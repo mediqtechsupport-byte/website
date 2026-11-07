@@ -1,0 +1,179 @@
+/// <reference path="./types.d.ts" />
+import React from "react";
+import { InfoCard } from "./info-card";
+import { VideoPlayer } from "./video-player";
+import { SpotlightBentoCard } from "./spotlight-bento";
+import BlueprintInkReveal from "./blueprint-ink-reveal";
+
+const containerStyle: React.CSSProperties = {
+  display: "flex",
+  gap: 24,
+  padding: 24,
+  flexWrap: "wrap",
+  justifyContent: "center",
+  alignItems: "flex-start",
+  background: "none",
+  fontFamily: "var(--font-family)",
+  margin: 0,
+};
+
+const fileContainerStyle: React.CSSProperties = {
+  width: 388,
+  height: 378,
+  borderRadius: "1em",
+  position: "relative",
+  overflow: "hidden",
+  padding: 0,
+  cursor: "pointer",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  background: "none",
+  boxSizing: "border-box",
+};
+
+export const Demo: React.FC = () => (
+  <div className="container" style={containerStyle}>
+    {/* Card 1: RayOne Galaxy (Sky Blue #3aa0db) */}
+    <div
+      className="file-container"
+      id="container1"
+      style={{
+        ...fileContainerStyle,
+        ["--hover-text-color" as any]: "#0b1a33",
+      }}
+    >
+      <InfoCard
+        image="assets/rayner/galaxy.webp"
+        title="RayOne® Galaxy & Toric"
+        description="Proprietary AI optical design replaces concentric diffractive rings with a continuous non-diffractive spiral surface — 0% light loss."
+        borderColor="var(--border-color-1)"
+        borderBgColor="var(--border-bg-color)"
+        cardBgColor="var(--card-bg-color)"
+        shadowColor="var(--shadow-color)"
+        textColor="var(--text-color)"
+        hoverTextColor="var(--hover-text-color-1)"
+        fontFamily="var(--font-family)"
+        rtlFontFamily="var(--rtl-font-family)"
+        effectBgColor="var(--border-color-1)"
+        patternColor1="var(--pattern-color1)"
+        patternColor2="var(--pattern-color2)"
+        contentPadding="14.3px 16px"
+      />
+    </div>
+
+    {/* Card 2: RayOne EMV & EMV Toric (Rayner EMV Magenta #c4006b) */}
+    <div
+      className="file-container"
+      id="container2"
+      style={{
+        ...fileContainerStyle,
+        ["--hover-text-color" as any]: "#ffffff",
+      }}
+    >
+      <InfoCard
+        image="assets/rayner/toric-carton-injector.png"
+        title="RayOne® EMV & EMV Toric"
+        description="Controlled positive spherical aberration uniquely extends depth of focus up to 1.5 D with monofocal contrast sensitivity and zero dysphotopsia."
+        borderColor="var(--border-color-2)"
+        borderBgColor="var(--border-bg-color)"
+        cardBgColor="var(--card-bg-color)"
+        shadowColor="var(--shadow-color)"
+        textColor="var(--text-color)"
+        hoverTextColor="var(--hover-text-color-2)"
+        fontFamily="var(--font-family)"
+        rtlFontFamily="var(--rtl-font-family)"
+        effectBgColor="var(--border-color-2)"
+        patternColor1="var(--pattern-color1)"
+        patternColor2="var(--pattern-color2)"
+        contentPadding="14.3px 16px"
+      />
+    </div>
+
+    {/* Card 3: RayOne Trifocal & Sulcoflex (RayOne Orange #e8562a) */}
+    <div
+      className="file-container"
+      id="container3"
+      style={{
+        ...fileContainerStyle,
+        ["--hover-text-color" as any]: "#ffffff",
+      }}
+    >
+      <InfoCard
+        image="assets/rayner/trifocal.jpg"
+        title="RayOne® Trifocal & Sulcoflex®"
+        description="Patented 16-step diffractive optic transmits 89% of available light to the retina across distance, intermediate, and near."
+        borderColor="var(--border-color-3)"
+        borderBgColor="var(--border-bg-color)"
+        cardBgColor="var(--card-bg-color)"
+        shadowColor="var(--shadow-color)"
+        textColor="var(--text-color)"
+        hoverTextColor="var(--hover-text-color-3)"
+        fontFamily="var(--font-family)"
+        rtlFontFamily="var(--rtl-font-family)"
+        effectBgColor="var(--border-color-3)"
+        patternColor1="var(--pattern-color1)"
+        patternColor2="var(--pattern-color2)"
+        contentPadding="14.3px 16px"
+      />
+    </div>
+  </div>
+);
+
+export function VideoPlayerDemo() {
+  return (
+    <div className="mx-auto w-full max-w-3xl p-6">
+      <VideoPlayer
+        videoSrc="assets/video/rayner-uk-tour.mp4"
+        currentTime={0}
+        duration={128}
+        title="Inside Rayner Worthing, UK"
+        subtitle="The Ridley Innovation Centre · Global Ophthalmic Manufacturing"
+      />
+    </div>
+  );
+}
+
+export function SpotlightBentoDemo() {
+  return (
+    <div className="mx-auto grid max-w-[1320px] grid-cols-1 gap-6 p-6 lg:grid-cols-12">
+      <SpotlightBentoCard
+        className="lg:col-span-7"
+        badge="3D Optical Bench"
+        title="Real-Time Wavefront Simulation"
+        subtitle="Three.js WebGL simulation of positive spherical aberration and non-diffractive ray tracing."
+        accentColor="#3aa0db"
+      >
+        <div className="flex h-64 items-center justify-center rounded-xl border border-white/10 bg-black/40">
+          <span className="text-xs uppercase tracking-widest text-[#3aa0db]">WebGL 3D Canvas Stage</span>
+        </div>
+      </SpotlightBentoCard>
+
+      <SpotlightBentoCard
+        className="lg:col-span-5"
+        badge="Clinical Efficacy"
+        title="100% Dysphotopsia-Free"
+        subtitle="Prospective bilateral emmetropia study from Hospital San Rafael, Madrid."
+        accentColor="#c4006b"
+      >
+        <div className="flex flex-col gap-3 pt-4">
+          <div className="rounded-lg border border-white/10 bg-black/20 p-3">
+            <span className="font-serif text-2xl text-[#c4006b]">100%</span>
+            <p className="text-xs text-white/70">Spectacle independence for distance and intermediate.</p>
+          </div>
+          <div className="rounded-lg border border-white/10 bg-black/20 p-3">
+            <span className="font-serif text-2xl text-[#e8562a]">1.83°</span>
+            <p className="text-xs text-white/70">Mean toric axis rotation with AVH haptics.</p>
+          </div>
+        </div>
+      </SpotlightBentoCard>
+
+      {/* Blueprint Ink Reveal Demo */}
+      <div style={{ width: "100%", maxWidth: 1000, margin: "24px 0" }}>
+        <BlueprintInkReveal wordmark="ADVANCED VISION" inkRadius={160} />
+      </div>
+    </div>
+  );
+}
+
+export default Demo;

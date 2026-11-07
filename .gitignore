@@ -1,0 +1,25 @@
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+
+# Temporary debug frame dumps (not part of the website)
+user_feedback_frames/
+scratch/zandrellez_portfolio
+scratch/zandrellez_rec_frames/
+scratch/video_frames/
+scratch/*.jpg
+scratch/*.png
+scratch/*.mp4
+real_*.jpg
+real_*.png
+timeline_*.jpg
+timeline_*.png
+box_patch_*.jpg
+frame_*_preview.png
+im*_test.png
+user_box_*.png
+user_box_*.jpg
+user_canvas_*.jpg
+index.html.bak

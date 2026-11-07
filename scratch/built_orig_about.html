@@ -1,0 +1,736 @@
+    <!-- ============== ABOUT MEDIQ / HERITAGE & COMPLETE CORPORATE SHOWCASE (5-PAGE DECK) ============== -->
+    <section id="about" aria-labelledby="about-title" class="page-snap-section page-transition-section relative isolate w-full h-[100svh] min-h-[100svh] max-h-[100svh] overflow-hidden bg-[#0a1d40] scroll-mt-0">
+
+      <!-- Persistent Ambient Medical Navy Background with Organic Fluid Smoke & Silk Waves Shader across ALL Deck Slides -->
+      <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-[#0a1d40]">
+        <!-- 1. Active Moving Silk Waves Shader Background in Calm MediQ Navy Palette -->
+        <canvas id="about-waves-shader-canvas" class="pointer-events-none absolute inset-0 z-0 block size-full opacity-70" aria-hidden="true"></canvas>
+
+        <!-- 2. Active Drifting Organic Fluid Smoke Canvas (Uniform with Hero Page) -->
+        <canvas id="about-smoke-canvas" class="pointer-events-none absolute inset-0 z-[1] block size-full opacity-75" aria-hidden="true"></canvas>
+
+        <div class="absolute -left-20 top-1/4 h-[38rem] w-[38rem] rounded-full bg-sky/15 blur-[160px]"></div>
+        <div class="absolute right-0 top-1/3 h-[42rem] w-[42rem] rounded-full bg-[#11326c]/45 blur-[180px]"></div>
+        <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(#3aa0db_1px,transparent_1px)] [background-size:24px_24px] opacity-15"></div>
+      </div>
+      
+      <!-- Sleek Floating Arrow Navigation for Rest of Pages (Hidden on Purpose Slide 0) -->
+      <div id="about-deck-nav" class="absolute top-20 right-6 sm:top-24 sm:right-10 z-40 flex items-center gap-2 opacity-0 pointer-events-none scale-90 transition-all duration-300">
+        <button type="button" id="about-deck-prev" class="size-9 rounded-full bg-[#0a1d40]/80 hover:bg-sky text-white hover:text-[#0a1d40] border border-sky/30 hover:border-sky backdrop-blur-md flex items-center justify-center transition-all shadow-[0_4px_16px_rgba(0,0,0,0.4)] active:scale-95 disabled:opacity-20 disabled:pointer-events-none cursor-pointer" aria-label="Previous Slide">
+          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+
+        <button type="button" id="about-deck-next" class="size-9 rounded-full bg-[#0a1d40]/80 hover:bg-sky text-white hover:text-[#0a1d40] border border-sky/30 hover:border-sky backdrop-blur-md flex items-center justify-center transition-all shadow-[0_4px_16px_rgba(0,0,0,0.4)] active:scale-95 disabled:opacity-20 disabled:pointer-events-none cursor-pointer" aria-label="Next Slide">
+          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+
+      <!-- Main Slides Container (100% Viewport, Seamless with Fixed Navbar) -->
+      <div class="relative w-full h-full overflow-hidden">
+        <!-- ========================================================================= -->
+        <!-- SLIDE 1: PURPOSE (Global Healthcare Innovation & Philippines Map)         -->
+        <!-- ========================================================================= -->
+        <div class="about-slide absolute inset-0 w-full h-full flex items-center overflow-y-auto lg:overflow-hidden transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10" data-index="0">
+          
+          <!-- Full-Bleed Panoramic World Route Blueprint Map across Background -->
+          <div id="about-interactive-stage" class="absolute inset-0 w-full h-full pointer-events-auto z-[2] overflow-hidden">
+            <!-- Atmospheric Volumetric Glow -->
+            <div class="absolute inset-0 bg-radial from-sky/15 via-[#11326c]/20 to-transparent rounded-full blur-3xl transform scale-125 pointer-events-none -z-10"></div>
+          </div>
+
+          <div class="ih-shell relative z-10 w-full pointer-events-none">
+            <div class="ih-hero">
+              
+              <!-- Left Copy Column (Positioned and styled exactly as shown in user video) -->
+              <div class="ih-hero-copy pointer-events-auto max-w-2xl relative z-20">
+                
+                <!-- Eyebrow Tag -->
+                <p class="ih-eyebrow">
+                  <span>ABOUT MEDIQ &nbsp;&bull;&nbsp; OUR PURPOSE</span>
+                  <span class="inline-block h-0.5 bg-sky/50 w-12 ml-1"></span>
+                </p>
+
+                <!-- Main Headline -->
+                <h2 id="about-title" class="ih-h1">
+                  <span class="ih-h1-line">Connecting Global</span>
+                  <span class="ih-h1-line">Healthcare Innovation</span>
+                  <span class="ih-h1-line">with the Philippines</span>
+                </h2>
+
+                <!-- Lede Description -->
+                <p class="ih-lede">
+                  Medical solutions, product marketing, commercialization, and dependable distribution for a stronger healthcare system.
+                </p>
+
+                <!-- Action Button: Path to Mission & Vision (Slide 1) -->
+                <div class="mt-8">
+                  <button type="button" onclick="if(window.goToAboutSlide){window.goToAboutSlide(1);}" class="about-go-next inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-sky text-[#0a1d40] text-sm font-bold tracking-wide shadow-[0_0_25px_rgba(58,160,219,0.35)] hover:bg-[#72c5f8] hover:scale-105 active:scale-95 transition-all cursor-pointer">
+                    <span>Explore Profile &amp; Mission</span>
+                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                  </button>
+                </div>
+
+              </div>
+
+              <!-- Right Column: Expansive Open Space for the Panoramic Global Map -->
+              <div class="hidden lg:block pointer-events-none"></div>
+
+            </div>
+          </div>
+
+        </div>
+
+<!-- ========================================================================= -->
+        <!-- SLIDE 2: WHO WE ARE, OUR VISION & MISSION (Architectural Blueprint Cards) -->
+        <!-- ========================================================================= -->
+        <div class="about-slide absolute inset-0 w-full h-full flex items-center justify-center bg-[#0a1d40] text-cream px-6 sm:px-10 lg:px-14 pt-16 sm:pt-20 pb-8 overflow-y-auto transition-all duration-500 ease-out opacity-0 pointer-events-none translate-x-12 z-0" data-index="1">
+          
+          <!-- Ambient Luminous Glows matching Home & Purpose -->
+          <div class="pointer-events-none absolute -left-20 top-1/4 h-[32rem] w-[32rem] rounded-full bg-sky/15 blur-[160px]"></div>
+          <div class="pointer-events-none absolute right-0 top-1/3 h-[36rem] w-[36rem] rounded-full bg-[#11326c]/45 blur-[180px]"></div>
+
+          <div class="relative z-10 mx-auto w-full max-w-[1420px]">
+
+            <!-- Centered Header Section (Vertically balanced) -->
+            <div class="text-center max-w-3xl mx-auto mb-7 sm:mb-9 lg:mb-10">
+              <p class="text-[11px] sm:text-xs font-mono font-bold tracking-[0.25em] text-sky uppercase mb-2">
+                ABOUT MEDIQ &bull; CORPORATE IDENTITY
+              </p>
+              <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-2.5">
+                Who We Are, <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky via-[#72c5f8] to-white">Vision &amp; Mission</span>
+              </h2>
+              <p class="text-xs sm:text-sm lg:text-base text-cream/75 leading-relaxed max-w-2xl mx-auto">
+                Connecting global medical innovations with Philippine clinical practitioners, surgical centers, and healthcare institutions nationwide.
+              </p>
+            </div>
+
+            <!-- 3 Staggered / Cascading Blueprint Glass Cards (Larger Scale & Balanced Stagger) -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-8 items-start pb-4">
+              
+              <!-- CARD 1: WHO WE ARE (Step 1: Elevated) -->
+              <div class="relative group lg:-translate-y-3 transition-transform duration-300">
+                <!-- Architectural Corner Crosshairs -->
+                <span class="absolute -top-3.5 -left-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -top-3.5 -right-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -bottom-3.5 -left-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -bottom-3.5 -right-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+
+                <!-- Extended Construction Tick Lines -->
+                <div class="pointer-events-none absolute -top-5 -bottom-5 left-0 w-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -top-5 -bottom-5 right-0 w-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -left-5 -right-5 top-0 h-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -left-5 -right-5 bottom-0 h-px bg-sky/25"></div>
+
+                <!-- Card Body (Enlarged padding and text) -->
+                <div class="relative rounded-2xl bg-[#071530]/85 border border-sky/30 p-7 sm:p-8 lg:p-9 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.55)] transition-all group-hover:border-sky/60 group-hover:bg-[#0a1e42]/90">
+                  <!-- Quote / Badge Icon -->
+                  <div class="text-sky/70 mb-5">
+                    <svg class="size-7" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                  </div>
+
+                  <!-- Statement -->
+                  <p class="text-sm sm:text-base lg:text-[15.5px] text-cream/90 leading-relaxed mb-7 font-normal min-h-[120px]">
+                    Operating as <strong class="text-white font-semibold">Mediq Pharma and Medical Supplies Distribution</strong>, we connect international medical manufacturers with ophthalmologists, hospitals, surgical centers, and healthcare institutions across the Philippines.
+                  </p>
+
+                  <!-- Author / Identity Pill -->
+                  <div class="flex items-center gap-3.5 pt-5 border-t border-sky/15">
+                    <div class="size-11 sm:size-12 rounded-full bg-sky/15 border border-sky/30 flex items-center justify-center shrink-0 text-sky shadow-[0_0_15px_rgba(58,160,219,0.25)]">
+                      <svg class="size-5 sm:size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <div>
+                      <div class="text-base font-bold text-white tracking-wide">Who We Are</div>
+                      <div class="text-xs sm:text-[13px] text-sky/80">Philippine Healthcare Distribution</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CARD 2: OUR VISION (Step 2: Center Balanced) -->
+              <div class="relative group lg:translate-y-3 transition-transform duration-300">
+                <!-- Architectural Corner Crosshairs -->
+                <span class="absolute -top-3.5 -left-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -top-3.5 -right-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -bottom-3.5 -left-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -bottom-3.5 -right-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+
+                <!-- Extended Construction Tick Lines -->
+                <div class="pointer-events-none absolute -top-5 -bottom-5 left-0 w-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -top-5 -bottom-5 right-0 w-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -left-5 -right-5 top-0 h-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -left-5 -right-5 bottom-0 h-px bg-sky/25"></div>
+
+                <!-- Card Body (Enlarged padding and text) -->
+                <div class="relative rounded-2xl bg-[#071530]/85 border border-sky/30 p-7 sm:p-8 lg:p-9 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.55)] transition-all group-hover:border-sky/60 group-hover:bg-[#0a1e42]/90">
+                  <!-- Quote / Badge Icon -->
+                  <div class="text-sky/70 mb-5">
+                    <svg class="size-7" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                  </div>
+
+                  <!-- Statement -->
+                  <p class="text-sm sm:text-base lg:text-[15.5px] text-cream/90 leading-relaxed mb-7 font-normal min-h-[120px]">
+                    To become one of the Philippines' most trusted and forward-thinking healthcare solutions partners, advancing accessibility, product quality, and the delivery of care through innovative technologies and enduring partnerships.
+                  </p>
+
+                  <!-- Author / Identity Pill -->
+                  <div class="flex items-center gap-3.5 pt-5 border-t border-sky/15">
+                    <div class="size-11 sm:size-12 rounded-full bg-sky/15 border border-sky/30 flex items-center justify-center shrink-0 text-sky shadow-[0_0_15px_rgba(58,160,219,0.25)]">
+                      <svg class="size-5 sm:size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+                    </div>
+                    <div>
+                      <div class="text-base font-bold text-white tracking-wide">Our Vision</div>
+                      <div class="text-xs sm:text-[13px] text-sky/80">Trusted Clinical Solutions Partner</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CARD 3: OUR MISSION (Step 3: Gentle Descending Step) -->
+              <div class="relative group lg:translate-y-9 transition-transform duration-300">
+                <!-- Architectural Corner Crosshairs -->
+                <span class="absolute -top-3.5 -left-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -top-3.5 -right-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -bottom-3.5 -left-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -bottom-3.5 -right-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+
+                <!-- Extended Construction Tick Lines -->
+                <div class="pointer-events-none absolute -top-5 -bottom-5 left-0 w-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -top-5 -bottom-5 right-0 w-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -left-5 -right-5 top-0 h-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -left-5 -right-5 bottom-0 h-px bg-sky/25"></div>
+
+                <!-- Card Body (Enlarged padding and text) -->
+                <div class="relative rounded-2xl bg-[#071530]/85 border border-sky/30 p-7 sm:p-8 lg:p-9 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.55)] transition-all group-hover:border-sky/60 group-hover:bg-[#0a1e42]/90">
+                  <!-- Quote / Badge Icon -->
+                  <div class="text-sky/70 mb-5">
+                    <svg class="size-7" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                  </div>
+
+                  <!-- Statement -->
+                  <p class="text-sm sm:text-base lg:text-[15.5px] text-cream/90 leading-relaxed mb-7 font-normal min-h-[120px]">
+                    To bridge global healthcare innovation with the Philippine market by sourcing, commercializing, and distributing quality medical products, while providing surgeons with reliable clinical support and professional education.
+                  </p>
+
+                  <!-- Author / Identity Pill -->
+                  <div class="flex items-center gap-3.5 pt-5 border-t border-sky/15">
+                    <div class="size-11 sm:size-12 rounded-full bg-sky/15 border border-sky/30 flex items-center justify-center shrink-0 text-sky shadow-[0_0_15px_rgba(58,160,219,0.25)]">
+                      <svg class="size-5 sm:size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m11 17 2 2a1 1 0 0 0 1.414 0l4.586-4.586a2 2 0 0 0 0-2.828l-1.172-1.172a2 2 0 0 0-2.828 0L13 12.5"/><path d="m13 12.5 1-1a2 2 0 0 0 0-2.828l-1.172-1.172a2 2 0 0 0-2.828 0l-3 3a2 2 0 0 0 0 2.828l1 1"/></svg>
+                    </div>
+                    <div>
+                      <div class="text-base font-bold text-white tracking-wide">Our Mission</div>
+                      <div class="text-xs sm:text-[13px] text-sky/80">Responsible Commercialization &amp; Support</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+<!-- ========================================================================= -->
+        <!-- SLIDE 3: WHAT WE DO (Continuous Scroll Stacking Cards)                    -->
+        <!-- ========================================================================= -->
+        <div id="about-slide-what-we-do" class="about-slide absolute inset-0 w-full h-full flex flex-col bg-transparent text-cream px-4 sm:px-8 lg:px-12 pt-16 sm:pt-20 pb-2 overflow-hidden transition-all duration-500 ease-out opacity-0 pointer-events-none translate-x-12 z-0" data-index="2">
+          
+          <!-- Ambient Luminous Glows -->
+          <div class="pointer-events-none absolute -left-20 top-1/4 h-[32rem] w-[32rem] rounded-full bg-sky/15 blur-[160px]"></div>
+          <div class="pointer-events-none absolute right-0 top-1/3 h-[36rem] w-[36rem] rounded-full bg-[#11326c]/45 blur-[180px]"></div>
+          <!-- Blueprint / Dot Matrix Grid matching Deck Style -->
+          <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(#3aa0db_1px,transparent_1px)] [background-size:24px_24px] opacity-15"></div>
+
+          <!-- Fixed Header (Permanently separated above scroll container, zero card overlap) -->
+          <div class="relative z-30 shrink-0 text-center max-w-3xl mx-auto pb-3">
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight mb-1.5">
+              What <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky via-[#72c5f8] to-white">We Do</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-cream/75 leading-relaxed max-w-2xl mx-auto">
+              Comprehensive commercial operations, clinical distribution, and surgical healthcare partnerships across the Philippine archipelago.
+            </p>
+
+            <!-- Interactive Stacking Card Scroll Hint -->
+            <div class="mt-2.5 inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#071530]/85 border border-sky/25 text-[11px] font-semibold text-sky uppercase tracking-wider backdrop-blur-md shadow-md">
+              <span>Scroll down to stack all 6 capabilities</span>
+              <svg class="size-3.5 animate-bounce text-[#72c5f8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Dedicated Scroll Viewport (Cards scroll & stack with real physics, stopping cleanly at the last card) -->
+          <div id="about-stacking-scroll-viewport" class="relative z-20 flex-1 w-full overflow-y-auto overflow-x-hidden scroll-smooth pt-2 pb-0">
+            
+            <div id="stacking-cards-container" class="relative w-full max-w-5xl mx-auto">
+
+              <!-- CARD 1: Strategic Importation & Distribution -->
+              <div class="stacking-card-item sticky mb-[55vh] transition-transform duration-300 ease-out" style="top: 10px; z-index: 10;">
+                <div class="stacking-card-inner relative overflow-hidden rounded-3xl border border-sky/30 bg-[#071530]/95 backdrop-blur-2xl p-6 sm:p-8 lg:p-9 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85)] ring-1 ring-white/10 hover:border-sky/50 transition-all flex flex-col lg:flex-row gap-6 lg:gap-8 items-center min-h-[360px] sm:min-h-[390px]">
+                  <div class="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-sky/15 blur-2xl"></div>
+
+                  <!-- Text Column -->
+                  <div class="flex-1 flex flex-col justify-center">
+                    <div class="flex items-center gap-2.5 mb-2.5">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-sky/15 border border-sky/30 text-sky text-[10.5px] font-mono font-bold tracking-wider uppercase">
+                        PILLAR 01
+                      </span>
+                      <span class="text-[11px] uppercase tracking-widest text-[#72c5f8]/80 font-medium">Supply Chain</span>
+                    </div>
+
+                    <h3 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight mb-2.5">
+                      Strategic Importation &amp; Distribution
+                    </h3>
+
+                    <p class="text-xs sm:text-sm text-cream/85 leading-relaxed mb-4">
+                      Product sourcing, importation coordination, inventory availability, and supply-chain support.
+                    </p>
+
+                    <!-- Feature Badges -->
+                    <div class="grid grid-cols-2 gap-2 text-xs text-cream/90">
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Product Sourcing</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Importation Coordination</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Inventory Availability</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Supply-Chain Support</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Image Column -->
+                  <div class="w-full lg:w-1/2 aspect-video rounded-2xl relative overflow-hidden border border-sky/30 shadow-2xl bg-black/60 group shrink-0">
+                    <img src="assets/img/pillars/p1_cleanroom_inspect.jpg" alt="Strategic Importation &amp; Distribution - Cleanroom Cold-Chain Packaging" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 select-none" loading="lazy">
+                  </div>
+                </div>
+              </div>
+
+              <!-- CARD 2: Product Marketing & Brand Development -->
+              <div class="stacking-card-item sticky mb-[55vh] transition-transform duration-300 ease-out" style="top: 22px; z-index: 20;">
+                <div class="stacking-card-inner relative overflow-hidden rounded-3xl border border-sky/30 bg-[#081a3d]/95 backdrop-blur-2xl p-6 sm:p-8 lg:p-9 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85)] ring-1 ring-white/10 hover:border-sky/50 transition-all flex flex-col lg:flex-row gap-6 lg:gap-8 items-center min-h-[360px] sm:min-h-[390px]">
+                  <div class="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-[#72c5f8]/15 blur-2xl"></div>
+
+                  <!-- Text Column -->
+                  <div class="flex-1 flex flex-col justify-center">
+                    <div class="flex items-center gap-2.5 mb-2.5">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-sky/15 border border-sky/30 text-sky text-[10.5px] font-mono font-bold tracking-wider uppercase">
+                        PILLAR 02
+                      </span>
+                      <span class="text-[11px] uppercase tracking-widest text-[#72c5f8]/80 font-medium">Marketing &amp; Branding</span>
+                    </div>
+
+                    <h3 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight mb-2.5">
+                      Product Marketing &amp; Brand Development
+                    </h3>
+
+                    <p class="text-xs sm:text-sm text-cream/85 leading-relaxed mb-4">
+                      Brand positioning, launch campaigns, professional communication, and product awareness.
+                    </p>
+
+                    <!-- Feature Badges -->
+                    <div class="grid grid-cols-2 gap-2 text-xs text-cream/90">
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Brand Positioning</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Launch Campaigns</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Professional Communication</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Product Awareness</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Image Column -->
+                  <div class="w-full lg:w-1/2 aspect-video rounded-2xl relative overflow-hidden border border-sky/30 shadow-2xl bg-black/60 group shrink-0">
+                    <img src="assets/img/pillars/p2_headquarters_brand.jpg" alt="Product Marketing &amp; Brand Development - Rayner Global Headquarters" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 select-none" loading="lazy">
+                  </div>
+                </div>
+              </div>
+
+              <!-- CARD 3: Sales, Promotion & Commercialization -->
+              <div class="stacking-card-item sticky mb-[55vh] transition-transform duration-300 ease-out" style="top: 34px; z-index: 30;">
+                <div class="stacking-card-inner relative overflow-hidden rounded-3xl border border-sky/30 bg-[#091f47]/95 backdrop-blur-2xl p-6 sm:p-8 lg:p-9 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85)] ring-1 ring-white/10 hover:border-sky/50 transition-all flex flex-col lg:flex-row gap-6 lg:gap-8 items-center min-h-[360px] sm:min-h-[390px]">
+                  <div class="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-sky/20 blur-2xl"></div>
+
+                  <!-- Text Column -->
+                  <div class="flex-1 flex flex-col justify-center">
+                    <div class="flex items-center gap-2.5 mb-2.5">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-sky/15 border border-sky/30 text-sky text-[10.5px] font-mono font-bold tracking-wider uppercase">
+                        PILLAR 03
+                      </span>
+                      <span class="text-[11px] uppercase tracking-widest text-[#72c5f8]/80 font-medium">Commercialization</span>
+                    </div>
+
+                    <h3 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight mb-2.5">
+                      Sales, Promotion &amp; Commercialization
+                    </h3>
+
+                    <p class="text-xs sm:text-sm text-cream/85 leading-relaxed mb-4">
+                      Field sales, medical product presentations, institutional account development, and promotional programs.
+                    </p>
+
+                    <!-- Feature Badges -->
+                    <div class="grid grid-cols-2 gap-2 text-xs text-cream/90">
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Field Sales</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Medical Presentations</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Institutional Accounts</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Promotional Programs</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Image Column -->
+                  <div class="w-full lg:w-1/2 aspect-video rounded-2xl relative overflow-hidden border border-sky/30 shadow-2xl bg-black/60 group shrink-0">
+                    <img src="assets/img/pillars/p3_commercial_meeting.jpg" alt="Sales, Promotion &amp; Commercialization - Hospital Presentations" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 select-none" loading="lazy">
+                  </div>
+                </div>
+              </div>
+
+              <!-- CARD 4: Market Development -->
+              <div class="stacking-card-item sticky mb-[55vh] transition-transform duration-300 ease-out" style="top: 46px; z-index: 40;">
+                <div class="stacking-card-inner relative overflow-hidden rounded-3xl border border-sky/30 bg-[#082250]/95 backdrop-blur-2xl p-6 sm:p-8 lg:p-9 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85)] ring-1 ring-white/10 hover:border-sky/50 transition-all flex flex-col lg:flex-row gap-6 lg:gap-8 items-center min-h-[360px] sm:min-h-[390px]">
+                  <div class="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-[#3aa0db]/15 blur-2xl"></div>
+
+                  <!-- Text Column -->
+                  <div class="flex-1 flex flex-col justify-center">
+                    <div class="flex items-center gap-2.5 mb-2.5">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-sky/15 border border-sky/30 text-sky text-[10.5px] font-mono font-bold tracking-wider uppercase">
+                        PILLAR 04
+                      </span>
+                      <span class="text-[11px] uppercase tracking-widest text-[#72c5f8]/80 font-medium">Growth &amp; Expansion</span>
+                    </div>
+
+                    <h3 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight mb-2.5">
+                      Market Development
+                    </h3>
+
+                    <p class="text-xs sm:text-sm text-cream/85 leading-relaxed mb-4">
+                      Customer insight, segment planning, channel expansion, new account growth, and principal collaboration.
+                    </p>
+
+                    <!-- Feature Badges -->
+                    <div class="grid grid-cols-2 gap-2 text-xs text-cream/90">
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Customer Insight</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Segment Planning</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Channel Expansion</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Principal Collaboration</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Image Column -->
+                  <div class="w-full lg:w-1/2 aspect-video rounded-2xl relative overflow-hidden border border-sky/30 shadow-2xl bg-black/60 group shrink-0">
+                    <img src="assets/img/pillars/p4_customer_growth.jpg" alt="Market Development - Global Healthcare Network &amp; Expansion" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 select-none" loading="lazy">
+                  </div>
+                </div>
+              </div>
+
+              <!-- CARD 5: Professional Education -->
+              <div class="stacking-card-item sticky mb-[55vh] transition-transform duration-300 ease-out" style="top: 58px; z-index: 50;">
+                <div class="stacking-card-inner relative overflow-hidden rounded-3xl border border-sky/30 bg-[#0a2354]/95 backdrop-blur-2xl p-6 sm:p-8 lg:p-9 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85)] ring-1 ring-white/10 hover:border-sky/50 transition-all flex flex-col lg:flex-row gap-6 lg:gap-8 items-center min-h-[360px] sm:min-h-[390px]">
+                  <div class="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-sky/20 blur-2xl"></div>
+
+                  <!-- Text Column -->
+                  <div class="flex-1 flex flex-col justify-center">
+                    <div class="flex items-center gap-2.5 mb-2.5">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-sky/15 border border-sky/30 text-sky text-[10.5px] font-mono font-bold tracking-wider uppercase">
+                        PILLAR 05
+                      </span>
+                      <span class="text-[11px] uppercase tracking-widest text-[#72c5f8]/80 font-medium">Education &amp; Training</span>
+                    </div>
+
+                    <h3 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight mb-2.5">
+                      Professional Education
+                    </h3>
+
+                    <p class="text-xs sm:text-sm text-cream/85 leading-relaxed mb-4">
+                      Product knowledge training, educational events, demonstrations where appropriate, and technical engagement.
+                    </p>
+
+                    <!-- Feature Badges -->
+                    <div class="grid grid-cols-2 gap-2 text-xs text-cream/90">
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Product Knowledge Training</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Educational Events</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Demonstrations</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Technical Engagement</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Image Column -->
+                  <div class="w-full lg:w-1/2 aspect-video rounded-2xl relative overflow-hidden border border-sky/30 shadow-2xl bg-black/60 group shrink-0">
+                    <img src="assets/img/pillars/p5_microscope_education.jpg" alt="Professional Education - Surgeon Microscope Training" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 select-none" loading="lazy">
+                  </div>
+                </div>
+              </div>
+
+              <!-- CARD 6: Quality & Customer Support (Final Card: Sits Here Not Moving When Stacked) -->
+              <div class="stacking-card-item sticky mb-0 transition-transform duration-300 ease-out" style="top: 70px; z-index: 60;">
+                <div class="stacking-card-inner relative overflow-hidden rounded-3xl border border-sky/30 bg-[#071738]/95 backdrop-blur-2xl p-6 sm:p-8 lg:p-9 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85)] ring-1 ring-white/10 hover:border-sky/50 transition-all flex flex-col lg:flex-row gap-6 lg:gap-8 items-center min-h-[360px] sm:min-h-[390px]">
+                  <div class="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-emerald-400/10 blur-2xl"></div>
+
+                  <!-- Text Column -->
+                  <div class="flex-1 flex flex-col justify-center">
+                    <div class="flex items-center gap-2.5 mb-2.5">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-sky/15 border border-sky/30 text-sky text-[10.5px] font-mono font-bold tracking-wider uppercase">
+                        PILLAR 06
+                      </span>
+                      <span class="text-[11px] uppercase tracking-widest text-[#72c5f8]/80 font-medium">Compliance &amp; Support</span>
+                    </div>
+
+                    <h3 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight mb-2.5">
+                      Quality &amp; Customer Support
+                    </h3>
+
+                    <p class="text-xs sm:text-sm text-cream/85 leading-relaxed mb-4">
+                      Regulatory coordination, traceability, responsible product handling, and responsive after-sales support.
+                    </p>
+
+                    <!-- Feature Badges -->
+                    <div class="grid grid-cols-2 gap-2 text-xs text-cream/90">
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Regulatory Coordination</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Traceability</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>Responsible Product Handling</span>
+                      </div>
+                      <div class="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-3 py-1.5">
+                        <span class="size-1.5 rounded-full bg-sky shrink-0"></span>
+                        <span>After-Sales Support</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Image Column -->
+                  <div class="w-full lg:w-1/2 aspect-video rounded-2xl relative overflow-hidden border border-sky/30 shadow-2xl bg-black/60 group shrink-0">
+                    <img src="assets/img/pillars/p6_quality_metrology.jpg" alt="Quality &amp; Customer Support - Precision Optical Metrology" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 select-none" loading="lazy">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Terminal Anchor (Allows Card 6 to reach its sticky point and locks scrolling right there) -->
+              <div class="h-[calc(100vh-460px)] min-h-[160px] max-h-[220px] pointer-events-none"></div>
+
+            </div>
+          </div>
+
+        </div>
+
+<!-- ========================================================================= -->
+        <!-- SLIDE 4: OUR ESTABLISHED FOUNDATION (Navy Banner with Rayner Partnership) -->
+        <!-- ========================================================================= -->
+        <div class="about-slide absolute inset-0 w-full h-full flex items-center bg-[#0a1d40] text-white px-6 sm:px-10 lg:px-16 pt-20 pb-16 overflow-y-auto transition-all duration-500 ease-out opacity-0 pointer-events-none translate-x-12 z-0" data-index="3">
+          
+          <!-- Ambient Luminous Glows -->
+          <div class="pointer-events-none absolute -left-20 top-1/4 h-[32rem] w-[32rem] rounded-full bg-sky/15 blur-[160px]"></div>
+          <div class="pointer-events-none absolute right-0 top-1/3 h-[36rem] w-[36rem] rounded-full bg-[#11326c]/45 blur-[180px]"></div>
+
+          <div class="relative z-10 mx-auto w-full max-w-7xl">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              
+              <div class="lg:col-span-7">
+                <!-- Eyebrow Pill -->
+                <p class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky/10 border border-sky/30 text-sky text-[11px] font-bold tracking-widest uppercase mb-3.5">
+                  <span>ABOUT MEDIQ &bull; HERITAGE &amp; PARTNERSHIP</span>
+                  <span class="inline-block h-1 w-1 rounded-full bg-sky"></span>
+                </p>
+
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-4">
+                  Our Established <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky via-[#72c5f8] to-white">Foundation</span>
+                </h2>
+
+                <p class="text-sm sm:text-base lg:text-lg text-cream/90 leading-relaxed mb-6">
+                  MEDIQ brings established expertise in ophthalmology and serves as the exclusive Philippine distributor for Rayner intraocular lenses from the United Kingdom.
+                </p>
+
+                <!-- Key Metrics & Proof Points in Glass Cards -->
+                <div class="grid grid-cols-2 gap-3.5 sm:gap-4 mb-6">
+                  <div class="p-4 rounded-2xl bg-[#071530]/80 border border-sky/25 backdrop-blur-xl shadow-lg ring-1 ring-white/5 hover:border-sky/50 transition-all">
+                    <div class="text-sky font-bold text-sm sm:text-base font-mono mb-1">100% UK Precision</div>
+                    <div class="text-xs text-cream/70 leading-relaxed">Worthing, West Sussex Engineered Intraocular Lenses</div>
+                  </div>
+                  <div class="p-4 rounded-2xl bg-[#071530]/80 border border-sky/25 backdrop-blur-xl shadow-lg ring-1 ring-white/5 hover:border-sky/50 transition-all">
+                    <div class="text-sky font-bold text-sm sm:text-base font-mono mb-1">Nationwide Cold-Chain</div>
+                    <div class="text-xs text-cream/70 leading-relaxed">Verified Hospital Logistics &amp; Operating Room Delivery</div>
+                  </div>
+                </div>
+
+                <div class="rounded-xl border border-sky/30 bg-[#071530]/60 backdrop-blur-md p-3.5 border-l-4 border-l-sky text-xs sm:text-sm text-sky/90 italic">
+                  Complementary portfolio expansion is a strategic opportunity and is subject to licensing, ethical regulatory compliance, and partner authorization.
+                </div>
+              </div>
+
+              <!-- Right Visual: Crystal Lens Showcase -->
+              <div class="lg:col-span-5 flex justify-center lg:justify-end">
+                <div class="relative size-64 sm:size-72 lg:size-80 rounded-full border border-sky/30 bg-[#071530]/85 backdrop-blur-2xl p-6 flex items-center justify-center shadow-[0_0_65px_rgba(58,160,219,0.35)] ring-1 ring-white/10 group">
+                  <div class="pointer-events-none absolute inset-0 rounded-full bg-radial from-sky/30 via-transparent to-transparent"></div>
+                  <img src="assets/img/about-crystal-lens.png" alt="Rayner UK Intraocular Lens Partnership" class="max-w-[240px] sm:max-w-[280px] w-full object-contain drop-shadow-[0_20px_40px_rgba(58,160,219,0.50)] group-hover:scale-105 transition-transform duration-500" />
+                  <div class="absolute -bottom-3 px-4 py-1.5 rounded-full bg-[#0a1d40]/95 border border-sky/40 text-[11px] font-mono font-bold text-sky uppercase tracking-wider backdrop-blur-md shadow-xl">
+                    Rayner UK &bull; Official Partner
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 5: OUR CORE VALUES & BEYOND DISTRIBUTION (Deep Navy Glass)          -->
+        <!-- ========================================================================= -->
+        <div class="about-slide absolute inset-0 w-full h-full flex flex-col justify-between bg-[#0a1d40] text-cream px-6 sm:px-10 lg:px-16 pt-20 pb-16 overflow-y-auto transition-all duration-500 ease-out opacity-0 pointer-events-none translate-x-12 z-0" data-index="4">
+          
+          <!-- Ambient Luminous Glows -->
+          <div class="pointer-events-none absolute -left-20 top-1/4 h-[32rem] w-[32rem] rounded-full bg-sky/15 blur-[160px]"></div>
+          <div class="pointer-events-none absolute right-0 top-1/3 h-[36rem] w-[36rem] rounded-full bg-[#11326c]/45 blur-[180px]"></div>
+
+          <!-- Upper: Core Values Grid -->
+          <div class="relative z-10 mx-auto w-full max-w-7xl pt-2 pb-4">
+            
+            <div class="mb-6">
+              <p class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky/10 border border-sky/30 text-sky text-[11px] font-bold tracking-widest uppercase mb-3">
+                <span>ABOUT MEDIQ &bull; CORPORATE ETHOS</span>
+                <span class="inline-block h-1 w-1 rounded-full bg-sky"></span>
+              </p>
+              <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-2">
+                Our Core <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky via-[#72c5f8] to-white">Values</span>
+              </h2>
+              <p class="text-xs sm:text-sm text-cream/70">Principles That Drive Philippine Clinical Stewardship &amp; Long-Term Partnerships</p>
+            </div>
+
+            <!-- 6 Core Value Cards in Glassmorphism -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4">
+              
+              <!-- Integrity -->
+              <div class="relative overflow-hidden rounded-2xl border border-sky/20 bg-[#071530]/80 p-4 text-center flex flex-col items-center hover:border-sky/50 hover:bg-[#0c234b]/90 hover:-translate-y-1 transition-all group backdrop-blur-xl ring-1 ring-white/5">
+                <div class="size-11 rounded-full bg-sky/15 border border-sky/30 flex items-center justify-center text-sky group-hover:scale-110 group-hover:bg-sky/25 transition-all mb-2.5 shadow-[0_0_15px_rgba(58,160,219,0.2)]">
+                  <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h3 class="text-xs sm:text-sm font-bold text-white mb-1">Integrity</h3>
+                <p class="text-[11px] sm:text-xs text-cream/70 leading-tight">Ethical, transparent, and compliant conduct.</p>
+              </div>
+
+              <!-- Innovation -->
+              <div class="relative overflow-hidden rounded-2xl border border-sky/20 bg-[#071530]/80 p-4 text-center flex flex-col items-center hover:border-sky/50 hover:bg-[#0c234b]/90 hover:-translate-y-1 transition-all group backdrop-blur-xl ring-1 ring-white/5">
+                <div class="size-11 rounded-full bg-sky/15 border border-sky/30 flex items-center justify-center text-sky group-hover:scale-110 group-hover:bg-sky/25 transition-all mb-2.5 shadow-[0_0_15px_rgba(58,160,219,0.2)]">
+                  <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                </div>
+                <h3 class="text-xs sm:text-sm font-bold text-white mb-1">Innovation</h3>
+                <p class="text-[11px] sm:text-xs text-cream/70 leading-tight">Progress through modern technologies.</p>
+              </div>
+
+              <!-- Excellence -->
+              <div class="relative overflow-hidden rounded-2xl border border-sky/20 bg-[#071530]/80 p-4 text-center flex flex-col items-center hover:border-sky/50 hover:bg-[#0c234b]/90 hover:-translate-y-1 transition-all group backdrop-blur-xl ring-1 ring-white/5">
+                <div class="size-11 rounded-full bg-sky/15 border border-sky/30 flex items-center justify-center text-sky group-hover:scale-110 group-hover:bg-sky/25 transition-all mb-2.5 shadow-[0_0_15px_rgba(58,160,219,0.2)]">
+                  <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34"/><path d="M18 14.66V17c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M6 4h12v7a6 6 0 0 1-12 0V4z"/></svg>
+                </div>
+                <h3 class="text-xs sm:text-sm font-bold text-white mb-1">Excellence</h3>
+                <p class="text-[11px] sm:text-xs text-cream/70 leading-tight">Precision in clinical delivery &amp; care.</p>
+              </div>
+
+              <!-- Reliability -->
+              <div class="relative overflow-hidden rounded-2xl border border-sky/20 bg-[#071530]/80 p-4 text-center flex flex-col items-center hover:border-sky/50 hover:bg-[#0c234b]/90 hover:-translate-y-1 transition-all group backdrop-blur-xl ring-1 ring-white/5">
+                <div class="size-11 rounded-full bg-sky/15 border border-sky/30 flex items-center justify-center text-sky group-hover:scale-110 group-hover:bg-sky/25 transition-all mb-2.5 shadow-[0_0_15px_rgba(58,160,219,0.2)]">
+                  <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m11 17 2 2a1 1 0 0 0 1.414 0l4.586-4.586a2 2 0 0 0 0-2.828l-1.172-1.172a2 2 0 0 0-2.828 0L13 12.5"/><path d="m13 12.5 1-1a2 2 0 0 0 0-2.828l-1.172-1.172a2 2 0 0 0-2.828 0l-3 3a2 2 0 0 0 0 2.828l1 1"/></svg>
+                </div>
+                <h3 class="text-xs sm:text-sm font-bold text-white mb-1">Reliability</h3>
+                <p class="text-[11px] sm:text-xs text-cream/70 leading-tight">Unbroken logistics &amp; dependable supply.</p>
+              </div>
+
+              <!-- Partnership -->
+              <div class="relative overflow-hidden rounded-2xl border border-sky/20 bg-[#071530]/80 p-4 text-center flex flex-col items-center hover:border-sky/50 hover:bg-[#0c234b]/90 hover:-translate-y-1 transition-all group backdrop-blur-xl ring-1 ring-white/5">
+                <div class="size-11 rounded-full bg-sky/15 border border-sky/30 flex items-center justify-center text-sky group-hover:scale-110 group-hover:bg-sky/25 transition-all mb-2.5 shadow-[0_0_15px_rgba(58,160,219,0.2)]">
+                  <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <h3 class="text-xs sm:text-sm font-bold text-white mb-1">Partnership</h3>
+                <p class="text-[11px] sm:text-xs text-cream/70 leading-tight">Long-term trust with principals &amp; surgeons.</p>
+              </div>
+
+              <!-- Patient Focus -->
+              <div class="relative overflow-hidden rounded-2xl border border-sky/20 bg-[#071530]/80 p-4 text-center flex flex-col items-center hover:border-sky/50 hover:bg-[#0c234b]/90 hover:-translate-y-1 transition-all group backdrop-blur-xl ring-1 ring-white/5">
+                <div class="size-11 rounded-full bg-sky/15 border border-sky/30 flex items-center justify-center text-sky group-hover:scale-110 group-hover:bg-sky/25 transition-all mb-2.5 shadow-[0_0_15px_rgba(58,160,219,0.2)]">
+                  <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                </div>
+                <h3 class="text-xs sm:text-sm font-bold text-white mb-1">Patient Focus</h3>
+                <p class="text-[11px] sm:text-xs text-cream/70 leading-tight">Patient sight &amp; well-being as our ultimate goal.</p>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Lower: Beyond Distribution Navy Closing Banner -->
+          <div class="relative z-10 mx-auto w-full max-w-7xl pb-4">
+            <div class="w-full rounded-2xl border border-sky/25 bg-gradient-to-r from-[#061226]/90 via-[#091a38]/90 to-[#040c1a]/90 text-white py-5 px-6 text-center backdrop-blur-xl shadow-2xl ring-1 ring-white/10">
+              <h2 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-1">
+                Beyond Distribution. Advancing Healthcare Together.
+              </h2>
+              <p class="text-xs sm:text-sm text-sky font-medium mb-3">
+                Sourcing, commercializing, and distributing ophthalmic and healthcare technologies for Filipino clinicians and patients.
+              </p>
+              <div class="flex flex-wrap items-center justify-center gap-3 text-[11px] font-mono text-cream/70">
+                <span class="flex items-center gap-1.5"><span class="size-1.5 rounded-full bg-sky"></span>Philippine FDA Registered</span>
+                <span class="flex items-center gap-1.5"><span class="size-1.5 rounded-full bg-sky"></span>Rayner UK Official Partner</span>
+                <span class="flex items-center gap-1.5"><span class="size-1.5 rounded-full bg-sky"></span>Nationwide Hospital Network</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>

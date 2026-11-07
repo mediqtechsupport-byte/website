@@ -1,0 +1,980 @@
+# Resuming from a compaction
+
+You are continuing work on the task described above, but you have lost access to the full conversation history, and need to resume work efficiently using the progress summary below:
+
+# User Requests
+The following were user requests from the truncated conversation in chronological order:
+1.  remove this blue part 
+  - [Attachment: image/png (C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793853064682_543dd051.png)]
+2. now i want you to just study this hero page what can you say about the blending f=of the carousel and the other part???
+  - [Attachment: image/png (C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793853096845_fd9b7b37.jpg)]
+3. now look  at how the human move then make it in ours because now it looks like floating  and not running also make the motion of the running human sync in the globe 
+  - [Attachment omitted: application/octet-stream (C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793853300668_95189359.mp4, uploaded as "20261105-0434-40.2829624.mp4"); read it from that path if needed]
+  - [Attachment: image/png (C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793853382481_b402dfdb.jpg)]
+4. now this is the wbout page what can you say about the color and size of the  globe part???
+  - [Attachment: image/png (C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793854217451_e58d46dc.jpg)]
+5. make it also  the movement of the human i attached here a short clip on how it move it can move any part of the globe any direction  depend on the cursor
+  - [Attachment omitted: application/octet-stream (C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793854442973_2c4bb5ff.mp4, uploaded as "20261105-0451-39.3242907.mp4"); read it from that path if needed]
+6. NOW  in this page" about mediq" blend the globe  like in the hero page so its not like look its just paste  video 
+
+
+note the running human dissappear
+note dont alter or change anything in the  hero page just make it ur references 
+  - [Attachment: image/jpeg (C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793855641660_128eb966.jpg)]
+  - [Attachment: image/png (C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793855685852_e47a19e9.jpg)]
+7. now in about page  put something like this  a smoke like in the hero page to make it uniform
+  - [Attachment omitted: application/octet-stream (C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793855733736_02be226b.mp4, uploaded as "20261105-0515-19.3613267.mp4"); read it from that path if needed]
+8. delete this part  i will change the content in that part
+  - [Attachment: image/png (C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793856372599_ab45f502.jpg)]
+9. delete that glove and running human i will change theat part make this fast
+10. now in that part of the about us , the one  with blank space make this  make sure the size is not too smalll
+
+make this fast as soon as you need
+
+make this fast as a senior programmer you need to double time
+
+You are given a task to integrate an existing React component in the codebase
+
+The codebase should support:
+- shadcn project structure  
+- Tailwind CSS
+- Typescript
+
+If it doesn't, provide instructions on how to setup project via shadcn CLI, install Tailwind or Typescript.
+
+Determine the default path for components and styles. 
+If default path for components is not /components/ui, provide instructions on why it's important to create this folder
+Copy-paste this component to /components/ui folder:
+```tsx
+route-globe.tsx
+"use client";
+
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  drawGlobe,
+  landDots,
+  rotate,
+  slerp,
+  toVec,
+  type Vec3,
+} from "./route-globe-utils/globe";
+import "./global.css";
+
+/**
+ * Route Globe
+ * A dotted globe with flight arcs from one hub. Each route lifts off the surface on a great
+ * circle; a comet runs along it and the destination pulses when it lands. Drag to spin; it
+ * turns slowly on its own when left alone.
+ */
+
+export type Place = { name: string; lon: number; lat: number; note?: string };
+
+const MUSCAT: Place = { name: "Muscat", lon: 58.41, lat: 23.59 };
+const DEST: Place[] = [
+  { name: "London", lon: -0.13, lat: 51.5, note: "7h 45m" },
+  { name: "Istanbul", lon: 28.98, lat: 41.01, note: "4h 50m" },
+  { name: "Cairo", lon: 31.24, lat: 30.04, note: "4h 10m" },
+  { name: "Nairobi", lon: 36.82, lat: -1.29, note: "5h 05m" },
+  { name: "Zanzibar", lon: 39.2, lat: -6.16, note: "5h 30m" },
+  { name: "Mumbai", lon: 72.88, lat: 19.08, note: "2h 55m" },
+  { name: "Kathmandu", lon: 85.32, lat: 27.72, note: "4h 15m" },
+  { name: "Bangkok", lon: 100.5, lat: 13.76, note: "6h 20m" },
+  { name: "Kuala Lumpur", lon: 101.69, lat: 3.14, note: "7h 05m" },
+  { name: "Manila", lon: 120.98, lat: 14.6, note: "8h 40m" },
+];
+
+export type GlobeTheme = {
+  ground: string;
+  land: string;
+  arc: string;
+  glow: string;
+  text: string;
+  muted: string;
+};
+
+type Props = {
+  hub?: Place;
+  places?: Place[];
+  theme?: GlobeTheme;
+  motion?: "full" | "reduced";
+  className?: string;
+  style?: CSSProperties;
+};
+
+const NIGHT: GlobeTheme = {
+  ground: "#06080d",
+  land: "#9fb4d6",
+  arc: "#ffb547",
+  glow: "rgb(90 140 255 / 0.18)",
+  text: "#eef2fb",
+  muted: "#7c8aa5",
+};
+
+export function RouteGlobe({
+  hub = MUSCAT,
+  places = DEST,
+  theme = NIGHT,
+  motion = "full",
+  className = "",
+  style,
+}: Props) {
+  const host = useRef<HTMLDivElement>(null);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const [hover, setHover] = useState<{ p: Place; x: number; y: number } | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const el = host.current,
+      cv = canvas.current;
+    if (!el || !cv) return;
+    const ctx = cv.getContext("2d")!;
+    const reduced =
+      motion === "reduced" ||
+      matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const dots = landDots(window.innerWidth < 640 ? 18000 : 30000);
+    const H = toVec(hub.lon, hub.lat);
+    const routes = places.map((p, i) => ({
+      p,
+      v: toVec(p.lon, p.lat),
+      offset: i / places.length,
+    }));
+    const RAD = Math.PI / 180;
+    const st = {
+      yaw: hub.lon * RAD - 0.35,
+      tilt: 18 * RAD,
+      vy: 0,
+      vt: 0,
+      drag: false,
+      px: 0,
+      py: 0,
+      last: 0,
+      idle: 0,
+    };
+    let W = 0,
+      Hh = 0,
+      dpr = 1,
+      raf = 0,
+      alive = true,
+      visible = true,
+      t0 = performance.now();
+    const pins: { p: Place; x: number; y: number; front: boolean }[] = [];
+
+    const size = () => {
+      dpr = Math.min(devicePixelRatio || 1, 2);
+      W = el.clientWidth;
+      Hh = el.clientHeight;
+      cv.width = Math.round(W * dpr);
+      cv.height = Math.round(Hh * dpr);
+    };
+    const project = (
+      v: Vec3,
+      lift: number,
+      r: number,
+      cx: number,
+      cy: number,
+    ) => {
+      const [x, y, z] = rotate(v, st.yaw, st.tilt);
+      return { x: cx + x * r * lift, y: cy - y * r * lift, z };
+    };
+
+    const draw = (now: number) => {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, Hh);
+      const r = Math.min(W, Hh) * 0.4,
+        cx = W / 2,
+        cy = Hh / 2;
+      drawGlobe(
+        ctx,
+        dots,
+        { cx, cy, r, yaw: st.yaw, tilt: st.tilt },
+        theme.land,
+        Math.max(1.4, r / 150),
+        theme.glow,
+      );
+      const t = (now - t0) / 1000;
+      pins.length = 0;
+      ctx.lineCap = "round";
+      for (const rt of routes) {
+        const ang = Math.acos(
+          Math.max(
+            -1,
+            Math.min(1, H[0] * rt.v[0] + H[1] * rt.v[1] + H[2] * rt.v[2]),
+          ),
+        );
+        const height = 0.06 + ang * 0.12;
+        const pts: { x: number; y: number; z: number }[] = [];
+        for (let k = 0; k <= 48; k++) {
+          const u = k / 48;
+          pts.push(
+            project(
+              slerp(H, rt.v, u),
+              1 + Math.sin(Math.PI * u) * height,
+              r,
+              cx,
+              cy,
+            ),
+          );
+        }
+        // the arc: faint where it passes behind the globe
+        ctx.strokeStyle = theme.arc;
+        ctx.lineWidth = 1.1;
+        for (let k = 0; k < 48; k++) {
+          const a = pts[k],
+            b = pts[k + 1];
+          const hidden = a.z < 0 && Math.hypot(a.x - cx, a.y - cy) < r;
+          ctx.globalAlpha = hidden ? 0.06 : 0.38;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+        // the comet: a bright head with a fading tail, looping with its own offset
+        const cycle = 3.6,
+          ph = reduced ? 0.999 : (t / cycle + rt.offset) % 1;
+        const run = Math.min(1, ph / 0.7);
+        const head = Math.floor(run * 48);
+        for (let k = Math.max(0, head - 10); k < head; k++) {
+          const a = pts[k],
+            b = pts[k + 1];
+          if (a.z < 0 && Math.hypot(a.x - cx, a.y - cy) < r) continue;
+          ctx.globalAlpha = (1 - (head - k) / 10) * 0.95;
+          ctx.lineWidth = 2.2;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+        const end = pts[48];
+        const front = end.z > 0;
+        pins.push({ p: rt.p, x: end.x, y: end.y, front });
+        if (front) {
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = theme.arc;
+          ctx.beginPath();
+          ctx.arc(end.x, end.y, 2.6, 0, Math.PI * 2);
+          ctx.fill();
+          // arrival pulse
+          if (ph > 0.7) {
+            const k = (ph - 0.7) / 0.3;
+            ctx.globalAlpha = 1 - k;
+            ctx.lineWidth = 1.4;
+            ctx.beginPath();
+            ctx.arc(end.x, end.y, 3 + k * 16, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+        }
+      }
+      // the hub
+      const h = project(H, 1, r, cx, cy);
+      if (h.z > 0) {
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = theme.text;
+        ctx.beginPath();
+        ctx.arc(h.x, h.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 0.5 + 0.5 * Math.sin(t * 3);
+        ctx.strokeStyle = theme.text;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.arc(h.x, h.y, 9, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    };
+
+    const tick = (now: number) => {
+      raf = 0;
+      if (!alive || !visible || document.hidden) return;
+      const dt = st.last ? Math.min(0.05, (now - st.last) / 1000) : 0.016;
+      st.last = now;
+      if (!st.drag) {
+        st.yaw += st.vy * dt;
+        st.tilt += st.vt * dt;
+        st.vy *= Math.pow(0.05, dt);
+        st.vt *= Math.pow(0.05, dt);
+        if (now - st.idle > 2500) st.yaw += dt * 0.08;
+        st.tilt = Math.max(
+          -0.9,
+          Math.min(0.9, st.tilt + (18 * RAD - st.tilt) * Math.min(1, dt * 0.4)),
+        );
+      }
+      draw(now);
+      raf = requestAnimationFrame(tick);
+    };
+    const start = () => {
+      if (reduced) return draw(performance.now());
+      if (!raf && alive) {
+        st.last = 0;
+        raf = requestAnimationFrame(tick);
+      }
+    };
+    const onDown = (e: PointerEvent) => {
+      cv.setPointerCapture(e.pointerId);
+      st.drag = true;
+      st.px = e.clientX;
+      st.py = e.clientY;
+      st.vy = st.vt = 0;
+      el.dataset.dragging = "";
+    };
+    const onMove = (e: PointerEvent) => {
+      if (st.drag) {
+        const r = Math.min(W, Hh) * 0.4;
+        const dx = e.clientX - st.px,
+          dy = e.clientY - st.py;
+        st.px = e.clientX;
+        st.py = e.clientY;
+        st.yaw -= dx / r;
+        st.tilt = Math.max(-0.9, Math.min(0.9, st.tilt + dy / r));
+        st.vy = (-dx / r) * 30;
+        st.vt = (dy / r) * 30;
+        st.idle = performance.now();
+        if (reduced) draw(performance.now());
+        setHover(null);
+        return;
+      }
+      const b = cv.getBoundingClientRect();
+      const x = e.clientX - b.left,
+        y = e.clientY - b.top;
+      const near = pins
+        .filter((p) => p.front)
+        .map((p) => ({ ...p, d: Math.hypot(p.x - x,
+<truncated 4127 bytes>
+  - [Attachment: image/png (C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793856846545_ade3b172.jpg)]
+
+<summary>
+1. **Task Overview**
+   - **User Request**: The user wants to integrate the 21st.dev `RouteGlobe` component into the blank space in the About page (`#about` in `index.html`), ensuring the globe size is prominent (not too small), fast, and well-blended with the deep navy atmosphere.
+   - **Component Given**: `route-globe.tsx` (an interactive canvas-based dotted-matrix orthographic globe with flight arcs from a hub, comets, arrival pulses, and drag-to-spin interactivity).
+   - **Architecture Requirement**: The codebase is an HTML/JS/CSS site with Tailwind and standard script bundles, plus React components in `components/ui`. We need both:
+     - The React component placed at `components/ui/route-globe.tsx`.
+     - The self-contained, standalone Canvas implementation mounted directly in `#about-interactive-stage` in `index.html` so it renders seamlessly on the site right now.
+   - **Strict Constraints**: **DO NOT ALTER OR MOVE ANYTHING IN THE HERO PAGE (`#hero`)**. Hero section must remain 100% character-for-character matched to `components/hero-locked-backup.html`.
+
+2. **Progress**
+   - **Clean Stage Prepared**: Removed the previous 3D whimsical world globe, courier, ribbons, HUD, and pinpoints from `#about`.
+   - **Hero Verification**: `node scratch/verify_hero_pure.js` returned `Sections match 100%: true`.
+   - **Background Smoke Active**: `<canvas id="about-smoke-canvas">` is in place in `index.html` with the 18-puff fluid harmonic curling smoke engine from `assets/js/main.js`.
+   - **RouteGlobe Component Analyzed**: `route-globe.tsx` uses:
+     - `toVec(lon, lat)`: Spherical to 3D Cartesian coordinates on unit sphere.
+     - `rotate([x, y, z], yaw, tilt)`: Matrix/Euler rotation for drag and spin.
+     - `slerp(a, b, t)`: Great circle arc spherical linear interpolation.
+     - `landDots(count)`: Landmass dot distribution (Fibonacci sphere filtered by land polygons or procedural land bitmask).
+     - `drawGlobe(ctx, dots, {cx, cy, r, yaw, tilt}, landColor, dotRadius, glowColor)`.
+     - Route arcs with comets and arrival pulses.
+
+3. **Key Findings**
+   - In `route-globe.tsx`, the component relies on `./route-globe-utils/globe` for `drawGlobe`, `landDots`, `rotate`, `slerp`, `toVec`.
+   - To make `RouteGlobe` work standalone without missing imports, we can construct the full self-contained `globe.ts` utility and also an integrated vanilla JS bundle `assets/js/about-route-globe.js` that directly attaches to `#about-interactive-stage` on the live site!
+   - Mathematical definitions for `globe.ts`:
+     - `toVec(lon, lat)`: $\phi = (90 - \text{lat}) \cdot \frac{\pi}{180}$, $\theta = (\text{lon} + 180) \cdot \frac{\pi}{180}$; $x = -\sin\phi \cos\theta, y = \cos\phi, z = \sin\phi \sin\theta$ (or standard geo projection: $x = \cos(\text{lat}) \cos(\text{lon}), y = \sin(\text{lat}), z = \cos(\text{lat}) \sin(\text{lon})$).
+     - `rotate(v, yaw, tilt)`: Rotate around Y axis by `yaw`, then X axis by `tilt`.
+     - `slerp(a, b, t)`: $\Omega = \arccos(\text{clamp}(a \cdot b, -1, 1))$; if $\sin\Omega < 10^{-5}$, lerp; else $\frac{\sin((1-t)\Omega)}{\sin\Omega} a + \frac{\sin(t\Omega)}{\sin\Omega} b$.
+     - `landDots(count)`: Uses a Fibonacci spiral distribution over the sphere, keeping points where continent tests return true (Natural Earth land polygons or simplified continent bounding polygons for Americas, Eurasia, Africa, Australia, Antarctica, Philippines).
+     - `drawGlobe(ctx, dots, {cx, cy, r, yaw, tilt}, landColor, dotRadius, glowColor)`: Projects dots $(x, y, z)$, filters $z > 0$, draws circles of radius `dotRadius * Math.max(0.2, (z + 0.2))`, with outer glow aura.
+     - Manila as hub: For MediQ Philippines, the hub can be Manila (`{ name: "Manila", lon: 120.98, lat: 14.60 }`) with routes to Global Healthcare Innovation centers (London, Zurich, Tokyo, Singapore, San Francisco, Seoul, Sydney, Munich)!
+
+4. **Errors & Fixes**
+   - *Error*: `route-globe-utils/globe` was missing from the user snippet.
+     - *Fix*: Provide the complete, self-contained `globe.ts` implementation inside `components/ui/route-globe-utils/globe.ts` and bundle it cleanly into `assets/js/about-route-globe.js` for the live HTML page.
+
+5. **Active Context**
+   - Active HTML: [`index.html`](file:///c:/Users/Pat/Website%20Version%202/index.html) (`#about-interactive-stage` at line 2137)
+   - Locked Hero Reference: [`components/hero-locked-backup.html`](file:///c:/Users/Pat/Website%20Version%202/components/hero-locked-backup.html)
+   - Background Smoke Canvas: `#about-smoke-canvas` initialized by `initAboutSmokeCanvas()` in `assets/js/main.js`.
+
+6. **Next Steps**
+   1. Create `components/ui/route-globe-utils/globe.ts` containing the full vector math, slerp, rotation, land dots generator, and `drawGlobe` canvas renderer.
+   2. Create `components/ui/route-globe.tsx` and `components/ui/global.css` (or inline styles) as requested.
+   3. Create `assets/js/about-route-globe.js` that mounts this exact Route Globe into `#about-interactive-stage` in `index.html`.
+      - Configure Manila as the central hub with routes to Global Innovation partners (UK, Switzerland, Germany, Japan, USA, Singapore).
+      - Style theme in MediQ palette: `ground: 'transparent'`, `land: '#3aa0db'`, `arc: '#72c5f8'`, `glow: 'rgba(58, 160, 219, 0.25)'`, `text: '#ffffff'`, `muted: '#94a3b8'`.
+      - Set prominent size: `w-full max-w-xl h-[520px] sm:h-[580px] lg:h-[640px]`.
+   4. Add `<script src="assets/js/about-route-globe.js?v=1.00" defer></script>` in `index.html`.
+   5. Run `node scratch/verify_hero_pure.js` to ensure `#hero` remains 100% matched to backup.
+   6. Report completion to user with verification.
+
+7. **Commitments & Constraints**
+   - STRICT: Never alter `#hero` in `index.html`.
+   - Ensure the globe size is prominent and not too small.
+   - Complete quickly and efficiently.
+</summary>
+
+You have the 943 following artifacts written to the artifacts directory:
+
+[ARTIFACT: media_1793069805712_7d059207]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793069805712_7d059207.png
+Last Edited: 2026-10-27T02:57:07Z
+
+[ARTIFACT: media_1793071263617_33c83221]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793071263617_33c83221.png
+Last Edited: 2026-10-27T03:22:58Z
+
+[ARTIFACT: media_1793071278752_b65b849c]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793071278752_b65b849c.png
+Last Edited: 2026-10-27T03:22:58Z
+
+[ARTIFACT: media_1793071617631_69e48cc1]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793071617631_69e48cc1.png
+Last Edited: 2026-10-27T03:27:09Z
+
+[ARTIFACT: media_1793071627188_a2f117e9]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793071627188_a2f117e9.png
+Last Edited: 2026-10-27T03:27:09Z
+
+[ARTIFACT: media_1793072325413_702542f1]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793072325413_702542f1.png
+Last Edited: 2026-10-27T03:42:29Z
+
+[ARTIFACT: media_1793072812461_dd39eaaf]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793072812461_dd39eaaf.png
+Last Edited: 2026-10-27T03:47:31Z
+
+[ARTIFACT: media_1793082784031_3b73d8f1]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793082784031_3b73d8f1.png
+Last Edited: 2026-10-27T06:33:33Z
+
+[ARTIFACT: media_1793083923017_61663ecd]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793083923017_61663ecd.png
+Last Edited: 2026-10-27T06:52:39Z
+
+[ARTIFACT: media_1793084566606_3284c69b]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793084566606_3284c69b.png
+Last Edited: 2026-10-27T07:02:51Z
+
+[ARTIFACT: media_1793084744779_3823d01a]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793084744779_3823d01a.png
+Last Edited: 2026-10-27T07:06:32Z
+
+[ARTIFACT: media_1793087727145_05ff51a8]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793087727145_05ff51a8.png
+Last Edited: 2026-10-27T07:56:01Z
+
+[ARTIFACT: media_1793088581209_5d143840]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793088581209_5d143840.png
+Last Edited: 2026-10-27T08:09:57Z
+
+[ARTIFACT: media_1793089299992_3a7dc419]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793089299992_3a7dc419.png
+Last Edited: 2026-10-27T08:21:52Z
+
+[ARTIFACT: media_1793090381267_d7d9f8f7]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793090381267_d7d9f8f7.png
+Last Edited: 2026-10-27T08:43:48Z
+
+[ARTIFACT: media_1793090888738_500e0a19]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793090888738_500e0a19.png
+Last Edited: 2026-10-27T08:49:12Z
+
+[ARTIFACT: media_1793090928651_7ac7b28b]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793090928651_7ac7b28b.png
+Last Edited: 2026-10-27T08:49:12Z
+
+[ARTIFACT: media_1793091292406_f2f684d1]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793091292406_f2f684d1.png
+Last Edited: 2026-10-27T08:54:58Z
+
+[ARTIFACT: media_1793146777941_eb13430d]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793146777941_eb13430d.png
+Last Edited: 2026-10-28T00:19:50Z
+
+[ARTIFACT: media_1793148393754_93837e17]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793148393754_93837e17.png
+Last Edited: 2026-10-28T00:46:41Z
+
+[ARTIFACT: media_1793148639597_00f8741a]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793148639597_00f8741a.png
+Last Edited: 2026-10-28T01:12:31Z
+
+[ARTIFACT: media_1793150557984_1f50076d]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793150557984_1f50076d.png
+Last Edited: 2026-10-28T01:23:56Z
+
+[ARTIFACT: media_1793150598922_f58ec016]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793150598922_f58ec016.png
+Last Edited: 2026-10-28T01:23:56Z
+
+[ARTIFACT: media_1793151519739_c3436402]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793151519739_c3436402.png
+Last Edited: 2026-10-28T01:57:17Z
+
+[ARTIFACT: media_1793153331118_f794073c]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793153331118_f794073c.png
+Last Edited: 2026-10-28T02:09:47Z
+
+[ARTIFACT: media_1793153386419_5b543af1]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793153386419_5b543af1.png
+Last Edited: 2026-10-28T02:09:47Z
+
+[ARTIFACT: media_1793155103475_29b5e52a]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793155103475_29b5e52a.png
+Last Edited: 2026-10-28T02:43:02Z
+
+[ARTIFACT: media_1793155114555_b287e011]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793155114555_b287e011.png
+Last Edited: 2026-10-28T02:43:02Z
+
+[ARTIFACT: media_1793155284798_29c5086b]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793155284798_29c5086b.png
+Last Edited: 2026-10-28T02:43:02Z
+
+[ARTIFACT: media_1793155613840_6d49a60c]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793155613840_6d49a60c.png
+Last Edited: 2026-10-28T02:47:28Z
+
+[ARTIFACT: media_1793156036503_8c504152]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793156036503_8c504152.png
+Last Edited: 2026-10-28T02:54:10Z
+
+[ARTIFACT: media_1793156609756_77403010]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793156609756_77403010.png
+Last Edited: 2026-10-28T03:10:13Z
+
+[ARTIFACT: media_1793157910111_7b0dba40]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793157910111_7b0dba40.png
+Last Edited: 2026-10-28T03:25:24Z
+
+[ARTIFACT: media_1793158264409_6cb10c46]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793158264409_6cb10c46.png
+Last Edited: 2026-10-28T03:34:02Z
+
+[ARTIFACT: media_1793158359043_03702961]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793158359043_03702961.png
+Last Edited: 2026-10-28T03:34:02Z
+
+[ARTIFACT: media_1793158388441_b9f07e1f]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793158388441_b9f07e1f.png
+Last Edited: 2026-10-28T03:34:02Z
+
+[ARTIFACT: media_1793158772432_544cdfb8]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793158772432_544cdfb8.png
+Last Edited: 2026-10-28T03:42:23Z
+
+[ARTIFACT: media_1793158784886_086dc704]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793158784886_086dc704.png
+Last Edited: 2026-10-28T03:42:23Z
+
+[ARTIFACT: media_1793158795456_fc277714]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793158795456_fc277714.png
+Last Edited: 2026-10-28T03:42:23Z
+
+[ARTIFACT: media_1793158812354_088169aa]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793158812354_088169aa.png
+Last Edited: 2026-10-28T03:42:23Z
+
+[ARTIFACT: media_1793158842314_a9f36cce]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793158842314_a9f36cce.png
+Last Edited: 2026-10-28T03:42:23Z
+
+[ARTIFACT: media_1793160324401_4f55ab32]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793160324401_4f55ab32.mp4
+Last Edited: 2026-10-28T04:05:49Z
+
+[ARTIFACT: media_1793232505712_3a2588d0]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793232505712_3a2588d0.mp4
+Last Edited: 2026-10-29T00:09:56Z
+
+[ARTIFACT: media_1793232896940_57b1c52f]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793232896940_57b1c52f.png
+Last Edited: 2026-10-29T00:18:12Z
+
+[ARTIFACT: media_1793232945022_94b9d2f1]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793232945022_94b9d2f1.png
+Last Edited: 2026-10-29T00:18:12Z
+
+[ARTIFACT: media_1793232955217_b9f4c018]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793232955217_b9f4c018.png
+Last Edited: 2026-10-29T00:18:12Z
+
+[ARTIFACT: media_1793233456651_ceb945ce]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793233456651_ceb945ce.mp4
+Last Edited: 2026-10-29T00:24:42Z
+
+[ARTIFACT: media_1793234165391_ae54545a]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793234165391_ae54545a.png
+Last Edited: 2026-10-29T00:37:07Z
+
+[ARTIFACT: media_1793234196698_605cfaa1]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793234196698_605cfaa1.png
+Last Edited: 2026-10-29T00:37:07Z
+
+[ARTIFACT: media_1793234519583_7a00c83b]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793234519583_7a00c83b.png
+Last Edited: 2026-10-29T00:44:11Z
+
+[ARTIFACT: media_1793234535621_51bee77d]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793234535621_51bee77d.png
+Last Edited: 2026-10-29T00:44:11Z
+
+[ARTIFACT: media_1793234580166_e6eb256b]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793234580166_e6eb256b.png
+Last Edited: 2026-10-29T00:44:11Z
+
+[ARTIFACT: media_1793234604672_e2bce517]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793234604672_e2bce517.png
+Last Edited: 2026-10-29T00:44:11Z
+
+[ARTIFACT: media_1793234614277_99af347a]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793234614277_99af347a.png
+Last Edited: 2026-10-29T00:44:11Z
+
+[ARTIFACT: media_1793235663057_cfa106e2]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793235663057_cfa106e2.png
+Last Edited: 2026-10-29T01:03:58Z
+
+[ARTIFACT: media_1793236997765_c4f3f528]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793236997765_c4f3f528.png
+Last Edited: 2026-10-29T01:25:12Z
+
+[ARTIFACT: media_1793237068989_a69b6f93]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793237068989_a69b6f93.png
+Last Edited: 2026-10-29T01:25:12Z
+
+[ARTIFACT: media_1793238272321_a466e946]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793238272321_a466e946.mp4
+Last Edited: 2026-10-29T01:44:34Z
+
+[ARTIFACT: media_1793238757449_7a46ae16]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793238757449_7a46ae16.png
+Last Edited: 2026-10-29T01:52:45Z
+
+[ARTIFACT: media_1793239175446_a878f803]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793239175446_a878f803.png
+Last Edited: 2026-10-29T02:03:31Z
+
+[ARTIFACT: media_1793239779463_24976366]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793239779463_24976366.png
+Last Edited: 2026-10-29T02:09:46Z
+
+[ARTIFACT: media_1793240093470_2ec96724]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793240093470_2ec96724.mp4
+Last Edited: 2026-10-29T02:17:22Z
+
+[ARTIFACT: media_1793240188801_65cfeadb]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793240188801_65cfeadb.png
+Last Edited: 2026-10-29T02:17:22Z
+
+[ARTIFACT: media_1793240241341_e6c5be7d]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793240241341_e6c5be7d.png
+Last Edited: 2026-10-29T02:17:22Z
+
+[ARTIFACT: media_1793240359018_f7546e79]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793240359018_f7546e79.png
+Last Edited: 2026-10-29T02:33:21Z
+
+[ARTIFACT: media_1793240370629_48dcc28c]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793240370629_48dcc28c.png
+Last Edited: 2026-10-29T02:33:21Z
+
+[ARTIFACT: media_1793241626606_90e10937]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793241626606_90e10937.mp4
+Last Edited: 2026-10-29T02:42:14Z
+
+[ARTIFACT: media_1793242329200_5f744b9d]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793242329200_5f744b9d.png
+Last Edited: 2026-10-29T03:01:57Z
+
+[ARTIFACT: media_1793242407527_063139df]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793242407527_063139df.mp4
+Last Edited: 2026-10-29T03:01:57Z
+
+[ARTIFACT: media_1793243961776_ed4e03a2]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793243961776_ed4e03a2.mp4
+Last Edited: 2026-10-29T03:19:55Z
+
+[ARTIFACT: media_1793245069761_2edffea1]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793245069761_2edffea1.mp4
+Last Edited: 2026-10-29T03:40:04Z
+
+[ARTIFACT: media_1793249394429_d3a025a1]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793249394429_d3a025a1.png
+Last Edited: 2026-10-29T04:50:19Z
+
+[ARTIFACT: media_1793249723596_08976f87]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793249723596_08976f87.png
+Last Edited: 2026-10-29T05:02:32Z
+
+[ARTIFACT: media_1793251005183_156300ff]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793251005183_156300ff.png
+Last Edited: 2026-10-29T05:17:25Z
+
+[ARTIFACT: media_1793252186082_66f2e01d]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793252186082_66f2e01d.png
+Last Edited: 2026-10-29T05:45:07Z
+
+[ARTIFACT: media_1793253062239_472ba98b]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793253062239_472ba98b.png
+Last Edited: 2026-10-29T05:52:08Z
+
+[ARTIFACT: media_1793254994417_f80840fd]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793254994417_f80840fd.png
+Last Edited: 2026-10-29T06:23:20Z
+
+[ARTIFACT: media_1793255513173_a0eb926e]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793255513173_a0eb926e.png
+Last Edited: 2026-10-29T06:37:07Z
+
+[ARTIFACT: media_1793255588924_0e568697]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793255588924_0e568697.png
+Last Edited: 2026-10-29T06:37:07Z
+
+[ARTIFACT: media_1793255710820_8bda1b99]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793255710820_8bda1b99.mp4
+Last Edited: 2026-10-29T06:37:07Z
+
+[ARTIFACT: media_1793255778825_2ac488ae]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793255778825_2ac488ae.png
+Last Edited: 2026-10-29T06:37:07Z
+
+[ARTIFACT: media_1793257005089_bd626051]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793257005089_bd626051.mp4
+Last Edited: 2026-10-29T06:57:35Z
+
+[ARTIFACT: media_1793258026180_1efafd80]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793258026180_1efafd80.mp4
+Last Edited: 2026-10-29T07:13:48Z
+
+[ARTIFACT: media_1793258596851_adedb631]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793258596851_adedb631.mp4
+Last Edited: 2026-10-29T07:23:39Z
+
+[ARTIFACT: media_1793259571433_b3f94f7e]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793259571433_b3f94f7e.png
+Last Edited: 2026-10-29T07:39:56Z
+
+[ARTIFACT: media_1793259990141_c4c727e3]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793259990141_c4c727e3.png
+Last Edited: 2026-10-29T08:04:45Z
+
+[ARTIFACT: media_1793261050963_bd240a6d]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793261050963_bd240a6d.mp4
+Last Edited: 2026-10-29T08:04:45Z
+
+[ARTIFACT: media_1793261897140_b426fa0c]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793261897140_b426fa0c.mp4
+Last Edited: 2026-10-29T08:19:20Z
+
+[ARTIFACT: media_1793262943876_d22b29d8]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793262943876_d22b29d8.mp4
+Last Edited: 2026-10-29T08:37:18Z
+
+[ARTIFACT: media_1793263549841_e952b348]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793263549841_e952b348.png
+Last Edited: 2026-10-29T09:09:08Z
+
+[ARTIFACT: media_1793264563764_40a2d366]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793264563764_40a2d366.png
+Last Edited: 2026-10-29T09:09:08Z
+
+[ARTIFACT: media_1793319078864_5f7e1f72]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793319078864_5f7e1f72.jpg
+Last Edited: 2026-10-30T00:11:45Z
+
+[ARTIFACT: media_1793320783235_c0a6ab91]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793320783235_c0a6ab91.png
+Last Edited: 2026-10-30T00:39:43Z
+
+[ARTIFACT: media_1793323495670_5a1d094b]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793323495670_5a1d094b.png
+Last Edited: 2026-10-30T01:27:00Z
+
+[ARTIFACT: media_1793323618806_a4d14e65]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793323618806_a4d14e65.png
+Last Edited: 2026-10-30T01:27:00Z
+
+[ARTIFACT: media_1793324315338_05e055f8]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793324315338_05e055f8.png
+Last Edited: 2026-10-30T01:39:29Z
+
+[ARTIFACT: media_1793325800431_a9d8d5ba]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793325800431_a9d8d5ba.jpg
+Last Edited: 2026-10-30T02:03:38Z
+
+[ARTIFACT: media_1793326355418_85e567f0]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793326355418_85e567f0.jpg
+Last Edited: 2026-10-30T02:13:02Z
+
+[ARTIFACT: media_1793326683423_4b3160ec]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793326683423_4b3160ec.png
+Last Edited: 2026-10-30T02:19:57Z
+
+[ARTIFACT: media_1793326702784_fbdafb20]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793326702784_fbdafb20.jpg
+Last Edited: 2026-10-30T02:19:57Z
+
+[ARTIFACT: media_1793326717087_63d0e3b6]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793326717087_63d0e3b6.jpg
+Last Edited: 2026-10-30T02:19:57Z
+
+[ARTIFACT: media_1793326749104_24d2461b]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793326749104_24d2461b.jpg
+Last Edited: 2026-10-30T02:19:57Z
+
+[ARTIFACT: media_1793326765958_39d0813c]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793326765958_39d0813c.jpg
+Last Edited: 2026-10-30T02:19:57Z
+
+[ARTIFACT: media_1793329424338_5de3e998]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793329424338_5de3e998.jpg
+Last Edited: 2026-10-30T03:03:48Z
+
+[ARTIFACT: media_1793334745672_0ce5b205]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793334745672_0ce5b205.png
+Last Edited: 2026-10-30T04:34:14Z
+
+[ARTIFACT: media_1793334810750_90634342]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793334810750_90634342.png
+Last Edited: 2026-10-30T04:34:14Z
+
+[ARTIFACT: media_1793340874413_83211b3c]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793340874413_83211b3c.png
+Last Edited: 2026-10-30T06:18:05Z
+
+[ARTIFACT: media_1793340932955_b02e2035]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793340932955_b02e2035.png
+Last Edited: 2026-10-30T06:18:05Z
+
+[ARTIFACT: media_1793341893301_6c6c03ea]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793341893301_6c6c03ea.mp4
+Last Edited: 2026-10-30T06:32:15Z
+
+[ARTIFACT: media_1793342493639_40069213]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793342493639_40069213.mp4
+Last Edited: 2026-10-30T06:42:12Z
+
+[ARTIFACT: media_1793346899214_ef6d2e3d]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793346899214_ef6d2e3d.mp4
+Last Edited: 2026-10-30T07:55:09Z
+
+[ARTIFACT: media_1793347035070_9e3428d3]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793347035070_9e3428d3.jpg
+Last Edited: 2026-10-30T08:02:51Z
+
+[ARTIFACT: media_1793347142996_7ca76f22]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793347142996_7ca76f22.jpg
+Last Edited: 2026-10-30T08:02:51Z
+
+[ARTIFACT: media_1793347299300_7612a150]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793347299300_7612a150.jpg
+Last Edited: 2026-10-30T08:02:51Z
+
+[ARTIFACT: media_1793349399471_75ba30dd]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793349399471_75ba30dd.jpg
+Last Edited: 2026-10-30T08:36:43Z
+
+[ARTIFACT: media_1793405830153_5377b116]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793405830153_5377b116.mp4
+Last Edited: 2026-10-31T00:17:35Z
+
+[ARTIFACT: media_1793406794688_ae82fa22]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793406794688_ae82fa22.mp4
+Last Edited: 2026-10-31T00:33:52Z
+
+[ARTIFACT: media_1793407285431_42d4660b]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793407285431_42d4660b.mp4
+Last Edited: 2026-10-31T00:41:35Z
+
+[ARTIFACT: media_1793407772442_a519bb75]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793407772442_a519bb75.mp4
+Last Edited: 2026-10-31T00:49:49Z
+
+[ARTIFACT: media_1793408398823_1a51457c]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793408398823_1a51457c.mp4
+Last Edited: 2026-10-31T01:00:08Z
+
+[ARTIFACT: media_1793409289231_456c39f8]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793409289231_456c39f8.mp4
+Last Edited: 2026-10-31T01:14:58Z
+
+[ARTIFACT: media_1793410273187_6d010450]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793410273187_6d010450.mp4
+Last Edited: 2026-10-31T01:31:26Z
+
+[ARTIFACT: media_1793410566012_e8de3fbe]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793410566012_e8de3fbe.png
+Last Edited: 2026-10-31T01:36:09Z
+
+[ARTIFACT: media_1793410763231_e67601c3]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793410763231_e67601c3.png
+Last Edited: 2026-10-31T01:40:07Z
+
+[ARTIFACT: media_1793411041212_22086296]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793411041212_22086296.png
+Last Edited: 2026-10-31T01:44:09Z
+
+[ARTIFACT: media_1793412424289_754de2a0]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793412424289_754de2a0.png
+Last Edited: 2026-10-31T02:09:45Z
+
+[ARTIFACT: media_1793412508860_44bffdf6]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793412508860_44bffdf6.png
+Last Edited: 2026-10-31T02:09:45Z
+
+[ARTIFACT: media_1793412576052_f59e7b7e]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793412576052_f59e7b7e.png
+Last Edited: 2026-10-31T02:09:45Z
+
+[ARTIFACT: media_1793412666090_a0e82400]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793412666090_a0e82400.jpg
+Last Edited: 2026-10-31T02:14:54Z
+
+[ARTIFACT: media_1793412749183_5ebc7782]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793412749183_5ebc7782.png
+Last Edited: 2026-10-31T02:14:54Z
+
+[ARTIFACT: media_1793413332402_e9107fe8]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793413332402_e9107fe8.png
+Last Edited: 2026-10-31T02:22:52Z
+
+[ARTIFACT: media_1793414087050_cf202a66]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793414087050_cf202a66.png
+Last Edited: 2026-10-31T02:34:50Z
+
+[ARTIFACT: media_1793414659007_5891ad04]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793414659007_5891ad04.jpg
+Last Edited: 2026-10-31T02:45:45Z
+
+[ARTIFACT: media_1793415447856_0a358310]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793415447856_0a358310.jpg
+Last Edited: 2026-10-31T03:06:09Z
+
+[ARTIFACT: media_1793416091799_885b8b84]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793416091799_885b8b84.jpg
+Last Edited: 2026-10-31T03:15:43Z
+
+[ARTIFACT: media_1793418415893_dd3deede]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793418415893_dd3deede.jpg
+Last Edited: 2026-10-31T03:47:30Z
+
+[ARTIFACT: media_1793418594226_8cb962b8]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793418594226_8cb962b8.jpg
+Last Edited: 2026-10-31T03:50:13Z
+
+[ARTIFACT: media_1793425695182_ecb91e8f]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793425695182_ecb91e8f.png
+Last Edited: 2026-10-31T05:48:24Z
+
+[ARTIFACT: media_1793425985588_cde6784e]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793425985588_cde6784e.jpg
+Last Edited: 2026-10-31T05:53:19Z
+
+[ARTIFACT: media_1793427487108_8dee8915]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793427487108_8dee8915.png
+Last Edited: 2026-10-31T06:18:17Z
+
+[ARTIFACT: media_1793434351134_03bf72f0]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793434351134_03bf72f0.jpg
+Last Edited: 2026-10-31T08:13:02Z
+
+[ARTIFACT: media_1793435281813_77915c55]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793435281813_77915c55.jpg
+Last Edited: 2026-10-31T08:28:07Z
+
+[ARTIFACT: media_1793663660349_d034a1e7]
+Path: file:///C:/Users/Pat/.gemini/antigravity/brain/44761d27-8779-4853-a6c0-110aa2113235/.user_uploaded/media_1793663660349_d034a1e7.jpg
+Last Edited: 2026-11-02T23:55:15Z
+
+[ARTIFACT: media_179366446035
+<truncated 66185 bytes>
+
+NOTE: The output was truncated because it was too long. Use a more targeted query or a smaller range to get the information you need.

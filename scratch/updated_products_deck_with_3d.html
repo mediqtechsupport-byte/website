@@ -1,0 +1,729 @@
+<section id="products" aria-labelledby="products-title" class="page-snap-section page-transition-section relative isolate w-full h-[100svh] min-h-[100svh] max-h-[100svh] overflow-hidden bg-[#07132b] scroll-mt-0">
+
+      <!-- Ambient Background Glows & Blueprint Dot Grid -->
+      <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-[#07132b]">
+        <div class="absolute -left-20 top-1/4 h-[38rem] w-[38rem] rounded-full bg-sky/15 blur-[160px]"></div>
+        <div class="absolute right-0 top-1/3 h-[42rem] w-[42rem] rounded-full bg-[#11326c]/45 blur-[180px]"></div>
+        <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(#3aa0db_1px,transparent_1px)] [background-size:24px_24px] opacity-15"></div>
+      </div>
+
+      <!-- Floating Products Deck Navigation (Prev / Next & Counter) -->
+      <div id="products-deck-nav" class="absolute top-20 right-6 sm:top-24 sm:right-10 z-40 flex items-center gap-3">
+        <!-- Deck Counter -->
+        <span id="products-deck-counter" class="text-xs font-mono font-bold text-sky tracking-wider px-3 py-1 rounded-full bg-sky/10 border border-sky/20 backdrop-blur-md">01 / 05</span>
+        
+        <div class="flex items-center gap-1.5">
+          <button type="button" id="products-deck-prev" class="size-9 rounded-full bg-[#0a1d40]/80 hover:bg-sky text-white hover:text-[#0a1d40] border border-sky/30 hover:border-sky backdrop-blur-md flex items-center justify-center transition-all shadow-[0_4px_16px_rgba(0,0,0,0.4)] active:scale-95 disabled:opacity-25 disabled:pointer-events-none cursor-pointer" aria-label="Previous Product Slide">
+            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+
+          <button type="button" id="products-deck-next" class="size-9 rounded-full bg-[#0a1d40]/80 hover:bg-sky text-white hover:text-[#0a1d40] border border-sky/30 hover:border-sky backdrop-blur-md flex items-center justify-center transition-all shadow-[0_4px_16px_rgba(0,0,0,0.4)] active:scale-95 disabled:opacity-25 disabled:pointer-events-none cursor-pointer" aria-label="Next Product Slide">
+            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Slides Container (100% Viewport, Seamless with Fixed Navbar) -->
+      <div class="relative w-full h-full overflow-hidden">
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 0: PRODUCTS LANDING / ECOSYSTEM OVERVIEW (Matching User Menu)       -->
+        <!-- ========================================================================= -->
+        <div class="product-slide absolute inset-0 w-full h-full flex flex-col justify-center items-center px-4 sm:px-8 lg:px-12 py-16 transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10 overflow-y-auto" data-product-index="0">
+          <div class="relative z-10 w-full max-w-7xl mx-auto my-auto flex flex-col items-center">
+            
+            <!-- Section Header -->
+            <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
+              <p class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-sky/10 border border-sky/30 text-sky text-[11px] font-bold tracking-widest uppercase mb-3 shadow-[0_0_20px_rgba(58,160,219,0.2)]">
+                <span>OPHTHALMIC INNOVATIONS &bull; PRODUCT PORTFOLIO</span>
+                <span class="inline-block size-1.5 rounded-full bg-sky animate-ping"></span>
+              </p>
+              <h2 id="products-title" class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-3">
+                Pioneering Optical &amp; Surgical <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky via-[#72c5f8] to-white">Solutions</span>
+              </h2>
+              <p class="text-xs sm:text-sm lg:text-base text-cream/75 leading-relaxed max-w-2xl mx-auto">
+                Connecting Rayner's world-leading intraocular lenses, bio-engineered ophthalmic viscoelastics, and single-use preloaded injector systems across the Philippine archipelago.
+              </p>
+            </div>
+
+            <!-- 4 Interactive Category Cards (Directly matching user menu: Intraocular Lenses, Medical Supplies, Devices & Equipment, Product Catalogs) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 w-full">
+              
+              <!-- CARD 1: INTRAOCULAR LENSES -->
+              <div onclick="if(window.goToProductSlide){window.goToProductSlide(1);}" class="group relative rounded-2xl bg-[#0a1d40]/80 hover:bg-[#0c2452] border border-sky/25 hover:border-sky/60 p-6 shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 cursor-pointer flex flex-col justify-between">
+                <div>
+                  <div class="size-12 rounded-xl bg-sky/15 border border-sky/30 text-sky flex items-center justify-center mb-5 group-hover:scale-110 group-hover:bg-sky group-hover:text-[#0a1d40] transition-all">
+                    <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </div>
+                  <span class="text-[10px] font-mono font-bold tracking-widest text-sky uppercase">01 &bull; SURGICAL OPTICS</span>
+                  <h3 class="text-lg font-bold text-white mt-1 mb-2 group-hover:text-sky transition-colors">Intraocular Lenses</h3>
+                  <p class="text-xs text-cream/70 leading-relaxed">
+                    RayOne&reg; Galaxy spiral AI, EMV extended visual range, trifocal, and monofocal precision IOLs.
+                  </p>
+                </div>
+                <div class="mt-6 flex items-center gap-1 text-xs font-semibold text-sky group-hover:translate-x-1 transition-transform">
+                  <span>Explore Lenses</span>
+                  <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                </div>
+              </div>
+
+              <!-- CARD 2: MEDICAL SUPPLIES -->
+              <div onclick="if(window.goToProductSlide){window.goToProductSlide(2);}" class="group relative rounded-2xl bg-[#0a1d40]/80 hover:bg-[#0c2452] border border-sky/25 hover:border-sky/60 p-6 shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 cursor-pointer flex flex-col justify-between">
+                <div>
+                  <div class="size-12 rounded-xl bg-sky/15 border border-sky/30 text-sky flex items-center justify-center mb-5 group-hover:scale-110 group-hover:bg-sky group-hover:text-[#0a1d40] transition-all">
+                    <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="6" rx="2"/><path d="M10 6V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2"/><line x1="12" x2="12" y1="11" y2="17"/><line x1="9" x2="15" y1="14" y2="14"/></svg>
+                  </div>
+                  <span class="text-[10px] font-mono font-bold tracking-widest text-sky uppercase">02 &bull; VISCOSURGICAL</span>
+                  <h3 class="text-lg font-bold text-white mt-1 mb-2 group-hover:text-sky transition-colors">Medical Supplies</h3>
+                  <p class="text-xs text-cream/70 leading-relaxed">
+                    Ophteis&reg; bio-engineered viscoelastics with Sorbitol, microsurgical blades, and sterile surgery kits.
+                  </p>
+                </div>
+                <div class="mt-6 flex items-center gap-1 text-xs font-semibold text-sky group-hover:translate-x-1 transition-transform">
+                  <span>Explore Supplies</span>
+                  <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                </div>
+              </div>
+
+              <!-- CARD 3: DEVICES & EQUIPMENT -->
+              <div onclick="if(window.goToProductSlide){window.goToProductSlide(3);}" class="group relative rounded-2xl bg-[#0a1d40]/80 hover:bg-[#0c2452] border border-sky/25 hover:border-sky/60 p-6 shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 cursor-pointer flex flex-col justify-between">
+                <div>
+                  <div class="size-12 rounded-xl bg-sky/15 border border-sky/30 text-sky flex items-center justify-center mb-5 group-hover:scale-110 group-hover:bg-sky group-hover:text-[#0a1d40] transition-all">
+                    <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M12 17v4"/><path d="M8 21h8"/><path d="m6 10 2.5-3 3 6 2-3 2.5 2 2-2"/></svg>
+                  </div>
+                  <span class="text-[10px] font-mono font-bold tracking-widest text-sky uppercase">03 &bull; INSTRUMENTATION</span>
+                  <h3 class="text-lg font-bold text-white mt-1 mb-2 group-hover:text-sky transition-colors">Devices &amp; Equipment</h3>
+                  <p class="text-xs text-cream/70 leading-relaxed">
+                    Lock &amp; Roll&trade; preloaded 1.65mm micro-incision injector delivery systems and precision tools.
+                  </p>
+                </div>
+                <div class="mt-6 flex items-center gap-1 text-xs font-semibold text-sky group-hover:translate-x-1 transition-transform">
+                  <span>Explore Devices</span>
+                  <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                </div>
+              </div>
+
+              <!-- CARD 4: PRODUCT CATALOGS -->
+              <div onclick="if(window.goToProductSlide){window.goToProductSlide(4);}" class="group relative rounded-2xl bg-[#0a1d40]/80 hover:bg-[#0c2452] border border-sky/25 hover:border-sky/60 p-6 shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 cursor-pointer flex flex-col justify-between">
+                <div>
+                  <div class="size-12 rounded-xl bg-sky/15 border border-sky/30 text-sky flex items-center justify-center mb-5 group-hover:scale-110 group-hover:bg-sky group-hover:text-[#0a1d40] transition-all">
+                    <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+                  </div>
+                  <span class="text-[10px] font-mono font-bold tracking-widest text-sky uppercase">04 &bull; DOCUMENTATION</span>
+                  <h3 class="text-lg font-bold text-white mt-1 mb-2 group-hover:text-sky transition-colors">Product Catalogs</h3>
+                  <p class="text-xs text-cream/70 leading-relaxed">
+                    Comprehensive digital catalogs, clinical datasheets, IOL power charts, and FDA certifications.
+                  </p>
+                </div>
+                <div class="mt-6 flex items-center gap-1 text-xs font-semibold text-sky group-hover:translate-x-1 transition-transform">
+                  <span>View Catalogs</span>
+                  <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Bottom Navigation Prompt -->
+            <div class="mt-8 text-center">
+              <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(1);}" class="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-sky text-[#0a1d40] text-sm font-bold tracking-wide shadow-[0_0_25px_rgba(58,160,219,0.35)] hover:bg-[#72c5f8] hover:scale-105 active:scale-95 transition-all cursor-pointer">
+                <span>Browse Full Product Deck</span>
+                <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+                <!-- ========================================================================= -->
+        <!-- SLIDE 1: INTRAOCULAR LENSES (3D SCROLL-DRIVEN PACKSHOT SHOWCASE)          -->
+        <!-- ========================================================================= -->
+        <div id="product-slide-iols" class="product-slide absolute inset-0 w-full h-full flex flex-col bg-transparent text-cream overflow-hidden transition-all duration-500 ease-out opacity-0 pointer-events-none translate-x-12 z-0" data-product-index="1">
+          
+          <!-- Inner Scrollable Container driving the 3 Stages (Height 320vh) -->
+          <div id="iol-scroll-container" class="relative w-full h-full overflow-y-auto scroll-smooth">
+            <div class="h-[320vh] w-full relative">
+              
+              <!-- Pinned 100vh Sticky Viewport -->
+              <div class="sticky top-0 h-screen w-full flex flex-col justify-between px-4 sm:px-8 lg:px-14 py-6 sm:py-8 overflow-hidden">
+                
+                <!-- Top Navigation Bar -->
+                <div class="relative z-30 flex items-center justify-between w-full max-w-7xl mx-auto pt-8 sm:pt-12">
+                  <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(0);}" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-sky hover:text-white transition-all cursor-pointer">
+                    <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+                    <span>Back to Overview</span>
+                  </button>
+
+                  <div class="hidden sm:flex items-center gap-2 px-3.5 py-1 rounded-full bg-sky/10 border border-sky/25 text-[11px] font-mono font-bold tracking-wider text-sky uppercase shadow-[0_0_15px_rgba(58,160,219,0.2)]">
+                    <span class="size-1.5 rounded-full bg-sky animate-ping"></span>
+                    <span>Scroll down inside to explore 3 IOL Innovations</span>
+                  </div>
+
+                  <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(2);}" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-sky/20 hover:bg-sky text-sky hover:text-[#0a1d40] text-xs font-bold transition-all cursor-pointer">
+                    <span>Next: Medical Supplies</span>
+                    <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                  </button>
+                </div>
+
+                <!-- Central 3D Stage Choreography (The 3 Stages) -->
+                <div class="relative z-20 w-full max-w-7xl mx-auto flex-1 flex items-center justify-center my-auto min-h-[460px]">
+                  
+                  <!-- STAGE 0: RayOne EMV (Packshot Left, Content Right) -->
+                  <div id="iol-stage-0" class="iol-stage-container w-full grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-center opacity-100 pointer-events-auto">
+                    <!-- Left: 3D Packshot Rig -->
+                    <div class="flex items-center justify-center order-1 lg:order-1">
+                      <div class="iol-3d-scene" onpointermove="handleIolTilt(event, this)" onpointerleave="resetIolTilt(this)">
+                        <div class="iol-halo"></div>
+                        <div class="iol-disc-platform"></div>
+                        <div class="iol-tilt-rig">
+                          <img src="assets/img/packshots/emv_stage.png" alt="RayOne EMV Packshot" class="iol-float-card" loading="eager">
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Right: Content -->
+                    <div class="flex flex-col justify-center order-2 lg:order-2 max-w-xl">
+                      <p class="inline-flex items-center gap-2 text-sky text-[11px] font-mono font-bold tracking-widest uppercase mb-2">
+                        <span>01 &bull; EXTENDED DEPTH OF FOCUS</span>
+                        <span class="px-2 py-0.5 rounded-md bg-sky/15 text-[10px] text-white">BARRETT FORMULA</span>
+                      </p>
+                      <h3 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-2">
+                        RayOne&reg; <span class="text-sky">EMV</span>
+                      </h3>
+                      <h4 class="text-xs sm:text-sm font-semibold text-pearl/90 mb-3">
+                        Co-developed with Prof. Graham Barrett &bull; Extended Visual Depth
+                      </h4>
+                      <p class="text-xs sm:text-sm text-cream/75 leading-relaxed mb-5">
+                        The first non-diffractive IOL utilizing controlled positive spherical aberration to provide comfortable intermediate and functional near vision without dysphotopsia.
+                      </p>
+
+                      <!-- 3 Accordion Rows -->
+                      <div class="space-y-2 w-full">
+                        <div class="iol-accordion-row" data-open="true">
+                          <button type="button" class="iol-acc-btn" onclick="toggleIolAcc(this)">
+                            <span class="iol-acc-led"></span>
+                            <span class="iol-acc-title">Natural Intermediate Focus (+1.50 D)</span>
+                            <span class="iol-acc-plus"><i></i><i></i></span>
+                          </button>
+                          <div class="iol-acc-panel">
+                            <div class="iol-acc-clip">
+                              <p class="iol-acc-desc">Extends depth of focus seamlessly into desktop computer and dashboard distance while preserving photopic contrast and eliminating halos.</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="iol-accordion-row" data-open="false">
+                          <button type="button" class="iol-acc-btn" onclick="toggleIolAcc(this)">
+                            <span class="iol-acc-led"></span>
+                            <span class="iol-acc-title">Lock &amp; Roll&trade; 1.65mm Delivery</span>
+                            <span class="iol-acc-plus"><i></i><i></i></span>
+                          </button>
+                          <div class="iol-acc-panel">
+                            <div class="iol-acc-clip">
+                              <p class="iol-acc-desc">True preloaded system pre-assembled under ISO Class 5 cleanroom conditions. Delivers the optic smoothly through sub-2.0mm incisions without manual lens touching.</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="iol-accordion-row" data-open="false">
+                          <button type="button" class="iol-acc-btn" onclick="toggleIolAcc(this)">
+                            <span class="iol-acc-led"></span>
+                            <span class="iol-acc-title">Glisten-Free Rayacryl&reg; Copolymer</span>
+                            <span class="iol-acc-plus"><i></i><i></i></span>
+                          </button>
+                          <div class="iol-acc-panel">
+                            <div class="iol-acc-clip">
+                              <p class="iol-acc-desc">Engineered from balanced 26% water-content hydrophilic/hydrophobic material with continuous 360&deg; Amon-Apple square edge to eradicate glistening and prevent PCO.</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- STAGE 1: RayOne Trifocal & Toric (Content Left, Packshot Right - Alternating!) -->
+                  <div id="iol-stage-1" class="iol-stage-container w-full grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-center opacity-0 pointer-events-none">
+                    <!-- Left: Content (Alternating!) -->
+                    <div class="flex flex-col justify-center order-2 lg:order-1 max-w-xl">
+                      <p class="inline-flex items-center gap-2 text-sky text-[11px] font-mono font-bold tracking-widest uppercase mb-2">
+                        <span>02 &bull; PREMIUM DIFFRACTIVE</span>
+                        <span class="px-2 py-0.5 rounded-md bg-sky/15 text-[10px] text-white">PATENTED OPTICS</span>
+                      </p>
+                      <h3 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-2">
+                        RayOne&reg; <span class="text-sky">Trifocal</span>
+                      </h3>
+                      <h4 class="text-xs sm:text-sm font-semibold text-pearl/90 mb-3">
+                        Halved diffractive rings for maximum light transmission
+                      </h4>
+                      <p class="text-xs sm:text-sm text-cream/75 leading-relaxed mb-5">
+                        Patented 16-ring diffractive architecture halves the ring count of conventional trifocals, directing 89% of light onto the retina with lowest 11% light scatter.
+                      </p>
+
+                      <!-- 3 Accordion Rows -->
+                      <div class="space-y-2 w-full">
+                        <div class="iol-accordion-row" data-open="true">
+                          <button type="button" class="iol-acc-btn" onclick="toggleIolAcc(this)">
+                            <span class="iol-acc-led"></span>
+                            <span class="iol-acc-title">Lowest Light Transmission Loss (11%)</span>
+                            <span class="iol-acc-plus"><i></i><i></i></span>
+                          </button>
+                          <div class="iol-acc-panel">
+                            <div class="iol-acc-clip">
+                              <p class="iol-acc-desc">Reduces light loss to less than half of older trifocals, providing exceptional pupil-independent brightness for night driving and dim light reading.</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="iol-accordion-row" data-open="false">
+                          <button type="button" class="iol-acc-btn" onclick="toggleIolAcc(this)">
+                            <span class="iol-acc-led"></span>
+                            <span class="iol-acc-title">Continuous Near &amp; Intermediate Vision</span>
+                            <span class="iol-acc-plus"><i></i><i></i></span>
+                          </button>
+                          <div class="iol-acc-panel">
+                            <div class="iol-acc-clip">
+                              <p class="iol-acc-desc">+1.75 D intermediate add for computer screens and +3.50 D near add for comfortable reading of smartphones and fine print with total spectacle independence.</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="iol-accordion-row" data-open="false">
+                          <button type="button" class="iol-acc-btn" onclick="toggleIolAcc(this)">
+                            <span class="iol-acc-led"></span>
+                            <span class="iol-acc-title">Anti-Vaulting Closed-Loop Haptics</span>
+                            <span class="iol-acc-plus"><i></i><i></i></span>
+                          </button>
+                          <div class="iol-acc-panel">
+                            <div class="iol-acc-clip">
+                              <p class="iol-acc-desc">Closed-loop corner-lock haptics guarantee zero rotational movement and exceptional axial planar stability inside the capsular bag.</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Right: 3D Packshot Rig -->
+                    <div class="flex items-center justify-center order-1 lg:order-2">
+                      <div class="iol-3d-scene" onpointermove="handleIolTilt(event, this)" onpointerleave="resetIolTilt(this)">
+                        <div class="iol-halo"></div>
+                        <div class="iol-disc-platform"></div>
+                        <div class="iol-tilt-rig">
+                          <img src="assets/img/packshots/trifocal_stage.png" alt="RayOne Trifocal Packshot" class="iol-float-card" loading="lazy">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- STAGE 2: RayOne Aspheric & Sulcoflex (Packshot Left, Content Right) -->
+                  <div id="iol-stage-2" class="iol-stage-container w-full grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-center opacity-0 pointer-events-none">
+                    <!-- Left: 3D Packshot Rig -->
+                    <div class="flex items-center justify-center order-1 lg:order-1">
+                      <div class="iol-3d-scene" onpointermove="handleIolTilt(event, this)" onpointerleave="resetIolTilt(this)">
+                        <div class="iol-halo"></div>
+                        <div class="iol-disc-platform"></div>
+                        <div class="iol-tilt-rig">
+                          <img src="assets/img/packshots/aspheric_stage.png" alt="RayOne Aspheric Packshot" class="iol-float-card" loading="lazy">
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Right: Content -->
+                    <div class="flex flex-col justify-center order-2 lg:order-2 max-w-xl">
+                      <p class="inline-flex items-center gap-2 text-sky text-[11px] font-mono font-bold tracking-widest uppercase mb-2">
+                        <span>03 &bull; MONOFOCAL &amp; SULCUS CORRECTION</span>
+                        <span class="px-2 py-0.5 rounded-md bg-sky/15 text-[10px] text-white">GOLD STANDARD</span>
+                      </p>
+                      <h3 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-2">
+                        RayOne&reg; <span class="text-sky">Aspheric</span>
+                      </h3>
+                      <h4 class="text-xs sm:text-sm font-semibold text-pearl/90 mb-3">
+                        Aberration-neutral precision &amp; Sulcoflex pseudophakic optics
+                      </h4>
+                      <p class="text-xs sm:text-sm text-cream/75 leading-relaxed mb-5">
+                        Aberration-neutral monofocal IOL designed for pristine contrast sensitivity in diverse corneas, paired with Sulcoflex pseudophakic supplementary lenses for reversible post-operative refractive adjustments.
+                      </p>
+
+                      <!-- 3 Accordion Rows -->
+                      <div class="space-y-2 w-full">
+                        <div class="iol-accordion-row" data-open="true">
+                          <button type="button" class="iol-acc-btn" onclick="toggleIolAcc(this)">
+                            <span class="iol-acc-led"></span>
+                            <span class="iol-acc-title">Aberration-Neutral Aspheric Technology</span>
+                            <span class="iol-acc-plus"><i></i><i></i></span>
+                          </button>
+                          <div class="iol-acc-panel">
+                            <div class="iol-acc-clip">
+                              <p class="iol-acc-desc">Zero induced spherical aberration ensures sharp, predictable vision and heightened depth of field regardless of individual corneal curvature or previous refractive surgery.</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="iol-accordion-row" data-open="false">
+                          <button type="button" class="iol-acc-btn" onclick="toggleIolAcc(this)">
+                            <span class="iol-acc-led"></span>
+                            <span class="iol-acc-title">Sulcoflex Supplementary Sulcus Platform</span>
+                            <span class="iol-acc-plus"><i></i><i></i></span>
+                          </button>
+                          <div class="iol-acc-panel">
+                            <div class="iol-acc-clip">
+                              <p class="iol-acc-desc">Reversible secondary IOL engineered for ciliary sulcus placement to correct residual cylinder, spherical surprise, or presbyopic enhancement in pseudophakic patients.</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="iol-accordion-row" data-open="false">
+                          <button type="button" class="iol-acc-btn" onclick="toggleIolAcc(this)">
+                            <span class="iol-acc-led"></span>
+                            <span class="iol-acc-title">Micro-Incision Wound Sealing</span>
+                            <span class="iol-acc-plus"><i></i><i></i></span>
+                          </button>
+                          <div class="iol-acc-panel">
+                            <div class="iol-acc-clip">
+                              <p class="iol-acc-desc">Ultra-smooth 1.65mm delivery eliminates incision stress and supports rapid self-sealing clear corneal wounds for speedy patient recovery.</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Bottom Progress Rail (Matching Reference) -->
+                <div class="relative z-30 w-full max-w-7xl mx-auto pb-2">
+                  <div class="iol-progress-rail">
+                    <button type="button" class="iol-rail-tab is-active" onclick="jumpIolStage(0)">
+                      <div class="iol-rail-track"><div id="iol-fill-0" class="iol-rail-fill" style="transform: scaleX(1);"></div></div>
+                      <span class="iol-rail-label">01. RayOne&reg; EMV</span>
+                    </button>
+                    <button type="button" class="iol-rail-tab" onclick="jumpIolStage(1)">
+                      <div class="iol-rail-track"><div id="iol-fill-1" class="iol-rail-fill"></div></div>
+                      <span class="iol-rail-label">02. RayOne&reg; Trifocal</span>
+                    </button>
+                    <button type="button" class="iol-rail-tab" onclick="jumpIolStage(2)">
+                      <div class="iol-rail-track"><div id="iol-fill-2" class="iol-rail-fill"></div></div>
+                      <span class="iol-rail-label">03. RayOne&reg; Aspheric</span>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+<!-- ========================================================================= -->
+        <!-- SLIDE 2: MEDICAL SUPPLIES (Ophteis Viscosurgical OVDs & Surgical Consumables)-->
+        <!-- ========================================================================= -->
+        <div class="product-slide absolute inset-0 w-full h-full flex flex-col justify-center items-center px-4 sm:px-8 lg:px-12 py-16 transition-all duration-500 ease-out opacity-0 pointer-events-none translate-x-12 z-0 overflow-y-auto" data-product-index="2">
+          <div class="relative z-10 w-full max-w-7xl mx-auto my-auto">
+            
+            <!-- Category Header with Back Link -->
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+              <div>
+                <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(0);}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-sky hover:text-white mb-2 transition-colors cursor-pointer">
+                  <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+                  <span>Back to Product Overview</span>
+                </button>
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
+                  Medical Supplies &bull; <span class="text-sky">Ophteis&reg; OVDs</span>
+                </h3>
+                <p class="text-xs sm:text-sm text-cream/70 mt-1 max-w-xl">
+                  Bio-engineered sodium hyaluronate viscoelastics formulated for maximum endothelial cell protection and anterior chamber stability.
+                </p>
+              </div>
+
+              <!-- Pill Tags -->
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1 rounded-full bg-sky/10 border border-sky/30 text-[10px] font-mono font-bold text-sky uppercase">High Viscosity</span>
+                <span class="px-3 py-1 rounded-full bg-sky/10 border border-sky/30 text-[10px] font-mono font-bold text-sky uppercase">Room Temp Storage</span>
+                <span class="px-3 py-1 rounded-full bg-sky/10 border border-sky/30 text-[10px] font-mono font-bold text-sky uppercase">Sorbitol Infused</span>
+              </div>
+            </div>
+
+            <!-- 3 Supplies Showcase Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+              
+              <!-- SUPPLY 1: Ophteis FR Pro -->
+              <div class="rounded-2xl bg-[#0a1d40]/90 border border-sky/30 p-5 shadow-2xl backdrop-blur-xl flex flex-col justify-between">
+                <div>
+                  <div class="size-12 rounded-xl bg-sky/15 border border-sky/30 text-sky flex items-center justify-center mb-4">
+                    <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                  </div>
+                  <h4 class="text-lg font-bold text-white">Ophteis&reg; FR Pro</h4>
+                  <p class="text-xs text-sky font-mono font-semibold mb-2">Free Radical Scavenger OVD</p>
+                  <p class="text-xs text-cream/75 leading-relaxed">
+                    Infused with natural Sorbitol antioxidant to neutralize free radicals generated by phacoemulsification ultrasound energy, reducing endothelial cell loss by up to 28%.
+                  </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-cream/60">
+                  <span>Composition: <strong class="text-white">NaHA + Sorbitol</strong></span>
+                  <span>Protection: <strong class="text-white">Endothelial Max</strong></span>
+                </div>
+              </div>
+
+              <!-- SUPPLY 2: Ophteis Max -->
+              <div class="rounded-2xl bg-[#0a1d40]/90 border border-sky/30 p-5 shadow-2xl backdrop-blur-xl flex flex-col justify-between">
+                <div>
+                  <div class="size-12 rounded-xl bg-sky/15 border border-sky/30 text-sky flex items-center justify-center mb-4">
+                    <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24M14.83 9.17l4.24-4.24M14.83 14.83l4.24 4.24M9.17 14.83l-4.24 4.24"/></svg>
+                  </div>
+                  <h4 class="text-lg font-bold text-white">Ophteis&reg; Max &amp; Bio</h4>
+                  <p class="text-xs text-sky font-mono font-semibold mb-2">Visco-Adaptive Chamber Maintainer</p>
+                  <p class="text-xs text-cream/75 leading-relaxed">
+                    Combines high zero-shear viscosity for space creation with high shear-rate fluidity during aspiration. Ensures deep stable anterior chambers during capsulorhexis.
+                  </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-cream/60">
+                  <span>Zero-Shear Viscosity: <strong class="text-white">500,000 mPa.s</strong></span>
+                  <span>Aspiration: <strong class="text-white">Rapid &amp; Clean</strong></span>
+                </div>
+              </div>
+
+              <!-- SUPPLY 3: Surgical Packs & Consumables -->
+              <div class="rounded-2xl bg-[#0a1d40]/90 border border-sky/30 p-5 shadow-2xl backdrop-blur-xl flex flex-col justify-between">
+                <div>
+                  <div class="size-12 rounded-xl bg-sky/15 border border-sky/30 text-sky flex items-center justify-center mb-4">
+                    <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m14 12-8.5 8.5a2.12 2.12 0 1 1-3-3L11 9"/><path d="M15 13 9 7l4-4 6 6h3l3 3"/><line x1="16" x2="20" y1="8" y2="12"/></svg>
+                  </div>
+                  <h4 class="text-lg font-bold text-white">Microsurgical Consumables</h4>
+                  <p class="text-xs text-sky font-mono font-semibold mb-2">Precision Blades &amp; Sterile Cannulas</p>
+                  <p class="text-xs text-cream/75 leading-relaxed">
+                    Complete range of single-use ophthalmic surgical blades (clear corneal, side-port, slit blades), hydrodissection cannulas, and customized sterile procedure packs.
+                  </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-cream/60">
+                  <span>Sterility: <strong class="text-white">Medical Grade</strong></span>
+                  <span>Compliance: <strong class="text-white">PH FDA Registered</strong></span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Footer Quick Nav -->
+            <div class="mt-6 flex items-center justify-between">
+              <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(1);}" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-cream/80 hover:text-white transition-all cursor-pointer">
+                &larr; Intraocular Lenses
+              </button>
+              <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(3);}" class="px-5 py-2.5 rounded-xl bg-sky text-[#0a1d40] text-xs font-bold hover:bg-[#72c5f8] transition-all cursor-pointer flex items-center gap-1.5">
+                <span>Next: Devices &amp; Equipment</span>
+                <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 3: DEVICES & EQUIPMENT (Preloaded Injectors & Micro-Surgical Tools)  -->
+        <!-- ========================================================================= -->
+        <div class="product-slide absolute inset-0 w-full h-full flex flex-col justify-center items-center px-4 sm:px-8 lg:px-12 py-16 transition-all duration-500 ease-out opacity-0 pointer-events-none translate-x-12 z-0 overflow-y-auto" data-product-index="3">
+          <div class="relative z-10 w-full max-w-7xl mx-auto my-auto">
+            
+            <!-- Category Header with Back Link -->
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+              <div>
+                <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(0);}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-sky hover:text-white mb-2 transition-colors cursor-pointer">
+                  <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+                  <span>Back to Product Overview</span>
+                </button>
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
+                  Devices &amp; Equipment &bull; <span class="text-sky">Lock &amp; Roll&trade;</span>
+                </h3>
+                <p class="text-xs sm:text-sm text-cream/70 mt-1 max-w-xl">
+                  World's smallest fully preloaded 1.65mm micro-incision IOL injector system engineered for reproducible single-handed delivery.
+                </p>
+              </div>
+
+              <!-- Pill Tags -->
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1 rounded-full bg-sky/10 border border-sky/30 text-[10px] font-mono font-bold text-sky uppercase">1.65mm Nozzle</span>
+                <span class="px-3 py-1 rounded-full bg-sky/10 border border-sky/30 text-[10px] font-mono font-bold text-sky uppercase">True Preloaded</span>
+                <span class="px-3 py-1 rounded-full bg-sky/10 border border-sky/30 text-[10px] font-mono font-bold text-sky uppercase">Zero Manual Touch</span>
+              </div>
+            </div>
+
+            <!-- 3 Devices Showcase Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+              
+              <!-- DEVICE 1: Lock & Roll 2-Step -->
+              <div class="rounded-2xl bg-[#0a1d40]/90 border border-sky/30 p-5 shadow-2xl backdrop-blur-xl flex flex-col justify-between">
+                <div>
+                  <div class="size-12 rounded-xl bg-sky/15 border border-sky/30 text-sky flex items-center justify-center mb-4">
+                    <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  </div>
+                  <h4 class="text-lg font-bold text-white">Patented Lock &amp; Roll&trade;</h4>
+                  <p class="text-xs text-sky font-mono font-semibold mb-2">2-Step Preloaded Loading</p>
+                  <p class="text-xs text-cream/75 leading-relaxed">
+                    Lens is pre-assembled in factory sterile cleanroom. The surgeon only adds viscoelastic and advances the plunger, locking and rolling the optic smoothly without touch.
+                  </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-cream/60">
+                  <span>Steps: <strong class="text-white">2 Steps Only</strong></span>
+                  <span>Contact: <strong class="text-white">Zero Touch</strong></span>
+                </div>
+              </div>
+
+              <!-- DEVICE 2: 1.65mm Micro Nozzle -->
+              <div class="rounded-2xl bg-[#0a1d40]/90 border border-sky/30 p-5 shadow-2xl backdrop-blur-xl flex flex-col justify-between">
+                <div>
+                  <div class="size-12 rounded-xl bg-sky/15 border border-sky/30 text-sky flex items-center justify-center mb-4">
+                    <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+                  </div>
+                  <h4 class="text-lg font-bold text-white">Micro-Incision Nozzle</h4>
+                  <p class="text-xs text-sky font-mono font-semibold mb-2">1.65mm Wound Architecture</p>
+                  <p class="text-xs text-cream/75 leading-relaxed">
+                    Designed for sub-2.0mm wound assist delivery. Beveled tip enters clear corneal incision without wound stretching, preserving corneal architecture and rapid sealing.
+                  </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-cream/60">
+                  <span>Nozzle OD: <strong class="text-white">1.65 mm</strong></span>
+                  <span>Wound Stretch: <strong class="text-white">Zero</strong></span>
+                </div>
+              </div>
+
+              <!-- DEVICE 3: Ergonomic Control -->
+              <div class="rounded-2xl bg-[#0a1d40]/90 border border-sky/30 p-5 shadow-2xl backdrop-blur-xl flex flex-col justify-between">
+                <div>
+                  <div class="size-12 rounded-xl bg-sky/15 border border-sky/30 text-sky flex items-center justify-center mb-4">
+                    <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+                  </div>
+                  <h4 class="text-lg font-bold text-white">Single-Handed Delivery</h4>
+                  <p class="text-xs text-sky font-mono font-semibold mb-2">Dual Finger Flanges &amp; Plunger</p>
+                  <p class="text-xs text-cream/75 leading-relaxed">
+                    Balanced tactile feedback with silicone cushion plunger tip. Delivers predictable haptic release directly inside the capsular bag with total surgeon control.
+                  </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-cream/60">
+                  <span>Operation: <strong class="text-white">Single Handed</strong></span>
+                  <span>Feedback: <strong class="text-white">Tactile Controlled</strong></span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Footer Quick Nav -->
+            <div class="mt-6 flex items-center justify-between">
+              <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(2);}" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-cream/80 hover:text-white transition-all cursor-pointer">
+                &larr; Medical Supplies
+              </button>
+              <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(4);}" class="px-5 py-2.5 rounded-xl bg-sky text-[#0a1d40] text-xs font-bold hover:bg-[#72c5f8] transition-all cursor-pointer flex items-center gap-1.5">
+                <span>Next: Product Catalogs</span>
+                <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 4: PRODUCT CATALOGS & CLINICAL DOCUMENTATION (Downloads & Quotes)   -->
+        <!-- ========================================================================= -->
+        <div class="product-slide absolute inset-0 w-full h-full flex flex-col justify-center items-center px-4 sm:px-8 lg:px-12 py-16 transition-all duration-500 ease-out opacity-0 pointer-events-none translate-x-12 z-0 overflow-y-auto" data-product-index="4">
+          <div class="relative z-10 w-full max-w-7xl mx-auto my-auto">
+            
+            <!-- Category Header with Back Link -->
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+              <div>
+                <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(0);}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-sky hover:text-white mb-2 transition-colors cursor-pointer">
+                  <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+                  <span>Back to Product Overview</span>
+                </button>
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
+                  Product Catalogs &bull; <span class="text-sky">Clinical Downloads</span>
+                </h3>
+                <p class="text-xs sm:text-sm text-cream/70 mt-1 max-w-xl">
+                  Access digital product brochures, clinical whitepapers, IOL calculation tables, and Philippine FDA registration certifications.
+                </p>
+              </div>
+
+              <!-- Pill Tags -->
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1 rounded-full bg-sky/10 border border-sky/30 text-[10px] font-mono font-bold text-sky uppercase">PDF Downloads</span>
+                <span class="px-3 py-1 rounded-full bg-sky/10 border border-sky/30 text-[10px] font-mono font-bold text-sky uppercase">Hospital Inquiries</span>
+                <span class="px-3 py-1 rounded-full bg-sky/10 border border-sky/30 text-[10px] font-mono font-bold text-sky uppercase">FDA Certified</span>
+              </div>
+            </div>
+
+            <!-- 3 Catalogs / Resources Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+              
+              <!-- CATALOG 1: Rayner Complete IOL Portfolio -->
+              <div class="rounded-2xl bg-[#0a1d40]/90 border border-sky/30 p-6 shadow-2xl backdrop-blur-xl flex flex-col justify-between">
+                <div>
+                  <div class="size-12 rounded-xl bg-sky/15 border border-sky/30 text-sky flex items-center justify-center mb-4">
+                    <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                  </div>
+                  <h4 class="text-lg font-bold text-white">Rayner IOL Portfolio 2026</h4>
+                  <p class="text-xs text-sky font-mono font-semibold mb-2">Complete Clinical Specifications</p>
+                  <p class="text-xs text-cream/75 leading-relaxed">
+                    Full technical datasheets for RayOne Galaxy, EMV, Trifocal, Toric, and Spheric IOLs with optical constants, A-constants, and surgical injection guidelines.
+                  </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-cream/60">PDF &bull; 8.4 MB</span>
+                  <a href="https://mediqvision.com/mobile/index.html" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-sky/20 hover:bg-sky text-sky hover:text-[#0a1d40] text-xs font-bold transition-all flex items-center gap-1.5">
+                    <span>Open Catalog</span>
+                    <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  </a>
+                </div>
+              </div>
+
+              <!-- CATALOG 2: Viscosurgical Comparison Guide -->
+              <div class="rounded-2xl bg-[#0a1d40]/90 border border-sky/30 p-6 shadow-2xl backdrop-blur-xl flex flex-col justify-between">
+                <div>
+                  <div class="size-12 rounded-xl bg-sky/15 border border-sky/30 text-sky flex items-center justify-center mb-4">
+                    <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </div>
+                  <h4 class="text-lg font-bold text-white">Ophteis&reg; Rheology Guide</h4>
+                  <p class="text-xs text-sky font-mono font-semibold mb-2">Clinical Viscoelastic Data</p>
+                  <p class="text-xs text-cream/75 leading-relaxed">
+                    Comparison charts of cohesive vs dispersive viscosurgical properties, free-radical protection metrics, and anterior segment endothelial safety profiles.
+                  </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-cream/60">PDF &bull; 4.2 MB</span>
+                  <a href="https://mediqvision.com/mobile/index.html" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-sky/20 hover:bg-sky text-sky hover:text-[#0a1d40] text-xs font-bold transition-all flex items-center gap-1.5">
+                    <span>Open Guide</span>
+                    <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  </a>
+                </div>
+              </div>
+
+              <!-- CATALOG 3: Hospital Inquiries & Sample Requests -->
+              <div class="rounded-2xl bg-[#0a1d40]/90 border border-sky/30 p-6 shadow-2xl backdrop-blur-xl flex flex-col justify-between">
+                <div>
+                  <div class="size-12 rounded-xl bg-sky/15 border border-sky/30 text-sky flex items-center justify-center mb-4">
+                    <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  </div>
+                  <h4 class="text-lg font-bold text-white">Hospital Procurement &amp; Quote</h4>
+                  <p class="text-xs text-sky font-mono font-semibold mb-2">Philippine Nationwide Supply</p>
+                  <p class="text-xs text-cream/75 leading-relaxed">
+                    Request clinical demonstrations, institutional hospital consignment agreements, surgeon evaluation packs, or local FDA registration documentation.
+                  </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-emerald-400">&bull; Immediate Response</span>
+                  <a href="#contact" class="px-4 py-2 rounded-xl bg-sky text-[#0a1d40] text-xs font-bold hover:bg-[#72c5f8] transition-all flex items-center gap-1.5">
+                    <span>Contact Sales</span>
+                    <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                  </a>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Footer Quick Nav -->
+            <div class="mt-6 flex items-center justify-between">
+              <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(3);}" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-cream/80 hover:text-white transition-all cursor-pointer">
+                &larr; Devices &amp; Equipment
+              </button>
+              <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(0);}" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5">
+                <span>Back to Overview</span>
+                <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section>

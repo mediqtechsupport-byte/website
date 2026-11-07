@@ -1,0 +1,293 @@
+        <!-- ========================================================================= -->
+        <!-- SLIDE 1: INTRAOCULAR LENSES (PREMIUM 3D SCROLL-DRIVEN SHOWCASE)           -->
+        <!-- ========================================================================= -->
+        <div id="product-slide-iols" class="product-slide absolute inset-0 w-full h-full flex flex-col bg-[#07132b] text-cream overflow-hidden transition-all duration-500 ease-out opacity-0 pointer-events-none translate-x-12 z-0" data-product-index="1">
+          
+          <!-- Persistent Subtle Grid & Ambient Radial Glows -->
+          <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+            <div class="absolute -left-20 top-1/4 h-[42rem] w-[42rem] rounded-full bg-sky/15 blur-[160px]"></div>
+            <div class="absolute right-0 top-1/3 h-[46rem] w-[46rem] rounded-full bg-[#11326c]/40 blur-[180px]"></div>
+            <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(#3aa0db_1px,transparent_1px)] [background-size:28px_28px] opacity-15"></div>
+          </div>
+
+          <!-- Top Slim Floating Navigation Bar -->
+          <div class="absolute top-5 left-6 right-6 sm:top-7 sm:left-12 sm:right-12 z-40 flex items-center justify-between pointer-events-auto">
+            <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(0);}" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-cream/90 hover:text-white transition-all cursor-pointer backdrop-blur-md">
+              <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+              <span>Product Overview</span>
+            </button>
+
+            <!-- Active Stage Highlight Badge -->
+            <div id="iol-stage-badge" class="px-4 py-1.5 rounded-full bg-sky/10 border border-sky/35 text-[11px] font-mono font-bold tracking-widest text-sky uppercase shadow-[0_0_20px_rgba(58,160,219,0.3)] backdrop-blur-md flex items-center gap-2">
+              <span class="size-1.5 rounded-full bg-sky animate-ping"></span>
+              <span id="iol-stage-badge-text">STAGE 01 &bull; RAYONE&reg; EMV</span>
+            </div>
+
+            <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(2);}" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky/20 hover:bg-sky text-sky hover:text-[#07132b] text-xs font-bold transition-all cursor-pointer backdrop-blur-md">
+              <span>Medical Supplies</span>
+              <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+          </div>
+
+          <!-- Inner Scroll Track (Height 320vh for fluid scroll choreography) -->
+          <div id="iol-scroll-container" class="relative w-full h-full overflow-y-auto scroll-smooth z-10">
+            <div class="h-[320vh] w-full relative">
+              
+              <!-- Pinned 100vh Sticky Stage -->
+              <div class="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
+
+                <!-- ================= STAGE 0: RayOne EMV ================= -->
+                <!-- Desktop Scene (Left-0) -->
+                <div id="iol-scene-0" class="iol-anim-scene absolute inset-y-0 hidden lg:flex w-1/2 left-0 items-center justify-center pointer-events-auto transition-transform duration-500 will-change-transform z-10">
+                  <div class="sv-scene" onpointermove="handleIolTilt(event, this)" onpointerleave="resetIolTilt(this)">
+                    <div class="sv-halo"></div>
+                    <div class="sv-stage">
+                      <div class="sv-tilt">
+                        <div class="sv-rig">
+                          <div class="sv-plinth">
+                            <i class="sv-disc sv-disc--top"></i>
+                            <i class="sv-disc sv-disc--ring1"></i>
+                            <i class="sv-disc sv-disc--ring2"></i>
+                          </div>
+                          <img src="assets/img/packshots/emv_stage.png" alt="RayOne EMV Packshot" class="sv-packshot-img" loading="eager">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Desktop Content (Right-0) -->
+                <div id="iol-content-0" class="iol-anim-content absolute inset-y-0 hidden lg:flex w-1/2 right-0 items-center justify-center pointer-events-auto transition-transform duration-500 will-change-transform z-20">
+                  <div class="sv-content">
+                    <h2 class="sv-title">RayOne&reg; EMV</h2>
+                    <p class="sv-subtitle">Co-developed with Prof. Graham Barrett &bull; Extended Visual Depth</p>
+                    <p class="sv-pitch">
+                      First and only non-diffractive extended depth of field IOL utilizing controlled positive spherical aberration to provide seamless distance, intermediate, and functional near vision without dysphotopsia.
+                    </p>
+
+                    <ul class="sv-list">
+                      <li class="sv-row" data-open="true">
+                        <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
+                          <span class="sv-row__led" aria-hidden="true"></span>
+                          <span class="sv-row__title">Natural Intermediate Focus (+1.50 D)</span>
+                          <span class="sv-row__plus" aria-hidden="true"><i></i><i></i></span>
+                        </button>
+                        <div class="sv-row__panel">
+                          <div class="sv-row__clip">
+                            <p class="sv-row__desc">Extends depth of focus seamlessly into desktop computer and dashboard distance while preserving photopic contrast and eliminating halos.</p>
+                          </div>
+                        </div>
+                      </li>
+
+                      <li class="sv-row" data-open="false">
+                        <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
+                          <span class="sv-row__led" aria-hidden="true"></span>
+                          <span class="sv-row__title">Lock &amp; Roll&trade; 1.65mm Delivery</span>
+                          <span class="sv-row__plus" aria-hidden="true"><i></i><i></i></span>
+                        </button>
+                        <div class="sv-row__panel">
+                          <div class="sv-row__clip">
+                            <p class="sv-row__desc">True preloaded system pre-assembled under ISO Class 5 cleanroom conditions. Delivers the optic smoothly through sub-2.0mm incisions without manual lens touching.</p>
+                          </div>
+                        </div>
+                      </li>
+
+                      <li class="sv-row" data-open="false">
+                        <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
+                          <span class="sv-row__led" aria-hidden="true"></span>
+                          <span class="sv-row__title">Glisten-Free Rayacryl&reg; Copolymer</span>
+                          <span class="sv-row__plus" aria-hidden="true"><i></i><i></i></span>
+                        </button>
+                        <div class="sv-row__panel">
+                          <div class="sv-row__clip">
+                            <p class="sv-row__desc">Engineered from balanced 26% water-content hydrophilic/hydrophobic material with continuous 360&deg; Amon-Apple square edge to eradicate glistening and prevent PCO.</p>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+
+                <!-- ================= STAGE 1: RayOne Trifocal (Alternating: Content Left, Scene Right!) ================= -->
+                <!-- Desktop Content (Left-0) -->
+                <div id="iol-content-1" class="iol-anim-content absolute inset-y-0 hidden lg:flex w-1/2 left-0 items-center justify-center opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-20">
+                  <div class="sv-content">
+                    <h2 class="sv-title">RayOne&reg; Trifocal</h2>
+                    <p class="sv-subtitle">Halved diffractive rings for maximum light transmission</p>
+                    <p class="sv-pitch">
+                      Patented 16-ring diffractive architecture halves the ring count of conventional trifocals, directing 89% of light onto the retina with lowest 11% light scatter for vibrant contrast.
+                    </p>
+
+                    <ul class="sv-list">
+                      <li class="sv-row" data-open="true">
+                        <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
+                          <span class="sv-row__led" aria-hidden="true"></span>
+                          <span class="sv-row__title">Lowest Light Transmission Loss (11%)</span>
+                          <span class="sv-row__plus" aria-hidden="true"><i></i><i></i></span>
+                        </button>
+                        <div class="sv-row__panel">
+                          <div class="sv-row__clip">
+                            <p class="sv-row__desc">Reduces light loss to less than half of older trifocals, providing exceptional pupil-independent brightness for night driving and dim light reading.</p>
+                          </div>
+                        </div>
+                      </li>
+
+                      <li class="sv-row" data-open="false">
+                        <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
+                          <span class="sv-row__led" aria-hidden="true"></span>
+                          <span class="sv-row__title">Comfortable Near &amp; Intermediate Vision</span>
+                          <span class="sv-row__plus" aria-hidden="true"><i></i><i></i></span>
+                        </button>
+                        <div class="sv-row__panel">
+                          <div class="sv-row__clip">
+                            <p class="sv-row__desc">+1.75 D intermediate add for computer screens and +3.50 D near add for comfortable reading of smartphones and fine print with total spectacle independence.</p>
+                          </div>
+                        </div>
+                      </li>
+
+                      <li class="sv-row" data-open="false">
+                        <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
+                          <span class="sv-row__led" aria-hidden="true"></span>
+                          <span class="sv-row__title">Anti-Vaulting Closed-Loop Haptics</span>
+                          <span class="sv-row__plus" aria-hidden="true"><i></i><i></i></span>
+                        </button>
+                        <div class="sv-row__panel">
+                          <div class="sv-row__clip">
+                            <p class="sv-row__desc">Closed-loop corner-lock haptics guarantee zero rotational movement and exceptional axial planar stability inside the capsular bag.</p>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Desktop Scene (Right-0) -->
+                <div id="iol-scene-1" class="iol-anim-scene absolute inset-y-0 hidden lg:flex w-1/2 right-0 items-center justify-center opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-10">
+                  <div class="sv-scene" onpointermove="handleIolTilt(event, this)" onpointerleave="resetIolTilt(this)">
+                    <div class="sv-halo"></div>
+                    <div class="sv-stage">
+                      <div class="sv-tilt">
+                        <div class="sv-rig">
+                          <div class="sv-plinth">
+                            <i class="sv-disc sv-disc--top"></i>
+                            <i class="sv-disc sv-disc--ring1"></i>
+                            <i class="sv-disc sv-disc--ring2"></i>
+                          </div>
+                          <img src="assets/img/packshots/trifocal_stage.png" alt="RayOne Trifocal Packshot" class="sv-packshot-img" loading="lazy">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <!-- ================= STAGE 2: RayOne Aspheric & Sulcoflex ================= -->
+                <!-- Desktop Scene (Left-0) -->
+                <div id="iol-scene-2" class="iol-anim-scene absolute inset-y-0 hidden lg:flex w-1/2 left-0 items-center justify-center opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-10">
+                  <div class="sv-scene" onpointermove="handleIolTilt(event, this)" onpointerleave="resetIolTilt(this)">
+                    <div class="sv-halo"></div>
+                    <div class="sv-stage">
+                      <div class="sv-tilt">
+                        <div class="sv-rig">
+                          <div class="sv-plinth">
+                            <i class="sv-disc sv-disc--top"></i>
+                            <i class="sv-disc sv-disc--ring1"></i>
+                            <i class="sv-disc sv-disc--ring2"></i>
+                          </div>
+                          <img src="assets/img/packshots/aspheric_stage.png" alt="RayOne Aspheric Packshot" class="sv-packshot-img" loading="lazy">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Desktop Content (Right-0) -->
+                <div id="iol-content-2" class="iol-anim-content absolute inset-y-0 hidden lg:flex w-1/2 right-0 items-center justify-center opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-20">
+                  <div class="sv-content">
+                    <h2 class="sv-title">RayOne&reg; Aspheric</h2>
+                    <p class="sv-subtitle">Aberration-neutral precision &amp; Sulcoflex pseudophakic optics</p>
+                    <p class="sv-pitch">
+                      Aberration-neutral monofocal IOL designed for pristine contrast sensitivity across all corneas, paired with Sulcoflex pseudophakic supplementary lenses for reversible post-operative refractive adjustments.
+                    </p>
+
+                    <ul class="sv-list">
+                      <li class="sv-row" data-open="true">
+                        <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
+                          <span class="sv-row__led" aria-hidden="true"></span>
+                          <span class="sv-row__title">Aberration-Neutral Aspheric Technology</span>
+                          <span class="sv-row__plus" aria-hidden="true"><i></i><i></i></span>
+                        </button>
+                        <div class="sv-row__panel">
+                          <div class="sv-row__clip">
+                            <p class="sv-row__desc">Zero induced spherical aberration ensures sharp, predictable vision and heightened depth of field regardless of individual corneal curvature or previous refractive surgery.</p>
+                          </div>
+                        </div>
+                      </li>
+
+                      <li class="sv-row" data-open="false">
+                        <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
+                          <span class="sv-row__led" aria-hidden="true"></span>
+                          <span class="sv-row__title">Sulcoflex Supplementary Sulcus Platform</span>
+                          <span class="sv-row__plus" aria-hidden="true"><i></i><i></i></span>
+                        </button>
+                        <div class="sv-row__panel">
+                          <div class="sv-row__clip">
+                            <p class="sv-row__desc">Reversible secondary IOL engineered for ciliary sulcus placement to correct residual cylinder, spherical surprise, or presbyopic enhancement in pseudophakic patients.</p>
+                          </div>
+                        </div>
+                      </li>
+
+                      <li class="sv-row" data-open="false">
+                        <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
+                          <span class="sv-row__led" aria-hidden="true"></span>
+                          <span class="sv-row__title">Micro-Incision Wound Sealing</span>
+                          <span class="sv-row__plus" aria-hidden="true"><i></i><i></i></span>
+                        </button>
+                        <div class="sv-row__panel">
+                          <div class="sv-row__clip">
+                            <p class="sv-row__desc">Ultra-smooth 1.65mm delivery eliminates incision stress and supports rapid self-sealing clear corneal wounds for speedy patient recovery.</p>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- ================= MOBILE VIEW (Stacked: Packshot Top, Content Below) ================= -->
+                <div class="lg:hidden flex flex-col items-center justify-center w-full px-4 pt-16 pb-20 overflow-y-auto">
+                  <div class="w-full max-w-sm aspect-square flex items-center justify-center mb-4">
+                    <img id="iol-mobile-packshot" src="assets/img/packshots/emv_stage.png" alt="RayOne IOL" class="max-h-60 object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)]">
+                  </div>
+                  <div class="w-full max-w-md">
+                    <h2 id="iol-mobile-title" class="text-2xl font-bold text-white mb-1">RayOne&reg; EMV</h2>
+                    <p id="iol-mobile-sub" class="text-xs text-sky font-medium mb-3">Co-developed with Prof. Graham Barrett</p>
+                    <p id="iol-mobile-desc" class="text-xs text-cream/75 leading-relaxed mb-4">
+                      Non-diffractive extended depth of field IOL providing seamless intermediate and functional near vision.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Bottom Progress Rail (Exact Match to Reference Rail) -->
+                <div class="sv-rail">
+                  <button type="button" class="sv-rail__item" aria-current="true" onclick="jumpIolStage(0)">
+                    <span class="sv-rail__label">01. RayOne&reg; EMV</span>
+                    <div class="sv-rail__track"><div id="iol-fill-0" class="sv-rail__fill" style="transform: scaleX(1);"></div></div>
+                  </button>
+
+                  <button type="button" class="sv-rail__item" aria-current="false" onclick="jumpIolStage(1)">
+                    <span class="sv-rail__label">02. RayOne&reg; Trifocal</span>
+                    <div class="sv-rail__track"><div id="iol-fill-1" class="sv-rail__fill"></div></div>
+                  </button>
+
+                  <button type="button" class="sv-rail__item" aria-current="false" onclick="jumpIolStage(2)">
+                    <span class="sv-rail__label">03. RayOne&reg; Aspheric</span>
+                    <div class="sv-rail__track"><div id="iol-fill-2" class="sv-rail__fill"></div></div>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>

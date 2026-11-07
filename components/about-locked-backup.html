@@ -1,0 +1,812 @@
+<section id="about" aria-labelledby="about-title" class="page-snap-section page-transition-section relative isolate w-full h-[100svh] min-h-[100svh] max-h-[100svh] overflow-hidden bg-[#0a1d40] scroll-mt-0">
+
+      <!-- Persistent Ambient Medical Navy Background with Organic Fluid Smoke & Silk Waves Shader across ALL Deck Slides -->
+      <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-[#0a1d40]">
+        <!-- 1. Active Moving Silk Waves Shader Background in Calm MediQ Navy Palette -->
+        <canvas id="about-waves-shader-canvas" class="pointer-events-none absolute inset-0 z-0 block size-full opacity-70" aria-hidden="true"></canvas>
+
+        <!-- 2. Active Drifting Organic Fluid Smoke Canvas (Uniform with Hero Page) -->
+        <canvas id="about-smoke-canvas" class="pointer-events-none absolute inset-0 z-[1] block size-full opacity-75" aria-hidden="true"></canvas>
+
+        <div class="absolute -left-20 top-1/4 h-[38rem] w-[38rem] rounded-full bg-sky/15 blur-[160px]"></div>
+        <div class="absolute right-0 top-1/3 h-[42rem] w-[42rem] rounded-full bg-[#11326c]/45 blur-[180px]"></div>
+        <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(#3aa0db_1px,transparent_1px)] [background-size:24px_24px] opacity-15"></div>
+      </div>
+      
+      <!-- Sleek Floating Arrow Navigation for Rest of Pages (Hidden on Purpose Slide 0) -->
+      <div id="about-deck-nav" class="absolute top-20 right-6 sm:top-24 sm:right-10 z-40 flex items-center gap-2 opacity-0 pointer-events-none scale-90 transition-all duration-300">
+        <button type="button" id="about-deck-prev" class="size-9 rounded-full bg-[#0a1d40]/80 hover:bg-sky text-white hover:text-[#0a1d40] border border-sky/30 hover:border-sky backdrop-blur-md flex items-center justify-center transition-all shadow-[0_4px_16px_rgba(0,0,0,0.4)] active:scale-95 disabled:opacity-20 disabled:pointer-events-none cursor-pointer" aria-label="Previous Slide">
+          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+
+        <button type="button" id="about-deck-next" class="size-9 rounded-full bg-[#0a1d40]/80 hover:bg-sky text-white hover:text-[#0a1d40] border border-sky/30 hover:border-sky backdrop-blur-md flex items-center justify-center transition-all shadow-[0_4px_16px_rgba(0,0,0,0.4)] active:scale-95 disabled:opacity-20 disabled:pointer-events-none cursor-pointer" aria-label="Next Slide">
+          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+
+      <!-- Main Slides Container (100% Viewport, Seamless with Fixed Navbar) -->
+      <div class="relative w-full h-full overflow-hidden">
+        <!-- ========================================================================= -->
+        <!-- SLIDE 1: PURPOSE (Global Healthcare Innovation & Philippines Map)         -->
+        <!-- ========================================================================= -->
+        <div class="about-slide absolute inset-0 w-full h-full flex items-center overflow-y-auto lg:overflow-hidden transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10" data-index="0">
+          
+          <!-- Full-Bleed Panoramic World Route Blueprint Map across Background -->
+          <div id="about-interactive-stage" class="absolute inset-0 w-full h-full pointer-events-auto z-[2] overflow-hidden">
+            <!-- Atmospheric Volumetric Glow -->
+            <div class="absolute inset-0 bg-radial from-sky/15 via-[#11326c]/20 to-transparent rounded-full blur-3xl transform scale-125 pointer-events-none -z-10"></div>
+          </div>
+
+          <div class="ih-shell relative z-10 w-full pointer-events-none">
+            <div class="ih-hero">
+              
+              <!-- Left Copy Column (Positioned and styled exactly as shown in user video) -->
+              <div class="ih-hero-copy pointer-events-auto max-w-2xl relative z-20">
+                
+                <!-- Eyebrow Tag -->
+                <p class="ih-eyebrow">
+                  <span>ABOUT MEDIQ &nbsp;&bull;&nbsp; OUR PURPOSE</span>
+                  <span class="inline-block h-0.5 bg-sky/50 w-12 ml-1"></span>
+                </p>
+
+                <!-- Main Headline -->
+                <h2 id="about-title" class="ih-h1">
+                  <span class="ih-h1-line">Connecting Global</span>
+                  <span class="ih-h1-line">Healthcare Innovation</span>
+                  <span class="ih-h1-line">with the Philippines</span>
+                </h2>
+
+                <!-- Lede Description -->
+                <p class="ih-lede">
+                  Medical solutions, product marketing, commercialization, and dependable distribution for a stronger healthcare system.
+                </p>
+
+                <!-- Action Button: Path to Mission & Vision (Slide 1) -->
+                <div class="mt-8">
+                  <button type="button" onclick="if(window.goToAboutSlide){window.goToAboutSlide(1);}" class="about-go-next inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-sky text-[#0a1d40] text-sm font-bold tracking-wide shadow-[0_0_25px_rgba(58,160,219,0.35)] hover:bg-[#72c5f8] hover:scale-105 active:scale-95 transition-all cursor-pointer">
+                    <span>Explore Profile &amp; Mission</span>
+                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                  </button>
+                </div>
+
+              </div>
+
+              <!-- Right Column: Expansive Open Space for the Panoramic Global Map -->
+              <div class="hidden lg:block pointer-events-none"></div>
+
+            </div>
+          </div>
+
+        </div>
+
+<!-- ========================================================================= -->
+        <!-- SLIDE 2: WHO WE ARE, OUR VISION & MISSION (Architectural Blueprint Cards) -->
+        <!-- ========================================================================= -->
+        <div class="about-slide absolute inset-0 w-full h-full flex items-center justify-center bg-transparent text-cream px-6 sm:px-10 lg:px-14 pt-28 sm:pt-28 pb-8 overflow-y-auto transition-all duration-500 ease-out opacity-0 pointer-events-none translate-x-12 z-0" data-index="1">
+          <!-- Pill navigation (replaces round arrows) -->
+          <div class="absolute top-[76px] left-0 right-0 z-30 px-6 sm:px-10 lg:px-16 flex items-center justify-between gap-3 pointer-events-none">
+            <button type="button" onclick="if(window.goToAboutSlide){window.goToAboutSlide(0);}" class="pointer-events-auto inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-cream/90 hover:text-white transition-all cursor-pointer backdrop-blur-md"><svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg><span>Our Purpose</span></button>
+            <button type="button" onclick="if(window.goToAboutSlide){window.goToAboutSlide(2);}" class="pointer-events-auto inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-cream/90 hover:text-white transition-all cursor-pointer backdrop-blur-md"><span>What We Do</span><svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></button>
+          </div>
+
+          
+          <!-- Ambient Luminous Glows matching Home & Purpose -->
+          <div class="pointer-events-none absolute -left-20 top-1/4 h-[32rem] w-[32rem] rounded-full bg-sky/15 blur-[160px]"></div>
+          <div class="pointer-events-none absolute right-0 top-1/3 h-[36rem] w-[36rem] rounded-full bg-[#11326c]/45 blur-[180px]"></div>
+
+          <div class="relative z-10 mx-auto w-full max-w-[1420px]">
+
+            <!-- Centered Header Section (Vertically balanced) -->
+            <div class="text-center max-w-3xl mx-auto mb-7 sm:mb-9 lg:mb-10">
+              <p class="text-[11px] sm:text-xs font-mono font-bold tracking-[0.25em] text-sky uppercase mb-2">
+                ABOUT MEDIQ &bull; CORPORATE IDENTITY
+              </p>
+              <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-2.5">
+                Who We Are, <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky via-[#72c5f8] to-white">Vision &amp; Mission</span>
+              </h2>
+              <p class="text-xs sm:text-sm lg:text-base text-cream/75 leading-relaxed max-w-2xl mx-auto">
+                Connecting global medical innovations with Philippine clinical practitioners, surgical centers, and healthcare institutions nationwide.
+              </p>
+            </div>
+
+            <!-- 3 Staggered / Cascading Blueprint Glass Cards (Larger Scale & Balanced Stagger) -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-8 items-start pb-4">
+              
+              <!-- CARD 1: WHO WE ARE (Step 1: Elevated) -->
+              <div class="relative group lg:-translate-y-3 transition-transform duration-300">
+                <!-- Architectural Corner Crosshairs -->
+                <span class="absolute -top-3.5 -left-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -top-3.5 -right-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -bottom-3.5 -left-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -bottom-3.5 -right-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+
+                <!-- Extended Construction Tick Lines -->
+                <div class="pointer-events-none absolute -top-5 -bottom-5 left-0 w-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -top-5 -bottom-5 right-0 w-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -left-5 -right-5 top-0 h-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -left-5 -right-5 bottom-0 h-px bg-sky/25"></div>
+
+                <!-- Card Body (Enlarged padding and text) -->
+                <div class="relative rounded-2xl bg-[#071530]/85 border border-sky/30 p-7 sm:p-8 lg:p-9 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.55)] transition-all group-hover:border-sky/60 group-hover:bg-[#0a1e42]/90">
+                  <!-- Quote / Badge Icon -->
+                  <div class="text-sky/70 mb-5">
+                    <svg class="size-7" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                  </div>
+
+                  <!-- Statement -->
+                  <p class="text-sm sm:text-base lg:text-[15.5px] text-cream/90 leading-relaxed mb-7 font-normal min-h-[120px]">
+                    Operating as <strong class="text-white font-semibold">Mediq Pharma and Medical Supplies Distribution</strong>, we connect international medical manufacturers with ophthalmologists, hospitals, surgical centers, and healthcare institutions across the Philippines.
+                  </p>
+
+                  <!-- Author / Identity Pill -->
+                  <div class="flex items-center gap-3.5 pt-5 border-t border-sky/15">
+                    <div class="size-11 sm:size-12 rounded-full bg-sky/15 border border-sky/30 flex items-center justify-center shrink-0 text-sky shadow-[0_0_15px_rgba(58,160,219,0.25)]">
+                      <svg class="size-5 sm:size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <div>
+                      <div class="text-base font-bold text-white tracking-wide">Who We Are</div>
+                      <div class="text-xs sm:text-[13px] text-sky/80">Philippine Healthcare Distribution</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CARD 2: OUR VISION (Step 2: Center Balanced) -->
+              <div class="relative group lg:translate-y-3 transition-transform duration-300">
+                <!-- Architectural Corner Crosshairs -->
+                <span class="absolute -top-3.5 -left-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -top-3.5 -right-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -bottom-3.5 -left-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -bottom-3.5 -right-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+
+                <!-- Extended Construction Tick Lines -->
+                <div class="pointer-events-none absolute -top-5 -bottom-5 left-0 w-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -top-5 -bottom-5 right-0 w-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -left-5 -right-5 top-0 h-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -left-5 -right-5 bottom-0 h-px bg-sky/25"></div>
+
+                <!-- Card Body (Enlarged padding and text) -->
+                <div class="relative rounded-2xl bg-[#071530]/85 border border-sky/30 p-7 sm:p-8 lg:p-9 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.55)] transition-all group-hover:border-sky/60 group-hover:bg-[#0a1e42]/90">
+                  <!-- Quote / Badge Icon -->
+                  <div class="text-sky/70 mb-5">
+                    <svg class="size-7" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                  </div>
+
+                  <!-- Statement -->
+                  <p class="text-sm sm:text-base lg:text-[15.5px] text-cream/90 leading-relaxed mb-7 font-normal min-h-[120px]">
+                    To become one of the Philippines' most trusted and forward-thinking healthcare solutions partners, advancing accessibility, product quality, and the delivery of care through innovative technologies and enduring partnerships.
+                  </p>
+
+                  <!-- Author / Identity Pill -->
+                  <div class="flex items-center gap-3.5 pt-5 border-t border-sky/15">
+                    <div class="size-11 sm:size-12 rounded-full bg-sky/15 border border-sky/30 flex items-center justify-center shrink-0 text-sky shadow-[0_0_15px_rgba(58,160,219,0.25)]">
+                      <svg class="size-5 sm:size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+                    </div>
+                    <div>
+                      <div class="text-base font-bold text-white tracking-wide">Our Vision</div>
+                      <div class="text-xs sm:text-[13px] text-sky/80">Trusted Clinical Solutions Partner</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CARD 3: OUR MISSION (Step 3: Gentle Descending Step) -->
+              <div class="relative group lg:translate-y-9 transition-transform duration-300">
+                <!-- Architectural Corner Crosshairs -->
+                <span class="absolute -top-3.5 -left-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -top-3.5 -right-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -bottom-3.5 -left-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+                <span class="absolute -bottom-3.5 -right-3.5 size-7 flex items-center justify-center font-mono text-base text-sky/70 pointer-events-none select-none">+</span>
+
+                <!-- Extended Construction Tick Lines -->
+                <div class="pointer-events-none absolute -top-5 -bottom-5 left-0 w-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -top-5 -bottom-5 right-0 w-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -left-5 -right-5 top-0 h-px bg-sky/25"></div>
+                <div class="pointer-events-none absolute -left-5 -right-5 bottom-0 h-px bg-sky/25"></div>
+
+                <!-- Card Body (Enlarged padding and text) -->
+                <div class="relative rounded-2xl bg-[#071530]/85 border border-sky/30 p-7 sm:p-8 lg:p-9 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.55)] transition-all group-hover:border-sky/60 group-hover:bg-[#0a1e42]/90">
+                  <!-- Quote / Badge Icon -->
+                  <div class="text-sky/70 mb-5">
+                    <svg class="size-7" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                  </div>
+
+                  <!-- Statement -->
+                  <p class="text-sm sm:text-base lg:text-[15.5px] text-cream/90 leading-relaxed mb-7 font-normal min-h-[120px]">
+                    To bridge global healthcare innovation with the Philippine market by sourcing, commercializing, and distributing quality medical products, while providing surgeons with reliable clinical support and professional education.
+                  </p>
+
+                  <!-- Author / Identity Pill -->
+                  <div class="flex items-center gap-3.5 pt-5 border-t border-sky/15">
+                    <div class="size-11 sm:size-12 rounded-full bg-sky/15 border border-sky/30 flex items-center justify-center shrink-0 text-sky shadow-[0_0_15px_rgba(58,160,219,0.25)]">
+                      <svg class="size-5 sm:size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m11 17 2 2a1 1 0 0 0 1.414 0l4.586-4.586a2 2 0 0 0 0-2.828l-1.172-1.172a2 2 0 0 0-2.828 0L13 12.5"/><path d="m13 12.5 1-1a2 2 0 0 0 0-2.828l-1.172-1.172a2 2 0 0 0-2.828 0l-3 3a2 2 0 0 0 0 2.828l1 1"/></svg>
+                    </div>
+                    <div>
+                      <div class="text-base font-bold text-white tracking-wide">Our Mission</div>
+                      <div class="text-xs sm:text-[13px] text-sky/80">Responsible Commercialization &amp; Support</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+                                                                                <!-- ========================================================================= -->
+        <!-- SLIDE 3: WHAT WE DO (Frosted glass cards, cursor spotlight & 3° tilt)    -->
+        <!-- ========================================================================= -->
+        <div id="about-slide-what-we-do" class="about-slide absolute top-0 left-0 right-0 w-full h-[calc(100svh-4.5rem)] flex flex-col text-cream px-4 sm:px-8 lg:px-14 pt-[112px] pb-4 lg:pb-6 overflow-y-auto lg:overflow-hidden transition-all duration-500 ease-out opacity-0 pointer-events-none translate-x-12 z-0" data-index="2">
+
+          <style id="wwd-stage-scoped-styles">
+            #about-slide-what-we-do {
+              background-color: transparent;
+              background-image: radial-gradient(rgba(114, 197, 248, 0.13) 1px, transparent 1.2px);
+              background-size: 22px 22px;
+            }
+
+            /* Word-by-word blur-fade headline reveal + cyan sweep on "core capabilities" */
+            #about-slide-what-we-do .wwd-word {
+              display: inline-block;
+              opacity: 0;
+              filter: blur(8px);
+              transform: translateY(9px);
+              transition: opacity .52s cubic-bezier(.22,1,.36,1), filter .52s cubic-bezier(.22,1,.36,1), transform .52s cubic-bezier(.22,1,.36,1);
+              transition-delay: var(--w-delay, 0ms);
+            }
+            #about-slide-what-we-do.wwd-entered .wwd-word {
+              opacity: 1;
+              filter: blur(0);
+              transform: translateY(0);
+            }
+            @keyframes wwdCyanSweep {
+              0%, 15% { background-position: 130% 50%; }
+              55%, 100% { background-position: -30% 50%; }
+            }
+            #about-slide-what-we-do .wwd-core-sweep {
+              background-image: linear-gradient(110deg, #4fc3f7 0%, #4fc3f7 38%, #e0f7ff 50%, #4fc3f7 62%, #4fc3f7 100%);
+              background-size: 240% 100%;
+              -webkit-background-clip: text;
+              background-clip: text;
+              color: transparent;
+              animation: wwdCyanSweep 5.5s ease-in-out infinite;
+            }
+
+            /* Sequential cyan underline under the 4 key subtitle phrases */
+            @keyframes wwdPhrasePulse {
+              0%, 5% { transform: scaleX(0); transform-origin: left; opacity: 0.3; }
+              14%, 26% { transform: scaleX(1); transform-origin: left; opacity: 1; }
+              34%, 100% { transform: scaleX(0); transform-origin: right; opacity: 0; }
+            }
+            #about-slide-what-we-do .wwd-phrase {
+              position: relative;
+              display: inline-block;
+              color: rgba(255, 255, 255, 0.96);
+              font-weight: 500;
+            }
+            #about-slide-what-we-do .wwd-phrase::after {
+              content: "";
+              position: absolute;
+              left: 0;
+              right: 0;
+              bottom: -2px;
+              height: 1.5px;
+              border-radius: 999px;
+              background: linear-gradient(90deg, #4fc3f7, rgba(79, 195, 247, 0.35));
+              transform: scaleX(0);
+              transform-origin: left;
+              animation: wwdPhrasePulse 6.4s cubic-bezier(.22,1,.36,1) infinite;
+              animation-delay: var(--p-delay, 0s);
+            }
+
+            /* Header divider drawing across from cyan to transparent */
+            #about-slide-what-we-do .wwd-header-divider {
+              height: 1px;
+              background: linear-gradient(90deg, rgba(79, 195, 247, 0.62) 0%, rgba(79, 195, 247, 0.18) 55%, rgba(244, 166, 75, 0.15) 82%, transparent 100%);
+              transform: scaleX(0);
+              transform-origin: left;
+              transition: transform .85s cubic-bezier(.22,1,.36,1) .18s;
+            }
+            #about-slide-what-we-do.wwd-entered .wwd-header-divider {
+              transform: scaleX(1);
+            }
+
+            /* Left lighter frosted-glass list card */
+            #about-slide-what-we-do .wwd-glass-list-card {
+              --mx: 50%;
+              --my: 50%;
+              --spot-o: 0;
+              position: relative;
+              border-radius: 20px;
+              background: linear-gradient(160deg, rgba(10, 28, 62, 0.42) 0%, rgba(5, 16, 38, 0.32) 100%);
+              backdrop-filter: blur(14px);
+              -webkit-backdrop-filter: blur(14px);
+              border: 1px solid rgba(114, 197, 248, 0.16);
+              box-shadow: 0 18px 44px rgba(2, 8, 22, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            }
+            #about-slide-what-we-do .wwd-glass-list-card::before {
+              content: "";
+              position: absolute;
+              inset: 0;
+              border-radius: inherit;
+              pointer-events: none;
+              opacity: var(--spot-o, 0);
+              transition: opacity .25s ease;
+              background: radial-gradient(320px circle at var(--mx) var(--my), rgba(79, 195, 247, 0.10), transparent 70%);
+            }
+
+            /* Main frosted-glass stage card: cyan-to-amber edge + cursor spotlight + cursor border glow + slow float + 3° tilt */
+            @keyframes wwdFloatBob {
+              0%, 100% { translate: 0 0; }
+              50% { translate: 0 -5px; }
+            }
+            #about-slide-what-we-do .wwd-glass-main-card {
+              --mx: 50%;
+              --my: 50%;
+              --spot-o: 0;
+              --rx: 0deg;
+              --ry: 0deg;
+              position: relative;
+              border-radius: 24px;
+              background: linear-gradient(155deg, rgba(9, 26, 58, 0.56) 0%, rgba(5, 15, 36, 0.46) 100%);
+              backdrop-filter: blur(18px);
+              -webkit-backdrop-filter: blur(18px);
+              box-shadow: 0 26px 68px rgba(2, 8, 22, 0.62), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+              transform: perspective(1400px) rotateX(var(--rx)) rotateY(var(--ry));
+              transition: transform .18s cubic-bezier(.22,1,.36,1), box-shadow .3s ease;
+              will-change: transform;
+            }
+            @media (min-width: 1024px) {
+              #about-slide-what-we-do .wwd-glass-main-card {
+                animation: wwdFloatBob 7.2s ease-in-out infinite;
+              }
+            }
+            /* Base thin cyan-to-amber glowing edge */
+            #about-slide-what-we-do .wwd-glass-main-card::before {
+              content: "";
+              position: absolute;
+              inset: 0;
+              border-radius: inherit;
+              padding: 1px;
+              pointer-events: none;
+              background: linear-gradient(135deg, rgba(79, 195, 247, 0.52) 0%, rgba(79, 195, 247, 0.14) 52%, rgba(244, 166, 75, 0.44) 100%);
+              -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+              -webkit-mask-composite: xor;
+              mask-composite: exclude;
+            }
+            /* Cursor-tracking border highlight layered on top of the cyan-to-amber edge */
+            #about-slide-what-we-do .wwd-card-border-glow {
+              position: absolute;
+              inset: 0;
+              border-radius: inherit;
+              padding: 1.25px;
+              pointer-events: none;
+              opacity: var(--spot-o, 0);
+              transition: opacity .25s ease;
+              background: radial-gradient(300px circle at var(--mx) var(--my), rgba(79, 195, 247, 0.95), rgba(244, 166, 75, 0.55) 45%, transparent 72%);
+              -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+              -webkit-mask-composite: xor;
+              mask-composite: exclude;
+            }
+            /* Cursor-tracking interior cyan spotlight + subtle glare */
+            #about-slide-what-we-do .wwd-card-spotlight {
+              position: absolute;
+              inset: 0;
+              border-radius: inherit;
+              pointer-events: none;
+              opacity: var(--spot-o, 0);
+              transition: opacity .25s ease;
+              background: radial-gradient(520px circle at var(--mx) var(--my), rgba(79, 195, 247, 0.13), rgba(58, 160, 219, 0.04) 42%, transparent 68%);
+            }
+
+            /* Selector list rail + sliding marker */
+            #about-slide-what-we-do .wwd-list-rail { background: rgba(255, 255, 255, 0.10); }
+            #about-slide-what-we-do #wwd-sliding-marker {
+              background: #4fc3f7;
+              box-shadow: 0 0 14px rgba(79, 195, 247, 0.85);
+              transition: top .32s cubic-bezier(.22,1,.36,1), height .32s cubic-bezier(.22,1,.36,1);
+            }
+            #about-slide-what-we-do .wwd-selector-tab {
+              padding-left: 1.35rem;
+              transition: padding-left .28s cubic-bezier(.22,1,.36,1);
+            }
+            #about-slide-what-we-do .wwd-selector-tab .wwd-tab-cat {
+              color: rgba(114, 197, 248, 0.62);
+              letter-spacing: 0.08em;
+              text-transform: uppercase;
+              transition: color .2s ease;
+            }
+            #about-slide-what-we-do .wwd-selector-tab .wwd-tab-title {
+              color: rgba(196, 208, 226, 0.58);
+              transition: color .2s ease;
+            }
+            #about-slide-what-we-do .wwd-selector-tab:hover:not(.is-active) .wwd-tab-title {
+              color: rgba(235, 242, 252, 0.88);
+            }
+            #about-slide-what-we-do .wwd-selector-tab.is-active {
+              padding-left: 1.75rem;
+            }
+            #about-slide-what-we-do .wwd-selector-tab.is-active .wwd-tab-cat {
+              color: #4fc3f7;
+            }
+            #about-slide-what-we-do .wwd-selector-tab.is-active .wwd-tab-title {
+              color: #ffffff;
+            }
+
+            #about-slide-what-we-do .wwd-link-underline { transition: width .25s cubic-bezier(.22,1,.36,1); }
+            #about-slide-what-we-do .wwd-link:hover .wwd-link-underline { width: 100%; }
+            @keyframes wwdSwap { from { opacity: .35; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+            #about-slide-what-we-do .wwd-stage-swap { animation: wwdSwap 260ms cubic-bezier(.22,1,.36,1) both; }
+
+            @media (prefers-reduced-motion: reduce) {
+              #about-slide-what-we-do .wwd-word { opacity: 1 !important; filter: none !important; transform: none !important; transition: none !important; }
+              #about-slide-what-we-do .wwd-core-sweep { animation: none !important; color: #4fc3f7 !important; background: none !important; }
+              #about-slide-what-we-do .wwd-phrase::after { animation: none !important; transform: scaleX(1) !important; opacity: 0.55 !important; }
+              #about-slide-what-we-do .wwd-header-divider { transform: scaleX(1) !important; transition: none !important; }
+              #about-slide-what-we-do .wwd-glass-main-card { animation: none !important; transform: none !important; transition: none !important; }
+              #about-slide-what-we-do .wwd-card-spotlight,
+              #about-slide-what-we-do .wwd-card-border-glow,
+              #about-slide-what-we-do .wwd-glass-list-card::before { display: none !important; }
+              #about-slide-what-we-do .wwd-stage-swap { animation: none !important; }
+              #about-slide-what-we-do .wwd-selector-tab,
+              #about-slide-what-we-do #wwd-sliding-marker { transition: none !important; }
+            }
+          </style>
+
+          <!-- Pill navigation: identical position & style to the other About slides -->
+          <div class="absolute top-[76px] left-0 right-0 z-30 px-6 sm:px-10 lg:px-16 flex items-center justify-between gap-3 pointer-events-none">
+            <button type="button" onclick="if(window.goToAboutSlide){window.goToAboutSlide(1);}" class="pointer-events-auto inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-cream/90 hover:text-white transition-all cursor-pointer backdrop-blur-md"><svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg><span>Who We Are</span></button>
+            <button type="button" onclick="if(window.goToAboutSlide){window.goToAboutSlide(3);}" class="pointer-events-auto inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-cream/90 hover:text-white transition-all cursor-pointer backdrop-blur-md"><span>Our Foundation</span><svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></button>
+          </div>
+
+          <div class="relative z-20 w-full h-full flex flex-col">
+
+            <!-- Header: word-by-word title + highlighted subtitle phrases + right count-up badges + cyan divider -->
+            <div class="shrink-0 mb-3 lg:mb-4">
+              <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-8">
+                <div class="min-w-0">
+                  <h2 id="wwd-headline" class="text-[26px] sm:text-[36px] lg:text-[42px] 2xl:text-[50px] font-semibold tracking-[-0.025em] leading-[1.06] text-white">
+                    <span class="wwd-word" style="--w-delay:0ms">What</span>
+                    <span class="wwd-word" style="--w-delay:55ms">we</span>
+                    <span class="wwd-word" style="--w-delay:110ms">do:</span>
+                    <span class="wwd-word wwd-core-sweep" style="--w-delay:175ms">core</span>
+                    <span class="wwd-word wwd-core-sweep" style="--w-delay:240ms">capabilities</span>
+                    <span class="wwd-word" style="--w-delay:305ms">and</span>
+                    <span class="wwd-word" style="--w-delay:370ms">clinical</span>
+                    <span class="wwd-word" style="--w-delay:435ms">network</span>
+                  </h2>
+                  <p id="wwd-subtext" class="mt-1.5 text-[12.5px] sm:text-[14px] text-[#9eb2ce] leading-relaxed max-w-[820px]">
+                    <span class="wwd-phrase" style="--p-delay:0s">Clinical distribution</span>,
+                    <span class="wwd-phrase" style="--p-delay:1.6s">product marketing</span>,
+                    <span class="wwd-phrase" style="--p-delay:3.2s">regulatory compliance</span>, and
+                    <span class="wwd-phrase" style="--p-delay:4.8s">surgical partnerships</span> across the Philippines.
+                  </p>
+                </div>
+
+                <!-- Right-side count-up badges: "6 core pillars" and "17 regions" -->
+                <div id="wwd-header-badges" class="shrink-0 flex items-center gap-3 self-start lg:self-end">
+                  <div class="inline-flex items-baseline gap-2 rounded-full border border-[#4fc3f7]/25 bg-[#081d42]/55 px-3.5 py-1.5 backdrop-blur-md">
+                    <span id="wwd-badge-pillars" class="text-[16px] sm:text-[18px] font-extrabold text-[#4fc3f7] tabular-nums">6</span>
+                    <span class="text-[11.5px] sm:text-[12px] font-medium text-[#c5d5eb]">core pillars</span>
+                  </div>
+                  <div class="inline-flex items-baseline gap-2 rounded-full border border-[#4fc3f7]/25 bg-[#081d42]/55 px-3.5 py-1.5 backdrop-blur-md">
+                    <span id="wwd-badge-regions" class="text-[16px] sm:text-[18px] font-extrabold text-[#4fc3f7] tabular-nums">17</span>
+                    <span class="text-[11.5px] sm:text-[12px] font-medium text-[#c5d5eb]">regions</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Thin cyan-to-transparent divider line -->
+              <div class="wwd-header-divider mt-3 lg:mt-3.5 w-full" aria-hidden="true"></div>
+            </div>
+
+            <!-- Two columns: Left List Card + Right Main Frosted-Glass Tilt Card -->
+            <div id="wwd-interactive-root" class="grid grid-cols-1 lg:grid-cols-[minmax(0,3.8fr)_minmax(0,8.2fr)] gap-4 lg:gap-7 flex-1 min-h-0">
+
+              <!-- Left List Card: lighter frosted-glass card housing the 6 capabilities + sliding rail marker -->
+              <div id="wwd-list-card" class="wwd-glass-list-card p-3 sm:p-4 lg:py-4 lg:px-5 flex flex-col min-h-0">
+                <div id="wwd-tablist" role="tablist" aria-label="Core capabilities" class="relative flex lg:flex-col gap-2 lg:gap-0.5 overflow-x-auto lg:overflow-visible pb-1 lg:pb-0 min-h-0 lg:h-full">
+                  <span class="wwd-list-rail hidden lg:block absolute left-0 top-1 bottom-1 w-px" aria-hidden="true"></span>
+                  <span id="wwd-sliding-marker" class="hidden lg:block absolute left-0 top-1 w-[3px] h-10 rounded-full" aria-hidden="true"></span>
+
+                  <button type="button" id="wwd-tab-0" role="tab" aria-selected="true" aria-controls="wwd-stage-panel" tabindex="0"
+                    data-n="01" data-cat="Supply chain" data-title="Strategic importation and distribution" data-img="assets/img/pillars/p1_cleanroom_inspect.jpg" data-sl="Cold-chain dispatch" data-sv="24–48 hours"
+                    data-stat-num="24–48" data-stat-meta="hours · cold-chain dispatch" data-stat-p1="24" data-stat-p2="48" data-stat-sep="–" data-stat-suffix=""
+                    data-visual="cold-chain" data-short-desc="Temperature-controlled products leave our warehouse within two days of an order." data-desc="We source Rayner and partner products directly from the manufacturer, coordinate customs clearance, and keep cleanroom-grade inventory ready so surgeons never wait on a lens." data-pts="Product sourcing &amp; importation coordination|Cleanroom inventory reserves|GDP-compliant cold-chain logistics|Port-of-entry to operating-room tracking"
+                    class="wwd-selector-tab is-active relative shrink-0 w-[230px] lg:w-full lg:flex-1 lg:min-h-0 flex flex-col justify-center text-left py-1.5 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72c5f8]/70">
+                    <span class="wwd-tab-cat block text-[10.5px] xl:text-[11px] font-semibold leading-tight">Supply chain</span>
+                    <span class="wwd-tab-title block text-[14.5px] sm:text-[15.5px] xl:text-[17px] font-bold leading-snug mt-0.5">Strategic importation and distribution</span>
+                  </button>
+
+                  <button type="button" id="wwd-tab-1" role="tab" aria-selected="false" aria-controls="wwd-stage-panel" tabindex="-1"
+                    data-n="02" data-cat="Commercial" data-title="Product marketing and brand development" data-img="assets/img/pillars/p2_headquarters_brand.jpg" data-sl="Academic symposia" data-sv="25+ per year"
+                    data-stat-num="25+" data-stat-meta="per year · academic symposia" data-stat-p1="25" data-stat-p2="" data-stat-sep="" data-stat-suffix="+"
+                    data-visual="symposia-bars" data-short-desc="Medical meetings and campaigns that put each brand in front of the right surgeons." data-desc="We build clinical-first brand programs that connect international innovators with Philippine ophthalmologists through congresses, symposia and peer-to-peer education." data-pts="Brand strategy &amp; clinical positioning|Surgeon symposia and advisory boards|PAO and congress exhibitions|Launch campaigns for new technologies"
+                    class="wwd-selector-tab relative shrink-0 w-[230px] lg:w-full lg:flex-1 lg:min-h-0 flex flex-col justify-center text-left py-1.5 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72c5f8]/70">
+                    <span class="wwd-tab-cat block text-[10.5px] xl:text-[11px] font-semibold leading-tight">Commercial</span>
+                    <span class="wwd-tab-title block text-[14.5px] sm:text-[15.5px] xl:text-[17px] font-bold leading-snug mt-0.5">Product marketing and brand development</span>
+                  </button>
+
+                  <button type="button" id="wwd-tab-2" role="tab" aria-selected="false" aria-controls="wwd-stage-panel" tabindex="-1"
+                    data-n="03" data-cat="Field network" data-title="Nationwide clinical and sales coverage" data-img="assets/img/pillars/p3_specialist_discussion.jpg" data-sl="Archipelago reach" data-sv="17 regions"
+                    data-stat-num="17" data-stat-meta="regions · archipelago reach" data-stat-p1="17" data-stat-p2="" data-stat-sep="" data-stat-suffix=""
+                    data-visual="archipelago-routes" data-short-desc="Clinical specialists and sales teams in every region, from Luzon to Mindanao." data-desc="Our clinical specialists work alongside surgical teams in Luzon, Visayas and Mindanao, handling detailing, consignment and hospital relationships." data-pts="Direct surgical-suite detailing|Operating-room consignment management|Hospital and ASC relations|Coverage across NCR, Luzon, Visayas, Mindanao"
+                    class="wwd-selector-tab relative shrink-0 w-[230px] lg:w-full lg:flex-1 lg:min-h-0 flex flex-col justify-center text-left py-1.5 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72c5f8]/70">
+                    <span class="wwd-tab-cat block text-[10.5px] xl:text-[11px] font-semibold leading-tight">Field network</span>
+                    <span class="wwd-tab-title block text-[14.5px] sm:text-[15.5px] xl:text-[17px] font-bold leading-snug mt-0.5">Nationwide clinical and sales coverage</span>
+                  </button>
+
+                  <button type="button" id="wwd-tab-3" role="tab" aria-selected="false" aria-controls="wwd-stage-panel" tabindex="-1"
+                    data-n="04" data-cat="Governance" data-title="Regulatory compliance and QA" data-img="assets/img/pillars/p6_quality_metrology.jpg" data-sl="Regulatory audits" data-sv="100% pass"
+                    data-stat-num="100" data-stat-meta="% · regulatory audits passed" data-stat-p1="100" data-stat-p2="" data-stat-sep="" data-stat-suffix=""
+                    data-visual="governance-ring" data-short-desc="Every shipment, label and registration is checked before it reaches a hospital." data-desc="Every product we distribute is registered, traceable and stored under audited conditions, with continuous temperature monitoring and post-market surveillance." data-pts="Philippine FDA product registration|GDP / CDRR certification|Thermal mapping &amp; temperature monitoring|Pharmacovigilance &amp; recall readiness"
+                    class="wwd-selector-tab relative shrink-0 w-[230px] lg:w-full lg:flex-1 lg:min-h-0 flex flex-col justify-center text-left py-1.5 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72c5f8]/70">
+                    <span class="wwd-tab-cat block text-[10.5px] xl:text-[11px] font-semibold leading-tight">Governance</span>
+                    <span class="wwd-tab-title block text-[14.5px] sm:text-[15.5px] xl:text-[17px] font-bold leading-snug mt-0.5">Regulatory compliance and QA</span>
+                  </button>
+
+                  <button type="button" id="wwd-tab-4" role="tab" aria-selected="false" aria-controls="wwd-stage-panel" tabindex="-1"
+                    data-n="05" data-cat="Professional development" data-title="Clinical and surgical education" data-img="assets/img/pillars/p5_theatre_wetlab.jpg" data-sl="Surgeons trained" data-sv="500+ fellows"
+                    data-stat-num="500+" data-stat-meta="fellows · surgeons trained" data-stat-p1="500" data-stat-p2="" data-stat-sep="" data-stat-suffix="+"
+                    data-visual="education-matrix" data-short-desc="Hands-on courses and fellowships that build surgical skill close to home." data-desc="Hands-on dry and wet labs, phacoemulsification masterclasses and accredited workshops that raise surgical outcomes for residents and fellows alike." data-pts="Dry &amp; wet lab courses|Phacoemulsification masterclasses|CME-accredited modules|Live and recorded video surgery"
+                    class="wwd-selector-tab relative shrink-0 w-[230px] lg:w-full lg:flex-1 lg:min-h-0 flex flex-col justify-center text-left py-1.5 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72c5f8]/70">
+                    <span class="wwd-tab-cat block text-[10.5px] xl:text-[11px] font-semibold leading-tight">Professional development</span>
+                    <span class="wwd-tab-title block text-[14.5px] sm:text-[15.5px] xl:text-[17px] font-bold leading-snug mt-0.5">Clinical and surgical education</span>
+                  </button>
+
+                  <button type="button" id="wwd-tab-5" role="tab" aria-selected="false" aria-controls="wwd-stage-panel" tabindex="-1"
+                    data-n="06" data-cat="Continuity" data-title="Comprehensive post-market support" data-img="assets/img/pillars/p6_lot_traceability.jpg" data-sl="Service SLA" data-sv="24/7 priority"
+                    data-stat-num="24/7" data-stat-meta="priority · service response" data-stat-p1="24" data-stat-p2="7" data-stat-sep="/" data-stat-suffix=""
+                    data-visual="continuity-dial" data-short-desc="Surgeons reach a support specialist at any hour, with priority for urgent cases." data-desc="After the sale we stay close: equipment calibration, biometry assistance, surgical feedback loops and a technical hotline for ophthalmic teams." data-pts="Equipment calibration &amp; in-service|IOL biometry assistance|Surgical feedback loops|24/7 technical hotline"
+                    class="wwd-selector-tab relative shrink-0 w-[230px] lg:w-full lg:flex-1 lg:min-h-0 flex flex-col justify-center text-left py-1.5 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72c5f8]/70">
+                    <span class="wwd-tab-cat block text-[10.5px] xl:text-[11px] font-semibold leading-tight">Continuity</span>
+                    <span class="wwd-tab-title block text-[14.5px] sm:text-[15.5px] xl:text-[17px] font-bold leading-snug mt-0.5">Comprehensive post-market support</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Right Main Frosted-Glass Card (spotlight, cursor border glow, 3° tilt, floating bob) -->
+              <div id="wwd-stage-panel" role="tabpanel" aria-labelledby="wwd-tab-0" aria-live="polite" class="min-h-0 flex flex-col">
+                <div id="wwd-stage-card" class="wwd-glass-main-card flex-1 min-h-[420px] lg:min-h-0 h-full p-4 sm:p-6 lg:px-8 lg:py-6 flex flex-col">
+                  <span class="wwd-card-spotlight" aria-hidden="true"></span>
+                  <span class="wwd-card-border-glow" aria-hidden="true"></span>
+
+                  <div class="relative z-10 shrink-0">
+                    <div class="flex flex-wrap items-end gap-x-4 gap-y-1">
+                      <span id="wwd-stage-stat-num" class="text-[52px] sm:text-[76px] xl:text-[96px] font-extrabold text-[#4fc3f7] tracking-[-0.045em] tabular-nums leading-[0.88]">24–48</span>
+                      <span id="wwd-stage-stat-meta" class="pb-1 text-[13px] sm:text-[14.5px] text-[#b8c6dc]">hours · cold-chain dispatch</span>
+                    </div>
+                    <p id="wwd-stage-desc" class="mt-2.5 text-[13.5px] sm:text-[14.5px] xl:text-[15.5px] text-white/90 leading-relaxed max-w-[540px]">Temperature-controlled products leave our warehouse within two days of an order.</p>
+                  </div>
+
+                  <div id="wwd-stage-visual-wrap" class="relative z-10 flex-1 min-h-[200px] my-2">
+                    <canvas id="wwd-stage-canvas" class="absolute inset-0 w-full h-full block" aria-hidden="true"></canvas>
+                  </div>
+
+                  <div class="relative z-10 shrink-0 pt-2.5 border-t border-white/[0.08] flex items-center gap-7">
+                    <button type="button" id="wwd-stage-modal-btn"
+                      data-n="01" data-cat="Supply chain" data-title="Strategic importation and distribution" data-img="assets/img/pillars/p1_cleanroom_inspect.jpg" data-sl="Cold-chain dispatch" data-sv="24–48 hours" data-desc="We source Rayner and partner products directly from the manufacturer, coordinate customs clearance, and keep cleanroom-grade inventory ready so surgeons never wait on a lens." data-pts="Product sourcing &amp; importation coordination|Cleanroom inventory reserves|GDP-compliant cold-chain logistics|Port-of-entry to operating-room tracking"
+                      class="wwd-card wwd-link group inline-flex items-center gap-2 text-[13.5px] sm:text-[14px] font-semibold text-white cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72c5f8]/70">
+                      <span class="relative pb-1">Learn more<span class="wwd-link-underline absolute left-0 bottom-0 h-[2px] w-5 rounded-full bg-white/85"></span></span>
+                      <svg class="size-3.5 -mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    </button>
+                    <button type="button" id="wwd-pause-btn" aria-pressed="false"
+                      class="wwd-link group inline-flex items-center text-[13px] sm:text-[13.5px] font-medium text-[#9eb2ce] hover:text-white cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72c5f8]/70">
+                      <span class="relative pb-1"><span class="wwd-pause-label">Pause</span><span class="wwd-link-underline absolute left-0 bottom-0 h-[1.5px] w-3 rounded-full bg-[#9eb2ce]/70 group-hover:bg-white"></span></span>
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Learn-more detail card (modal) -->
+          <div id="wwd-modal" class="absolute inset-0 z-50 items-center justify-center p-4 sm:p-8 bg-[#030b1c]/80 backdrop-blur-md opacity-0 transition-opacity duration-300" style="display:none" role="dialog" aria-modal="true" aria-labelledby="wwd-modal-title">
+            <div class="relative w-full max-w-5xl max-h-full overflow-y-auto rounded-3xl border border-sky/35 bg-[#071530] shadow-[0_30px_80px_rgba(0,0,0,0.8)] grid grid-cols-1 md:grid-cols-2">
+              <button type="button" id="wwd-modal-close" aria-label="Close" class="absolute top-3 right-3 z-10 size-9 rounded-full bg-black/60 border border-white/15 hover:border-sky text-white flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72c5f8]/70">
+                <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+              <div class="relative min-h-[220px] md:min-h-[420px]">
+                <img id="wwd-modal-img" src="" alt="" class="absolute inset-0 h-full w-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#071530] via-transparent to-transparent md:bg-gradient-to-r"></div>
+              </div>
+              <div class="p-6 sm:p-8 flex flex-col gap-3">
+                <span id="wwd-modal-tag" class="self-start text-[12px] text-[#4fc3f7]"></span>
+                <h3 id="wwd-modal-title" class="text-2xl sm:text-3xl font-extrabold text-white leading-tight"></h3>
+                <p id="wwd-modal-desc" class="text-sm sm:text-base text-cream/80 leading-relaxed"></p>
+                <ul id="wwd-modal-pts" class="grid gap-2 text-sm text-cream/90"></ul>
+                <div class="mt-auto pt-4 border-t border-white/10 flex items-center justify-between gap-3">
+                  <div><div id="wwd-modal-sl" class="text-[12px] text-[#b8c6dc]"></div><div id="wwd-modal-sv" class="text-xl font-extrabold text-[#4fc3f7]"></div></div>
+                  <a href="#contact" id="wwd-modal-cta" class="wwd-text-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12px] font-medium cursor-pointer"><span>Contact us</span><svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 4: OUR ESTABLISHED FOUNDATION (Navy Banner with Rayner Partnership) -->
+        <!-- ========================================================================= -->
+        <div class="about-slide absolute inset-0 w-full h-full flex items-center bg-transparent text-white px-0 pt-20 pb-20 overflow-y-auto transition-all duration-500 ease-out opacity-0 pointer-events-none translate-x-12 z-0" data-index="3">
+          <!-- Pill navigation (replaces round arrows) -->
+          <div class="absolute top-[76px] left-0 right-0 z-30 px-6 sm:px-10 lg:px-16 flex items-center justify-between gap-3 pointer-events-none">
+            <button type="button" onclick="if(window.goToAboutSlide){window.goToAboutSlide(2);}" class="pointer-events-auto inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-cream/90 hover:text-white transition-all cursor-pointer backdrop-blur-md"><svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg><span>What We Do</span></button>
+            <button type="button" onclick="if(window.goToAboutSlide){window.goToAboutSlide(4);}" class="pointer-events-auto inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-cream/90 hover:text-white transition-all cursor-pointer backdrop-blur-md"><span>Core Values</span><svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></button>
+          </div>
+
+          
+          <!-- Ambient Luminous Glows -->
+          <div class="pointer-events-none absolute -left-20 top-1/4 h-[32rem] w-[32rem] rounded-full bg-sky/15 blur-[160px]"></div>
+          <div class="pointer-events-none absolute right-0 top-1/3 h-[36rem] w-[36rem] rounded-full bg-[#11326c]/45 blur-[180px]"></div>
+
+          <div class="relative z-10 mx-auto w-full max-w-[1680px] px-[clamp(24px,5vw,88px)]">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center">
+
+              <!-- Left: copy -->
+              <div class="lg:col-span-7 xl:col-span-7">
+                <h2 class="font-semibold text-white tracking-tight leading-[1.04] text-[clamp(2rem,8vh,5rem)] mb-[clamp(0.6rem,2.4vh,1.6rem)]">
+                  Our Established<br>
+                  <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky via-[#72c5f8] to-white drop-shadow-[0_0_22px_rgba(114,197,248,0.45)]">Foundation</span>
+                </h2>
+
+                <p class="max-w-xl text-white/90 leading-relaxed text-[clamp(0.8rem,2.4vh,1.3rem)] mb-[clamp(0.8rem,3vh,2rem)]">
+                  MEDIQ brings established expertise in ophthalmology and serves as the exclusive Philippine distributor for Rayner intraocular lenses from the United Kingdom.
+                </p>
+
+                <div class="grid grid-cols-2 gap-[clamp(0.6rem,1.8vh,1.25rem)] max-w-xl mb-[clamp(0.6rem,2vh,1.25rem)]">
+                  <div class="relative rounded-2xl border border-white/15 bg-gradient-to-b from-white/[0.09] to-white/[0.02] backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.12)] hover:border-[#72c5f8]/50 transition-all p-[clamp(0.7rem,2vh,1.4rem)]"><span class="pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent"></span>
+                    <div class="text-[#72c5f8] font-semibold text-[clamp(0.8rem,2.2vh,1.2rem)] mb-1">100% UK Precision</div>
+                    <div class="text-white/75 leading-snug text-[clamp(0.65rem,1.7vh,0.95rem)]">Worthing, West Sussex Engineered Intraocular Lenses</div>
+                  </div>
+                  <div class="relative rounded-2xl border border-white/15 bg-gradient-to-b from-white/[0.09] to-white/[0.02] backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.12)] hover:border-[#72c5f8]/50 transition-all p-[clamp(0.7rem,2vh,1.4rem)]"><span class="pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent"></span>
+                    <div class="text-[#72c5f8] font-semibold text-[clamp(0.8rem,2.2vh,1.2rem)] mb-1">Nationwide Cold-Chain</div>
+                    <div class="text-white/75 leading-snug text-[clamp(0.65rem,1.7vh,0.95rem)]">Verified Hospital Logistics &amp; Operating Room Delivery</div>
+                  </div>
+                </div>
+
+                <div class="relative max-w-xl rounded-xl border border-white/20 border-l-[3px] border-l-[#72c5f8] shadow-[0_0_18px_rgba(114,197,248,0.15),inset_0_1px_0_rgba(255,255,255,0.1)] bg-white/[0.04] backdrop-blur-md px-[clamp(0.8rem,2vh,1.4rem)] py-[clamp(0.6rem,1.8vh,1.1rem)] font-serif italic text-white/85 leading-relaxed text-[clamp(0.65rem,1.8vh,1rem)]">
+                  Complementary portfolio expansion is a strategic opportunity and is subject to licensing, ethical regulatory compliance, and partner authorization.
+                </div>
+              </div>
+
+              <!-- Right: 3D shining lens rings -->
+              <div class="lg:col-span-5 xl:col-span-5 flex flex-col items-center justify-center gap-[clamp(0.6rem,2vh,1.4rem)]">
+                <style>
+                  @keyframes fdnFloat { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-3%) rotate(2deg); } }
+                  @keyframes fdnPulse { 0%,100% { opacity:.55; transform:scale(1); } 50% { opacity:1; transform:scale(1.04); } }
+                  .fdn-float { animation: fdnFloat 7s ease-in-out infinite; }
+                  .fdn-pulse { animation: fdnPulse 4.5s ease-in-out infinite; }
+                </style>
+                <div class="relative grid place-items-center size-[clamp(210px,54vh,540px)] group [perspective:900px]">
+                  <!-- ambient bloom -->
+                  <div class="fdn-pulse pointer-events-none absolute -inset-[14%] rounded-full bg-[radial-gradient(circle,rgba(114,197,248,0.28)_0%,rgba(58,160,219,0.16)_45%,transparent_70%)] blur-2xl"></div>
+                  <!-- outer neon ring -->
+                  <div class="absolute inset-0 rounded-full border border-[#72c5f8]/50 shadow-[0_0_46px_rgba(114,197,248,0.5),inset_0_0_46px_rgba(114,197,248,0.28)]"></div>
+                  <!-- rotating light arcs (shine) -->
+                  <div class="absolute inset-0 rounded-full animate-spin [animation-duration:11s]" style="background:conic-gradient(from 0deg,transparent 0deg,rgba(255,255,255,0.95) 18deg,#72c5f8 40deg,transparent 95deg,transparent 200deg,rgba(114,197,248,0.8) 235deg,transparent 280deg);mask-image:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px));-webkit-mask-image:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px));filter:drop-shadow(0 0 8px rgba(114,197,248,0.9))"></div>
+                  <div class="absolute inset-[4.5%] rounded-full animate-spin [animation-duration:17s] [animation-direction:reverse]" style="background:conic-gradient(from 90deg,transparent 0deg,rgba(255,255,255,0.8) 14deg,#3aa0db 38deg,transparent 80deg,transparent 220deg,rgba(58,160,219,0.9) 260deg,transparent 300deg);mask-image:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2px));-webkit-mask-image:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2px));filter:drop-shadow(0 0 6px rgba(58,160,219,0.9))"></div>
+                  <!-- inner disc -->
+                  <div class="absolute inset-[10%] rounded-full bg-[radial-gradient(circle_at_50%_40%,#10346a_0%,#071a3a_62%,#040f26_100%)] border border-[#72c5f8]/30 shadow-[inset_0_0_70px_rgba(0,0,0,0.65),inset_0_2px_0_rgba(255,255,255,0.12)]"></div>
+                  <!-- glass glint on disc -->
+                  <div class="pointer-events-none absolute inset-[10%] rounded-full bg-[linear-gradient(145deg,rgba(255,255,255,0.22)_0%,rgba(255,255,255,0.04)_28%,transparent_45%)]"></div>
+                  <!-- floating lens -->
+                  <div class="fdn-float relative w-[74%] [transform-style:preserve-3d]">
+                    <img src="assets/img/about-crystal-lens.png" alt="Rayner UK Intraocular Lens Partnership" class="w-full object-contain drop-shadow-[0_24px_36px_rgba(0,0,0,0.55)] drop-shadow-[0_0_28px_rgba(114,197,248,0.6)] group-hover:scale-105 transition-transform duration-500">
+                    <div class="pointer-events-none absolute left-[22%] top-[28%] w-[34%] h-[18%] rounded-full bg-white/35 blur-xl mix-blend-screen"></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 5: OUR CORE VALUES & BEYOND DISTRIBUTION (Deep Navy Glass)          -->
+        <!-- ========================================================================= -->
+        <div class="about-slide absolute inset-0 w-full h-full flex flex-col justify-center bg-transparent text-cream px-6 sm:px-10 lg:px-16 pt-24 pb-8 overflow-y-auto transition-all duration-500 ease-out opacity-0 pointer-events-none translate-x-12 z-0" data-index="4">
+          <!-- Pill navigation (replaces round arrows) -->
+          <div class="absolute top-[76px] left-0 right-0 z-30 px-6 sm:px-10 lg:px-16 flex items-center justify-between gap-3 pointer-events-none">
+            <button type="button" onclick="if(window.goToAboutSlide){window.goToAboutSlide(3);}" class="pointer-events-auto inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-cream/90 hover:text-white transition-all cursor-pointer backdrop-blur-md"><svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg><span>Our Foundation</span></button>
+            <button type="button" onclick="if(window.goToAboutSlide){window.goToAboutSlide(0);}" class="pointer-events-auto inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-cream/90 hover:text-white transition-all cursor-pointer backdrop-blur-md"><span>Back to Purpose</span><svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></button>
+          </div>
+
+          
+          <!-- Ambient Luminous Glows -->
+          <div class="pointer-events-none absolute -left-20 top-1/4 h-[32rem] w-[32rem] rounded-full bg-sky/15 blur-[160px]"></div>
+          <div class="pointer-events-none absolute right-0 top-1/3 h-[36rem] w-[36rem] rounded-full bg-[#11326c]/45 blur-[180px]"></div>
+
+          <!-- Core Values: glass card grid -->
+          <div class="relative z-10 mx-auto w-full max-w-[1680px] px-0 sm:px-[clamp(0px,2vw,40px)]">
+
+            <div class="mb-[clamp(0.6rem,2.4vh,1.6rem)]">
+              <h2 class="font-semibold text-white tracking-tight leading-tight text-[clamp(1.7rem,6vh,3.6rem)] mb-1">
+                Our <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky via-[#72c5f8] to-white font-bold drop-shadow-[0_0_20px_rgba(114,197,248,0.45)]">Core Values</span>
+              </h2>
+              <p class="text-white/80 text-[clamp(0.75rem,2vh,1.15rem)]">Principles That Drive Philippine Clinical Stewardship &amp; Long-term Partnerships</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[clamp(0.6rem,2vh,1.4rem)]">
+              <div class="group relative rounded-2xl border border-white/20 bg-gradient-to-b from-white/[0.10] to-white/[0.02] backdrop-blur-xl shadow-[0_0_28px_rgba(114,197,248,0.14),0_10px_30px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.18),inset_0_0_30px_rgba(114,197,248,0.05)] hover:border-[#72c5f8]/60 hover:shadow-[0_0_40px_rgba(114,197,248,0.3),0_14px_36px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.25)] hover:-translate-y-1 transition-all duration-300 px-[clamp(0.8rem,2vh,1.6rem)] py-[clamp(0.7rem,2.4vh,1.8rem)] flex flex-col items-center justify-center text-center">
+                <span class="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent"></span>
+                <span class="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 h-12 w-2/3 rounded-full bg-[#72c5f8]/10 blur-2xl"></span>
+                <div class="relative mb-[clamp(0.4rem,1.4vh,1rem)] grid place-items-center size-[clamp(38px,7vh,68px)] rounded-full border border-[#72c5f8]/55 bg-[radial-gradient(circle,rgba(114,197,248,0.22)_0%,rgba(10,29,64,0.6)_70%)] shadow-[0_0_22px_rgba(114,197,248,0.45),inset_0_0_14px_rgba(114,197,248,0.3)] group-hover:scale-110 transition-transform duration-300">
+                  <span class="pointer-events-none absolute -inset-[5px] rounded-full border border-[#72c5f8]/25"></span>
+                  <span class="block size-[46%] text-[#72c5f8] drop-shadow-[0_0_6px_rgba(114,197,248,0.8)]"><svg class="size-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                </div>
+                <h3 class="font-bold text-white text-[clamp(0.95rem,2.8vh,1.6rem)] mb-[clamp(0.2rem,0.8vh,0.5rem)] leading-tight">Integrity</h3>
+                <p class="text-white/75 leading-snug max-w-[17rem] text-[clamp(0.7rem,1.9vh,1.05rem)]">Ethical, transparent, and compliant conduct.</p>
+              </div>
+              <div class="group relative rounded-2xl border border-white/20 bg-gradient-to-b from-white/[0.10] to-white/[0.02] backdrop-blur-xl shadow-[0_0_28px_rgba(114,197,248,0.14),0_10px_30px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.18),inset_0_0_30px_rgba(114,197,248,0.05)] hover:border-[#72c5f8]/60 hover:shadow-[0_0_40px_rgba(114,197,248,0.3),0_14px_36px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.25)] hover:-translate-y-1 transition-all duration-300 px-[clamp(0.8rem,2vh,1.6rem)] py-[clamp(0.7rem,2.4vh,1.8rem)] flex flex-col items-center justify-center text-center">
+                <span class="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent"></span>
+                <span class="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 h-12 w-2/3 rounded-full bg-[#72c5f8]/10 blur-2xl"></span>
+                <div class="relative mb-[clamp(0.4rem,1.4vh,1rem)] grid place-items-center size-[clamp(38px,7vh,68px)] rounded-full border border-[#72c5f8]/55 bg-[radial-gradient(circle,rgba(114,197,248,0.22)_0%,rgba(10,29,64,0.6)_70%)] shadow-[0_0_22px_rgba(114,197,248,0.45),inset_0_0_14px_rgba(114,197,248,0.3)] group-hover:scale-110 transition-transform duration-300">
+                  <span class="pointer-events-none absolute -inset-[5px] rounded-full border border-[#72c5f8]/25"></span>
+                  <span class="block size-[46%] text-[#72c5f8] drop-shadow-[0_0_6px_rgba(114,197,248,0.8)]"><svg class="size-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+                </div>
+                <h3 class="font-bold text-white text-[clamp(0.95rem,2.8vh,1.6rem)] mb-[clamp(0.2rem,0.8vh,0.5rem)] leading-tight">Innovation</h3>
+                <p class="text-white/75 leading-snug max-w-[17rem] text-[clamp(0.7rem,1.9vh,1.05rem)]">Progress through modern technologies.</p>
+              </div>
+              <div class="group relative rounded-2xl border border-white/20 bg-gradient-to-b from-white/[0.10] to-white/[0.02] backdrop-blur-xl shadow-[0_0_28px_rgba(114,197,248,0.14),0_10px_30px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.18),inset_0_0_30px_rgba(114,197,248,0.05)] hover:border-[#72c5f8]/60 hover:shadow-[0_0_40px_rgba(114,197,248,0.3),0_14px_36px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.25)] hover:-translate-y-1 transition-all duration-300 px-[clamp(0.8rem,2vh,1.6rem)] py-[clamp(0.7rem,2.4vh,1.8rem)] flex flex-col items-center justify-center text-center">
+                <span class="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent"></span>
+                <span class="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 h-12 w-2/3 rounded-full bg-[#72c5f8]/10 blur-2xl"></span>
+                <div class="relative mb-[clamp(0.4rem,1.4vh,1rem)] grid place-items-center size-[clamp(38px,7vh,68px)] rounded-full border border-[#72c5f8]/55 bg-[radial-gradient(circle,rgba(114,197,248,0.22)_0%,rgba(10,29,64,0.6)_70%)] shadow-[0_0_22px_rgba(114,197,248,0.45),inset_0_0_14px_rgba(114,197,248,0.3)] group-hover:scale-110 transition-transform duration-300">
+                  <span class="pointer-events-none absolute -inset-[5px] rounded-full border border-[#72c5f8]/25"></span>
+                  <span class="block size-[46%] text-[#72c5f8] drop-shadow-[0_0_6px_rgba(114,197,248,0.8)]"><svg class="size-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34"/><path d="M18 14.66V17c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M6 4h12v7a6 6 0 0 1-12 0V4z"/></svg></span>
+                </div>
+                <h3 class="font-bold text-white text-[clamp(0.95rem,2.8vh,1.6rem)] mb-[clamp(0.2rem,0.8vh,0.5rem)] leading-tight">Excellence</h3>
+                <p class="text-white/75 leading-snug max-w-[17rem] text-[clamp(0.7rem,1.9vh,1.05rem)]">Precision in clinical delivery &amp; care.</p>
+              </div>
+              <div class="group relative rounded-2xl border border-white/20 bg-gradient-to-b from-white/[0.10] to-white/[0.02] backdrop-blur-xl shadow-[0_0_28px_rgba(114,197,248,0.14),0_10px_30px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.18),inset_0_0_30px_rgba(114,197,248,0.05)] hover:border-[#72c5f8]/60 hover:shadow-[0_0_40px_rgba(114,197,248,0.3),0_14px_36px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.25)] hover:-translate-y-1 transition-all duration-300 px-[clamp(0.8rem,2vh,1.6rem)] py-[clamp(0.7rem,2.4vh,1.8rem)] flex flex-col items-center justify-center text-center">
+                <span class="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent"></span>
+                <span class="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 h-12 w-2/3 rounded-full bg-[#72c5f8]/10 blur-2xl"></span>
+                <div class="relative mb-[clamp(0.4rem,1.4vh,1rem)] grid place-items-center size-[clamp(38px,7vh,68px)] rounded-full border border-[#72c5f8]/55 bg-[radial-gradient(circle,rgba(114,197,248,0.22)_0%,rgba(10,29,64,0.6)_70%)] shadow-[0_0_22px_rgba(114,197,248,0.45),inset_0_0_14px_rgba(114,197,248,0.3)] group-hover:scale-110 transition-transform duration-300">
+                  <span class="pointer-events-none absolute -inset-[5px] rounded-full border border-[#72c5f8]/25"></span>
+                  <span class="block size-[46%] text-[#72c5f8] drop-shadow-[0_0_6px_rgba(114,197,248,0.8)]"><svg class="size-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m11 17 2 2a1 1 0 0 0 1.414 0l4.586-4.586a2 2 0 0 0 0-2.828l-1.172-1.172a2 2 0 0 0-2.828 0L13 12.5"/><path d="m13 12.5 1-1a2 2 0 0 0 0-2.828l-1.172-1.172a2 2 0 0 0-2.828 0l-3 3a2 2 0 0 0 0 2.828l1 1"/></svg></span>
+                </div>
+                <h3 class="font-bold text-white text-[clamp(0.95rem,2.8vh,1.6rem)] mb-[clamp(0.2rem,0.8vh,0.5rem)] leading-tight">Reliability</h3>
+                <p class="text-white/75 leading-snug max-w-[17rem] text-[clamp(0.7rem,1.9vh,1.05rem)]">Unbroken logistics &amp; dependable supply.</p>
+              </div>
+              <div class="group relative rounded-2xl border border-white/20 bg-gradient-to-b from-white/[0.10] to-white/[0.02] backdrop-blur-xl shadow-[0_0_28px_rgba(114,197,248,0.14),0_10px_30px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.18),inset_0_0_30px_rgba(114,197,248,0.05)] hover:border-[#72c5f8]/60 hover:shadow-[0_0_40px_rgba(114,197,248,0.3),0_14px_36px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.25)] hover:-translate-y-1 transition-all duration-300 px-[clamp(0.8rem,2vh,1.6rem)] py-[clamp(0.7rem,2.4vh,1.8rem)] flex flex-col items-center justify-center text-center">
+                <span class="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent"></span>
+                <span class="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 h-12 w-2/3 rounded-full bg-[#72c5f8]/10 blur-2xl"></span>
+                <div class="relative mb-[clamp(0.4rem,1.4vh,1rem)] grid place-items-center size-[clamp(38px,7vh,68px)] rounded-full border border-[#72c5f8]/55 bg-[radial-gradient(circle,rgba(114,197,248,0.22)_0%,rgba(10,29,64,0.6)_70%)] shadow-[0_0_22px_rgba(114,197,248,0.45),inset_0_0_14px_rgba(114,197,248,0.3)] group-hover:scale-110 transition-transform duration-300">
+                  <span class="pointer-events-none absolute -inset-[5px] rounded-full border border-[#72c5f8]/25"></span>
+                  <span class="block size-[46%] text-[#72c5f8] drop-shadow-[0_0_6px_rgba(114,197,248,0.8)]"><svg class="size-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+                </div>
+                <h3 class="font-bold text-white text-[clamp(0.95rem,2.8vh,1.6rem)] mb-[clamp(0.2rem,0.8vh,0.5rem)] leading-tight">Partnership</h3>
+                <p class="text-white/75 leading-snug max-w-[17rem] text-[clamp(0.7rem,1.9vh,1.05rem)]">Long-term trust with principals &amp; surgeons.</p>
+              </div>
+              <div class="group relative rounded-2xl border border-white/20 bg-gradient-to-b from-white/[0.10] to-white/[0.02] backdrop-blur-xl shadow-[0_0_28px_rgba(114,197,248,0.14),0_10px_30px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.18),inset_0_0_30px_rgba(114,197,248,0.05)] hover:border-[#72c5f8]/60 hover:shadow-[0_0_40px_rgba(114,197,248,0.3),0_14px_36px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.25)] hover:-translate-y-1 transition-all duration-300 px-[clamp(0.8rem,2vh,1.6rem)] py-[clamp(0.7rem,2.4vh,1.8rem)] flex flex-col items-center justify-center text-center">
+                <span class="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent"></span>
+                <span class="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 h-12 w-2/3 rounded-full bg-[#72c5f8]/10 blur-2xl"></span>
+                <div class="relative mb-[clamp(0.4rem,1.4vh,1rem)] grid place-items-center size-[clamp(38px,7vh,68px)] rounded-full border border-[#72c5f8]/55 bg-[radial-gradient(circle,rgba(114,197,248,0.22)_0%,rgba(10,29,64,0.6)_70%)] shadow-[0_0_22px_rgba(114,197,248,0.45),inset_0_0_14px_rgba(114,197,248,0.3)] group-hover:scale-110 transition-transform duration-300">
+                  <span class="pointer-events-none absolute -inset-[5px] rounded-full border border-[#72c5f8]/25"></span>
+                  <span class="block size-[46%] text-[#72c5f8] drop-shadow-[0_0_6px_rgba(114,197,248,0.8)]"><svg class="size-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span>
+                </div>
+                <h3 class="font-bold text-white text-[clamp(0.95rem,2.8vh,1.6rem)] mb-[clamp(0.2rem,0.8vh,0.5rem)] leading-tight">Patient Focus</h3>
+                <p class="text-white/75 leading-snug max-w-[17rem] text-[clamp(0.7rem,1.9vh,1.05rem)]">Patient sight &amp; well-being as our ultimate goal.</p>
+              </div>
+            </div>
+
+            <!-- Beyond Distribution closing banner (glass) -->
+            <div class="mt-[clamp(0.6rem,2vh,1.4rem)] relative rounded-2xl border border-white/20 bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-xl shadow-[0_0_24px_rgba(114,197,248,0.12),inset_0_1px_0_rgba(255,255,255,0.15)] px-[clamp(0.8rem,2vh,1.6rem)] py-[clamp(0.5rem,1.6vh,1.1rem)] text-center">
+              <span class="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/70 to-transparent"></span>
+              <h3 class="font-bold text-white text-[clamp(0.85rem,2.2vh,1.3rem)]">Beyond Distribution. Advancing Healthcare Together.</h3>
+              <p class="text-[#72c5f8] font-medium text-[clamp(0.65rem,1.6vh,0.95rem)] mt-0.5">Sourcing, commercializing, and distributing ophthalmic and healthcare technologies for Filipino clinicians and patients.</p>
+              <div class="mt-1.5 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-[clamp(0.6rem,1.5vh,0.85rem)] font-mono text-white/70">
+                <span class="flex items-center gap-1.5"><span class="size-1.5 rounded-full bg-[#72c5f8] shadow-[0_0_6px_rgba(114,197,248,0.9)]"></span>Philippine FDA Registered</span>
+                <span class="flex items-center gap-1.5"><span class="size-1.5 rounded-full bg-[#72c5f8] shadow-[0_0_6px_rgba(114,197,248,0.9)]"></span>Rayner UK Official Partner</span>
+                <span class="flex items-center gap-1.5"><span class="size-1.5 rounded-full bg-[#72c5f8] shadow-[0_0_6px_rgba(114,197,248,0.9)]"></span>Nationwide Hospital Network</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </section>

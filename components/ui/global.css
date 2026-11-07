@@ -1,0 +1,8 @@
+/* Route Globe Component Styles */
+@layer utilities {
+  [data-dragging] {
+    cursor: grabbing !important;
+    user-select: none;
+  }
+}
+

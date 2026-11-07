@@ -1,0 +1,177 @@
+<section id="hero" aria-labelledby="hero-title"
+      class="page-snap-section page-transition-section relative isolate flex min-h-[100svh] flex-col items-center justify-center overflow-hidden p-0 bg-[#0a1d40]">
+      
+      <div class="ih-root w-full" id="hero-interactive-stage">
+        
+        <!-- 1. Active Moving 21st.dev Silk Waves ShaderBackground (waves-background-2) in MediQ Navy Palette -->
+        <canvas id="hero-waves-shader-canvas" class="pointer-events-none absolute inset-0 z-0 block size-full opacity-100" aria-hidden="true"></canvas>
+
+        <!-- 2. Dynamic Lifespan Eye Stage: Filipino Vision Across Generations (Seamlessly mixed into moving waves with zero divider) -->
+        <div id="hero-eye-lifespan-container" class="absolute inset-0 z-[1] overflow-hidden select-none pointer-events-none mix-blend-screen"
+             style="-webkit-mask-image: radial-gradient(ellipse at 70% 50%, black 35%, rgba(0,0,0,0.85) 55%, transparent 85%); mask-image: radial-gradient(ellipse at 70% 50%, black 35%, rgba(0,0,0,0.85) 55%, transparent 85%);">
+          <!-- Child Stage (~8–10y) -->
+          <div class="hero-eye-slide absolute inset-0 bg-cover bg-[center_right_10%] sm:bg-[center_right_15%] lg:bg-[center_right_20%] bg-no-repeat transition-opacity duration-700 ease-in-out opacity-100 z-[1]"
+               style="background-image: url('assets/img/hero-eye-kid.jpg?v=73.00');"
+               data-stage="0"></div>
+          
+          <!-- Youth / Teen Stage (~18–20y) -->
+          <div class="hero-eye-slide absolute inset-0 bg-cover bg-[center_right_10%] sm:bg-[center_right_15%] lg:bg-[center_right_20%] bg-no-repeat transition-opacity duration-700 ease-in-out opacity-0"
+               style="background-image: url('assets/img/hero-eye-teen.jpg?v=73.00');"
+               data-stage="1"></div>
+          
+          <!-- Mature Adult Stage (~40–45y) -->
+          <div class="hero-eye-slide absolute inset-0 bg-cover bg-[center_right_10%] sm:bg-[center_right_15%] lg:bg-[center_right_20%] bg-no-repeat transition-opacity duration-700 ease-in-out opacity-0"
+               style="background-image: url('assets/img/hero-eye-adult.jpg?v=73.00');"
+               data-stage="2"></div>
+          
+          <!-- Senior Stage (~65–70y) -->
+          <div class="hero-eye-slide absolute inset-0 bg-cover bg-[center_right_10%] sm:bg-[center_right_15%] lg:bg-[center_right_20%] bg-no-repeat transition-opacity duration-700 ease-in-out opacity-0"
+               style="background-image: url('assets/img/hero-eye-senior.jpg?v=73.00');"
+               data-stage="3"></div>
+
+          <!-- Pristine 4K Macro Iris Texture with Live Interactive Wavefront Optics -->
+          <div class="hero-eye-slide absolute inset-0 bg-cover bg-[center_right_10%] sm:bg-[center_right_15%] lg:bg-[center_right_20%] bg-no-repeat transition-opacity duration-700 ease-in-out opacity-0 overflow-hidden"
+               style="background-image: url('assets/img/hero-eye-macro-iris.jpg?v=75.00');"
+               data-stage="4">
+            <!-- Interactive Live Wavefront Optics Canvas (Continuous Motion + Full Mouse Interactivity) -->
+            <canvas id="hero-iris-interactive-canvas" class="absolute inset-0 size-full pointer-events-auto cursor-pointer mix-blend-screen"
+                    title="RayOne® Galaxy Spiral Wavefront Optic · Click to pulse wavefront"></canvas>
+          </div>
+        </div>
+
+        <!-- 3. Left Vignette Gradient Fade (Guarantees Text Readability on Left over moving background) -->
+        <div class="absolute inset-0 bg-gradient-to-r from-[#0a1d40]/95 via-[#0a1d40]/70 via-35% md:via-45% to-transparent pointer-events-none z-[2]"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0a1d40] via-transparent via-15% to-[#0a1d40]/40 pointer-events-none z-[2]"></div>
+
+        <div class="ih-shell relative z-10">
+          <div class="ih-hero">
+            
+            <!-- Left Copy Column (Exact Reference Layout with MediQ Text) -->
+            <div class="ih-hero-copy">
+              
+              <!-- Eyebrow Tag -->
+              <p class="ih-eyebrow">
+                <span>PRECISION &nbsp;&bull;&nbsp; INNOVATION &nbsp;&bull;&nbsp; BETTER VISION</span>
+              </p>
+
+              <!-- Main Headline with Animated Cycling Font & Interactive Surface -->
+              <h1 id="hero-title" class="ih-h1 relative select-none">
+                <canvas id="hero-liquid-title-canvas" class="pointer-events-auto absolute inset-0 z-10 block size-full cursor-grab active:cursor-grabbing opacity-0 transition-opacity duration-300" aria-hidden="true"></canvas>
+                <span class="ih-h1-line">Advanced Intraocular</span>
+                <span id="hero-cycle-word" class="ih-h1-line text-sky transition-all duration-300 ease-out inline-block">Continuous Spiral Optics</span>
+              </h1>
+
+              <!-- Lede Description (Our Current MediQ Text) -->
+              <p class="ih-lede">
+                MediQ Pharma connects Philippine cataract and refractive surgeons to RayOne® Galaxy — the world’s first AI-engineered spiral intraocular lens. Delivering continuous full-range visual acuity with 100% transmitted light and zero diffractive dysphotopsia.
+              </p>
+
+              <!-- Reference Action CTAs -->
+              <div class="ih-hero-ctas">
+                <a href="#products" class="ih-btn-pill-primary">
+                  <span>Explore Our Lenses</span>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" />
+                  </svg>
+                </a>
+
+                <button type="button" id="hero-open-demo-btn" class="ih-btn-video-secondary group">
+                  <span class="ih-play-circle group-hover:scale-110 transition-transform">
+                    <svg class="size-3.5 ml-0.5 text-current" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                  </span>
+                  <span>Watch Video</span>
+                </button>
+              </div>
+
+            </div>
+
+            <!-- Right Column: Clean Open Visual Stage -->
+            <div class="ih-art-lens-stage pointer-events-none"></div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Clinical Film / Workflow Dialog -->
+      <div id="hero-demo-modal"
+        class="hidden fixed inset-0 z-[100] grid place-items-center bg-black/75 p-4 backdrop-blur-md transition-opacity duration-300">
+        <div class="relative w-full max-w-lg overflow-hidden rounded-2xl border border-sky/35 bg-[#0a1d40]/95 p-5 text-white shadow-2xl ring-1 ring-white/15">
+          <div class="flex items-center justify-between border-b border-white/10 pb-3 text-xs">
+            <span class="flex items-center gap-2 font-mono text-sky">
+              <span class="size-2 rounded-full bg-emerald-400 animate-ping"></span>
+              <span id="demo-modal-status">surgical simulation running · 0.0s</span>
+            </span>
+            <button type="button" id="hero-close-demo-btn" class="grid size-7 place-items-center rounded-lg text-cream/60 hover:bg-white/10 hover:text-white transition" aria-label="Close dialog">
+              <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Clean Iris Macro Showcase (No Watermark) -->
+          <div class="relative w-full aspect-video rounded-xl overflow-hidden border border-sky/30 my-4 bg-black shadow-lg">
+            <img src="assets/img/hero-eye-macro-iris.jpg?v=73.00" alt="4K Iris Micro-Texture and Spiral Wavefront" class="w-full h-full object-cover">
+            <div class="absolute top-2.5 left-3 flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#0a1d40]/80 backdrop-blur-md border border-sky/40 text-[10px] font-mono text-sky uppercase tracking-wider">
+              <span class="size-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              4K Iris Micro-Texture &amp; Wavefront Focus
+            </div>
+          </div>
+
+          <ol class="space-y-2 text-xs" id="demo-modal-steps">
+            <li class="demo-step flex items-center gap-3 rounded-lg border border-transparent p-2.5 transition" data-step="0">
+              <span class="step-num flex size-6 shrink-0 items-center justify-center rounded border border-white/20 font-mono text-[10px] text-sky">01</span>
+              <div class="flex-1">
+                <span class="block font-semibold text-white">AI Wavefront Optimization</span>
+                <span class="block text-[11px] text-cream/70">Ray-tracing continuous spiral surface calculation</span>
+              </div>
+              <span class="step-time font-mono text-[10.5px] text-cream/40">1.6s</span>
+            </li>
+            <li class="demo-step flex items-center gap-3 rounded-lg border border-transparent p-2.5 transition opacity-40" data-step="1">
+              <span class="step-num flex size-6 shrink-0 items-center justify-center rounded border border-white/20 font-mono text-[10px]">02</span>
+              <div class="flex-1">
+                <span class="block font-semibold text-white">Lock &amp; Roll® Micro-Incision</span>
+                <span class="block text-[11px] text-cream/70">Sub-2.2mm preloaded delivery across clear cornea</span>
+              </div>
+              <span class="step-time font-mono text-[10.5px] text-cream/40">3.2s</span>
+            </li>
+            <li class="demo-step flex items-center gap-3 rounded-lg border border-transparent p-2.5 transition opacity-40" data-step="2">
+              <span class="step-num flex size-6 shrink-0 items-center justify-center rounded border border-white/20 font-mono text-[10px]">03</span>
+              <div class="flex-1">
+                <span class="block font-semibold text-white">AVH™ C-Loop Capsular Centration</span>
+                <span class="block text-[11px] text-cream/70">Anti-vaulting haptic engagement with 1.83° rotational stability</span>
+              </div>
+              <span class="step-time font-mono text-[10.5px] text-cream/40">4.8s</span>
+            </li>
+            <li class="demo-step flex items-center gap-3 rounded-lg border border-transparent p-2.5 transition opacity-40" data-step="3">
+              <span class="step-num flex size-6 shrink-0 items-center justify-center rounded border border-white/20 font-mono text-[10px]">04</span>
+              <div class="flex-1">
+                <span class="block font-semibold text-white">100% Light Transmission Verified</span>
+                <span class="block text-[11px] text-cream/70">Zero diffractive rings — 0.0% photic dysphotopsia</span>
+              </div>
+              <span class="step-time font-mono text-[10.5px] text-cream/40">6.4s</span>
+            </li>
+            <li class="demo-step flex items-center gap-3 rounded-lg border border-transparent p-2.5 transition opacity-40" data-step="4">
+              <span class="step-num flex size-6 shrink-0 items-center justify-center rounded border border-white/20 font-mono text-[10px]">05</span>
+              <div class="flex-1">
+                <span class="block font-semibold text-white">Continuous Full-Range Acuity</span>
+                <span class="block text-[11px] text-cream/70">Pristine distance, intermediate and reading focus achieved</span>
+              </div>
+              <span class="step-time font-mono text-[10.5px] text-cream/40">8.0s</span>
+            </li>
+          </ol>
+          <div class="mt-4 h-1 w-full overflow-hidden rounded-full bg-white/10">
+            <div id="demo-modal-progress-bar" class="h-full w-0 bg-sky transition-all duration-150"></div>
+          </div>
+          <div class="mt-4 flex items-center justify-between border-t border-white/10 pt-3 text-xs text-cream/70">
+            <span id="demo-modal-foot-note">Clinical Trial Ref: Hospital San Rafael, Madrid</span>
+            <button type="button" id="demo-modal-replay-btn" class="rounded-lg border border-sky/30 px-3 py-1 font-semibold text-white hover:border-sky hover:bg-sky/20 transition disabled:opacity-40" disabled>
+              Replay
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </section>
