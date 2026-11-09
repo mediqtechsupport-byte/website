@@ -93,10 +93,10 @@
     { id: 'hero', navId: 'nav-home' },
     { id: 'about', navId: 'nav-about' },
     { id: 'products', navId: 'nav-products' },
-    { id: 'optical-studio', navId: 'nav-products' },
-    { id: 'galaxy-delivery', navId: 'nav-products' },
-    { id: 'activities', navId: 'nav-news' },
+    { id: 'brands', navId: 'nav-brands' },
     { id: 'distribution', navId: 'nav-services' },
+    { id: 'resources', navId: 'nav-resources' },
+    { id: 'activities', navId: 'nav-news' },
     { id: 'contact', navId: 'nav-contact' },
   ];
   const navLinks = document.querySelectorAll('.nav-link, .tubelight-pill, .spotlight-pill');
@@ -105,11 +105,10 @@
     'hero',
     'about',
     'products',
-    'optical-studio',
-    'clinical-lab',
-    'galaxy-delivery',
-    'activities',
+    'brands',
     'distribution',
+    'resources',
+    'activities',
     'contact',
     'site-footer',
   ];
@@ -124,14 +123,12 @@
   }
 
   const updateActiveNavOnScroll = () => {
-    const scrollMid = window.scrollY + window.innerHeight * 0.35;
-    let activeNavId = null;
-    const isProductsMode = !!document.getElementById('pedestal-showcase-stage');
+    const scrollMid = window.scrollY + window.innerHeight * 0.42;
+    let activeNavId = 'nav-home';
     for (const item of trackedNavTargets) {
-      if (item.id === 'products' && !isProductsMode) continue;
       const el = document.getElementById(item.id);
-      if (!el) continue;
-      const top = el.getBoundingClientRect().top + window.scrollY;
+      if (!el || el.classList.contains('hidden') || el.offsetParent === null) continue;
+      const top = el.offsetTop;
       if (scrollMid >= top) {
         activeNavId = item.navId;
       }
@@ -144,8 +141,8 @@
     let activePageId = 'hero';
     for (const pid of pageTargetIds) {
       const el = document.getElementById(pid);
-      if (!el) continue;
-      const top = el.getBoundingClientRect().top + window.scrollY;
+      if (!el || el.classList.contains('hidden')) continue;
+      const top = el.offsetTop;
       if (scrollMid >= top - 90) {
         activePageId = pid;
       }
@@ -155,6 +152,7 @@
       dot.classList.toggle('is-active', tgt === `#${activePageId}`);
     });
   };
+  window.__updateActiveNavOnScroll = updateActiveNavOnScroll;
   window.addEventListener('scroll', updateActiveNavOnScroll, { passive: true });
   updateActiveNavOnScroll();
 
@@ -174,7 +172,11 @@
         }, 420);
       }
 
-      targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (typeof window.grailScrollTo === 'function') {
+        window.grailScrollTo(targetEl);
+      } else {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
   });
 
@@ -211,7 +213,11 @@
       });
 
       requestAnimationFrame(() => {
-        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (typeof window.grailScrollTo === 'function') {
+          window.grailScrollTo(targetEl);
+        } else {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       });
     });
   });
@@ -391,10 +397,10 @@
       const match = card.getAttribute('data-product-key') === key;
       card.classList.toggle('is-active', match);
       card.classList.toggle('border-sky/50', match);
-      card.classList.toggle('bg-[#07162e]/90', match);
+      card.classList.toggle('bg-[#0a1d40]/90', match);
       card.classList.toggle('shadow-[0_8px_30px_rgba(58,160,219,0.18)]', match);
       card.classList.toggle('border-white/10', !match);
-      card.classList.toggle('bg-[#071324]/60', !match);
+      card.classList.toggle('bg-[#0a1d40]/60', !match);
 
       const drawer = card.querySelector('.acc-drawer');
       if (drawer) {
@@ -532,21 +538,43 @@
     });
   });
 
-  // ─── 4B. 2ND PAGE (#ABOUT) MEDTECH BLUE AMBIENT SMOKE CANVAS ─────────────────
+  // ─── 4B. 2ND PAGE (#ABOUT) TWO-LAYER SMOKE CANVAS (PUFF + TENDRIL) ──────────
   function initAboutSmokeCanvas() {
     const canvas = document.getElementById('about-smoke-canvas');
     if (!canvas || canvas._smokeActive) return;
     canvas._smokeActive = true;
 
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const PALETTE = [
+      [20, 50, 100],
+      [40, 80, 140],
+      [74, 127, 165],
+      [15, 35, 75],
+      [90, 140, 190]
+    ];
+
+    const reducedMotionMq = typeof window.matchMedia === 'function'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)')
+      : { matches: false };
+
     let w = 1, h = 1, dpr = 1;
     let t = 0;
+
+    function rand(min, max) {
+      return min + Math.random() * (max - min);
+    }
+
+    function pickColor() {
+      return PALETTE[Math.floor(Math.random() * PALETTE.length)];
+    }
 
     function resize() {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       const rect = canvas.getBoundingClientRect();
-      w = Math.max(1, Math.floor(rect.width));
-      h = Math.max(1, Math.floor(rect.height));
+      w = Math.max(1, Math.floor(rect.width || window.innerWidth));
+      h = Math.max(1, Math.floor(rect.height || window.innerHeight));
       if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
         canvas.width = w * dpr;
         canvas.height = h * dpr;
@@ -555,59 +583,155 @@
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    // 22 drifting organic fluid smoke puffs across about background (matching Hero Page fluid smoke)
-    const puffs = Array.from({ length: 22 }, (_, i) => ({
-      baseX: (i / 22) * 1.3 - 0.15,
-      baseY: 0.12 + (i % 5) * 0.20,
-      r: 220 + (i % 6) * 65,
-      speed: 0.12 + (i % 5) * 0.05,
-      phase: i * 1.42,
-      alpha: 0.38 + (i % 4) * 0.14,
-      hueShift: (i % 3)
-    }));
+    // Background Layer: 14 large radial gradient blobs (radius 180–420px)
+    class Puff {
+      constructor(prewarm) {
+        this.reset(prewarm);
+      }
+      reset(prewarm) {
+        this.radius = rand(180, 420);
+        this.x = rand(-this.radius * 0.25, w + this.radius * 0.25);
+        this.y = prewarm ? rand(-this.radius * 0.1, h + this.radius * 0.3) : rand(h * 0.25, h + this.radius * 0.45);
+        this.vx = rand(-0.22, 0.22);
+        this.vy = -rand(0.14, 0.36);
+        this.life = rand(600, 1400);
+        this.age = prewarm ? Math.floor(rand(0, this.life)) : 0;
+        this.maxOpacity = rand(0.06, 0.16);
+        this.color = pickColor();
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.age++;
+        if (this.age >= this.life || this.y < -this.radius * 1.2) {
+          this.reset(false);
+        }
+      }
+      draw(c) {
+        const p = Math.min(1, Math.max(0, this.age / this.life));
+        const fade = Math.sin(p * Math.PI);
+        const alpha = this.maxOpacity * fade;
+        if (alpha <= 0.001) return;
 
-    function renderSmoke() {
-      t += 0.008; // Calm, serene organic fluid smoke drift
+        const [r, g, b] = this.color;
+        const grad = c.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+        grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(4)})`);
+        grad.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${(alpha * 0.45).toFixed(4)})`);
+        grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+        c.fillStyle = grad;
+        c.beginPath();
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        c.fill();
+      }
+    }
+
+    // Foreground Layer: 18 upward-rising smoke wisps made of 18–32 linked nodes
+    class Tendril {
+      constructor(prewarm) {
+        this.reset(prewarm);
+      }
+      reset(prewarm) {
+        this.nodeCount = Math.floor(rand(18, 33)); // 18–32 linked nodes
+        this.spacing = rand(16, 26);
+        this.baseX = rand(w * 0.04, w * 0.96);
+        const chainHeight = this.nodeCount * this.spacing;
+        this.baseY = prewarm
+          ? rand(h * 0.25, h + chainHeight * 0.75)
+          : rand(h * 0.55, h + chainHeight * 0.85);
+        this.vy = -rand(0.28, 0.62);
+        this.vx = rand(-0.08, 0.08);
+        this.swayFreq = rand(0.014, 0.032);
+        this.swayOffset = rand(0, Math.PI * 2);
+        this.sway = rand(18, 46);
+        this.life = rand(320, 700);
+        this.age = prewarm ? Math.floor(rand(0, this.life)) : 0;
+        this.maxOpacity = rand(0.07, 0.22);
+        this.color = pickColor();
+
+        // Node radii: 28–90px, shrinking toward the tip
+        const baseR = rand(58, 90);
+        const tipR = rand(28, 40);
+        this.radii = Array.from({ length: this.nodeCount }, (_, i) => {
+          const frac = this.nodeCount > 1 ? i / (this.nodeCount - 1) : 0;
+          return baseR + (tipR - baseR) * frac;
+        });
+      }
+      update() {
+        this.baseX += this.vx;
+        this.baseY += this.vy;
+        this.age++;
+        const topY = this.baseY - this.nodeCount * this.spacing;
+        if (this.age >= this.life || topY < -140) {
+          this.reset(false);
+        }
+      }
+      draw(c, time) {
+        const p = Math.min(1, Math.max(0, this.age / this.life));
+        let lifeEnv = 1;
+        if (p < 0.22) {
+          lifeEnv = p / 0.22;
+        } else if (p > 0.72) {
+          lifeEnv = (1 - p) / 0.28;
+        }
+        if (lifeEnv <= 0.001) return;
+
+        const [r, g, b] = this.color;
+        const n = this.nodeCount;
+        for (let i = 0; i < n; i++) {
+          const frac = n > 1 ? i / (n - 1) : 0;
+          const swayX = Math.sin(time * this.swayFreq + this.swayOffset + i * 0.35) * this.sway * (0.4 + frac * 1.4);
+          const nx = this.baseX + swayX;
+          const ny = this.baseY - i * this.spacing;
+          const rad = this.radii[i];
+
+          // Sine envelope sin(frac * PI) to fade opacity at base and tip
+          const nodeEnv = Math.sin(frac * Math.PI);
+          const alpha = this.maxOpacity * lifeEnv * nodeEnv;
+          if (alpha <= 0.0015) continue;
+
+          const grad = c.createRadialGradient(nx, ny, 0, nx, ny, rad);
+          grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(4)})`);
+          grad.addColorStop(0.55, `rgba(${r}, ${g}, ${b}, ${(alpha * 0.42).toFixed(4)})`);
+          grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+          c.fillStyle = grad;
+          c.beginPath();
+          c.arc(nx, ny, rad, 0, Math.PI * 2);
+          c.fill();
+        }
+      }
+    }
+
+    const puffs = Array.from({ length: 14 }, () => new Puff(true));
+    const tendrils = Array.from({ length: 18 }, () => new Tendril(true));
+
+    function renderFrame() {
       ctx.save();
-      ctx.scale(dpr, dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
 
+      // 1. Draw Puffs (background layer)
       for (let i = 0; i < puffs.length; i++) {
-        const p = puffs[i];
-        // Harmonic motion generating curling, organic smoke drift in exact MedTech Blue
-        const cx = (p.baseX + Math.sin(t * p.speed + p.phase) * 0.15 + Math.sin(t * 0.3 + p.phase * 0.7) * 0.04) * w;
-        const cy = (p.baseY + Math.cos(t * p.speed * 0.85 + p.phase) * 0.10 + Math.cos(t * 0.25 + p.phase) * 0.03) * h;
-        const rad = p.r * (1 + Math.sin(t * 0.55 + p.phase) * 0.18);
+        if (!reducedMotionMq.matches) puffs[i].update();
+        puffs[i].draw(ctx);
+      }
 
-        const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, rad);
-        // Rich MedTech Blue Harmonic Spectrum with luminous sky accents
-        if (p.hueShift === 0) {
-          g.addColorStop(0, `rgba(58, 160, 219, ${(p.alpha * 0.36).toFixed(3)})`);
-          g.addColorStop(0.38, `rgba(29, 77, 140, ${(p.alpha * 0.26).toFixed(3)})`);
-          g.addColorStop(0.72, `rgba(16, 43, 92, ${(p.alpha * 0.12).toFixed(3)})`);
-          g.addColorStop(1, 'transparent');
-        } else if (p.hueShift === 1) {
-          g.addColorStop(0, `rgba(32, 92, 170, ${(p.alpha * 0.42).toFixed(3)})`);
-          g.addColorStop(0.40, `rgba(20, 53, 112, ${(p.alpha * 0.30).toFixed(3)})`);
-          g.addColorStop(0.75, `rgba(10, 29, 64, ${(p.alpha * 0.15).toFixed(3)})`);
-          g.addColorStop(1, 'transparent');
-        } else {
-          g.addColorStop(0, `rgba(114, 197, 248, ${(p.alpha * 0.28).toFixed(3)})`);
-          g.addColorStop(0.35, `rgba(30, 80, 150, ${(p.alpha * 0.20).toFixed(3)})`);
-          g.addColorStop(0.70, `rgba(16, 43, 92, ${(p.alpha * 0.10).toFixed(3)})`);
-          g.addColorStop(1, 'transparent');
-        }
-
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(cx, cy, rad, 0, Math.PI * 2);
-        ctx.fill();
+      // 2. Draw Tendrils on top (foreground layer)
+      for (let i = 0; i < tendrils.length; i++) {
+        if (!reducedMotionMq.matches) tendrils[i].update();
+        tendrils[i].draw(ctx, t);
       }
 
       ctx.restore();
-      requestAnimationFrame(renderSmoke);
+
+      if (!reducedMotionMq.matches) {
+        t += 1;
+        requestAnimationFrame(renderFrame);
+      }
     }
-    requestAnimationFrame(renderSmoke);
+
+    renderFrame();
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initAboutSmokeCanvas);
@@ -4276,7 +4400,7 @@ void main() {
       [0.0392, 0.1137, 0.2510], // Primary MedTech Blue base #0a1d40 (RGB 10, 29, 64)
       [0.0784, 0.2078, 0.4392], // Luminous #0a1d40 wave fold highlight #143570 (RGB 20, 53, 112)
       [0.0588, 0.1569, 0.3373], // Mid-tone #0a1d40 royal navy #0f2856 (RGB 15, 40, 86)
-      [0.0275, 0.0784, 0.1765], // Deep ocean shadow #07142d (RGB 7, 20, 45)
+      [0.0392, 0.1137, 0.2510], // Deep MedTech Blue base #0a1d40 (RGB 10, 29, 64)
       [0.0392, 0.1137, 0.2510],
       [0.0392, 0.1137, 0.2510],
       [0.0392, 0.1137, 0.2510],
@@ -6130,90 +6254,87 @@ if (document.readyState === 'loading') {
 
 
 /* ========================================================================= */
-/* ABOUT MEDIQ PAGE-BY-PAGE DECK CONTROLLER (Zero Long Scroll)               */
+/* ABOUT MEDIQ LANDING + UNIFIED SCROLLABLE SUBPAGE CONTROLLER               */
 /* ========================================================================= */
 function initAboutDeckController() {
   const aboutSec = document.getElementById('about');
   const slides = document.querySelectorAll('.about-slide');
-  const tabs = document.querySelectorAll('.about-deck-tab');
+  const subScroll = document.getElementById('about-subpage-scroll');
+  const wavesCanvas = document.getElementById('about-waves-shader-canvas');
+  const subnavPills = document.querySelectorAll('.abt-subnav-pill');
   const prevBtn = document.getElementById('about-deck-prev');
   const nextBtn = document.getElementById('about-deck-next');
-  const counter = document.getElementById('about-deck-counter');
-  const progressBar = document.getElementById('about-deck-progress');
   const goNextBtns = document.querySelectorAll('.about-go-next');
 
   if (!slides.length) return;
 
   let currentIndex = 0;
-  const total = slides.length;
+
+  const SECTION_MAP = {
+    1: 'about-sec-who-we-are',
+    2: 'about-slide-what-we-do',
+    3: 'about-sec-foundation',
+    4: 'about-sec-values'
+  };
+
+  function setActiveSubnavPill(sectionId) {
+    subnavPills.forEach((pill) => {
+      const isMatch = pill.getAttribute('data-about-jump') === sectionId;
+      pill.classList.toggle('is-active', isMatch);
+    });
+  }
+
+  function scrollToSubSection(targetIdx, wasAlreadyOpen) {
+    if (!subScroll) return;
+    const secId = SECTION_MAP[targetIdx] || 'about-sec-who-we-are';
+    setActiveSubnavPill(secId);
+
+    if (targetIdx === 1) {
+      subScroll.scrollTo({ top: 0, behavior: wasAlreadyOpen ? 'smooth' : 'auto' });
+      return;
+    }
+
+    const targetEl = document.getElementById(secId);
+    if (targetEl) {
+      const topPos = Math.max(0, targetEl.offsetTop);
+      subScroll.scrollTo({
+        top: topPos,
+        behavior: wasAlreadyOpen ? 'smooth' : 'auto'
+      });
+    }
+  }
 
   function goToSlide(idx) {
-    if (idx < 0) idx = 0;
-    if (idx >= total) idx = total - 1;
-    currentIndex = idx;
-    window.__aboutDeckCurrentIndex = idx;
+    const requestedIdx = Number.isFinite(idx) ? idx : 0;
+    const wasSubpageOpen = (currentIndex === 1);
+    const activeSlideIdx = requestedIdx <= 0 ? 0 : 1;
 
-    // Update slides classes
+    currentIndex = activeSlideIdx;
+    window.__aboutDeckCurrentIndex = activeSlideIdx;
+
     slides.forEach((slide, i) => {
-      slide.classList.remove('opacity-100', 'pointer-events-auto', 'translate-x-0', 'z-10', 'opacity-0', 'pointer-events-none', '-translate-x-12', 'translate-x-12', 'z-0');
-      if (i === currentIndex) {
+      slide.classList.remove(
+        'opacity-100', 'pointer-events-auto', 'translate-x-0', 'z-10',
+        'opacity-0', 'pointer-events-none', '-translate-x-12', 'translate-x-12', 'z-0'
+      );
+      if (i === activeSlideIdx) {
         slide.classList.add('opacity-100', 'pointer-events-auto', 'translate-x-0', 'z-10');
-      } else if (i < currentIndex) {
+      } else if (i < activeSlideIdx) {
         slide.classList.add('opacity-0', 'pointer-events-none', '-translate-x-12', 'z-0');
       } else {
         slide.classList.add('opacity-0', 'pointer-events-none', 'translate-x-12', 'z-0');
       }
     });
 
-    // Update tabs
-    tabs.forEach((tab, i) => {
-      const isActive = i === currentIndex;
-      tab.classList.toggle('is-active', isActive);
-      tab.classList.toggle('text-white', isActive);
-      tab.classList.toggle('bg-sky/20', isActive);
-      tab.classList.toggle('border-sky/40', isActive);
-      tab.classList.toggle('text-cream/70', !isActive);
-      tab.classList.toggle('hover:text-white', !isActive);
-      tab.classList.toggle('hover:bg-white/5', !isActive);
-      tab.classList.toggle('border-transparent', !isActive);
-    });
-
-    // Counter
-    if (counter) {
-      counter.textContent = String(currentIndex + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+    if (wavesCanvas) {
+      wavesCanvas.style.opacity = activeSlideIdx === 0 ? '0.62' : '0.16';
     }
 
-    // Progress bar
-    if (progressBar) {
-      progressBar.style.width = (((currentIndex + 1) / total) * 100) + '%';
+    if (activeSlideIdx === 1) {
+      scrollToSubSection(requestedIdx, wasSubpageOpen);
     }
 
-    // Buttons disabled state
-    if (prevBtn) prevBtn.disabled = (currentIndex === 0);
-    if (nextBtn) nextBtn.disabled = (currentIndex === total - 1);
-
-    // Hide arrows on Slide 0 (Purpose), show on rest of pages (Slides 1-4)
-    const navCtrl = document.getElementById('about-deck-nav');
-    if (navCtrl) {
-      if (currentIndex >= 0) {
-        navCtrl.classList.add('opacity-0', 'pointer-events-none', 'scale-90');
-        navCtrl.classList.remove('opacity-100', 'pointer-events-auto', 'scale-100');
-      } else {
-        navCtrl.classList.remove('opacity-0', 'pointer-events-none', 'scale-90');
-        navCtrl.classList.add('opacity-100', 'pointer-events-auto', 'scale-100');
-      }
-    }
-
-    // If entering Slide 2 ("What We Do"), ensure bento scroll container is ready at top
-    if (currentIndex === 2) {
-      const bentoSlide = document.getElementById('about-slide-what-we-do');
-      if (bentoSlide) {
-        bentoSlide.scrollTop = 0;
-      }
-    }
-
-    // Lock page scrolling when exploring slides 1-4 to avoid overlapsing with #hero or #products
-    updateAboutScrollLock(currentIndex);
+    updateAboutScrollLock(activeSlideIdx);
   }
 
   function updateAboutScrollLock(idx) {
@@ -6235,29 +6356,212 @@ function initAboutDeckController() {
     }
   }
 
-  // Prevent wheel scroll from snapping to #hero or #products when inside deck slides,
-  // but ALLOW seamless inner scroll inside the Bento capabilities viewport
+  // Highlight active subnav pill & drive Forge Automotive (01/03) pinned scroll showcase inside the unified subpage
+  if (subScroll) {
+    const trackedIds = ['about-sec-who-we-are', 'about-slide-what-we-do', 'about-sec-foundation', 'about-sec-values'];
+    const forgeBlock = document.getElementById('about-vision-mission-block');
+    const forgeNumEl = document.getElementById('forge-abt-num');
+    const forgeBgs = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-forge-bg]')) : [];
+    const forgeWraps = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-forge-img-wrap]')) : [];
+    const forgeImgs = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-forge-img]')) : [];
+    const forgePanels = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-forge-panel]')) : [];
+    const forgeDots = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-forge-dot]')) : [];
+
+    function updateForgeAboutShowcase() {
+      if (!forgeBlock || !subScroll) return;
+      const blockTop = forgeBlock.offsetTop;
+      const scrollRange = Math.max(1, forgeBlock.offsetHeight - subScroll.clientHeight);
+      const rawP = Math.min(1, Math.max(0, (subScroll.scrollTop - blockTop) / scrollRange));
+      const stageP = rawP * 2; // 0.0 -> 1.0 -> 2.0 across the 3 stages
+
+      // Continuous clip-path curtain wipe + kinematic zoom on the 3 framed images
+      const t1 = Math.min(1, Math.max(0, stageP));
+      const t2 = Math.min(1, Math.max(0, stageP - 1));
+
+      if (forgeImgs[0]) {
+        forgeImgs[0].style.transform = `scale(${(1.06 - t1 * 0.06).toFixed(4)})`;
+      }
+      if (forgeWraps[1] && forgeImgs[1]) {
+        forgeWraps[1].style.clipPath = `inset(${((1 - t1) * 100).toFixed(2)}% 0 0 0)`;
+        forgeImgs[1].style.transform = `scale(${(1.16 - t1 * 0.16).toFixed(4)})`;
+      }
+      if (forgeWraps[2] && forgeImgs[2]) {
+        forgeWraps[2].style.clipPath = `inset(${((1 - t2) * 100).toFixed(2)}% 0 0 0)`;
+        forgeImgs[2].style.transform = `scale(${(1.16 - t2 * 0.16).toFixed(4)})`;
+      }
+
+      // Active stage index (0 = Who We Are, 1 = Our Mission, 2 = Our Vision)
+      const activeStage = stageP < 0.55 ? 0 : (stageP < 1.45 ? 1 : 2);
+      if (forgeNumEl) {
+        forgeNumEl.textContent = `0${activeStage + 1}`;
+      }
+
+      forgeBgs.forEach((bg, idx) => {
+        bg.style.opacity = idx === activeStage ? '1' : '0';
+      });
+
+      forgePanels.forEach((panel, idx) => {
+        panel.classList.remove('is-active', 'is-above', 'is-below');
+        if (idx === activeStage) {
+          panel.classList.add('is-active');
+        } else if (idx < activeStage) {
+          panel.classList.add('is-above');
+        } else {
+          panel.classList.add('is-below');
+        }
+      });
+
+      forgeDots.forEach((dot, idx) => {
+        if (idx === activeStage) {
+          dot.className = 'h-1.5 w-7 rounded-full bg-[#72c5f8] transition-all duration-300 cursor-pointer';
+        } else {
+          dot.className = 'h-1.5 w-2.5 rounded-full bg-white/25 hover:bg-white/50 transition-all duration-300 cursor-pointer';
+        }
+      });
+    }
+
+    window.jumpForgeAboutStage = function(stageIdx) {
+      if (!forgeBlock || !subScroll) return;
+      const blockTop = forgeBlock.offsetTop;
+      const scrollRange = Math.max(1, forgeBlock.offsetHeight - subScroll.clientHeight);
+      const frac = stageIdx === 0 ? 0.02 : (stageIdx === 1 ? 0.50 : 0.98);
+      subScroll.scrollTo({
+        top: Math.max(0, blockTop + scrollRange * frac),
+        behavior: 'smooth'
+      });
+    };
+
+    // Forge Automotive Services (01 / 06) Pinned Scroll-Scrub Showcase inside #about-slide-what-we-do
+    const wwdSec = document.getElementById('about-slide-what-we-do');
+    const wwdForgeBlock = document.getElementById('wwd-forge-services-block');
+    const wwdForgeNumEl = document.getElementById('wwd-forge-num');
+    const wwdForgeCatEl = document.getElementById('wwd-forge-cat');
+    const wwdForgeFrameCatEl = document.getElementById('wwd-forge-frame-cat');
+    const wwdForgeSlEl = document.getElementById('wwd-forge-sl');
+    const wwdForgeSvEl = document.getElementById('wwd-forge-sv');
+    const wwdForgeBgs = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-wwd-forge-bg]')) : [];
+    const wwdForgeWraps = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-wwd-forge-wrap]')) : [];
+    const wwdForgeImgs = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-wwd-forge-img]')) : [];
+    const wwdForgePanels = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-wwd-forge-panel]')) : [];
+    const wwdForgeDots = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-wwd-forge-dot]')) : [];
+    const wwdServiceRows = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-wwd-row]')) : [];
+
+    const WWD_FORGE_META = [
+      { cat: 'SUPPLY CHAIN', sl: 'Cold-chain dispatch', sv: '24–48 hours' },
+      { cat: 'COMMERCIAL', sl: 'Academic symposia', sv: '25+ per year' },
+      { cat: 'FIELD NETWORK', sl: 'Archipelago reach', sv: '17 regions' },
+      { cat: 'GOVERNANCE', sl: 'Regulatory audits', sv: '100% pass' },
+      { cat: 'PROFESSIONAL DEVELOPMENT', sl: 'Surgeons trained', sv: '500+ fellows' },
+      { cat: 'CONTINUITY', sl: 'Service SLA', sv: '24/7 priority' }
+    ];
+
+    function getWwdForgeBlockTop() {
+      if (!wwdForgeBlock) return 0;
+      return (wwdSec ? wwdSec.offsetTop : 0) + wwdForgeBlock.offsetTop;
+    }
+
+    function updateWwdForgeServicesShowcase() {
+      if (!wwdForgeBlock || !subScroll) return;
+      const blockTop = getWwdForgeBlockTop();
+      const scrollRange = Math.max(1, wwdForgeBlock.offsetHeight - subScroll.clientHeight);
+      const rawP = Math.min(1, Math.max(0, (subScroll.scrollTop - blockTop) / scrollRange));
+      const stageP = rawP * 5; // 0.0 -> 5.0 across the 6 capability stages
+
+      // Layer 0 base scale
+      if (wwdForgeImgs[0]) {
+        const t0 = Math.min(1, Math.max(0, stageP));
+        wwdForgeImgs[0].style.transform = `scale(${(1.06 - t0 * 0.06).toFixed(4)})`;
+      }
+
+      // Layers 1..5 continuous bottom-up clip-path curtain wipe + kinematic zoom
+      for (let k = 1; k < 6; k++) {
+        const tk = Math.min(1, Math.max(0, stageP - (k - 1)));
+        const wrapEl = wwdForgeWraps[k];
+        const imgEl = wwdForgeImgs[k];
+        if (wrapEl && imgEl) {
+          wrapEl.style.clipPath = `inset(${((1 - tk) * 100).toFixed(2)}% 0 0 0)`;
+          imgEl.style.transform = `scale(${(1.16 - tk * 0.16).toFixed(4)})`;
+        }
+      }
+
+      const activeStage = Math.min(5, Math.max(0, Math.round(stageP)));
+      window.__wwdForgeActiveStage = activeStage;
+
+      if (wwdForgeNumEl) wwdForgeNumEl.textContent = `0${activeStage + 1}`;
+      const meta = WWD_FORGE_META[activeStage] || WWD_FORGE_META[0];
+      if (wwdForgeCatEl) wwdForgeCatEl.textContent = meta.cat;
+      if (wwdForgeFrameCatEl) wwdForgeFrameCatEl.textContent = meta.cat;
+      if (wwdForgeSlEl) wwdForgeSlEl.textContent = meta.sl;
+      if (wwdForgeSvEl) wwdForgeSvEl.textContent = meta.sv;
+
+      wwdForgeBgs.forEach((bg, idx) => {
+        bg.style.opacity = idx === activeStage ? '1' : '0';
+      });
+
+      wwdForgePanels.forEach((panel, idx) => {
+        panel.classList.remove('is-active', 'is-above', 'is-below');
+        if (idx === activeStage) {
+          panel.classList.add('is-active');
+        } else if (idx < activeStage) {
+          panel.classList.add('is-above');
+        } else {
+          panel.classList.add('is-below');
+        }
+      });
+
+      wwdForgeDots.forEach((dot, idx) => {
+        if (idx === activeStage) {
+          dot.className = 'h-1.5 w-7 rounded-full bg-[#72c5f8] transition-all duration-300 cursor-pointer';
+        } else {
+          dot.className = 'h-1.5 w-2.5 rounded-full bg-white/25 hover:bg-white/50 transition-all duration-300 cursor-pointer';
+        }
+      });
+
+      wwdServiceRows.forEach((row, idx) => {
+        row.classList.toggle('is-active', idx === activeStage);
+      });
+    }
+
+    window.jumpWwdForgeStage = function(stageIdx) {
+      if (!wwdForgeBlock || !subScroll) return;
+      const blockTop = getWwdForgeBlockTop();
+      const scrollRange = Math.max(1, wwdForgeBlock.offsetHeight - subScroll.clientHeight);
+      const frac = Math.min(1, Math.max(0, stageIdx / 5));
+      subScroll.scrollTo({
+        top: Math.max(0, blockTop + scrollRange * frac),
+        behavior: 'smooth'
+      });
+    };
+
+    subScroll.addEventListener('scroll', () => {
+      const scrollY = subScroll.scrollTop + 180;
+      let activeId = trackedIds[0];
+      for (let i = 0; i < trackedIds.length; i++) {
+        const el = document.getElementById(trackedIds[i]);
+        if (el && el.offsetTop <= scrollY) {
+          activeId = trackedIds[i];
+        }
+      }
+      setActiveSubnavPill(activeId);
+      updateForgeAboutShowcase();
+      updateWwdForgeServicesShowcase();
+    }, { passive: true });
+
+    updateForgeAboutShowcase();
+    updateWwdForgeServicesShowcase();
+  }
+
+  // Allow seamless inner scroll inside #about-subpage-scroll while preventing outer page snap
   window.addEventListener('wheel', (e) => {
     if (window.__aboutDeckCurrentIndex > 0) {
-      const bentoSlide = document.getElementById('about-slide-what-we-do');
-      if (bentoSlide && (bentoSlide === e.target || bentoSlide.contains(e.target))) {
-        return; // Allow native inner scroll through the Bento grid smoothly!
+      if (subScroll && (subScroll === e.target || subScroll.contains(e.target))) {
+        return; // Allow native inner scroll through the unified About subpage
       }
       if (aboutSec && aboutSec.contains(e.target)) {
         e.preventDefault();
       }
     }
   }, { passive: false });
-
-  // Bento card interactive cursor spotlight glow
-  document.addEventListener('mousemove', (e) => {
-    const card = e.target.closest('.bento-pillar-card');
-    if (card) {
-      const rect = card.getBoundingClientRect();
-      card.style.setProperty('--bx', `${e.clientX - rect.left}px`);
-      card.style.setProperty('--by', `${e.clientY - rect.top}px`);
-    }
-  });
 
   // Unlock page scrolling when user clicks any navbar anchor to another section
   document.querySelectorAll('a[href^="#"]').forEach((a) => {
@@ -6271,21 +6575,13 @@ function initAboutDeckController() {
     });
   });
 
-  // Attach tab listeners
-  tabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      const idx = parseInt(tab.getAttribute('data-slide') || '0', 10);
-      goToSlide(idx);
-    });
-  });
-
-  if (prevBtn) prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
-  if (nextBtn) nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+  if (prevBtn) prevBtn.addEventListener('click', () => goToSlide(0));
+  if (nextBtn) nextBtn.addEventListener('click', () => goToSlide(1));
   goNextBtns.forEach((btn) => btn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); goToSlide(1); }));
 
   // Link navbar dropdown items & nav-about
   document.querySelectorAll('[data-open-pel], [data-pillar-idx], [data-slide-target]').forEach((link) => {
-    link.addEventListener('click', (e) => {
+    link.addEventListener('click', () => {
       const target = link.getAttribute('data-slide-target');
       let targetSlide = 0;
       if (target !== null && target !== undefined) {
@@ -6309,40 +6605,9 @@ function initAboutDeckController() {
     });
   }
 
-  // Touch swipe support inside the deck
-  let touchStartX = 0;
-  let touchStartY = 0;
-  aboutSec.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-    touchStartY = e.changedTouches[0].screenY;
-  }, { passive: true });
-
-  aboutSec.addEventListener('touchend', (e) => {
-    const touchEndX = e.changedTouches[0].screenX;
-    const touchEndY = e.changedTouches[0].screenY;
-    const diffX = touchStartX - touchEndX;
-    const diffY = touchStartY - touchEndY;
-
-    // If swiping inside the stacking viewport vertically, allow it to scroll cards
-    const scrollViewport = document.getElementById('about-stacking-scroll-viewport');
-    if (scrollViewport && (scrollViewport === e.target || scrollViewport.contains(e.target))) {
-      if (Math.abs(diffY) > Math.abs(diffX)) {
-        return;
-      }
-    }
-
-    if (Math.abs(diffX) > 50) {
-      if (diffX > 0) {
-        goToSlide(currentIndex + 1);
-      } else {
-        goToSlide(currentIndex - 1);
-      }
-    }
-  }, { passive: true });
-
   window.goToAboutSlide = goToSlide;
 
-  // Initialize first slide
+  // Initialize first slide (Landing Purpose view)
   goToSlide(0);
 }
 
@@ -6758,7 +7023,7 @@ window.toggleIolAcc = function (btn) {
 /* PRODUCTS IN-PAGE 5-SLIDE DECK CONTROLLER (With Dedicated Page Scroll Lock)*/
 /* ========================================================================= */
 /* ========================================================================= */
-/* PRODUCTS ORGANIC SMOKE CANVAS & SILK WAVES (Matches Hero Section Design)  */
+/* PRODUCTS TWO-LAYER SMOKE CANVAS (Puff + Tendril — Matches Editorial Spec) */
 /* ========================================================================= */
 function initProductsSmokeCanvas() {
   const canvas = document.getElementById('products-smoke-canvas');
@@ -6767,13 +7032,17 @@ function initProductsSmokeCanvas() {
 
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
-  let w = window.innerWidth, h = window.innerHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let w = window.innerWidth;
+  let h = window.innerHeight;
+  let dpr = Math.min(window.devicePixelRatio || 1, 2);
   let t = 0;
 
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
-    w = window.innerWidth;
-    h = window.innerHeight;
+    w = canvas.parentElement ? canvas.parentElement.clientWidth || window.innerWidth : window.innerWidth;
+    h = canvas.parentElement ? canvas.parentElement.clientHeight || window.innerHeight : window.innerHeight;
     canvas.width = Math.floor(w * dpr);
     canvas.height = Math.floor(h * dpr);
     canvas.style.width = w + 'px';
@@ -6783,46 +7052,146 @@ function initProductsSmokeCanvas() {
   window.addEventListener('resize', resize, { passive: true });
   window.__resizeProductsSmoke = resize;
 
-  // 18 drifting organic smoke puffs across the products background (matching Hero Page)
-  const puffs = Array.from({ length: 18 }, (_, i) => ({
-    baseX: (i / 18) * 1.3 - 0.15,
-    baseY: 0.12 + (i % 4) * 0.24,
-    r: 220 + (i % 6) * 65,
-    speed: 0.12 + (i % 5) * 0.06,
-    phase: i * 1.42,
-    alpha: 0.38 + (i % 4) * 0.12,
-    hueShift: (i % 3)
-  }));
+  const PALETTE = [
+    [20, 50, 100],
+    [40, 80, 140],
+    [74, 127, 165],
+    [15, 35, 75],
+    [90, 140, 190]
+  ];
+  const rand = (min, max) => min + Math.random() * (max - min);
+  const pickColor = () => PALETTE[Math.floor(Math.random() * PALETTE.length)];
 
-  function renderSmoke() {
-    t += 0.008; // Calm, serene organic fluid smoke drift
+  class Puff {
+    constructor(initial = false) {
+      this.reset(initial);
+    }
+    reset(initial = false) {
+      this.r = rand(180, 420);
+      this.x = rand(-this.r * 0.35, w + this.r * 0.35);
+      this.y = initial ? rand(-this.r * 0.2, h + this.r * 0.4) : h + this.r * rand(0.2, 0.75);
+      this.vx = rand(-0.18, 0.18);
+      this.vy = -rand(0.16, 0.42);
+      this.life = 0;
+      this.maxLife = Math.floor(rand(600, 1400));
+      if (initial) this.life = Math.floor(rand(0, this.maxLife));
+      this.maxOpacity = rand(0.06, 0.16);
+      this.color = pickColor();
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.life++;
+      if (this.life >= this.maxLife || this.y < -this.r * 1.2) {
+        this.reset(false);
+      }
+    }
+    draw(ctx) {
+      const p = this.life / this.maxLife;
+      const env = Math.sin(p * Math.PI);
+      const alpha = Math.max(0, this.maxOpacity * env);
+      if (alpha <= 0.001) return;
+      const [cr, cg, cb] = this.color;
+      const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
+      g.addColorStop(0, `rgba(${cr}, ${cg}, ${cb}, ${alpha.toFixed(4)})`);
+      g.addColorStop(0.5, `rgba(${cr}, ${cg}, ${cb}, ${(alpha * 0.48).toFixed(4)})`);
+      g.addColorStop(1, `rgba(${cr}, ${cg}, ${cb}, 0)`);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  class Tendril {
+    constructor(initial = false) {
+      this.reset(initial);
+    }
+    reset(initial = false) {
+      this.nodeCount = Math.floor(rand(18, 33));
+      this.baseX = rand(w * 0.04, w * 0.96);
+      this.spacing = rand(18, 28);
+      const chainHeight = this.nodeCount * this.spacing;
+      this.baseY = initial ? rand(h * 0.15, h + chainHeight * 0.6) : h + rand(40, 220);
+      this.vy = -rand(0.32, 0.72);
+      this.vx = rand(-0.08, 0.08);
+      this.sway = rand(16, 42);
+      this.swayFreq = rand(0.009, 0.022);
+      this.swayOffset = rand(0, Math.PI * 2);
+      this.life = 0;
+      this.maxLife = Math.floor(rand(320, 700));
+      if (initial) this.life = Math.floor(rand(0, this.maxLife));
+      this.maxOpacity = rand(0.07, 0.22);
+      this.color = pickColor();
+      this.baseRadius = rand(52, 90);
+      this.tipRadius = rand(28, 44);
+    }
+    update() {
+      this.baseX += this.vx;
+      this.baseY += this.vy;
+      this.life++;
+      const topY = this.baseY - this.nodeCount * this.spacing;
+      if (this.life >= this.maxLife || topY < -160) {
+        this.reset(false);
+      }
+    }
+    draw(ctx, timeCounter) {
+      const p = this.life / this.maxLife;
+      let lifeEnv = 1;
+      if (p < 0.25) lifeEnv = p / 0.25;
+      else if (p > 0.72) lifeEnv = (1 - p) / 0.28;
+      lifeEnv = Math.max(0, Math.min(1, lifeEnv));
+      if (lifeEnv <= 0.001) return;
+
+      const [cr, cg, cb] = this.color;
+      for (let i = 0; i < this.nodeCount; i++) {
+        const frac = i / (this.nodeCount - 1);
+        const nodeEnv = Math.sin(frac * Math.PI);
+        const alpha = this.maxOpacity * lifeEnv * nodeEnv * 0.55;
+        if (alpha <= 0.001) continue;
+
+        const r = this.baseRadius * (1 - frac) + this.tipRadius * frac;
+        const dx = Math.sin(timeCounter * this.swayFreq + this.swayOffset + i * 0.35) * this.sway * (0.4 + frac * 1.4);
+        const nx = this.baseX + dx;
+        const ny = this.baseY - i * this.spacing;
+
+        const g = ctx.createRadialGradient(nx, ny, 0, nx, ny, r);
+        g.addColorStop(0, `rgba(${cr}, ${cg}, ${cb}, ${alpha.toFixed(4)})`);
+        g.addColorStop(0.55, `rgba(${cr}, ${cg}, ${cb}, ${(alpha * 0.42).toFixed(4)})`);
+        g.addColorStop(1, `rgba(${cr}, ${cg}, ${cb}, 0)`);
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(nx, ny, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  const puffs = Array.from({ length: 14 }, () => new Puff(true));
+  const tendrils = Array.from({ length: 18 }, () => new Tendril(true));
+
+  function renderFrame() {
+    t += 1;
     ctx.save();
     ctx.scale(dpr, dpr);
     ctx.clearRect(0, 0, w, h);
 
     for (let i = 0; i < puffs.length; i++) {
-      const p = puffs[i];
-      const cx = (p.baseX + Math.sin(t * p.speed + p.phase) * 0.15 + Math.sin(t * 0.3 + p.phase * 0.7) * 0.04) * w;
-      const cy = (p.baseY + Math.cos(t * p.speed * 0.85 + p.phase) * 0.10 + Math.cos(t * 0.25 + p.phase) * 0.03) * h;
-      const rad = p.r * (1 + Math.sin(t * 0.55 + p.phase) * 0.18);
-
-      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, rad);
-      // Pure MedTech Blue Harmonic Spectrum matching Hero
-      g.addColorStop(0, `rgba(20, 53, 112, ${(p.alpha * 0.68).toFixed(3)})`);
-      g.addColorStop(0.40, `rgba(16, 43, 92, ${(p.alpha * 0.45).toFixed(3)})`);
-      g.addColorStop(0.78, `rgba(10, 29, 64, ${(p.alpha * 0.20).toFixed(3)})`);
-      g.addColorStop(1, 'transparent');
-
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(cx, cy, rad, 0, Math.PI * 2);
-      ctx.fill();
+      if (!prefersReducedMotion) puffs[i].update();
+      puffs[i].draw(ctx);
+    }
+    for (let i = 0; i < tendrils.length; i++) {
+      if (!prefersReducedMotion) tendrils[i].update();
+      tendrils[i].draw(ctx, t);
     }
 
     ctx.restore();
-    requestAnimationFrame(renderSmoke);
+    if (!prefersReducedMotion) {
+      requestAnimationFrame(renderFrame);
+    }
   }
-  requestAnimationFrame(renderSmoke);
+
+  renderFrame();
 }
 
 function initProductsDeckController() {
@@ -6833,6 +7202,8 @@ function initProductsDeckController() {
   const prevBtn = document.getElementById('products-deck-prev');
   const nextBtn = document.getElementById('products-deck-next');
   const counter = document.getElementById('products-deck-counter');
+  const subpageBar = document.getElementById('products-subpage-bar');
+  const prodPills = prodSec.querySelectorAll('[data-prod-pill]');
 
   if (!slides.length) return;
 
@@ -6862,6 +7233,9 @@ function initProductsDeckController() {
       slide.classList.remove('opacity-100', 'pointer-events-auto', 'translate-x-0', 'z-10', 'opacity-0', 'pointer-events-none', '-translate-x-12', 'translate-x-12', 'z-0');
       if (i === currentIndex) {
         slide.classList.add('opacity-100', 'pointer-events-auto', 'translate-x-0', 'z-10');
+        if (typeof window.__triggerLotticiStagger === 'function') {
+          window.__triggerLotticiStagger(slide);
+        }
       } else if (i < currentIndex) {
         slide.classList.add('opacity-0', 'pointer-events-none', '-translate-x-12', 'z-0');
       } else {
@@ -6876,10 +7250,27 @@ function initProductsDeckController() {
     if (prevBtn) prevBtn.disabled = (currentIndex === 0);
     if (nextBtn) nextBtn.disabled = (currentIndex === total - 1);
 
-    // Hide floating deck nav controls completely on Slide 1 for a completely clean view
+    // Toggle attached top sub-navbar (#products-subpage-bar) flush under #site-header
+    if (subpageBar) {
+      if (currentIndex >= 1) {
+        subpageBar.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2');
+        subpageBar.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+      } else {
+        subpageBar.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+        subpageBar.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
+      }
+    }
+
+    // Highlight active category pill in the attached sub-navbar
+    prodPills.forEach((pill) => {
+      const targetIdx = parseInt(pill.getAttribute('data-prod-pill'), 10);
+      pill.classList.toggle('is-active', targetIdx === currentIndex);
+    });
+
+    // Hide floating deck nav controls completely on Slide 1 & Slide 2 for a completely clean view
     const navCtrl = document.getElementById('products-deck-nav');
     if (navCtrl) {
-      if (currentIndex === 1) {
+      if (currentIndex === 1 || currentIndex === 2) {
         navCtrl.classList.add('hidden');
       } else {
         navCtrl.classList.remove('hidden');
@@ -6893,12 +7284,15 @@ function initProductsDeckController() {
       if (typeof window.__resizeProductsSmoke === 'function') {
         window.__resizeProductsSmoke();
       }
-      const wavesCanvas = document.getElementById('products-waves-shader-canvas');
-      if (wavesCanvas && typeof wavesCanvas._resizeWaves === 'function') {
-        wavesCanvas._resizeWaves();
-      }
       if (currentIndex === 1 && typeof window.__updateIOLScroll === 'function') {
         setTimeout(window.__updateIOLScroll, 50);
+      }
+      if (currentIndex === 2) {
+        const medSlide = document.getElementById('product-slide-med-supplies');
+        if (medSlide) medSlide.scrollTop = 0;
+        if (typeof window.__updateMedSuppliesMosaic === 'function') {
+          setTimeout(window.__updateMedSuppliesMosaic, 40);
+        }
       }
     } else {
       unlockPage();
@@ -6920,8 +7314,11 @@ function initProductsDeckController() {
       if (scrollContainer) {
         scrollContainer.scrollTop += e.deltaY * 1.5;
       }
+    } else if (currentIndex === 2 && typeof window.__onMedSuppliesWheel === 'function') {
+      // Medical Supplies: feed wheel delta into the 60fps damped mosaic scroll engine
+      window.__onMedSuppliesWheel(e.deltaY);
     } else {
-      // Medical Supplies, Devices & Equipment, Product Catalogs:
+      // Devices & Equipment, Product Catalogs:
       // Scroll the inner subpage container smoothly without moving the main page
       const activeSlide = slides[currentIndex];
       if (activeSlide) {
@@ -6983,6 +7380,219 @@ function initProductsDeckController() {
     }
   };
 
+  // Ophteis & AEON Interactive 3D Box & Serif Tab Showcase Controllers
+  const OPHTEIS_PRODUCTS = [
+    {
+      ghost: 'Adaptive Pro',
+      accent: '#9b7fc1',
+      eyebrow: 'ADAPTIVE OVD \u00b7 NaHA WITH SORBITOL',
+      title: 'Ophteis\u00ae Adaptive Pro',
+      desc: 'Bio-engineered sodium hyaluronate viscoelastic with Sorbitol antioxidant to neutralize free radicals and adapt seamlessly across every phase of cataract surgery.',
+      frontImg: 'assets/img/packshots/box_front_ophteis_adaptive.png?v=380.0',
+      topImg: 'assets/img/packshots/box_top_ophteis_adaptive.png?v=380.0',
+      rightImg: 'assets/img/packshots/box_right_ophteis_adaptive.png?v=380.0',
+      bars: [88, 92, 90]
+    },
+    {
+      ghost: 'Cohesive',
+      accent: '#4894b2',
+      eyebrow: 'COHESIVE OVD \u00b7 1.1ML SYRINGE',
+      title: 'Ophteis\u00ae Cohesive',
+      desc: 'High molecular weight sodium hyaluronate viscoelastic solution providing superior anterior chamber depth maintenance, controlled capsulorhexis, and rapid bolus removal.',
+      frontImg: 'assets/img/packshots/box_front_ophteis_cohesive.png?v=380.0',
+      topImg: 'assets/img/packshots/box_top_ophteis_cohesive.png?v=380.0',
+      rightImg: 'assets/img/packshots/box_right_ophteis_cohesive.png?v=380.0',
+      bars: [62, 96, 95]
+    },
+    {
+      ghost: 'Dispersive',
+      accent: '#efa13a',
+      eyebrow: 'DISPERSIVE OVD \u00b7 ENDOTHELIAL SHIELD',
+      title: 'Ophteis\u00ae Dispersive',
+      desc: 'Adheres tenaciously to corneal endothelial cells throughout phacoemulsification, shielding delicate intraocular tissues from ultrasonic trauma and fluid turbulence.',
+      frontImg: 'assets/img/packshots/box_front_ophteis_dispersive.png?v=380.0',
+      topImg: 'assets/img/packshots/box_top_ophteis_dispersive.png?v=380.0',
+      rightImg: 'assets/img/packshots/box_right_ophteis_dispersive.png?v=380.0',
+      bars: [94, 48, 56]
+    }
+  ];
+
+  const AEON_PRODUCTS = [
+    {
+      ghost: 'Protect',
+      accent: '#00a67e',
+      eyebrow: '0.3% SODIUM HYALURONATE & SCO\u2122 \u00b7 LUBRICATING EYE DROPS',
+      title: 'AEON\u00ae Protect',
+      desc: 'Lubricating artificial tear drops formulated for the relief of mild to moderate dry eye. Phosphate free and preservative free on the eye (10 ml).',
+      frontImg: 'assets/img/packshots/box_front_aeon_protect.png?v=380.0',
+      sideImg: 'assets/img/packshots/box_side_aeon_protect.png?v=380.0',
+      bottleImg: 'assets/img/packshots/bottle_aeon_protect.png?v=380.0',
+      bars: [90, 86, 82]
+    },
+    {
+      ghost: 'Protect Plus',
+      accent: '#eab308',
+      eyebrow: '0.3% CROSS-LINKED NaHA \u00b7 BEFORE & AFTER EYE SURGERY',
+      title: 'AEON\u00ae Protect Plus',
+      desc: 'Cross-linked 0.3% sodium hyaluronate eye drops designed for use before and after eye surgery for the relief of moderate to severe dry eye (10 ml).',
+      frontImg: 'assets/img/packshots/box_front_aeon_protect_plus.png?v=380.0',
+      sideImg: 'assets/img/packshots/box_side_aeon_protect_plus.png?v=380.0',
+      bottleImg: 'assets/img/packshots/bottle_aeon_protect_plus.png?v=380.0',
+      bars: [96, 94, 88]
+    },
+    {
+      ghost: 'Repair',
+      accent: '#9366b8',
+      eyebrow: '0.15% NaHA + VITAMINS A & E \u00b7 AFTER EYE SURGERY',
+      title: 'AEON\u00ae Repair',
+      desc: 'Post-surgical ocular surface recovery drops enhanced with Vitamins A and E alongside 0.15% sodium hyaluronate. Phosphate and preservative free (10 ml).',
+      frontImg: 'assets/img/packshots/box_front_aeon_repair.png?v=380.0',
+      sideImg: 'assets/img/packshots/box_side_aeon_repair.png?v=380.0',
+      bottleImg: 'assets/img/packshots/bottle_aeon_repair.png?v=380.0',
+      bars: [88, 85, 98]
+    },
+    {
+      ghost: 'NaCl 5%',
+      accent: '#2546b8',
+      eyebrow: '5% SODIUM CHLORIDE + 0.3% NaHA \u00b7 CORNEAL OEDEMA RELIEF',
+      title: 'AEON\u00ae Sodium Chloride 5%',
+      desc: 'Hypertonic 5% sodium chloride and 0.3% sodium hyaluronate ophthalmic solution formulated for the osmotic relief of corneal oedema (10 ml).',
+      frontImg: 'assets/img/packshots/box_front_aeon_nacl.png?v=380.0',
+      sideImg: 'assets/img/packshots/box_side_aeon_nacl.png?v=380.0',
+      bottleImg: 'assets/img/packshots/bottle_aeon_nacl.png?v=380.0',
+      bars: [84, 88, 96]
+    }
+  ];
+
+  let activeOphteisIdx = 2;
+  let activeAeonIdx = 0;
+
+  window.selectOphteisTab = function(idx) {
+    const nextIdx = ((idx % OPHTEIS_PRODUCTS.length) + OPHTEIS_PRODUCTS.length) % OPHTEIS_PRODUCTS.length;
+    if (nextIdx === activeOphteisIdx) return;
+    activeOphteisIdx = nextIdx;
+    const item = OPHTEIS_PRODUCTS[nextIdx];
+    const stage = document.getElementById('med-stage-ophteis');
+    if (!stage) return;
+
+    stage.style.setProperty('--med-accent', item.accent);
+    stage.querySelectorAll('[data-ophteis-tab]').forEach((btn, i) => {
+      const on = i === nextIdx;
+      btn.classList.toggle('is-active', on);
+      btn.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+
+    const ghost = document.getElementById('ophteis-ghost-word');
+    if (ghost) ghost.textContent = item.ghost;
+    const eyebrow = document.getElementById('ophteis-eyebrow');
+    if (eyebrow) eyebrow.textContent = item.eyebrow;
+    const title = document.getElementById('ophteis-title');
+    if (title) title.textContent = item.title;
+    const desc = document.getElementById('ophteis-desc');
+    if (desc) desc.textContent = item.desc;
+
+    const frontImg = document.getElementById('ophteis-box-front-img');
+    if (frontImg && item.frontImg) {
+      frontImg.src = item.frontImg;
+      frontImg.alt = `${item.title} Packaging`;
+    }
+    const topImg = document.getElementById('ophteis-box-top-img');
+    if (topImg && item.topImg) topImg.src = item.topImg;
+    const rightImg = document.getElementById('ophteis-box-right-img');
+    if (rightImg && item.rightImg) rightImg.src = item.rightImg;
+
+    item.bars.forEach((val, bIdx) => {
+      const fill = document.getElementById(`ophteis-bar-fill-${bIdx}`);
+      const num = document.getElementById(`ophteis-bar-val-${bIdx}`);
+      if (fill) fill.style.width = `${val}%`;
+      if (num) num.textContent = String(val);
+    });
+
+    const prism = document.getElementById('ophteis-3d-prism');
+    if (prism) {
+      prism.classList.remove('is-spinning');
+      void prism.offsetWidth;
+      prism.classList.add('is-spinning');
+    }
+  };
+
+  window.selectAeonTab = function(idx) {
+    const nextIdx = ((idx % AEON_PRODUCTS.length) + AEON_PRODUCTS.length) % AEON_PRODUCTS.length;
+    if (nextIdx === activeAeonIdx) return;
+    activeAeonIdx = nextIdx;
+    const item = AEON_PRODUCTS[nextIdx];
+    const stage = document.getElementById('med-stage-aeon');
+    if (!stage) return;
+
+    stage.style.setProperty('--med-accent', item.accent);
+    stage.querySelectorAll('[data-aeon-tab]').forEach((btn, i) => {
+      const on = i === nextIdx;
+      btn.classList.toggle('is-active', on);
+      btn.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+
+    const ghost = document.getElementById('aeon-ghost-word');
+    if (ghost) ghost.textContent = item.ghost;
+    const eyebrow = document.getElementById('aeon-eyebrow');
+    if (eyebrow) eyebrow.textContent = item.eyebrow;
+    const title = document.getElementById('aeon-title');
+    if (title) title.textContent = item.title;
+    const desc = document.getElementById('aeon-desc');
+    if (desc) desc.textContent = item.desc;
+
+    const frontImg = document.getElementById('aeon-box-front-img');
+    if (frontImg && item.frontImg) {
+      frontImg.src = item.frontImg;
+      frontImg.alt = `${item.title} Packaging`;
+    }
+    const sideImg = document.getElementById('aeon-box-side-img');
+    if (sideImg && item.sideImg) sideImg.src = item.sideImg;
+    const bottleImg = document.getElementById('aeon-bottle-img');
+    if (bottleImg && item.bottleImg) {
+      bottleImg.src = item.bottleImg;
+      bottleImg.alt = `${item.title} 10ml Bottle`;
+    }
+
+    item.bars.forEach((val, bIdx) => {
+      const fill = document.getElementById(`aeon-bar-fill-${bIdx}`);
+      const num = document.getElementById(`aeon-bar-val-${bIdx}`);
+      if (fill) fill.style.width = `${val}%`;
+      if (num) num.textContent = String(val);
+    });
+
+    const prism = document.getElementById('aeon-3d-prism');
+    if (prism) {
+      prism.classList.remove('is-spinning');
+      void prism.offsetWidth;
+      prism.classList.add('is-spinning');
+    }
+  };
+
+  window.handleMed3dTilt = function(event, family) {
+    const isAeon = family === 'aeon';
+    const prism = document.getElementById(isAeon ? 'aeon-3d-prism' : 'ophteis-3d-prism');
+    const stage = document.getElementById(isAeon ? 'med-stage-aeon' : 'med-stage-ophteis');
+    if (!prism || !stage) return;
+    const rect = stage.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const nx = (event.clientX - rect.left) / rect.width - 0.5;
+    const ny = (event.clientY - rect.top) / rect.height - 0.5;
+    const baseRx = isAeon ? -8 : -14;
+    const baseRy = isAeon ? 24 : -22;
+    const rx = baseRx - ny * 16;
+    const ry = baseRy + nx * 28;
+    prism.style.setProperty('--med-rx', `${rx.toFixed(2)}deg`);
+    prism.style.setProperty('--med-ry', `${ry.toFixed(2)}deg`);
+  };
+
+  window.resetMed3dTilt = function(family) {
+    const isAeon = family === 'aeon';
+    const prism = document.getElementById(isAeon ? 'aeon-3d-prism' : 'ophteis-3d-prism');
+    if (!prism) return;
+    prism.style.setProperty('--med-rx', isAeon ? '-8deg' : '-14deg');
+    prism.style.setProperty('--med-ry', isAeon ? '24deg' : '-22deg');
+  };
+
   // Unlock page scrolling when user clicks any navbar anchor or page dot to another section
   document.querySelectorAll('a[href^="#"], .page-dot-item').forEach((link) => {
     link.addEventListener('click', () => {
@@ -7024,6 +7634,24 @@ function initProductsDeckController() {
     const rect = prodSec.getBoundingClientRect();
     const inView = (rect.top <= window.innerHeight * 0.5 && rect.bottom >= window.innerHeight * 0.5);
     if (inView) {
+      if (currentIndex === 2) {
+        const ophteisStage = document.getElementById('med-stage-ophteis');
+        const aeonStage = document.getElementById('med-stage-aeon');
+        const isOphteisVisible = ophteisStage && ophteisStage.classList.contains('opacity-100');
+        const isAeonVisible = aeonStage && aeonStage.classList.contains('opacity-100');
+        if (e.key === 'ArrowRight' && (isOphteisVisible || isAeonVisible)) {
+          e.preventDefault();
+          if (isOphteisVisible) window.selectOphteisTab(activeOphteisIdx + 1);
+          else if (isAeonVisible) window.selectAeonTab(activeAeonIdx + 1);
+          return;
+        }
+        if (e.key === 'ArrowLeft' && (isOphteisVisible || isAeonVisible)) {
+          e.preventDefault();
+          if (isOphteisVisible) window.selectOphteisTab(activeOphteisIdx - 1);
+          else if (isAeonVisible) window.selectAeonTab(activeAeonIdx - 1);
+          return;
+        }
+      }
       if (e.key === 'ArrowRight' && currentIndex !== 1) goToSlide(currentIndex + 1);
       if (e.key === 'ArrowLeft' && currentIndex !== 1) goToSlide(currentIndex - 1);
       if (currentIndex === 1) {
@@ -7032,20 +7660,23 @@ function initProductsDeckController() {
           if (e.key === 'ArrowDown') { e.preventDefault(); sc.scrollTop += 250; }
           if (e.key === 'ArrowUp') { e.preventDefault(); sc.scrollTop -= 250; }
         }
+      } else if (currentIndex === 2 && typeof window.__onMedSuppliesWheel === 'function') {
+        if (e.key === 'ArrowDown') { e.preventDefault(); window.__onMedSuppliesWheel(220); }
+        if (e.key === 'ArrowUp') { e.preventDefault(); window.__onMedSuppliesWheel(-220); }
       }
     }
   });
 
-  // Touch swipe between slides on Slide 0 and non-IOL slides
+  // Touch swipe between slides on Slide 0 and non-IOL/non-MedSupplies slides
   let deckTouchStartX = 0;
   prodSec.addEventListener('touchstart', (e) => {
-    if (currentIndex !== 1) {
+    if (currentIndex !== 1 && currentIndex !== 2) {
       deckTouchStartX = e.changedTouches[0].screenX;
     }
   }, { passive: true });
 
   prodSec.addEventListener('touchend', (e) => {
-    if (currentIndex !== 1) {
+    if (currentIndex !== 1 && currentIndex !== 2) {
       const touchEndX = e.changedTouches[0].screenX;
       const diffX = deckTouchStartX - touchEndX;
       if (Math.abs(diffX) > 50) {
@@ -7064,10 +7695,443 @@ function initProductsDeckController() {
   goToSlide(0);
 }
 
+/* ========================================================================= */
+/* MEDICAL SUPPLIES — 3-STAGE SCROLL + LEFT-TO-RIGHT PIXEL/BENTO MOSAIC WIPE */
+/* ========================================================================= */
+function initMedSuppliesMosaicScroll() {
+  const slide = document.getElementById('product-slide-med-supplies');
+  const stageIntro = document.getElementById('med-stage-intro');
+  const stageOphteis = document.getElementById('med-stage-ophteis');
+  const stageAeon = document.getElementById('med-stage-aeon');
+  const canvas = document.getElementById('med-mosaic-wipe-canvas');
+  if (!slide || !stageIntro || !stageOphteis || !stageAeon || !canvas) return;
+
+  const ctx = canvas.getContext('2d', { alpha: true });
+  if (!ctx) return;
+
+  const stageBtns = Array.from(slide.querySelectorAll('[data-med-stage-btn]'));
+
+  let cw = 0;
+  let ch = 0;
+  let dpr = 1;
+  let tiles = [];
+
+  // 60/120fps Damped Progress State (0.00 = Stage 0 Intro, 0.50 = Stage 1 Ophteis, 1.00 = Stage 2 AEON)
+  let smoothP = 0;
+  let targetP = 0;
+  let lastScrollDir = 1;
+  let lastInputTime = 0;
+  let rafId = 0;
+  let isSyncingScrollTop = false;
+
+  // Pure Blue & White palette for both the 3x3 micro-pixels and the locked-in Bento mosaic tiles (zero images)
+  const PIXEL_COLORS = [
+    '#ffffff',
+    '#eef7ff',
+    '#cfeaff',
+    '#8fd4ff',
+    '#5bb8f5',
+    '#3aa0db',
+    '#1f78b8',
+    '#0f467a',
+    '#082649',
+    '#05162e'
+  ];
+
+  const TILE_MAIN_COLORS = [
+    '#ffffff',
+    '#e4f3ff',
+    '#a8dcff',
+    '#6bc1f7',
+    '#3aa0db',
+    '#2077b3',
+    '#124c82',
+    '#0a2d57',
+    '#061b38'
+  ];
+
+  function hash2D(c, r) {
+    const h = Math.sin(c * 127.1 + r * 311.7) * 43758.5453123;
+    return h - Math.floor(h);
+  }
+
+  function smoothstep(edge0, edge1, x) {
+    const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
+    return t * t * (3 - 2 * t);
+  }
+
+  function buildBentoGrid() {
+    const isMobile = cw < 768;
+    const COLS = isMobile ? 8 : 12;
+    const ROWS = 7;
+
+    const occupied = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
+    const newTiles = [];
+
+    // Hero 2x2 Bento Color Tiles (matching the varied large/small mosaic layout)
+    const heroPlacements = isMobile
+      ? [
+          { c: 0, r: 1, w: 2, h: 2 },
+          { c: 3, r: 0, w: 2, h: 2 },
+          { c: 5, r: 2, w: 2, h: 2 },
+          { c: 1, r: 4, w: 2, h: 2 },
+          { c: 5, r: 5, w: 2, h: 2 }
+        ]
+      : [
+          { c: 0, r: 1, w: 2, h: 2 },
+          { c: 2, r: 0, w: 2, h: 2 },
+          { c: 5, r: 1, w: 2, h: 2 },
+          { c: 8, r: 0, w: 2, h: 2 },
+          { c: 10, r: 2, w: 2, h: 2 },
+          { c: 1, r: 4, w: 2, h: 2 },
+          { c: 4, r: 4, w: 2, h: 2 },
+          { c: 7, r: 3, w: 2, h: 2 },
+          { c: 9, r: 5, w: 2, h: 2 }
+        ];
+
+    const cellW = cw / COLS;
+    const cellH = ch / ROWS;
+
+    function createTileObj(c, r, w, h) {
+      const nx = (c + w * 0.5) / COLS;
+      const rand = hash2D(c, r);
+      const jitter = (rand - 0.5) * 0.09;
+      const xPx = Math.floor(c * cellW);
+      const yPx = Math.floor(r * cellH);
+      const wPx = Math.ceil((c + w) * cellW) - xPx;
+      const hPx = Math.ceil((r + h) * cellH) - yPx;
+
+      // Deterministic 3x3 sub-pixel order & blue/white colors for the leading/trailing wavefront
+      const subOrder = [0, 1, 2, 3, 4, 5, 6, 7, 8].sort(
+        (a, b) => hash2D(c * 3 + (a % 3), r * 3 + Math.floor(a / 3)) - hash2D(c * 3 + (b % 3), r * 3 + Math.floor(b / 3))
+      );
+      const subColors = subOrder.map((_, idx) => {
+        const pick = Math.floor(hash2D(c + idx * 7, r + idx * 13) * PIXEL_COLORS.length);
+        return PIXEL_COLORS[pick];
+      });
+
+      const mainColor0 = TILE_MAIN_COLORS[Math.floor(hash2D(c * 5 + 3, r * 11 + 7) * TILE_MAIN_COLORS.length)];
+      const mainColor1 = TILE_MAIN_COLORS[Math.floor(hash2D(c * 9 + 13, r * 7 + 19) * TILE_MAIN_COLORS.length)];
+
+      return {
+        c,
+        r,
+        w,
+        h,
+        xPx,
+        yPx,
+        wPx,
+        hPx,
+        nx,
+        jitter,
+        subOrder,
+        subColors,
+        mainColor0,
+        mainColor1
+      };
+    }
+
+    heroPlacements.forEach((p) => {
+      if (p.c + p.w <= COLS && p.r + p.h <= ROWS) {
+        let canPlace = true;
+        for (let rr = p.r; rr < p.r + p.h; rr++) {
+          for (let cc = p.c; cc < p.c + p.w; cc++) {
+            if (occupied[rr][cc]) canPlace = false;
+          }
+        }
+        if (canPlace) {
+          for (let rr = p.r; rr < p.r + p.h; rr++) {
+            for (let cc = p.c; cc < p.c + p.w; cc++) {
+              occupied[rr][cc] = true;
+            }
+          }
+          newTiles.push(createTileObj(p.c, p.r, p.w, p.h));
+        }
+      }
+    });
+
+    // Fill remaining 1x1 cells
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        if (!occupied[r][c]) {
+          occupied[r][c] = true;
+          newTiles.push(createTileObj(c, r, 1, 1));
+        }
+      }
+    }
+
+    tiles = newTiles;
+  }
+
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    cw = Math.max(320, rect.width || window.innerWidth);
+    ch = Math.max(300, rect.height || (window.innerHeight - 128));
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(cw * dpr);
+    canvas.height = Math.round(ch * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    buildBentoGrid();
+  }
+
+  // Draw the Left-to-Right Staggered Blue & White Pixel/Bento Mosaic Wipe for wipeProgress in [0, 1]
+  function drawMosaicWipe(wipeProgress, wipeSlot) {
+    ctx.clearRect(0, 0, cw, ch);
+    if (wipeProgress <= 0.001 || wipeProgress >= 0.999) return;
+
+    const seedOffset = wipeSlot === 0 ? 0 : 4;
+
+    for (let tIdx = 0; tIdx < tiles.length; tIdx++) {
+      const tile = tiles[tIdx];
+      const x = tile.xPx;
+      const y = tile.yPx;
+      const w = tile.wPx;
+      const h = tile.hPx;
+
+      // Smooth wave propagation Left -> Right
+      const waveOffset = tile.nx * 0.68 + tile.jitter;
+      const entry = wipeProgress * 2.08 - waveOffset;
+      const exit = (wipeProgress - 0.47) * 2.12 - waveOffset;
+
+      if (entry <= 0 || exit >= 0.42) {
+        continue;
+      }
+
+      const subW = w / 3;
+      const subH = h / 3;
+      const solidColor = wipeSlot === 0 ? tile.mainColor0 : tile.mainColor1;
+
+      // 1) LEADING EDGE: 3x3 blue & white micro-pixels smoothly scaling & fading in, then locking into solid blue/white Bento block
+      if (exit <= 0) {
+        if (entry < 0.42) {
+          for (let i = 0; i < 9; i++) {
+            const subStart = i * 0.026;
+            const subAlpha = smoothstep(subStart, subStart + 0.13, entry);
+            if (subAlpha <= 0.01) continue;
+
+            const subIdx = tile.subOrder[i];
+            const sc = subIdx % 3;
+            const sr = Math.floor(subIdx / 3);
+            const scale = 0.84 + 0.16 * subAlpha;
+            const pw = (subW + 0.6) * scale;
+            const ph = (subH + 0.6) * scale;
+            const px = x + sc * subW + (subW - pw) * 0.5;
+            const py = y + sr * subH + (subH - ph) * 0.5;
+
+            ctx.globalAlpha = subAlpha;
+            ctx.fillStyle = tile.subColors[(i + seedOffset) % tile.subColors.length];
+            ctx.fillRect(px, py, pw, ph);
+          }
+        }
+
+        // Cross-fade the solid Blue/White Bento Tile smoothly over the 3x3 micro-pixels (entry 0.24 -> 0.42)
+        const blockAlpha = smoothstep(0.24, 0.42, entry);
+        if (blockAlpha > 0.01) {
+          ctx.globalAlpha = blockAlpha;
+          ctx.fillStyle = solidColor;
+          ctx.fillRect(x, y, w, h);
+          ctx.strokeStyle = 'rgba(4, 11, 24, 0.55)';
+          ctx.lineWidth = 1.2;
+          ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+        }
+        ctx.globalAlpha = 1;
+        continue;
+      }
+
+      // 2) TRAILING EDGE: Solid Blue/White Bento Tile subdivides back into 3x3 blue & white micro-pixels which smoothly dissolve out
+      const blockOutAlpha = 1 - smoothstep(0.0, 0.17, exit);
+      if (exit < 0.42) {
+        for (let i = 0; i < 9; i++) {
+          const outStart = 0.04 + i * 0.028;
+          const subAlpha = 1 - smoothstep(outStart, outStart + 0.14, exit);
+          if (subAlpha <= 0.01) continue;
+
+          const subIdx = tile.subOrder[8 - i];
+          const sc = subIdx % 3;
+          const sr = Math.floor(subIdx / 3);
+          const scale = 0.84 + 0.16 * subAlpha;
+          const pw = (subW + 0.6) * scale;
+          const ph = (subH + 0.6) * scale;
+          const px = x + sc * subW + (subW - pw) * 0.5;
+          const py = y + sr * subH + (subH - ph) * 0.5;
+
+          ctx.globalAlpha = subAlpha;
+          ctx.fillStyle = tile.subColors[(i + seedOffset + 3) % tile.subColors.length];
+          ctx.fillRect(px, py, pw, ph);
+        }
+      }
+
+      if (blockOutAlpha > 0.01) {
+        ctx.globalAlpha = blockOutAlpha;
+        ctx.fillStyle = solidColor;
+        ctx.fillRect(x, y, w, h);
+        ctx.strokeStyle = 'rgba(4, 11, 24, 0.55)';
+        ctx.lineWidth = 1.2;
+        ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+      }
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  let currentActiveStage = -1;
+  function setStageVisibility(activeStageIndex) {
+    if (currentActiveStage === activeStageIndex) return;
+    currentActiveStage = activeStageIndex;
+
+    const configs = [
+      { el: stageIntro, active: activeStageIndex === 0 },
+      { el: stageOphteis, active: activeStageIndex === 1 },
+      { el: stageAeon, active: activeStageIndex === 2 }
+    ];
+    configs.forEach(({ el, active }) => {
+      if (active) {
+        el.classList.remove('opacity-0', 'pointer-events-none');
+        el.classList.add('opacity-100', 'pointer-events-auto');
+        if (typeof window.__triggerLotticiStagger === 'function') {
+          window.__triggerLotticiStagger(el);
+        }
+      } else {
+        el.classList.remove('opacity-100', 'pointer-events-auto');
+        el.classList.add('opacity-0', 'pointer-events-none');
+      }
+    });
+
+    stageBtns.forEach((btn) => {
+      const idx = parseInt(btn.getAttribute('data-med-stage-btn') || '0', 10);
+      if (idx === activeStageIndex) {
+        btn.className = 'px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider text-white bg-sky/25 border border-sky/45 transition-all cursor-pointer';
+      } else {
+        btn.className = 'px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider text-cream/60 hover:text-white border border-transparent transition-all cursor-pointer';
+      }
+    });
+  }
+
+  function renderProgress(p) {
+    if (!cw || !ch) resizeCanvas();
+
+    // Timeline across p in [0.00, 1.00]:
+    // [0.00 .. 0.06] -> Stage 0 Hold (Medical Supplies • Ophteis OVDs & AEON Care Intro)
+    // (0.06 .. 0.44) -> Wipe 1 (Left-to-Right Pixel & Bento Mosaic Wipe from Intro -> 01 Ophteis OVDs)
+    // [0.44 .. 0.56] -> Stage 1 Hold (01 • OPHTEIS VISCOSURGICAL DEVICES)
+    // (0.56 .. 0.94) -> Wipe 2 (Left-to-Right Pixel & Bento Mosaic Wipe from 01 Ophteis -> 02 AEON Care)
+    // [0.94 .. 1.00] -> Stage 2 Hold (02 • AEON EYE SOLUTIONS & OCULAR SURFACE CARE)
+
+    if (p <= 0.06) {
+      setStageVisibility(0);
+      ctx.clearRect(0, 0, cw, ch);
+    } else if (p < 0.44) {
+      const w1 = (p - 0.06) / (0.44 - 0.06); // 0 -> 1
+      setStageVisibility(w1 < 0.49 ? 0 : 1);
+      drawMosaicWipe(w1, 0);
+    } else if (p <= 0.56) {
+      setStageVisibility(1);
+      ctx.clearRect(0, 0, cw, ch);
+    } else if (p < 0.94) {
+      const w2 = (p - 0.56) / (0.94 - 0.56); // 0 -> 1
+      setStageVisibility(w2 < 0.49 ? 1 : 2);
+      drawMosaicWipe(w2, 1);
+    } else {
+      setStageVisibility(2);
+      ctx.clearRect(0, 0, cw, ch);
+    }
+  }
+
+  function tick() {
+    const now = performance.now();
+
+    // Auto-complete wipe if user paused scrolling inside a wipe transition zone
+    // so the screen never sits half-covered in mosaic tiles
+    if (now - lastInputTime > 140) {
+      if (targetP > 0.06 && targetP < 0.44) {
+        targetP = lastScrollDir >= 0 ? 0.50 : 0.0;
+      } else if (targetP > 0.56 && targetP < 0.94) {
+        targetP = lastScrollDir >= 0 ? 1.0 : 0.50;
+      }
+    }
+
+    const diff = targetP - smoothP;
+    if (Math.abs(diff) > 0.0004) {
+      // Velocity-capped critically damped lerp: guarantees 40-60 silky frames per wipe
+      const rawStep = diff * 0.095;
+      const cappedStep = Math.max(-0.0095, Math.min(0.0095, rawStep));
+      smoothP = Math.max(0, Math.min(1, smoothP + cappedStep));
+      renderProgress(smoothP);
+
+      // Keep native scrollTop synchronized for scrollbar/touch consistency
+      const maxScroll = Math.max(1, slide.scrollHeight - slide.clientHeight);
+      isSyncingScrollTop = true;
+      slide.scrollTop = smoothP * maxScroll;
+      isSyncingScrollTop = false;
+
+      rafId = requestAnimationFrame(tick);
+    } else {
+      smoothP = targetP;
+      renderProgress(smoothP);
+      rafId = 0;
+    }
+  }
+
+  function requestTick() {
+    if (!rafId) {
+      rafId = requestAnimationFrame(tick);
+    }
+  }
+
+  // Feed wheel impulses into the 60/120fps damped progress engine
+  window.__onMedSuppliesWheel = function(deltaY) {
+    if (!deltaY) return;
+    lastInputTime = performance.now();
+    lastScrollDir = deltaY >= 0 ? 1 : -1;
+    const impulse = Math.max(-0.075, Math.min(0.075, deltaY * 0.00042));
+    targetP = Math.max(0, Math.min(1, targetP + impulse));
+    requestTick();
+  };
+
+  // Smooth programmatic jump to Stage 0, 1, or 2
+  window.jumpMedSuppliesStage = function(targetStage) {
+    const stageTargets = [0.0, 0.50, 1.0];
+    const nextTarget = stageTargets[targetStage] !== undefined ? stageTargets[targetStage] : 0.0;
+    lastScrollDir = nextTarget >= smoothP ? 1 : -1;
+    lastInputTime = performance.now();
+    targetP = nextTarget;
+    requestTick();
+  };
+
+  // Support native scrollbar drag or touch scrolling on #product-slide-med-supplies
+  slide.addEventListener('scroll', () => {
+    if (isSyncingScrollTop) return;
+    const maxScroll = Math.max(1, slide.scrollHeight - slide.clientHeight);
+    const nativeP = Math.max(0, Math.min(1, slide.scrollTop / maxScroll));
+    if (Math.abs(nativeP - smoothP) > 0.002) {
+      lastInputTime = performance.now();
+      lastScrollDir = nativeP >= targetP ? 1 : -1;
+      targetP = nativeP;
+      requestTick();
+    }
+  }, { passive: true });
+
+  window.addEventListener('resize', () => {
+    resizeCanvas();
+    renderProgress(smoothP);
+  });
+
+  window.__updateMedSuppliesMosaic = function() {
+    smoothP = 0;
+    targetP = 0;
+    currentActiveStage = -1;
+    resizeCanvas();
+    renderProgress(0);
+  };
+
+  resizeCanvas();
+  renderProgress(0);
+}
+
 // Ensure products controllers and canvases initialize robustly regardless of document ready state
 function launchProductsControllers() {
   initProductsDeckController();
   initIOLScrollStageController();
+  initMedSuppliesMosaicScroll();
   initProductsSmokeCanvas();
   if (typeof initSilkWavesShader === 'function') {
     initSilkWavesShader('products-waves-shader-canvas');
@@ -8000,8 +9064,9 @@ if (document.readyState === 'loading') {
   }
 
   // ─── Slide visibility (lazy start / stop) ──────────────────────────────────
+  const hostSlide = slide.closest('.about-slide') || slide;
   function checkVisible() {
-    const on = !slide.classList.contains('opacity-0') && slide.classList.contains('opacity-100');
+    const on = !hostSlide.classList.contains('opacity-0') && hostSlide.classList.contains('opacity-100');
     if (on === slideOn) return;
     slideOn = on;
     if (on) {
@@ -8014,11 +9079,10 @@ if (document.readyState === 'loading') {
       start();
     } else {
       stop();
-      slide.classList.remove('wwd-entered');
       entryPlayed = false;
     }
   }
-  new MutationObserver(checkVisible).observe(slide, { attributes: true, attributeFilter: ['class'] });
+  new MutationObserver(checkVisible).observe(hostSlide, { attributes: true, attributeFilter: ['class'] });
   if (wrap && typeof ResizeObserver !== 'undefined') {
     new ResizeObserver(() => { if (slideOn) { resize(); syncSlidingMarker(); start(); } }).observe(wrap);
   }
@@ -8059,15 +9123,28 @@ if (document.readyState === 'loading') {
       li.appendChild(s);
       ul.appendChild(li);
     });
-    m.style.top = slide.scrollTop + 'px';
-    m.style.height = slide.clientHeight + 'px';
     m.style.display = 'flex';
     requestAnimationFrame(() => { m.style.opacity = '1'; });
   }
 
   document.addEventListener('click', (e) => {
+    const forgeOpenBtn = e.target.closest && e.target.closest('#wwd-forge-open-modal');
+    if (forgeOpenBtn) {
+      const idx = window.__wwdForgeActiveStage || 0;
+      const activeCard = slide.querySelector(`[data-wwd-row="${idx}"]`) || slide.querySelector('.wwd-card');
+      if (activeCard) openModal(activeCard);
+      return;
+    }
     const btn = e.target.closest && e.target.closest('.wwd-card');
-    if (btn) { openModal(btn); return; }
+    if (btn) {
+      const rowIdx = btn.getAttribute('data-wwd-row');
+      if (rowIdx !== null && typeof window.jumpWwdForgeStage === 'function') {
+        window.jumpWwdForgeStage(parseInt(rowIdx, 10));
+      } else {
+        openModal(btn);
+      }
+      return;
+    }
     const m = $('wwd-modal');
     if (!m || m.style.display === 'none') return;
     if (e.target === m || e.target.closest('#wwd-modal-close') || e.target.closest('#wwd-modal-cta')) closeModal();
@@ -8119,6 +9196,9 @@ if (document.readyState === 'loading') {
       if (i === idx) {
         slide.classList.add('opacity-100', 'pointer-events-auto', 'translate-x-0', 'z-10');
         slide.scrollTop = 0;
+        if (typeof window.__triggerLotticiStagger === 'function') {
+          window.__triggerLotticiStagger(slide);
+        }
       } else if (i < idx) {
         slide.classList.add('opacity-0', 'pointer-events-none', '-translate-x-12', 'z-0');
       } else {
@@ -8126,15 +9206,55 @@ if (document.readyState === 'loading') {
       }
     });
 
+    // Toggle attached top sub-navbar ([data-deck-bar]) flush under #site-header
+    const subpageBar = sec.querySelector(`[data-deck-bar="${deckKey}"]`);
+    if (subpageBar) {
+      if (idx >= 1) {
+        subpageBar.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2');
+        subpageBar.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+      } else {
+        subpageBar.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+        subpageBar.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
+      }
+    }
+
+    // Highlight active tab in the attached sub-navbar
+    sec.querySelectorAll(`[data-deck-pill^="${deckKey}:"]`).forEach((pill) => {
+      const target = pill.getAttribute('data-deck-pill');
+      pill.classList.toggle('is-active', target === `${deckKey}:${idx}`);
+    });
+
     if (shouldScroll) {
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
       document.documentElement.style.scrollSnapType = '';
-      sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (typeof window.grailScrollTo === 'function') {
+        window.grailScrollTo(sec);
+      } else {
+        sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   }
 
   window.goToDeckSlide = goToDeckSlide;
+
+  // Interactive Category Chips filter for Principal Brands Portfolio (Slide 1 of #brands)
+  window.filterBrandsPortfolio = function (cat) {
+    const sec = document.getElementById('brands');
+    if (!sec) return;
+    sec.querySelectorAll('.br-cat-chip[data-br-chip]').forEach((chip) => {
+      const isActive = chip.getAttribute('data-br-chip') === cat;
+      chip.className = isActive
+        ? 'br-cat-chip min-h-[44px] px-5 rounded-full text-[13.5px] font-semibold tracking-wide transition-all cursor-pointer bg-[#3aa0db] text-[#0a1d40] border border-[#72c5f8] shadow-[0_0_20px_rgba(58,160,219,0.35)]'
+        : 'br-cat-chip min-h-[44px] px-5 rounded-full text-[13.5px] font-medium tracking-wide transition-all cursor-pointer bg-[#0a1d40]/75 text-[#dce7f5] border border-[#72c5f8]/25 hover:border-[#72c5f8]/60 hover:text-white';
+    });
+    sec.querySelectorAll('.br-cat-col[data-br-col]').forEach((col) => {
+      const colCat = col.getAttribute('data-br-col');
+      const match = cat === 'all' || colCat === cat;
+      col.style.opacity = match ? '1' : '0.28';
+      col.style.filter = match ? 'none' : 'grayscale(0.6)';
+    });
+  };
 
   // Bind all navbar and dropdown items with [data-deck-target="deck:index"]
   document.querySelectorAll('[data-deck-target]').forEach((link) => {
@@ -8197,7 +9317,18 @@ if (document.readyState === 'loading') {
       r: 120 + (i % 4) * 35,
       speed: 0.1 + (i % 4) * 0.05,
       phase: i * 1.5,
-      alpha: 0.32 + (i % 3) * 0.1
+      alpha: 0.22 + (i % 3) * 0.08
+    }));
+
+    const tendrils = Array.from({ length: 14 }, (_, i) => ({
+      baseX: 0.06 + (i / 14) * 0.88,
+      nodeCount: 20,
+      sway: 14 + (i % 4) * 6,
+      freq: 0.6 + (i % 3) * 0.25,
+      phase: i * 1.15,
+      alpha: 0.08 + (i % 3) * 0.035,
+      rBase: 38 + (i % 3) * 10,
+      rTip: 18 + (i % 2) * 6
     }));
 
     let t = 0;
@@ -8209,7 +9340,7 @@ if (document.readyState === 'loading') {
 
     function draw() {
       if (visible) {
-        t += 0.008;
+        t += 0.012;
         const cw = canvas.width, ch = canvas.height;
         ctx.clearRect(0, 0, cw, ch);
         for (let i = 0; i < puffs.length; i++) {
@@ -8226,9 +9357,384 @@ if (document.readyState === 'loading') {
           ctx.arc(cx, cy, rad, 0, Math.PI * 2);
           ctx.fill();
         }
+        for (let j = 0; j < tendrils.length; j++) {
+          const td = tendrils[j];
+          const bx = td.baseX * cw;
+          for (let k = 0; k < td.nodeCount; k++) {
+            const frac = k / (td.nodeCount - 1);
+            const env = Math.sin(frac * Math.PI);
+            const a = td.alpha * env;
+            if (a <= 0.002) continue;
+            const r = td.rBase * (1 - frac) + td.rTip * frac;
+            const dx = Math.sin(t * td.freq + td.phase + k * 0.35) * td.sway * (0.4 + frac * 1.2);
+            const nx = bx + dx;
+            const ny = ch * (1.05 - frac * 1.1);
+            const g = ctx.createRadialGradient(nx, ny, 0, nx, ny, r);
+            g.addColorStop(0, `rgba(74, 127, 165, ${a.toFixed(4)})`);
+            g.addColorStop(0.55, `rgba(40, 80, 140, ${(a * 0.45).toFixed(4)})`);
+            g.addColorStop(1, 'transparent');
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(nx, ny, r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
       }
       requestAnimationFrame(draw);
     }
     requestAnimationFrame(draw);
   });
+})();
+
+/* ========================================================================= */
+/* LORENZO LOTTICI INSPIRED INTERACTIONS (STAGGER REVEALS, SPOTLIGHT, PILLS) */
+/* ========================================================================= */
+(function initLorenzoLotticiInteractions() {
+  const rmq = typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+
+  // 1. Staggered upward entrance choreography on unlocked slides & stages
+  window.__triggerLotticiStagger = function(containerEl) {
+    if (!containerEl || rmq.matches) return;
+    const targets = containerEl.querySelectorAll(
+      'h2, h3, h4, .notched-card, .lottici-index-row, .ophteis-elastic-card'
+    );
+    targets.forEach((el, idx) => {
+      el.classList.remove('lottici-stagger-in');
+      el.style.setProperty('--lottici-delay', Math.min(idx * 55, 380) + 'ms');
+      void el.offsetWidth;
+      el.classList.add('lottici-stagger-in');
+    });
+  };
+
+  // 2. Cursor-tracked sky-blue spotlight border glow on .notched-card elements
+  document.querySelectorAll('.notched-card').forEach((card) => {
+    card.addEventListener('pointermove', (e) => {
+      if (rmq.matches) return;
+      const rect = card.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      card.style.setProperty('--lottici-mx', mx.toFixed(1) + 'px');
+      card.style.setProperty('--lottici-my', my.toFixed(1) + 'px');
+      card.style.setProperty('--lottici-spot', '1');
+    }, { passive: true });
+
+    card.addEventListener('pointerleave', () => {
+      card.style.setProperty('--lottici-spot', '0');
+    }, { passive: true });
+  });
+
+  // 3. "Let's Talk" Quick-Select Topic Pills in #contact Inquiry Form
+  const pillWrap = document.getElementById('lottici-inquiry-pills');
+  const productSelect = document.getElementById('inq-product');
+  if (pillWrap && productSelect) {
+    const pills = Array.from(pillWrap.querySelectorAll('.lottici-topic-pill'));
+    pills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        const topic = pill.getAttribute('data-inq-topic');
+        pills.forEach((p) => p.classList.toggle('is-active', p === pill));
+        if (topic) {
+          productSelect.value = topic;
+        }
+      });
+    });
+    productSelect.addEventListener('change', () => {
+      const val = productSelect.value;
+      pills.forEach((p) => {
+        p.classList.toggle('is-active', p.getAttribute('data-inq-topic') === val);
+      });
+    });
+  }
+})();
+
+/* ========================================================================= */
+/* GRAIL-APP.COM INSPIRED 3D STACKED-PAGE SCROLL & DAMPED MOMENTUM ENGINE    */
+/* ========================================================================= */
+(function initGrailAppPageScrollChoreography() {
+  const rmq = typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)')
+    : { matches: false };
+  if (rmq.matches) return;
+
+  const SECTION_IDS = [
+    'hero',
+    'about',
+    'products',
+    'brands',
+    'distribution',
+    'resources',
+    'activities',
+    'contact',
+    'site-footer'
+  ];
+
+  const sections = SECTION_IDS
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+  if (!sections.length) return;
+
+  // Map each section to its primary foreground content wrapper for secondary depth parallax
+  const innerStages = sections.map((sec) => {
+    if (sec.id === 'hero') return sec.querySelector('.ih-shell');
+    if (sec.id === 'about') return sec.querySelector('.about-slide[data-slide-index="0"] > div');
+    if (sec.id === 'products') return sec.querySelector('.product-slide[data-product-index="0"] .ih-shell');
+    if (sec.id === 'site-footer') return null;
+    return sec.querySelector('.deck-slide[data-slide-index="0"] > div');
+  });
+
+  let sectionOffsets = [];
+  let vh = window.innerHeight || 1;
+  let maxScroll = 0;
+
+  function measureSections() {
+    vh = window.innerHeight || 1;
+    // Temporarily clear inline transforms before measuring exact document offsets
+    sections.forEach((sec) => {
+      sec.style.transform = '';
+    });
+    sectionOffsets = sections.map((sec) => sec.offsetTop);
+    maxScroll = Math.max(0, document.documentElement.scrollHeight - vh);
+  }
+
+  measureSections();
+  window.addEventListener('resize', () => {
+    measureSections();
+    applyGrailTransforms(window.scrollY);
+  }, { passive: true });
+  window.addEventListener('load', () => {
+    measureSections();
+    applyGrailTransforms(window.scrollY);
+  });
+
+  // Apply Grail.app 3D Stacked-Card Scale, Pinned Parallax Lag, Rounded Corners & Inner Depth
+  function applyGrailTransforms(scrollY) {
+    for (let i = 0; i < sections.length; i++) {
+      const sec = sections[i];
+      if (!sec || sec.id === 'site-footer') continue;
+
+      const baseTop = sectionOffsets[i] !== undefined ? sectionOffsets[i] : (i * vh);
+      const relTop = baseTop - scrollY;
+      const inner = innerStages[i];
+
+      // 1. Outgoing section receding underneath the rising next section (relTop < -1 and relTop > -vh)
+      if (relTop < -1 && relTop > -vh * 1.05) {
+        const exitP = Math.min(1, Math.max(0, -relTop / vh));
+        const eExit = exitP * (2 - exitP); // Smooth quad ease-out
+
+        // Pinned downward parallax lag so the outgoing page lingers in 3D space while the next card slides over it
+        const lagY = exitP * vh * 0.44;
+        const scale = 1 - eExit * 0.095;
+        const radius = eExit * 30;
+        const brightness = 1 - eExit * 0.54;
+
+        sec.classList.add('grail-card-transitioning');
+        sec.style.transform = `translate3d(0, ${lagY.toFixed(1)}px, 0) scale(${scale.toFixed(4)})`;
+        sec.style.borderRadius = `${radius.toFixed(1)}px`;
+        sec.style.filter = `brightness(${brightness.toFixed(3)})`;
+
+        if (inner) {
+          const innerY = -exitP * 38;
+          const innerScale = 1 - exitP * 0.03;
+          const innerOpacity = Math.max(0, 1 - exitP * 0.42);
+          inner.style.transform = `translate3d(0, ${innerY.toFixed(1)}px, 0) scale(${innerScale.toFixed(4)})`;
+          inner.style.opacity = innerOpacity.toFixed(3);
+        }
+      }
+      // 2. Incoming section rising up over the receding previous section (relTop > 1 and relTop < vh)
+      else if (relTop > 1 && relTop < vh * 1.05) {
+        const enterP = Math.min(1, Math.max(0, relTop / vh));
+        const topRadius = enterP * 30;
+        const cardScale = 1 - enterP * 0.022;
+
+        sec.classList.add('grail-card-transitioning');
+        sec.style.transform = `translate3d(0, 0, 0) scale(${cardScale.toFixed(4)})`;
+        sec.style.borderTopLeftRadius = `${topRadius.toFixed(1)}px`;
+        sec.style.borderTopRightRadius = `${topRadius.toFixed(1)}px`;
+        sec.style.borderBottomLeftRadius = '0px';
+        sec.style.borderBottomRightRadius = '0px';
+        sec.style.filter = 'none';
+
+        if (inner) {
+          const innerY = enterP * 68;
+          const innerScale = 1 - enterP * 0.045;
+          const innerOpacity = Math.max(0.15, 1 - enterP * 0.65);
+          inner.style.transform = `translate3d(0, ${innerY.toFixed(1)}px, 0) scale(${innerScale.toFixed(4)})`;
+          inner.style.opacity = innerOpacity.toFixed(3);
+        }
+      }
+      // 3. Settled at top of viewport or completely off-screen -> 100% crisp zero-transform state
+      else {
+        if (sec.classList.contains('grail-card-transitioning') || sec.style.transform) {
+          sec.classList.remove('grail-card-transitioning');
+          sec.style.transform = '';
+          sec.style.borderRadius = '';
+          sec.style.borderTopLeftRadius = '';
+          sec.style.borderTopRightRadius = '';
+          sec.style.borderBottomLeftRadius = '';
+          sec.style.borderBottomRightRadius = '';
+          sec.style.filter = '';
+        }
+        if (inner && (inner.style.transform || inner.style.opacity)) {
+          inner.style.transform = '';
+          inner.style.opacity = '';
+        }
+      }
+    }
+  }
+
+  // Smooth Lerp Momentum Scroll + Magnetic Page Settle (Desktop)
+  let currentY = window.scrollY;
+  let targetY = window.scrollY;
+  let isAnimating = false;
+  let lastWheelDir = 0;
+  let snapTimer = null;
+
+  function enableDesktopGrailMode() {
+    if (window.innerWidth >= 1024) {
+      document.documentElement.classList.add('grail-scroll-ready');
+    } else {
+      document.documentElement.classList.remove('grail-scroll-ready');
+    }
+  }
+  enableDesktopGrailMode();
+  window.addEventListener('resize', enableDesktopGrailMode, { passive: true });
+
+  // Helper to check if an inner scrollable container (subpage) should consume the wheel event natively
+  function shouldYieldToInnerScroll(e) {
+    if (e.defaultPrevented) return true;
+    if (window.__aboutDeckCurrentIndex > 0) return true;
+    if (document.documentElement.style.overflow === 'hidden') return true;
+
+    let el = e.target;
+    while (el && el !== document.body && el !== document.documentElement) {
+      if (el.nodeType === 1) {
+        const style = window.getComputedStyle(el);
+        const overflowY = style.overflowY;
+        if ((overflowY === 'auto' || overflowY === 'scroll') && el.scrollHeight > el.clientHeight + 4) {
+          const canScrollDown = e.deltaY > 0 && (el.scrollTop + el.clientHeight < el.scrollHeight - 2);
+          const canScrollUp = e.deltaY < 0 && (el.scrollTop > 2);
+          if (canScrollDown || canScrollUp) return true;
+        }
+      }
+      el = el.parentElement;
+    }
+    return false;
+  }
+
+  function scheduleMagneticSettle() {
+    clearTimeout(snapTimer);
+    snapTimer = setTimeout(() => {
+      if (!sectionOffsets.length) return;
+      // Find the section interval containing targetY
+      let bestTarget = targetY;
+      let minDist = Infinity;
+
+      for (let i = 0; i < sectionOffsets.length - 1; i++) {
+        const start = sectionOffsets[i];
+        const end = sectionOffsets[i + 1];
+        const span = end - start;
+        if (span <= 10) continue;
+
+        if (targetY >= start - 4 && targetY <= end + 4) {
+          const progress = (targetY - start) / span;
+          // Directional bias: if scrolling down past 18%, glide to next section; if scrolling up past 18%, glide to prev
+          if (lastWheelDir > 0) {
+            bestTarget = progress > 0.18 ? end : start;
+          } else if (lastWheelDir < 0) {
+            bestTarget = progress < 0.82 ? start : end;
+          } else {
+            bestTarget = progress >= 0.5 ? end : start;
+          }
+          minDist = 0;
+          break;
+        }
+      }
+
+      if (minDist === Infinity) {
+        for (let i = 0; i < sectionOffsets.length; i++) {
+          const d = Math.abs(targetY - sectionOffsets[i]);
+          if (d < minDist) {
+            minDist = d;
+            bestTarget = sectionOffsets[i];
+          }
+        }
+      }
+
+      targetY = Math.max(0, Math.min(maxScroll, bestTarget));
+      startLoop();
+    }, 150);
+  }
+
+  function tick() {
+    const diff = targetY - currentY;
+    if (Math.abs(diff) > 0.45) {
+      currentY += diff * 0.115;
+      window.scrollTo(0, currentY);
+      applyGrailTransforms(currentY);
+      if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll();
+      requestAnimationFrame(tick);
+    } else {
+      currentY = targetY;
+      window.scrollTo(0, currentY);
+      applyGrailTransforms(currentY);
+      if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll();
+      isAnimating = false;
+    }
+  }
+
+  function startLoop() {
+    if (!isAnimating) {
+      isAnimating = true;
+      requestAnimationFrame(tick);
+    }
+  }
+
+  window.addEventListener('wheel', (e) => {
+    if (window.innerWidth < 1024) return;
+    if (shouldYieldToInnerScroll(e)) return;
+
+    e.preventDefault();
+    if (!isAnimating) {
+      currentY = window.scrollY;
+      targetY = window.scrollY;
+    }
+
+    // Normalize wheel delta across mouse wheels and trackpads
+    const rawDelta = e.deltaMode === 1 ? e.deltaY * 36 : e.deltaY;
+    const clampedDelta = Math.max(-240, Math.min(240, rawDelta * 1.12));
+    lastWheelDir = clampedDelta > 0 ? 1 : (clampedDelta < 0 ? -1 : lastWheelDir);
+
+    targetY = Math.max(0, Math.min(maxScroll, targetY + clampedDelta));
+    startLoop();
+    scheduleMagneticSettle();
+  }, { passive: false });
+
+  // Sync when user scrolls via scrollbar, keyboard, or touch
+  window.addEventListener('scroll', () => {
+    if (!isAnimating) {
+      currentY = window.scrollY;
+      targetY = window.scrollY;
+      applyGrailTransforms(window.scrollY);
+    }
+  }, { passive: true });
+
+  // Programmatic smooth glide API for navbar links, dropdowns, and page indicator dots
+  window.grailScrollTo = function(targetElOrY) {
+    measureSections();
+    let destY = 0;
+    if (typeof targetElOrY === 'number') {
+      destY = targetElOrY;
+    } else if (targetElOrY && typeof targetElOrY.offsetTop === 'number') {
+      const idx = sections.indexOf(targetElOrY);
+      destY = idx !== -1 ? sectionOffsets[idx] : targetElOrY.offsetTop;
+    }
+    clearTimeout(snapTimer);
+    if (!isAnimating) {
+      currentY = window.scrollY;
+    }
+    targetY = Math.max(0, Math.min(maxScroll, destY));
+    startLoop();
+  };
+
+  applyGrailTransforms(window.scrollY);
 })();
