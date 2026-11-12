@@ -156,65 +156,109 @@
   window.addEventListener('scroll', updateActiveNavOnScroll, { passive: true });
   updateActiveNavOnScroll();
 
-  // Floating Page Dots Click Handler
+  const transitionCurtain = document.getElementById('page-transition-curtain');
+  let curtainTimer = null;
+  const sweepTransitionCurtain = () => {
+    if (!transitionCurtain) return;
+    clearTimeout(curtainTimer);
+    transitionCurtain.classList.add('is-sweeping');
+    curtainTimer = setTimeout(() => {
+      transitionCurtain.classList.remove('is-sweeping');
+    }, 420);
+  };
+  window.__sweepPageTransitionCurtain = sweepTransitionCurtain;
+
+  // Floating Page Dots Click Handler (Always resets subpages to Landing Page Slide 0 & unlocks outer scroll)
   pageDotItems.forEach((dot) => {
     dot.addEventListener('click', () => {
       const targetSelector = dot.getAttribute('data-target');
       if (!targetSelector) return;
-      const targetEl = document.querySelector(targetSelector);
+      const isHome = targetSelector === '#hero' || targetSelector === '#top';
+      const targetEl = isHome ? (document.getElementById('hero') || document.body) : document.querySelector(targetSelector);
       if (!targetEl) return;
 
-      if (transitionCurtain) {
-        clearTimeout(curtainTimer);
-        transitionCurtain.classList.add('is-sweeping');
-        curtainTimer = setTimeout(() => {
-          transitionCurtain.classList.remove('is-sweeping');
-        }, 420);
+      if (typeof window.__resetAllSubpagesExcept === 'function') {
+        window.__resetAllSubpagesExcept(null);
+      }
+      if (typeof window.__unlockOuterPageScroll === 'function') {
+        window.__unlockOuterPageScroll();
       }
 
+      sweepTransitionCurtain();
+
       if (typeof window.grailScrollTo === 'function') {
-        window.grailScrollTo(targetEl);
+        window.grailScrollTo(isHome ? 0 : targetEl);
+      } else if (isHome) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
   });
 
-  // 5c. Smooth Page Navigation Curtain Sweep on Anchor Clicks
-  const transitionCurtain = document.getElementById('page-transition-curtain');
-  let curtainTimer = null;
+  // 5c. Smooth Page Navigation Curtain Sweep & Landing-Page Reset on Anchor Clicks
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener('click', (e) => {
       const href = anchor.getAttribute('href');
       if (!href || href === '#') return;
-      const targetEl = document.querySelector(href);
+
+      const isHomeHref = (href === '#top' || href === '#hero');
+      const resolvedHref = href === '#news' ? '#activities' : href;
+      const targetEl = isHomeHref
+        ? (document.getElementById('hero') || document.getElementById('top') || document.body)
+        : document.querySelector(resolvedHref);
       if (!targetEl) return;
 
+      // Detect whether this anchor explicitly targets a subpage (Slide >= 1)
+      const slideTargetAttr = anchor.getAttribute('data-slide-target');
+      const prodSlideAttr = anchor.getAttribute('data-product-slide');
+      const deckTargetAttr = anchor.getAttribute('data-deck-target');
+      const hasExplicitSubpageAttr =
+        (slideTargetAttr !== null && parseInt(slideTargetAttr, 10) >= 1) ||
+        (prodSlideAttr !== null && parseInt(prodSlideAttr, 10) >= 1) ||
+        (deckTargetAttr !== null && parseInt((deckTargetAttr.split(':')[1] || '0'), 10) >= 1);
+      const justOpenedSubpageInline =
+        (performance.now() - (window.__lastExplicitSubpageOpenTime || -9999)) < 90;
+
       e.preventDefault();
-      // Close mobile menu & unlock html overflow BEFORE scrolling so scrollIntoView works on mobile
+
+      // Close mobile menu BEFORE scrolling
       if (toggle && toggle.getAttribute('aria-expanded') === 'true') {
         setMenu(false);
       }
 
-      if (transitionCurtain) {
-        clearTimeout(curtainTimer);
-        transitionCurtain.classList.add('is-sweeping');
-        curtainTimer = setTimeout(() => {
-          transitionCurtain.classList.remove('is-sweeping');
-        }, 420);
+      // If this is an explicit subpage trigger (e.g., About -> Foundation, Services -> Product Marketing),
+      // the subpage controller already aligned & locked the section; do not reset or run unlocked smooth scroll.
+      if (hasExplicitSubpageAttr || (!isHomeHref && justOpenedSubpageInline)) {
+        return;
       }
 
+      // Top-level navigation (Home, About MEDIQ, Products, Brands, Services, Resources, Contact, Hero CTAs, Footer):
+      // Reset ALL sections back to their specific Landing Page (Slide 0) and unlock main-page scrolling!
+      if (typeof window.__resetAllSubpagesExcept === 'function') {
+        window.__resetAllSubpagesExcept(null);
+      }
+      if (typeof window.__unlockOuterPageScroll === 'function') {
+        window.__unlockOuterPageScroll();
+      }
+
+      sweepTransitionCurtain();
+
       // Trigger reveal animations inside target page section
-      targetEl.querySelectorAll('.scroll-reveal').forEach((el) => {
-        el.classList.remove('is-visible');
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => el.classList.add('is-visible'));
+      if (targetEl.querySelectorAll) {
+        targetEl.querySelectorAll('.scroll-reveal').forEach((el) => {
+          el.classList.remove('is-visible');
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => el.classList.add('is-visible'));
+          });
         });
-      });
+      }
 
       requestAnimationFrame(() => {
         if (typeof window.grailScrollTo === 'function') {
-          window.grailScrollTo(targetEl);
+          window.grailScrollTo(isHomeHref ? 0 : targetEl);
+        } else if (isHomeHref) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
           targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -1057,14 +1101,27 @@
     }
   });
 
-  // 9. Smart Inquiry Form Pre-Selection & Submission Feedback
+  // 9. Smart Inquiry Form Pre-Selection, Consent Validation & Submission Feedback
   const productSelect = document.getElementById('inq-product');
   document.querySelectorAll('[data-inquire]').forEach((btn) => {
     btn.addEventListener('click', () => {
       const val = btn.getAttribute('data-inquire');
       if (productSelect && val) {
         productSelect.value = val;
+        productSelect.dispatchEvent(new Event('change'));
       }
+    });
+  });
+
+  document.querySelectorAll('[data-select-inquiry]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const val = btn.getAttribute('data-select-inquiry');
+      if (productSelect && val) {
+        productSelect.value = val;
+        productSelect.dispatchEvent(new Event('change'));
+      }
+      const nameInput = document.getElementById('inq-name');
+      if (nameInput) nameInput.focus();
     });
   });
 
@@ -1076,15 +1133,22 @@
       const name = quoteForm.querySelector('#inq-name')?.value.trim();
       const clinic = quoteForm.querySelector('#inq-clinic')?.value.trim();
       const email = quoteForm.querySelector('#inq-email')?.value.trim();
+      const consent = quoteForm.querySelector('#inq-consent');
       if (!name || !clinic || !email) {
-        formFeedback.textContent = 'Please fill in your Name, Hospital/Eye Center, and Email Address.';
-        formFeedback.className = 'text-xs font-semibold text-ray';
+        formFeedback.textContent = 'Please complete your Full Name, Organization/Institution, and Business Email.';
+        formFeedback.className = 'text-[10.5px] font-semibold text-ray';
         return;
       }
-      const selected = productSelect ? productSelect.value : 'Rayner Portfolio';
-      formFeedback.textContent = `Thank you, ${name}. Your inquiry for "${selected}" has been logged for our MediQ Product Specialist team.`;
-      formFeedback.className = 'text-xs font-semibold text-sky';
+      if (consent && !consent.checked) {
+        formFeedback.textContent = 'Please confirm the privacy and contact-consent statement before submitting.';
+        formFeedback.className = 'text-[10.5px] font-semibold text-ray';
+        return;
+      }
+      const selected = productSelect ? productSelect.value : 'Product Information';
+      formFeedback.textContent = `Thank you, ${name}. Your "${selected}" inquiry has been recorded for the MEDIQ team.`;
+      formFeedback.className = 'text-[10.5px] font-semibold text-sky';
       quoteForm.reset();
+      if (productSelect) productSelect.dispatchEvent(new Event('change'));
     });
   }
 
@@ -4534,6 +4598,11 @@ void main() {
 initSilkWavesShader('hero-waves-shader-canvas');
 initSilkWavesShader('about-waves-shader-canvas');
 initSilkWavesShader('products-waves-shader-canvas');
+initSilkWavesShader('brands-waves-shader-canvas');
+initSilkWavesShader('distribution-waves-shader-canvas');
+initSilkWavesShader('resources-waves-shader-canvas');
+initSilkWavesShader('activities-waves-shader-canvas');
+initSilkWavesShader('contact-waves-shader-canvas');
 
 // A3. Live Animated Optical Photon Pulses Locked to the Exact Reference Line Coordinates
 const photonCanvas = document.getElementById('hero-photon-lines-canvas');
@@ -4945,17 +5014,146 @@ window.addEventListener('keydown', (e) => {
 });
 
 // =========================================================================
-// D. Dynamic Lifespan Eye Stage: Filipino Vision Across Generations (Kid -> Teen -> Adult -> Senior -> Macro Iris)
+// D. Corporate Hero Carousel & Synchronized Lifespan Visual Stage
 // =========================================================================
 function initHeroEyeLifespan() {
   const slides = document.querySelectorAll('.hero-eye-slide');
   if (!slides.length) return;
 
-  let currentStage = 0;
-  const INTERVAL = 3000; // Smooth 3-second automatic transition
+  const HERO_CAROUSEL_DATA = [
+    {
+      eyebrow: 'PHILIPPINE HEALTHCARE DISTRIBUTOR \u00A0\u2022\u00A0 COMMERCIAL DEVELOPMENT',
+      lines: [
+        'Connecting Global',
+        'Healthcare Innovation',
+        'with the Philippines.'
+      ],
+      lede: 'Medical solutions, product marketing, commercialization, and dependable distribution for a stronger healthcare system — with ophthalmology as our established clinical specialty.',
+      primaryLabel: 'Explore Medical Solutions',
+      primaryHref: '#products',
+      secondaryLabel: 'Corporate Overview',
+      secondaryHref: '#about',
+      secondaryExternal: false
+    },
+    {
+      eyebrow: 'ESTABLISHED CLINICAL SPECIALTY \u00A0\u2022\u00A0 OPHTHALMIC SOLUTIONS',
+      lines: [
+        'Trusted Ophthalmic',
+        'Distribution for',
+        'Filipino Surgeons.'
+      ],
+      lede: 'Anchored by our established specialty in ophthalmology, MediQ partners with global medical manufacturers to supply intraocular lenses, surgical instruments, and diagnostic technologies to eye centers nationwide.',
+      primaryLabel: 'View Ophthalmic Portfolio',
+      primaryHref: '#products',
+      secondaryLabel: 'View Product Brochure',
+      secondaryHref: 'https://mediqvision.com/mobile/index.html',
+      secondaryExternal: true
+    },
+    {
+      eyebrow: 'PRODUCT MARKETING \u00A0\u2022\u00A0 COMMERCIALIZATION \u00A0\u2022\u00A0 MARKET ACCESS',
+      lines: [
+        'Strategic Product',
+        'Marketing & Market',
+        'Development.'
+      ],
+      lede: 'We bridge international healthcare innovators with Philippine hospitals and clinicians through regulatory stewardship, ethical product marketing, clinical education, and commercial execution.',
+      primaryLabel: 'Our Core Capabilities',
+      primaryHref: '#about',
+      secondaryLabel: 'Partner With MediQ',
+      secondaryHref: '#contact',
+      secondaryExternal: false
+    },
+    {
+      eyebrow: 'LUZON \u00A0\u2022\u00A0 VISAYAS \u00A0\u2022\u00A0 MINDANAO INSTITUTIONAL NETWORK',
+      lines: [
+        'Dependable Distribution',
+        'for a Stronger',
+        'Healthcare System.'
+      ],
+      lede: 'Delivering medical devices, pharmaceuticals, and clinical equipment with quality-assured logistics and responsive institutional support across Luzon, Visayas, and Mindanao.',
+      primaryLabel: 'Browse Product Divisions',
+      primaryHref: '#products',
+      secondaryLabel: 'Contact Distribution Team',
+      secondaryHref: '#contact',
+      secondaryExternal: false
+    }
+  ];
 
-  function setStage(idx) {
-    currentStage = (idx + slides.length) % slides.length;
+  const eyebrowTextEl = document.getElementById('hero-eyebrow-text');
+  const eyebrowWrapEl = document.getElementById('hero-eyebrow');
+  const titleEl = document.getElementById('hero-title');
+  const ledeEl = document.getElementById('hero-lede');
+  const ctasEl = document.getElementById('hero-ctas');
+  const primaryBtn = document.getElementById('hero-cta-primary');
+  const primaryLabelEl = document.getElementById('hero-cta-primary-label');
+  const secondaryBtn = document.getElementById('hero-open-brochure-btn');
+  const secondaryLabelEl = document.getElementById('hero-cta-secondary-label');
+  const stageEl = document.getElementById('hero-interactive-stage');
+
+  let currentStage = 0;
+  let autoTimer = null;
+  const INTERVAL = 6000;
+
+  function applySlideCopy(slideData, animate) {
+    if (!slideData || !titleEl) return;
+
+    const updateDOM = () => {
+      if (eyebrowTextEl) eyebrowTextEl.textContent = slideData.eyebrow;
+      if (ledeEl) ledeEl.textContent = slideData.lede;
+
+      const lineEls = titleEl.querySelectorAll('.ih-h1-line');
+      lineEls.forEach((el, idx) => {
+        el.textContent = slideData.lines[idx] || '';
+      });
+
+      if (primaryBtn && slideData.primaryHref) {
+        primaryBtn.setAttribute('href', slideData.primaryHref);
+      }
+      if (primaryLabelEl && slideData.primaryLabel) {
+        primaryLabelEl.textContent = slideData.primaryLabel;
+      }
+      if (secondaryBtn && slideData.secondaryHref) {
+        secondaryBtn.setAttribute('href', slideData.secondaryHref);
+        if (slideData.secondaryExternal) {
+          secondaryBtn.setAttribute('target', '_blank');
+          secondaryBtn.setAttribute('rel', 'noopener noreferrer');
+        } else {
+          secondaryBtn.removeAttribute('target');
+          secondaryBtn.removeAttribute('rel');
+        }
+      }
+      if (secondaryLabelEl && slideData.secondaryLabel) {
+        secondaryLabelEl.textContent = slideData.secondaryLabel;
+      }
+
+      if (typeof window.rebuildHeroLiquidTitle === 'function') {
+        window.rebuildHeroLiquidTitle();
+      }
+    };
+
+    if (!animate) {
+      updateDOM();
+      return;
+    }
+
+    const fadeTargets = [eyebrowWrapEl, titleEl, ledeEl, ctasEl].filter(Boolean);
+    fadeTargets.forEach((el) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(8px)';
+    });
+
+    setTimeout(() => {
+      updateDOM();
+      fadeTargets.forEach((el) => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      });
+    }, 220);
+  }
+
+  function setStage(idx, animate = true) {
+    const total = Math.min(slides.length, HERO_CAROUSEL_DATA.length);
+    currentStage = (idx + total) % total;
 
     slides.forEach((sl, i) => {
       const isCurrent = (i === currentStage);
@@ -4971,15 +5169,49 @@ function initHeroEyeLifespan() {
         sl.style.zIndex = '1';
       }
     });
+
+    applySlideCopy(HERO_CAROUSEL_DATA[currentStage], animate);
   }
 
-  function autoLoop() {
-    setStage(currentStage + 1);
-    setTimeout(autoLoop, INTERVAL);
+  function scheduleNext() {
+    clearTimeout(autoTimer);
+    autoTimer = setTimeout(() => {
+      setStage(currentStage + 1, true);
+      scheduleNext();
+    }, INTERVAL);
   }
 
-  setStage(0);
-  setTimeout(autoLoop, INTERVAL);
+  // Horizontal drag / swipe support across the hero stage (zero visible UI chrome)
+  if (stageEl) {
+    let dragStartX = null;
+    let dragStartY = null;
+
+    stageEl.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('a, button, #hero-liquid-title-canvas')) return;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+    }, { passive: true });
+
+    stageEl.addEventListener('pointerup', (e) => {
+      if (dragStartX === null) return;
+      const dx = e.clientX - dragStartX;
+      const dy = e.clientY - dragStartY;
+      dragStartX = null;
+      dragStartY = null;
+      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+        setStage(dx < 0 ? currentStage + 1 : currentStage - 1, true);
+        scheduleNext();
+      }
+    }, { passive: true });
+
+    stageEl.addEventListener('pointercancel', () => {
+      dragStartX = null;
+      dragStartY = null;
+    }, { passive: true });
+  }
+
+  setStage(0, false);
+  scheduleNext();
 }
 
 if (document.readyState === 'loading') {
@@ -5186,7 +5418,20 @@ const footerBackToTop = document.getElementById('footer-back-to-top');
 if (footerBackToTop) {
   footerBackToTop.addEventListener('click', (e) => {
     e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof window.__resetAllSubpagesExcept === 'function') {
+      window.__resetAllSubpagesExcept(null);
+    }
+    if (typeof window.__unlockOuterPageScroll === 'function') {
+      window.__unlockOuterPageScroll();
+    }
+    if (typeof window.__sweepPageTransitionCurtain === 'function') {
+      window.__sweepPageTransitionCurtain();
+    }
+    if (typeof window.grailScrollTo === 'function') {
+      window.grailScrollTo(0);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   });
 }
 
@@ -5473,14 +5718,18 @@ void main() {
     const fontFam = comp.fontFamily || 'Inter, sans-serif';
     const weight = comp.fontWeight || '600';
     const fontSize = parseFloat(comp.fontSize) || 48;
-    const lines = titleEl.querySelectorAll('.ih-h1-line');
-    const text1 = lines[0] ? lines[0].textContent.trim() : 'Advanced Intraocular';
-    const text2 = lines[1] ? lines[1].textContent.trim() : 'Lens for a Clearer Tomorrow';
+    const lines = Array.from(titleEl.querySelectorAll('.ih-h1-line'));
+    if (!lines.length) return null;
 
-    const line1Rect = lines[0] ? lines[0].getBoundingClientRect() : rect;
-    const line2Rect = lines[1] ? lines[1].getBoundingClientRect() : rect;
-    const y1 = (line1Rect.top - rect.top) + (line1Rect.height * 0.76);
-    const y2 = (line2Rect.top - rect.top) + (line2Rect.height * 0.76);
+    const lineMetrics = lines.map((lineEl) => {
+      const lr = lineEl.getBoundingClientRect();
+      return {
+        text: lineEl.textContent.trim(),
+        x: Math.max(0, lr.left - rect.left),
+        y: (lr.top - rect.top) + (lr.height * 0.76),
+        width: lr.width
+      };
+    });
 
     const scale = Math.min(1.25, 1800 / w);
     const texW = Math.max(2, Math.round(w * scale));
@@ -5499,10 +5748,11 @@ void main() {
     ctx.textBaseline = 'alphabetic';
     ctx.fillStyle = '#ffffff';
 
-    const x1 = line1Rect.left - rect.left;
-    const x2 = line2Rect.left - rect.left;
-    ctx.fillText(text1, x1, y1);
-    ctx.fillText(text2, x2, y2);
+    lineMetrics.forEach((lm) => {
+      if (lm.text) {
+        ctx.fillText(lm.text, lm.x, lm.y, Math.max(40, w - lm.x));
+      }
+    });
 
     const img = ctx.getImageData(0, 0, texW, texH).data;
     const n = texW * texH;
@@ -5548,15 +5798,19 @@ void main() {
       packed[i * 2 + 1] = soft[i];
     }
 
+    const maxLineW = lineMetrics.reduce((m, lm) => Math.max(m, lm.width), 0);
+    const firstY = lineMetrics[0] ? lineMetrics[0].y : fontSize;
+    const lastY = lineMetrics[lineMetrics.length - 1] ? lineMetrics[lineMetrics.length - 1].y : h;
+
     return {
       data, packed, w: texW, h: texH, scale,
       layout: {
         width: w,
         height: h,
         fontSize,
-        textWidth: Math.max(line1Rect.width, line2Rect.width),
-        inkTop: Math.min(y1 - fontSize * 0.75, 0),
-        inkBottom: y2 + fontSize * 0.25
+        textWidth: maxLineW,
+        inkTop: Math.min(firstY - fontSize * 0.75, 0),
+        inkBottom: lastY + fontSize * 0.25
       }
     };
   }
@@ -5591,6 +5845,8 @@ void main() {
     titleEl.querySelectorAll('.ih-h1-line').forEach(el => el.classList.add('opacity-0'));
     canvas.classList.remove('opacity-0');
   }
+
+  window.rebuildHeroLiquidTitle = setupGL;
 
   function stepSim(dt) {
     if (!field || !layout) return;
@@ -6269,6 +6525,9 @@ function initAboutDeckController() {
   if (!slides.length) return;
 
   let currentIndex = 0;
+  let activeSubpageIdx = 1;
+  let lockTimer = null;
+  let refreshSubpageShowcases = () => {};
 
   const SECTION_MAP = {
     1: 'about-sec-who-we-are',
@@ -6277,6 +6536,10 @@ function initAboutDeckController() {
     4: 'about-sec-values'
   };
 
+  const subpagePanels = subScroll
+    ? Array.from(subScroll.querySelectorAll('.abt-subpage-panel'))
+    : [];
+
   function setActiveSubnavPill(sectionId) {
     subnavPills.forEach((pill) => {
       const isMatch = pill.getAttribute('data-about-jump') === sectionId;
@@ -6284,29 +6547,68 @@ function initAboutDeckController() {
     });
   }
 
-  function scrollToSubSection(targetIdx, wasAlreadyOpen) {
-    if (!subScroll) return;
-    const secId = SECTION_MAP[targetIdx] || 'about-sec-who-we-are';
+  let lastGoToIdx = null;
+  let lastGoToTime = 0;
+
+  function showIsolatedSubpage(targetIdx, dir = 1) {
+    const subIdx = Math.min(4, Math.max(1, targetIdx));
+    activeSubpageIdx = subIdx;
+    window.__aboutActiveSubpageIdx = subIdx;
+
+    const secId = SECTION_MAP[subIdx] || 'about-sec-who-we-are';
     setActiveSubnavPill(secId);
 
-    if (targetIdx === 1) {
-      subScroll.scrollTo({ top: 0, behavior: wasAlreadyOpen ? 'smooth' : 'auto' });
-      return;
+    // Isolate ONLY the active sub-page so scrolling never reveals another sub-page
+    let activePanel = null;
+    subpagePanels.forEach((panel) => {
+      const isTarget = panel.id === secId;
+      panel.classList.toggle('is-hidden-subpage', !isTarget);
+      if (isTarget) activePanel = panel;
+    });
+
+    if (subScroll) {
+      subScroll.scrollTo({ top: 0, behavior: 'instant' });
+      refreshSubpageShowcases(subIdx);
+      requestAnimationFrame(() => {
+        subScroll.scrollTo({ top: 0, behavior: 'instant' });
+        refreshSubpageShowcases(subIdx);
+      });
     }
 
-    const targetEl = document.getElementById(secId);
-    if (targetEl) {
-      const topPos = Math.max(0, targetEl.offsetTop);
-      subScroll.scrollTo({
-        top: topPos,
-        behavior: wasAlreadyOpen ? 'smooth' : 'auto'
-      });
+    if (activePanel && typeof window.__playSubpage3DEntrance === 'function') {
+      window.__playSubpage3DEntrance(activePanel, dir);
     }
   }
 
-  function goToSlide(idx) {
+  function unlockOuterPage() {
+    document.documentElement.classList.remove('mediq-subpage-locked');
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+    document.documentElement.style.scrollSnapType = '';
+  }
+
+  function lockOuterPage() {
+    if (window.__aboutDeckCurrentIndex > 0) {
+      document.documentElement.classList.add('mediq-subpage-locked');
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.scrollSnapType = 'none';
+    }
+  }
+
+  function goToSlide(idx, opts = {}) {
     const requestedIdx = Number.isFinite(idx) ? idx : 0;
-    const wasSubpageOpen = (currentIndex === 1);
+    const now = performance.now();
+    if (requestedIdx >= 1) {
+      window.__lastExplicitSubpageOpenTime = now;
+    }
+    if (!opts.silentReset && lastGoToIdx === requestedIdx && (now - lastGoToTime) < 50) {
+      return;
+    }
+    lastGoToIdx = requestedIdx;
+    lastGoToTime = now;
+
+    const prevSubIdx = currentIndex > 0 ? activeSubpageIdx : 0;
     const activeSlideIdx = requestedIdx <= 0 ? 0 : 1;
 
     currentIndex = activeSlideIdx;
@@ -6327,45 +6629,56 @@ function initAboutDeckController() {
     });
 
     if (wavesCanvas) {
-      wavesCanvas.style.opacity = activeSlideIdx === 0 ? '0.62' : '0.16';
+      wavesCanvas.style.opacity = activeSlideIdx === 0 ? '0.62' : '0.55';
     }
 
+    clearTimeout(lockTimer);
     if (activeSlideIdx === 1) {
-      scrollToSubSection(requestedIdx, wasSubpageOpen);
-    }
-
-    updateAboutScrollLock(activeSlideIdx);
-  }
-
-  function updateAboutScrollLock(idx) {
-    if (idx > 0) {
+      const dir = (prevSubIdx > 0 && requestedIdx < prevSubIdx) ? -1 : 1;
+      showIsolatedSubpage(requestedIdx, dir);
       if (aboutSec) {
-        aboutSec.scrollIntoView({ behavior: 'smooth' });
+        aboutSec.querySelectorAll('video[data-forge-img], video[data-wwd-forge-img]').forEach((v) => {
+          v.muted = true;
+          if (v.paused) v.play().catch(() => {});
+        });
       }
-      setTimeout(() => {
-        if (window.__aboutDeckCurrentIndex > 0) {
-          document.documentElement.style.overflow = 'hidden';
-          document.body.style.overflow = 'hidden';
-          document.documentElement.style.scrollSnapType = 'none';
-        }
-      }, 350);
+      if (typeof window.__engageSubpageLock === 'function') {
+        window.__engageSubpageLock('about', aboutSec);
+      } else {
+        lockOuterPage();
+      }
     } else {
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
-      document.documentElement.style.scrollSnapType = '';
+      activeSubpageIdx = 1;
+      window.__aboutActiveSubpageIdx = 1;
+      if (!opts.silentReset) {
+        if (typeof window.__unlockOuterPageScroll === 'function') {
+          window.__unlockOuterPageScroll();
+        } else {
+          unlockOuterPage();
+        }
+      }
     }
   }
 
-  // Highlight active subnav pill & drive Forge Automotive (01/03) pinned scroll showcase inside the unified subpage
+  // Drive Forge Automotive (01/03) & What We Do (01/06) pinned scroll showcases inside the isolated active sub-page
   if (subScroll) {
-    const trackedIds = ['about-sec-who-we-are', 'about-slide-what-we-do', 'about-sec-foundation', 'about-sec-values'];
     const forgeBlock = document.getElementById('about-vision-mission-block');
     const forgeNumEl = document.getElementById('forge-abt-num');
+    const forgeCatEl = document.getElementById('forge-abt-cat');
+    const forgeFrameCatEl = document.getElementById('forge-abt-frame-cat');
+    const forgeSlEl = document.getElementById('forge-abt-sl');
+    const forgeSvEl = document.getElementById('forge-abt-sv');
     const forgeBgs = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-forge-bg]')) : [];
     const forgeWraps = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-forge-img-wrap]')) : [];
     const forgeImgs = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-forge-img]')) : [];
     const forgePanels = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-forge-panel]')) : [];
     const forgeDots = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-forge-dot]')) : [];
+
+    const FORGE_ABT_META = [
+      { cat: 'WHO WE ARE', sl: 'Operating scope', sv: 'Philippine Healthcare' },
+      { cat: 'OUR MISSION', sl: 'Core role', sv: 'Distribution & Support' },
+      { cat: 'OUR VISION', sl: 'Strategic ambition', sv: 'Trusted Solutions Partner' }
+    ];
 
     function updateForgeAboutShowcase() {
       if (!forgeBlock || !subScroll) return;
@@ -6374,9 +6687,9 @@ function initAboutDeckController() {
       const rawP = Math.min(1, Math.max(0, (subScroll.scrollTop - blockTop) / scrollRange));
       const stageP = rawP * 2; // 0.0 -> 1.0 -> 2.0 across the 3 stages
 
-      // Continuous clip-path curtain wipe + kinematic zoom on the 3 framed images
-      const t1 = Math.min(1, Math.max(0, stageP));
-      const t2 = Math.min(1, Math.max(0, stageP - 1));
+      // Continuous clip-path curtain wipe + kinematic zoom with full-reveal plateau so no top sliver remains
+      const t1 = Math.min(1, Math.max(0, stageP / 0.85));
+      const t2 = Math.min(1, Math.max(0, (stageP - 1) / 0.85));
 
       if (forgeImgs[0]) {
         forgeImgs[0].style.transform = `scale(${(1.06 - t1 * 0.06).toFixed(4)})`;
@@ -6391,10 +6704,21 @@ function initAboutDeckController() {
       }
 
       // Active stage index (0 = Who We Are, 1 = Our Mission, 2 = Our Vision)
-      const activeStage = stageP < 0.55 ? 0 : (stageP < 1.45 ? 1 : 2);
+      const activeStage = stageP < 0.5 ? 0 : (stageP < 1.5 ? 1 : 2);
+      window.__forgeAbtActiveStage = activeStage;
+      const activeVid = forgeImgs[activeStage];
+      if (activeVid && activeVid.tagName === 'VIDEO' && activeVid.paused) {
+        activeVid.muted = true;
+        activeVid.play().catch(() => {});
+      }
       if (forgeNumEl) {
         forgeNumEl.textContent = `0${activeStage + 1}`;
       }
+      const abtMeta = FORGE_ABT_META[activeStage] || FORGE_ABT_META[0];
+      if (forgeCatEl) forgeCatEl.textContent = abtMeta.cat;
+      if (forgeFrameCatEl) forgeFrameCatEl.textContent = abtMeta.cat;
+      if (forgeSlEl) forgeSlEl.textContent = abtMeta.sl;
+      if (forgeSvEl) forgeSvEl.textContent = abtMeta.sv;
 
       forgeBgs.forEach((bg, idx) => {
         bg.style.opacity = idx === activeStage ? '1' : '0';
@@ -6424,7 +6748,7 @@ function initAboutDeckController() {
       if (!forgeBlock || !subScroll) return;
       const blockTop = forgeBlock.offsetTop;
       const scrollRange = Math.max(1, forgeBlock.offsetHeight - subScroll.clientHeight);
-      const frac = stageIdx === 0 ? 0.02 : (stageIdx === 1 ? 0.50 : 0.98);
+      const frac = stageIdx === 0 ? 0 : (stageIdx === 1 ? 0.50 : 1.0);
       subScroll.scrollTo({
         top: Math.max(0, blockTop + scrollRange * frac),
         behavior: 'smooth'
@@ -6447,12 +6771,12 @@ function initAboutDeckController() {
     const wwdServiceRows = aboutSec ? Array.from(aboutSec.querySelectorAll('[data-wwd-row]')) : [];
 
     const WWD_FORGE_META = [
-      { cat: 'SUPPLY CHAIN', sl: 'Cold-chain dispatch', sv: '24–48 hours' },
-      { cat: 'COMMERCIAL', sl: 'Academic symposia', sv: '25+ per year' },
-      { cat: 'FIELD NETWORK', sl: 'Archipelago reach', sv: '17 regions' },
-      { cat: 'GOVERNANCE', sl: 'Regulatory audits', sv: '100% pass' },
-      { cat: 'PROFESSIONAL DEVELOPMENT', sl: 'Surgeons trained', sv: '500+ fellows' },
-      { cat: 'CONTINUITY', sl: 'Service SLA', sv: '24/7 priority' }
+      { cat: 'SUPPLY CHAIN', sl: 'Distribution scope', sv: 'Authorized Supply' },
+      { cat: 'PRODUCT MARKETING', sl: 'Promotion standard', sv: 'Evidence-based' },
+      { cat: 'COMMERCIALIZATION', sl: 'Commercial scope', sv: 'Institutional & Field' },
+      { cat: 'QUALITY & SUPPORT', sl: 'Operating standard', sv: 'Verified SOPs' },
+      { cat: 'PROFESSIONAL EDUCATION', sl: 'Learning scope', sv: 'Approved Content' },
+      { cat: 'RELATIONSHIPS & CONTINUITY', sl: 'Post-delivery care', sv: 'Responsive Support' }
     ];
 
     function getWwdForgeBlockTop() {
@@ -6473,9 +6797,9 @@ function initAboutDeckController() {
         wwdForgeImgs[0].style.transform = `scale(${(1.06 - t0 * 0.06).toFixed(4)})`;
       }
 
-      // Layers 1..5 continuous bottom-up clip-path curtain wipe + kinematic zoom
+      // Layers 1..5 continuous bottom-up clip-path curtain wipe + kinematic zoom with full-reveal plateau
       for (let k = 1; k < 6; k++) {
-        const tk = Math.min(1, Math.max(0, stageP - (k - 1)));
+        const tk = Math.min(1, Math.max(0, (stageP - (k - 1)) / 0.85));
         const wrapEl = wwdForgeWraps[k];
         const imgEl = wwdForgeImgs[k];
         if (wrapEl && imgEl) {
@@ -6486,6 +6810,11 @@ function initAboutDeckController() {
 
       const activeStage = Math.min(5, Math.max(0, Math.round(stageP)));
       window.__wwdForgeActiveStage = activeStage;
+      const activeWwdVid = wwdForgeImgs[activeStage];
+      if (activeWwdVid && activeWwdVid.tagName === 'VIDEO' && activeWwdVid.paused) {
+        activeWwdVid.muted = true;
+        activeWwdVid.play().catch(() => {});
+      }
 
       if (wwdForgeNumEl) wwdForgeNumEl.textContent = `0${activeStage + 1}`;
       const meta = WWD_FORGE_META[activeStage] || WWD_FORGE_META[0];
@@ -6533,55 +6862,30 @@ function initAboutDeckController() {
       });
     };
 
+    refreshSubpageShowcases = (subIdx) => {
+      if (subIdx === 1) updateForgeAboutShowcase();
+      else if (subIdx === 2) updateWwdForgeServicesShowcase();
+    };
+
     subScroll.addEventListener('scroll', () => {
-      const scrollY = subScroll.scrollTop + 180;
-      let activeId = trackedIds[0];
-      for (let i = 0; i < trackedIds.length; i++) {
-        const el = document.getElementById(trackedIds[i]);
-        if (el && el.offsetTop <= scrollY) {
-          activeId = trackedIds[i];
-        }
+      if (activeSubpageIdx === 1) {
+        updateForgeAboutShowcase();
+      } else if (activeSubpageIdx === 2) {
+        updateWwdForgeServicesShowcase();
       }
-      setActiveSubnavPill(activeId);
-      updateForgeAboutShowcase();
-      updateWwdForgeServicesShowcase();
     }, { passive: true });
 
     updateForgeAboutShowcase();
     updateWwdForgeServicesShowcase();
   }
 
-  // Allow seamless inner scroll inside #about-subpage-scroll while preventing outer page snap
-  window.addEventListener('wheel', (e) => {
-    if (window.__aboutDeckCurrentIndex > 0) {
-      if (subScroll && (subScroll === e.target || subScroll.contains(e.target))) {
-        return; // Allow native inner scroll through the unified About subpage
-      }
-      if (aboutSec && aboutSec.contains(e.target)) {
-        e.preventDefault();
-      }
-    }
-  }, { passive: false });
-
-  // Unlock page scrolling when user clicks any navbar anchor to another section
-  document.querySelectorAll('a[href^="#"]').forEach((a) => {
-    a.addEventListener('click', () => {
-      const href = a.getAttribute('href');
-      if (href && href !== '#about') {
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-        document.documentElement.style.scrollSnapType = '';
-      }
-    });
-  });
-
-  if (prevBtn) prevBtn.addEventListener('click', () => goToSlide(0));
-  if (nextBtn) nextBtn.addEventListener('click', () => goToSlide(1));
+  if (prevBtn) prevBtn.addEventListener('click', () => goToSlide(currentIndex === 0 ? 0 : Math.max(1, activeSubpageIdx - 1)));
+  if (nextBtn) nextBtn.addEventListener('click', () => goToSlide(currentIndex === 0 ? 1 : Math.min(4, activeSubpageIdx + 1)));
   goNextBtns.forEach((btn) => btn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); goToSlide(1); }));
 
-  // Link navbar dropdown items & nav-about
+  // Link navbar dropdown items & subpage overview buttons
   document.querySelectorAll('[data-open-pel], [data-pillar-idx], [data-slide-target]').forEach((link) => {
-    link.addEventListener('click', () => {
+    link.addEventListener('click', (e) => {
       const target = link.getAttribute('data-slide-target');
       let targetSlide = 0;
       if (target !== null && target !== undefined) {
@@ -6590,25 +6894,47 @@ function initAboutDeckController() {
         const idx = parseInt(link.getAttribute('data-pillar-idx') || link.getAttribute('data-open-pel') || '0', 10);
         targetSlide = (idx === 0 || idx === 1) ? 1 : (idx === 2 ? 2 : 3);
       }
-      goToSlide(targetSlide);
-      if (aboutSec) {
-        aboutSec.scrollIntoView({ behavior: 'smooth' });
+      e.preventDefault();
+      if (targetSlide >= 1) {
+        goToSlide(targetSlide);
+      } else {
+        if (typeof window.__resetAllSubpagesExcept === 'function') {
+          window.__resetAllSubpagesExcept(null);
+        }
+        goToSlide(0);
+        if (aboutSec) {
+          if (typeof window.grailScrollTo === 'function') {
+            window.grailScrollTo(aboutSec);
+          } else {
+            aboutSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
       }
     });
   });
 
   const navAbout = document.getElementById('nav-about');
   if (navAbout) {
-    navAbout.addEventListener('click', () => {
+    navAbout.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (typeof window.__resetAllSubpagesExcept === 'function') {
+        window.__resetAllSubpagesExcept(null);
+      }
       goToSlide(0);
-      if (aboutSec) aboutSec.scrollIntoView({ behavior: 'smooth' });
+      if (aboutSec) {
+        if (typeof window.grailScrollTo === 'function') {
+          window.grailScrollTo(aboutSec);
+        } else {
+          aboutSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
     });
   }
 
   window.goToAboutSlide = goToSlide;
 
   // Initialize first slide (Landing Purpose view)
-  goToSlide(0);
+  goToSlide(0, { silentReset: true });
 }
 
 /* ========================================================================= */
@@ -6660,14 +6986,155 @@ function initAboutStackingCards() {
   setTimeout(updateCardScales, 200);
 }
 
+/* ========================================================================= */
+/* OUR ESTABLISHED FOUNDATION — MEDIQ × RAYNER PARTNERSHIP CONVERGENCE STAGE */
+/* ========================================================================= */
+function initFoundationPartnershipStage() {
+  const sec = document.getElementById('about-sec-foundation');
+  const stage = document.getElementById('fnd-partner-stage');
+  const parts = document.getElementById('fnd-parts');
+  const hlL = document.getElementById('fnd-hlL');
+  const hlR = document.getElementById('fnd-hlR');
+  const lens = document.getElementById('fnd-lens');
+  const glow = document.getElementById('fnd-glow');
+  const iL = document.getElementById('fnd-iL');
+  const iR = document.getElementById('fnd-iR');
+  const iK = document.getElementById('fnd-iK');
+
+  if (!sec || !stage || !parts || !hlL || !hlR || !lens || !glow || !iL || !iR || !iK) return;
+  if (stage.dataset.partnerInitialized === '1') return;
+  stage.dataset.partnerInitialized = '1';
+
+  const S = (a, b, x) => {
+    x = Math.min(1, Math.max(0, (x - a) / (b - a)));
+    return x * x * (3 - 2 * x);
+  };
+  const LOOP = 13000;
+  const CL = Array.from(sec.querySelectorAll('.fnd-cl'));
+  const CR = Array.from(sec.querySelectorAll('.fnd-cr'));
+  const P = [];
+
+  for (let i = 0; i < 22; i++) {
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('fill', '#8fd0ff');
+    parts.appendChild(c);
+    P.push({
+      c,
+      a: Math.random() * 6.28,
+      r: 1 + Math.random() * 0.18,
+      s: (Math.random() * 0.0004 + 0.00012) * (Math.random() < 0.5 ? -1 : 1),
+      z: Math.random() * 1.6 + 0.7,
+      p: Math.random() * 6.28
+    });
+  }
+
+  function frame(t, still) {
+    const p = still ? 0.6 : (t % LOOP) / LOOP;
+    let m;
+    if (p < 0.18) m = 0;
+    else if (p < 0.45) m = S(0.18, 0.45, p);
+    else if (p < 0.78) m = 1;
+    else m = 1 - S(0.78, 0.97, p);
+
+    const cx = 450;
+    const y = 272 + Math.sin(t / 1700) * 5;
+    const d = 208 - 180 * m;
+    const xL = cx - d;
+    const xR = cx + d;
+
+    for (let i = 0; i < CL.length; i++) {
+      const c = CL[i];
+      c.setAttribute('cx', xL + (+c.dataset.dx || 0));
+      c.setAttribute('cy', y);
+    }
+    for (let i = 0; i < CR.length; i++) {
+      const c = CR[i];
+      c.setAttribute('cx', xR + (+c.dataset.dx || 0));
+      c.setAttribute('cy', y);
+    }
+
+    hlL.setAttribute('transform', `rotate(${t / 55} ${xL} ${y})`);
+    hlR.setAttribute('transform', `rotate(${-t / 65 + 120} ${xR} ${y})`);
+    lens.style.opacity = S(0.05, 0.5, m) * (0.85 + 0.15 * Math.sin(t / 900));
+
+    glow.setAttribute('cx', cx);
+    glow.setAttribute('cy', y);
+    glow.setAttribute('rx', 375 - 95 * m);
+    glow.setAttribute('ry', 235 + 25 * m);
+    glow.setAttribute('opacity', 0.08 + 0.10 * m);
+
+    const fo = 1 - S(0.35, 0.75, m);
+    const wL = 385;
+    const hL = wL * 267 / 900;
+    const wR = 340;
+    const hR = wR * 134 / 560;
+    const wK = 415;
+    const hK = wK * 584 / 1000;
+
+    iL.setAttribute('width', wL);
+    iL.setAttribute('height', hL);
+    iL.setAttribute('x', xL - wL / 2);
+    iL.setAttribute('y', y - hL / 2);
+    iL.style.opacity = fo;
+
+    iR.setAttribute('width', wR);
+    iR.setAttribute('height', hR);
+    iR.setAttribute('x', xR - wR / 2);
+    iR.setAttribute('y', y - hR / 2);
+    iR.style.opacity = fo;
+
+    iK.setAttribute('width', wK);
+    iK.setAttribute('height', hK);
+    iK.setAttribute('x', cx - wK / 2);
+    iK.setAttribute('y', y - hK / 2);
+    iK.style.opacity = S(0.6, 1, m);
+
+    for (let i = 0; i < P.length; i++) {
+      const q = P[i];
+      q.a += q.s * 16;
+      const rr = q.r + Math.sin(t / 2000 + q.p) * 0.03;
+      q.c.setAttribute('cx', cx + Math.cos(q.a) * rr * 425);
+      q.c.setAttribute('cy', 272 + Math.sin(q.a) * rr * 250);
+      q.c.setAttribute('r', q.z);
+      q.c.setAttribute('opacity', 0.06 + 0.14 * Math.pow(Math.sin(t / 900 + q.p), 2));
+    }
+  }
+
+  const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reducedMotion) {
+    frame(7800, true);
+  } else {
+    const loop = (t) => {
+      if (!document.hidden) {
+        frame(t, false);
+      }
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('mousemove', (e) => {
+    if (reducedMotion || window.__aboutDeckCurrentIndex === 0) return;
+    const x = e.clientX / window.innerWidth - 0.5;
+    const y = e.clientY / window.innerHeight - 0.5;
+    stage.style.transform = `rotateY(${x * 12}deg) rotateX(${-y * 12}deg)`;
+  }, { passive: true });
+
+  document.addEventListener('mouseleave', () => {
+    stage.style.transform = '';
+  });
+}
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     initAboutDeckController();
     initAboutStackingCards();
+    initFoundationPartnershipStage();
   });
 } else {
   initAboutDeckController();
   initAboutStackingCards();
+  initFoundationPartnershipStage();
 }
 
 /* ========================================================================= */
@@ -7212,29 +7679,45 @@ function initProductsDeckController() {
 
   // STRICT SUBPAGE ISOLATION LOCK: Completely locks outer main page scroll when inside ANY subpage
   function lockPage() {
+    document.documentElement.classList.add('mediq-subpage-locked');
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
     document.documentElement.style.scrollSnapType = 'none';
   }
 
   function unlockPage() {
+    document.documentElement.classList.remove('mediq-subpage-locked');
     document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
     document.documentElement.style.scrollSnapType = '';
   }
 
-  function goToSlide(idx) {
+  let prodEdgeAccum = 0;
+  let prodLastInnerScrollTime = 0;
+  let prodLastSwitchTime = 0;
+
+  function goToSlide(idx, opts = {}) {
     if (idx < 0) idx = 0;
     if (idx >= total) idx = total - 1;
+    const prevIdx = currentIndex;
+    if (idx >= 1) {
+      window.__lastExplicitSubpageOpenTime = performance.now();
+    }
     currentIndex = idx;
     window.__productsDeckCurrentIndex = idx;
+    prodEdgeAccum = 0;
 
     slides.forEach((slide, i) => {
       slide.classList.remove('opacity-100', 'pointer-events-auto', 'translate-x-0', 'z-10', 'opacity-0', 'pointer-events-none', '-translate-x-12', 'translate-x-12', 'z-0');
       if (i === currentIndex) {
         slide.classList.add('opacity-100', 'pointer-events-auto', 'translate-x-0', 'z-10');
+        slide.scrollTop = 0;
         if (typeof window.__triggerLotticiStagger === 'function') {
           window.__triggerLotticiStagger(slide);
+        }
+        if (currentIndex >= 1 && slide.firstElementChild && typeof window.__playSubpage3DEntrance === 'function') {
+          const dir = (prevIdx > 0 && currentIndex < prevIdx) ? -1 : 1;
+          window.__playSubpage3DEntrance(slide.firstElementChild, dir);
         }
       } else if (i < currentIndex) {
         slide.classList.add('opacity-0', 'pointer-events-none', '-translate-x-12', 'z-0');
@@ -7267,25 +7750,39 @@ function initProductsDeckController() {
       pill.classList.toggle('is-active', targetIdx === currentIndex);
     });
 
-    // Hide floating deck nav controls completely on Slide 1 & Slide 2 for a completely clean view
+    // Hide floating deck nav controls completely on subpages (Slides 1–4)
     const navCtrl = document.getElementById('products-deck-nav');
     if (navCtrl) {
-      if (currentIndex === 1 || currentIndex === 2) {
+      if (currentIndex >= 1) {
         navCtrl.classList.add('hidden');
       } else {
         navCtrl.classList.remove('hidden');
       }
     }
 
+    // Activate Active Theory ("What are you looking for?") 3D Helical Spiral & Terminal on all subpages (Slides 1–4)
+    window.__productsDeckCurrentIndex = currentIndex;
+    if (typeof window.__activateProductsActiveTheory === 'function') {
+      window.__activateProductsActiveTheory(currentIndex);
+    }
+
     // LOCK main page scrolling on ALL subpages (Slide 1: IOLs, Slide 2: Medical Supplies, Slide 3: Devices, Slide 4: Catalogs)
     // Only Slide 0 (Product Overview) allows main page scrolling!
     if (currentIndex >= 1) {
-      lockPage();
+      if (typeof window.__engageSubpageLock === 'function') {
+        window.__engageSubpageLock('products', prodSec);
+      } else {
+        lockPage();
+      }
       if (typeof window.__resizeProductsSmoke === 'function') {
         window.__resizeProductsSmoke();
       }
-      if (currentIndex === 1 && typeof window.__updateIOLScroll === 'function') {
-        setTimeout(window.__updateIOLScroll, 50);
+      if (currentIndex === 1) {
+        const iolSc = document.getElementById('iol-scroll-container');
+        if (iolSc) iolSc.scrollTop = 0;
+        if (typeof window.__updateIOLScroll === 'function') {
+          setTimeout(window.__updateIOLScroll, 50);
+        }
       }
       if (currentIndex === 2) {
         const medSlide = document.getElementById('product-slide-med-supplies');
@@ -7294,8 +7791,12 @@ function initProductsDeckController() {
           setTimeout(window.__updateMedSuppliesMosaic, 40);
         }
       }
-    } else {
-      unlockPage();
+    } else if (!opts.silentReset) {
+      if (typeof window.__unlockOuterPageScroll === 'function') {
+        window.__unlockOuterPageScroll();
+      } else {
+        unlockPage();
+      }
     }
   }
 
@@ -7305,25 +7806,69 @@ function initProductsDeckController() {
     // On Slide 0 (Product Overview), allow normal main page scrolling!
     if (currentIndex === 0) return;
 
+    // Allow open brochure modal to scroll its own inner content
+    const brochureModal = document.getElementById('brochure-modal');
+    if (brochureModal && brochureModal.classList.contains('opacity-100') && brochureModal.contains(e.target)) {
+      return;
+    }
+
     // On ANY subpage (Slide 1, 2, 3, 4): PREVENT main page from scrolling!
     e.preventDefault();
 
+    // Feed Active Theory 3D Helical Spiral first (unless zoomed into 3D Detail Stage)
+    if (typeof window.__onProductsActiveTheoryWheel === 'function') {
+      if (window.__onProductsActiveTheoryWheel(e.deltaY)) {
+        prodEdgeAccum = 0;
+        return;
+      }
+    }
+
+    const now = performance.now();
+    const rawDy = e.deltaMode === 1 ? e.deltaY * 36 : e.deltaY;
+    const sc = currentIndex === 1
+      ? document.getElementById('iol-scroll-container')
+      : slides[currentIndex];
+    const maxSc = sc ? Math.max(0, sc.scrollHeight - sc.clientHeight) : 0;
+    const atTop = !sc || maxSc <= 2 || sc.scrollTop <= 2;
+    const atBottom = !sc || maxSc <= 2 || sc.scrollTop >= maxSc - 3;
+
+    if ((rawDy < 0 && atTop) || (rawDy > 0 && atBottom)) {
+      if (now - prodLastInnerScrollTime >= 220 && now - prodLastSwitchTime >= 720) {
+        if ((prodEdgeAccum > 0 && rawDy < 0) || (prodEdgeAccum < 0 && rawDy > 0)) {
+          prodEdgeAccum = 0;
+        }
+        prodEdgeAccum += rawDy;
+        if (prodEdgeAccum <= -140 && currentIndex > 1) {
+          prodEdgeAccum = 0;
+          prodLastSwitchTime = now;
+          goToSlide(currentIndex - 1);
+          return;
+        }
+        if (prodEdgeAccum >= 140 && currentIndex < total - 1) {
+          prodEdgeAccum = 0;
+          prodLastSwitchTime = now;
+          goToSlide(currentIndex + 1);
+          return;
+        }
+      }
+      return;
+    }
+
+    prodEdgeAccum = 0;
+    prodLastInnerScrollTime = now;
+
     if (currentIndex === 1) {
       // Intraocular Lenses: scrub the 6 3D packshot stages smoothly
-      const scrollContainer = document.getElementById('iol-scroll-container');
-      if (scrollContainer) {
-        scrollContainer.scrollTop += e.deltaY * 1.5;
+      if (sc) {
+        sc.scrollTop += rawDy * 1.5;
       }
     } else if (currentIndex === 2 && typeof window.__onMedSuppliesWheel === 'function') {
       // Medical Supplies: feed wheel delta into the 60fps damped mosaic scroll engine
-      window.__onMedSuppliesWheel(e.deltaY);
-    } else {
+      window.__onMedSuppliesWheel(rawDy);
+    } else if (sc) {
       // Devices & Equipment, Product Catalogs:
       // Scroll the inner subpage container smoothly without moving the main page
-      const activeSlide = slides[currentIndex];
-      if (activeSlide) {
-        activeSlide.scrollTop += e.deltaY * 1.3;
-      }
+      sc.scrollTop += rawDy * 1.3;
     }
   }, { passive: false });
 
@@ -7356,6 +7901,13 @@ function initProductsDeckController() {
       const currentY = e.touches[0].clientY;
       const diffY = touchStartY - currentY;
 
+      if (typeof window.__onProductsActiveTheoryWheel === 'function') {
+        if (window.__onProductsActiveTheoryWheel(diffY * 0.45)) {
+          touchStartY = currentY;
+          return;
+        }
+      }
+
       if (currentIndex === 1) {
         const sc = document.getElementById('iol-scroll-container');
         if (sc) sc.scrollTop = touchStartScrollTop + diffY * 1.8;
@@ -7372,11 +7924,21 @@ function initProductsDeckController() {
 
   // Global helper for direct button navigation to any section
   window.navigateToSection = function(selector) {
-    document.documentElement.style.overflow = '';
-    document.body.style.overflow = '';
+    if (typeof window.__resetAllSubpagesExcept === 'function') {
+      window.__resetAllSubpagesExcept(null);
+    }
+    if (typeof window.__unlockOuterPageScroll === 'function') {
+      window.__unlockOuterPageScroll();
+    } else {
+      unlockPage();
+    }
     const target = document.querySelector(selector);
     if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (typeof window.grailScrollTo === 'function') {
+        window.grailScrollTo(target);
+      } else {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   };
 
@@ -7593,38 +8155,46 @@ function initProductsDeckController() {
     prism.style.setProperty('--med-ry', isAeon ? '24deg' : '-22deg');
   };
 
-  // Unlock page scrolling when user clicks any navbar anchor or page dot to another section
-  document.querySelectorAll('a[href^="#"], .page-dot-item').forEach((link) => {
-    link.addEventListener('click', () => {
-      const target = link.getAttribute('href') || link.getAttribute('data-target');
-      if (target && target !== '#products') {
-        unlockPage();
-      }
-    });
-  });
-
-  if (prevBtn) prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
+  if (prevBtn) prevBtn.addEventListener('click', () => goToSlide(currentIndex <= 1 ? 0 : currentIndex - 1));
   if (nextBtn) nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
 
   // Connect navbar dropdown items & in-page quick nav buttons
   document.querySelectorAll('[data-product-slide]').forEach((link) => {
     link.addEventListener('click', (e) => {
+      e.preventDefault();
       const targetSlide = parseInt(link.getAttribute('data-product-slide') || '0', 10);
-      goToSlide(targetSlide);
-      if (prodSec) {
-        prodSec.scrollIntoView({ behavior: 'smooth' });
-        if (targetSlide === 1) setTimeout(lockPage, 600); else unlockPage();
+      if (targetSlide >= 1) {
+        goToSlide(targetSlide);
+      } else {
+        if (typeof window.__resetAllSubpagesExcept === 'function') {
+          window.__resetAllSubpagesExcept(null);
+        }
+        goToSlide(0);
+        if (prodSec) {
+          if (typeof window.grailScrollTo === 'function') {
+            window.grailScrollTo(prodSec);
+          } else {
+            prodSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
       }
     });
   });
 
   const navProducts = document.getElementById('nav-products');
   if (navProducts) {
-    navProducts.addEventListener('click', () => {
+    navProducts.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (typeof window.__resetAllSubpagesExcept === 'function') {
+        window.__resetAllSubpagesExcept(null);
+      }
       goToSlide(0);
       if (prodSec) {
-        prodSec.scrollIntoView({ behavior: 'smooth' });
-        unlockPage();
+        if (typeof window.grailScrollTo === 'function') {
+          window.grailScrollTo(prodSec);
+        } else {
+          prodSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
     });
   }
@@ -7652,8 +8222,16 @@ function initProductsDeckController() {
           return;
         }
       }
-      if (e.key === 'ArrowRight' && currentIndex !== 1) goToSlide(currentIndex + 1);
-      if (e.key === 'ArrowLeft' && currentIndex !== 1) goToSlide(currentIndex - 1);
+      if (currentIndex >= 1) {
+        if (e.key === 'ArrowRight' && currentIndex !== 1 && currentIndex < total - 1) {
+          e.preventDefault();
+          goToSlide(currentIndex + 1);
+        }
+        if (e.key === 'ArrowLeft' && currentIndex !== 1 && currentIndex > 1) {
+          e.preventDefault();
+          goToSlide(currentIndex - 1);
+        }
+      }
       if (currentIndex === 1) {
         const sc = document.getElementById('iol-scroll-container');
         if (sc) {
@@ -7667,22 +8245,22 @@ function initProductsDeckController() {
     }
   });
 
-  // Touch swipe between slides on Slide 0 and non-IOL/non-MedSupplies slides
+  // Touch swipe between subpages on non-IOL/non-MedSupplies subpages
   let deckTouchStartX = 0;
   prodSec.addEventListener('touchstart', (e) => {
-    if (currentIndex !== 1 && currentIndex !== 2) {
+    if (currentIndex >= 3) {
       deckTouchStartX = e.changedTouches[0].screenX;
     }
   }, { passive: true });
 
   prodSec.addEventListener('touchend', (e) => {
-    if (currentIndex !== 1 && currentIndex !== 2) {
+    if (currentIndex >= 3) {
       const touchEndX = e.changedTouches[0].screenX;
       const diffX = deckTouchStartX - touchEndX;
       if (Math.abs(diffX) > 50) {
-        if (diffX > 0) {
+        if (diffX > 0 && currentIndex < total - 1) {
           goToSlide(currentIndex + 1);
-        } else {
+        } else if (diffX < 0 && currentIndex > 1) {
           goToSlide(currentIndex - 1);
         }
       }
@@ -7692,7 +8270,7 @@ function initProductsDeckController() {
   window.goToProductSlide = goToSlide;
 
   // Initialize first slide
-  goToSlide(0);
+  goToSlide(0, { silentReset: true });
 }
 
 /* ========================================================================= */
@@ -9167,6 +9745,8 @@ if (document.readyState === 'loading') {
     contact: 'contact'
   };
 
+  const SUBPAGE_DECKS = new Set(['brands', 'services', 'resources']);
+
   const state = {
     brands: 0,
     services: 0,
@@ -9175,7 +9755,7 @@ if (document.readyState === 'loading') {
     contact: 0
   };
 
-  function goToDeckSlide(deckKey, idx, shouldScroll = false) {
+  function goToDeckSlide(deckKey, idx, shouldScroll = false, opts = {}) {
     const secId = DECK_MAP[deckKey];
     const sec = secId ? document.getElementById(secId) : null;
     if (!sec) return;
@@ -9186,6 +9766,12 @@ if (document.readyState === 'loading') {
     const total = slides.length;
     if (idx < 0) idx = 0;
     if (idx >= total) idx = total - 1;
+
+    const prevIdx = state[deckKey] || 0;
+    const isSubpage = SUBPAGE_DECKS.has(deckKey) && idx >= 1;
+    if (isSubpage) {
+      window.__lastExplicitSubpageOpenTime = performance.now();
+    }
     state[deckKey] = idx;
 
     slides.forEach((slide, i) => {
@@ -9199,6 +9785,10 @@ if (document.readyState === 'loading') {
         if (typeof window.__triggerLotticiStagger === 'function') {
           window.__triggerLotticiStagger(slide);
         }
+        if (isSubpage && slide.firstElementChild && typeof window.__playSubpage3DEntrance === 'function') {
+          const dir = (prevIdx > 0 && idx < prevIdx) ? -1 : 1;
+          window.__playSubpage3DEntrance(slide.firstElementChild, dir);
+        }
       } else if (i < idx) {
         slide.classList.add('opacity-0', 'pointer-events-none', '-translate-x-12', 'z-0');
       } else {
@@ -9209,7 +9799,7 @@ if (document.readyState === 'loading') {
     // Toggle attached top sub-navbar ([data-deck-bar]) flush under #site-header
     const subpageBar = sec.querySelector(`[data-deck-bar="${deckKey}"]`);
     if (subpageBar) {
-      if (idx >= 1) {
+      if (isSubpage) {
         subpageBar.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2');
         subpageBar.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
       } else {
@@ -9224,19 +9814,39 @@ if (document.readyState === 'loading') {
       pill.classList.toggle('is-active', target === `${deckKey}:${idx}`);
     });
 
-    if (shouldScroll) {
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
-      document.documentElement.style.scrollSnapType = '';
-      if (typeof window.grailScrollTo === 'function') {
-        window.grailScrollTo(sec);
+    if (isSubpage) {
+      if (typeof window.__engageSubpageLock === 'function') {
+        window.__engageSubpageLock(deckKey, sec);
       } else {
-        sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.documentElement.classList.add('mediq-subpage-locked');
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.scrollSnapType = 'none';
+      }
+    } else if (!opts.silentReset) {
+      if (typeof window.__resetAllSubpagesExcept === 'function') {
+        window.__resetAllSubpagesExcept(null);
+      }
+      if (typeof window.__unlockOuterPageScroll === 'function') {
+        window.__unlockOuterPageScroll();
+      } else {
+        document.documentElement.classList.remove('mediq-subpage-locked');
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+        document.documentElement.style.scrollSnapType = '';
+      }
+      if (shouldScroll) {
+        if (typeof window.grailScrollTo === 'function') {
+          window.grailScrollTo(sec);
+        } else {
+          sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
     }
   }
 
   window.goToDeckSlide = goToDeckSlide;
+  window.__getDeckSlideIndex = (deckKey) => state[deckKey] || 0;
 
   // Interactive Category Chips filter for Principal Brands Portfolio (Slide 1 of #brands)
   window.filterBrandsPortfolio = function (cat) {
@@ -9269,31 +9879,37 @@ if (document.readyState === 'loading') {
     });
   });
 
-  // Also ensure any link to #contact with "Inquiry" or "Order" opens Inquiry Form (slide 1) or Overview
+  // Also ensure any link to #contact opens Contact overview cleanly and resets open subpages
   document.addEventListener('click', (e) => {
     const a = e.target.closest && e.target.closest('a[href="#contact"]');
     if (a && !a.hasAttribute('data-deck-target')) {
-      goToDeckSlide('contact', 1, true);
+      goToDeckSlide('contact', 0, true);
     }
   });
 
-  // Keyboard Left/Right navigation for whichever deck section is currently in view
+  // Keyboard Left/Right navigation strictly between subpages (1..N) when inside an active subpage
   window.addEventListener('keydown', (e) => {
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
     if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT')) return;
     for (const [deckKey, secId] of Object.entries(DECK_MAP)) {
+      if (!SUBPAGE_DECKS.has(deckKey)) continue;
+      const cur = state[deckKey] || 0;
+      if (cur < 1) continue;
       const sec = document.getElementById(secId);
       if (!sec) continue;
       const rect = sec.getBoundingClientRect();
       if (rect.top <= window.innerHeight * 0.45 && rect.bottom >= window.innerHeight * 0.55) {
-        const cur = state[deckKey] || 0;
-        goToDeckSlide(deckKey, e.key === 'ArrowRight' ? cur + 1 : cur - 1, false);
+        e.preventDefault();
+        const nextIdx = e.key === 'ArrowRight' ? cur + 1 : Math.max(1, cur - 1);
+        if (nextIdx !== cur) {
+          goToDeckSlide(deckKey, nextIdx, false);
+        }
         break;
       }
     }
   });
 
-  // Initialize calm drifting smoke on all new deck-smoke-canvas elements
+  // Initialize full-DPR Two-Layer Rising Smoke (Puff + Tendril) on all deck-smoke-canvas elements (including #brands-smoke-canvas)
   const canvases = document.querySelectorAll('.deck-smoke-canvas');
   canvases.forEach((canvas) => {
     if (canvas._smokeActive) return;
@@ -9301,130 +9917,289 @@ if (document.readyState === 'loading') {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let w = window.innerWidth, h = window.innerHeight;
+    const isBrands = canvas.id === 'brands-smoke-canvas';
+    const PALETTE = [
+      [20, 50, 100],
+      [40, 80, 140],
+      [74, 127, 165],
+      [15, 35, 75],
+      [90, 140, 190]
+    ];
+
+    const reducedMotionMq = typeof window.matchMedia === 'function'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)')
+      : { matches: false };
+
+    let w = 1, h = 1, dpr = 1;
+    let t = 0;
+
+    function rand(min, max) {
+      return min + Math.random() * (max - min);
+    }
+
+    function pickColor() {
+      return PALETTE[Math.floor(Math.random() * PALETTE.length)];
+    }
+
     function resize() {
-      w = window.innerWidth;
-      h = window.innerHeight;
-      canvas.width = Math.floor(w * 0.5);
-      canvas.height = Math.floor(h * 0.5);
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const rect = canvas.getBoundingClientRect();
+      w = Math.max(1, Math.floor(rect.width || window.innerWidth));
+      h = Math.max(1, Math.floor(rect.height || window.innerHeight));
+      if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+      }
     }
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    const puffs = Array.from({ length: 10 }, (_, i) => ({
-      baseX: (i / 10) * 1.2 - 0.1,
-      baseY: 0.15 + (i % 3) * 0.3,
-      r: 120 + (i % 4) * 35,
-      speed: 0.1 + (i % 4) * 0.05,
-      phase: i * 1.5,
-      alpha: 0.22 + (i % 3) * 0.08
-    }));
+    // Background Layer: 16 large radial gradient smoke puffs (radius 180–420px)
+    class DeckPuff {
+      constructor(prewarm) {
+        this.reset(prewarm);
+      }
+      reset(prewarm) {
+        this.radius = rand(180, 420);
+        this.x = rand(-this.radius * 0.25, w + this.radius * 0.25);
+        this.y = prewarm ? rand(-this.radius * 0.1, h + this.radius * 0.3) : rand(h * 0.25, h + this.radius * 0.45);
+        this.vx = rand(-0.22, 0.22);
+        this.vy = -rand(0.16, 0.38);
+        this.life = rand(600, 1400);
+        this.age = prewarm ? Math.floor(rand(0, this.life)) : 0;
+        this.maxOpacity = isBrands ? rand(0.08, 0.19) : rand(0.06, 0.16);
+        this.color = pickColor();
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.age++;
+        if (this.age >= this.life || this.y < -this.radius * 1.2) {
+          this.reset(false);
+        }
+      }
+      draw(c) {
+        const p = Math.min(1, Math.max(0, this.age / this.life));
+        const fade = Math.sin(p * Math.PI);
+        const alpha = this.maxOpacity * fade;
+        if (alpha <= 0.001) return;
 
-    const tendrils = Array.from({ length: 14 }, (_, i) => ({
-      baseX: 0.06 + (i / 14) * 0.88,
-      nodeCount: 20,
-      sway: 14 + (i % 4) * 6,
-      freq: 0.6 + (i % 3) * 0.25,
-      phase: i * 1.15,
-      alpha: 0.08 + (i % 3) * 0.035,
-      rBase: 38 + (i % 3) * 10,
-      rTip: 18 + (i % 2) * 6
-    }));
+        const [r, g, b] = this.color;
+        const grad = c.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+        grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(4)})`);
+        grad.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${(alpha * 0.45).toFixed(4)})`);
+        grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
 
-    let t = 0;
-    let visible = false;
+        c.fillStyle = grad;
+        c.beginPath();
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        c.fill();
+      }
+    }
+
+    // Foreground Layer: 20 upward-rising sine-swaying smoke tendrils made of 18–32 linked nodes
+    class DeckTendril {
+      constructor(prewarm) {
+        this.reset(prewarm);
+      }
+      reset(prewarm) {
+        this.nodeCount = Math.floor(rand(18, 33));
+        this.spacing = rand(16, 26);
+        this.baseX = rand(w * 0.04, w * 0.96);
+        const chainHeight = this.nodeCount * this.spacing;
+        this.baseY = prewarm
+          ? rand(h * 0.20, h + chainHeight * 0.75)
+          : rand(h * 0.50, h + chainHeight * 0.85);
+        this.vy = -rand(0.32, 0.68);
+        this.vx = rand(-0.09, 0.09);
+        this.swayFreq = rand(0.014, 0.032);
+        this.swayOffset = rand(0, Math.PI * 2);
+        this.sway = rand(20, 48);
+        this.life = rand(320, 700);
+        this.age = prewarm ? Math.floor(rand(0, this.life)) : 0;
+        this.maxOpacity = isBrands ? rand(0.09, 0.25) : rand(0.07, 0.22);
+        this.color = pickColor();
+
+        const baseR = rand(58, 92);
+        const tipR = rand(28, 42);
+        this.radii = Array.from({ length: this.nodeCount }, (_, i) => {
+          const frac = this.nodeCount > 1 ? i / (this.nodeCount - 1) : 0;
+          return baseR + (tipR - baseR) * frac;
+        });
+      }
+      update() {
+        this.baseX += this.vx;
+        this.baseY += this.vy;
+        this.age++;
+        const topY = this.baseY - this.nodeCount * this.spacing;
+        if (this.age >= this.life || topY < -140) {
+          this.reset(false);
+        }
+      }
+      draw(c, time) {
+        const p = Math.min(1, Math.max(0, this.age / this.life));
+        let lifeEnv = 1;
+        if (p < 0.22) {
+          lifeEnv = p / 0.22;
+        } else if (p > 0.72) {
+          lifeEnv = (1 - p) / 0.28;
+        }
+        if (lifeEnv <= 0.001) return;
+
+        const [r, g, b] = this.color;
+        const n = this.nodeCount;
+        for (let i = 0; i < n; i++) {
+          const frac = n > 1 ? i / (n - 1) : 0;
+          const swayX = Math.sin(time * this.swayFreq + this.swayOffset + i * 0.35) * this.sway * (0.4 + frac * 1.4);
+          const nx = this.baseX + swayX;
+          const ny = this.baseY - i * this.spacing;
+          const rad = this.radii[i];
+
+          const nodeEnv = Math.sin(frac * Math.PI);
+          const alpha = this.maxOpacity * lifeEnv * nodeEnv;
+          if (alpha <= 0.0015) continue;
+
+          const grad = c.createRadialGradient(nx, ny, 0, nx, ny, rad);
+          grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(4)})`);
+          grad.addColorStop(0.55, `rgba(${r}, ${g}, ${b}, ${(alpha * 0.44).toFixed(4)})`);
+          grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+          c.fillStyle = grad;
+          c.beginPath();
+          c.arc(nx, ny, rad, 0, Math.PI * 2);
+          c.fill();
+        }
+      }
+    }
+
+    const puffs = Array.from({ length: isBrands ? 16 : 14 }, () => new DeckPuff(true));
+    const tendrils = Array.from({ length: isBrands ? 20 : 18 }, () => new DeckTendril(true));
+
+    let visible = isBrands;
     const io = new IntersectionObserver((entries) => {
       entries.forEach((en) => { visible = en.isIntersecting; });
-    }, { threshold: 0.05 });
+    }, { threshold: 0.01 });
     io.observe(canvas.parentElement || canvas);
 
     function draw() {
-      if (visible) {
-        t += 0.012;
-        const cw = canvas.width, ch = canvas.height;
-        ctx.clearRect(0, 0, cw, ch);
+      if (visible || isBrands) {
+        ctx.save();
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, w, h);
+
         for (let i = 0; i < puffs.length; i++) {
-          const p = puffs[i];
-          const cx = (p.baseX + Math.sin(t * p.speed + p.phase) * 0.12) * cw;
-          const cy = (p.baseY + Math.cos(t * p.speed * 0.85 + p.phase) * 0.08) * ch;
-          const rad = p.r * (1 + Math.sin(t * 0.5 + p.phase) * 0.14);
-          const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, rad);
-          g.addColorStop(0, `rgba(28, 72, 145, ${(p.alpha * 0.65).toFixed(3)})`);
-          g.addColorStop(0.5, `rgba(16, 43, 92, ${(p.alpha * 0.35).toFixed(3)})`);
-          g.addColorStop(1, 'transparent');
-          ctx.fillStyle = g;
-          ctx.beginPath();
-          ctx.arc(cx, cy, rad, 0, Math.PI * 2);
-          ctx.fill();
+          if (!reducedMotionMq.matches) puffs[i].update();
+          puffs[i].draw(ctx);
         }
-        for (let j = 0; j < tendrils.length; j++) {
-          const td = tendrils[j];
-          const bx = td.baseX * cw;
-          for (let k = 0; k < td.nodeCount; k++) {
-            const frac = k / (td.nodeCount - 1);
-            const env = Math.sin(frac * Math.PI);
-            const a = td.alpha * env;
-            if (a <= 0.002) continue;
-            const r = td.rBase * (1 - frac) + td.rTip * frac;
-            const dx = Math.sin(t * td.freq + td.phase + k * 0.35) * td.sway * (0.4 + frac * 1.2);
-            const nx = bx + dx;
-            const ny = ch * (1.05 - frac * 1.1);
-            const g = ctx.createRadialGradient(nx, ny, 0, nx, ny, r);
-            g.addColorStop(0, `rgba(74, 127, 165, ${a.toFixed(4)})`);
-            g.addColorStop(0.55, `rgba(40, 80, 140, ${(a * 0.45).toFixed(4)})`);
-            g.addColorStop(1, 'transparent');
-            ctx.fillStyle = g;
-            ctx.beginPath();
-            ctx.arc(nx, ny, r, 0, Math.PI * 2);
-            ctx.fill();
-          }
+
+        for (let i = 0; i < tendrils.length; i++) {
+          if (!reducedMotionMq.matches) tendrils[i].update();
+          tendrils[i].draw(ctx, t);
+        }
+
+        ctx.restore();
+        if (!reducedMotionMq.matches) {
+          t += 1;
         }
       }
       requestAnimationFrame(draw);
     }
-    requestAnimationFrame(draw);
+    draw();
   });
 })();
 
 /* ========================================================================= */
-/* LORENZO LOTTICI INSPIRED INTERACTIONS (STAGGER REVEALS, SPOTLIGHT, PILLS) */
+/* LORENZO LOTTICI INSPIRED SUBPAGE ANIMATIONS ("ORDER IN CHAOS" ENGINE)     */
 /* ========================================================================= */
 (function initLorenzoLotticiInteractions() {
   const rmq = typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
 
-  // 1. Staggered upward entrance choreography on unlocked slides & stages
+  // 1. "Chaos to Order" Staggered Convergence, Line-Mask Headings & Divider Sweeps on Subpages
   window.__triggerLotticiStagger = function(containerEl) {
     if (!containerEl || rmq.matches) return;
-    const targets = containerEl.querySelectorAll(
-      'h2, h3, h4, .notched-card, .lottici-index-row, .ophteis-elastic-card'
+
+    // A) Line-mask clip-path reveal on subpage headings
+    const headings = containerEl.querySelectorAll('h2, h3, .prod-serif, .news-serif');
+    headings.forEach((h, idx) => {
+      h.classList.remove('lottici-heading-reveal');
+      h.style.setProperty('--lottici-delay', Math.min(idx * 45, 280) + 'ms');
+      void h.offsetWidth;
+      h.classList.add('lottici-heading-reveal');
+    });
+
+    // B) "Chaos to Order" 3D spatial convergence on subpage cards, rows, tables & panels
+    const cards = containerEl.querySelectorAll(
+      '.notched-card, .lottici-index-row, .ophteis-elastic-card, .br-cat-col, .lottici-subpage-card, [class*="rounded-2xl"], [class*="rounded-xl"]'
     );
-    targets.forEach((el, idx) => {
+    cards.forEach((el, idx) => {
+      // Deterministic scattered offset ("Chaos") that converges to 0 ("Order")
+      const cx = ((idx % 3) - 1) * 14;
+      const cy = 22 + (idx % 4) * 6;
+      const crx = 4 + (idx % 3) * 1.5;
       el.classList.remove('lottici-stagger-in');
-      el.style.setProperty('--lottici-delay', Math.min(idx * 55, 380) + 'ms');
+      el.style.setProperty('--lottici-cx', cx + 'px');
+      el.style.setProperty('--lottici-cy', cy + 'px');
+      el.style.setProperty('--lottici-crx', crx + 'deg');
+      el.style.setProperty('--lottici-delay', Math.min(60 + idx * 48, 440) + 'ms');
       void el.offsetWidth;
       el.classList.add('lottici-stagger-in');
     });
+
+    // C) Horizontal architectural divider line-sweep
+    const dividers = containerEl.querySelectorAll('.border-t, .border-b, hr');
+    dividers.forEach((div, idx) => {
+      div.classList.remove('lottici-line-sweep');
+      div.style.setProperty('--lottici-delay', Math.min(40 + idx * 35, 320) + 'ms');
+      void div.offsetWidth;
+      div.classList.add('lottici-line-sweep');
+    });
   };
 
-  // 2. Cursor-tracked sky-blue spotlight border glow on .notched-card elements
-  document.querySelectorAll('.notched-card').forEach((card) => {
+  // 3. Interactive Subpage Card 3D Magnetic Micro-Tilt & Cursor-Tracked Sky-Blue Spotlight
+  const subpageCardSelectors = [
+    '.notched-card',
+    '#products .product-slide:not([data-product-index="0"]) [class*="rounded-2xl"]',
+    '#brands .deck-slide:not([data-slide-index="0"]) [class*="rounded-2xl"]',
+    '#distribution .deck-slide:not([data-slide-index="0"]) [class*="rounded-2xl"]',
+    '#resources .deck-slide:not([data-slide-index="0"]) [class*="rounded-2xl"]',
+    '#activities .deck-slide [class*="rounded-2xl"]',
+    '#contact .deck-slide:not([data-slide-index="0"]) [class*="rounded-2xl"]'
+  ].join(', ');
+
+  document.querySelectorAll(subpageCardSelectors).forEach((card) => {
+    if (!card.classList.contains('notched-card')) {
+      card.classList.add('lottici-subpage-card');
+    }
+
     card.addEventListener('pointermove', (e) => {
       if (rmq.matches) return;
       const rect = card.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
       const mx = e.clientX - rect.left;
       const my = e.clientY - rect.top;
+      const nx = (mx / rect.width) - 0.5;
+      const ny = (my / rect.height) - 0.5;
+
       card.style.setProperty('--lottici-mx', mx.toFixed(1) + 'px');
       card.style.setProperty('--lottici-my', my.toFixed(1) + 'px');
       card.style.setProperty('--lottici-spot', '1');
+
+      if (card.classList.contains('lottici-subpage-card')) {
+        card.style.setProperty('--lottici-rx', (-ny * 4.5).toFixed(2) + 'deg');
+        card.style.setProperty('--lottici-ry', (nx * 5.5).toFixed(2) + 'deg');
+        card.classList.add('is-tilting');
+      }
     }, { passive: true });
 
     card.addEventListener('pointerleave', () => {
       card.style.setProperty('--lottici-spot', '0');
+      card.style.setProperty('--lottici-rx', '0deg');
+      card.style.setProperty('--lottici-ry', '0deg');
+      card.classList.remove('is-tilting');
     }, { passive: true });
   });
 
-  // 3. "Let's Talk" Quick-Select Topic Pills in #contact Inquiry Form
+  // 4. "Let's Talk" Quick-Select Topic Pills in #contact Inquiry Form
   const pillWrap = document.getElementById('lottici-inquiry-pills');
   const productSelect = document.getElementById('inq-product');
   if (pillWrap && productSelect) {
@@ -9476,7 +10251,7 @@ if (document.readyState === 'loading') {
   // Map each section to its primary foreground content wrapper for secondary depth parallax
   const innerStages = sections.map((sec) => {
     if (sec.id === 'hero') return sec.querySelector('.ih-shell');
-    if (sec.id === 'about') return sec.querySelector('.about-slide[data-slide-index="0"] > div');
+    if (sec.id === 'about') return sec.querySelector('.about-slide[data-index="0"] > div, .about-slide[data-slide-index="0"] > div');
     if (sec.id === 'products') return sec.querySelector('.product-slide[data-product-index="0"] .ih-shell');
     if (sec.id === 'site-footer') return null;
     return sec.querySelector('.deck-slide[data-slide-index="0"] > div');
@@ -9602,7 +10377,8 @@ if (document.readyState === 'loading') {
   // Helper to check if an inner scrollable container (subpage) should consume the wheel event natively
   function shouldYieldToInnerScroll(e) {
     if (e.defaultPrevented) return true;
-    if (window.__aboutDeckCurrentIndex > 0) return true;
+    if (typeof window.__isAnyMediqSubpageOpen === 'function' && window.__isAnyMediqSubpageOpen()) return true;
+    if (document.documentElement.classList.contains('mediq-subpage-locked')) return true;
     if (document.documentElement.style.overflow === 'hidden') return true;
 
     let el = e.target;
@@ -9625,6 +10401,8 @@ if (document.readyState === 'loading') {
     clearTimeout(snapTimer);
     snapTimer = setTimeout(() => {
       if (!sectionOffsets.length) return;
+      if (typeof window.__isAnyMediqSubpageOpen === 'function' && window.__isAnyMediqSubpageOpen()) return;
+      if (document.documentElement.classList.contains('mediq-subpage-locked')) return;
       // Find the section interval containing targetY
       let bestTarget = targetY;
       let minDist = Infinity;
@@ -9666,6 +10444,10 @@ if (document.readyState === 'loading') {
   }
 
   function tick() {
+    if (document.documentElement.classList.contains('mediq-subpage-locked')) {
+      isAnimating = false;
+      return;
+    }
     const diff = targetY - currentY;
     if (Math.abs(diff) > 0.45) {
       currentY += diff * 0.115;
@@ -9729,12 +10511,377 @@ if (document.readyState === 'loading') {
       destY = idx !== -1 ? sectionOffsets[idx] : targetElOrY.offsetTop;
     }
     clearTimeout(snapTimer);
-    if (!isAnimating) {
-      currentY = window.scrollY;
-    }
+    currentY = window.scrollY;
     targetY = Math.max(0, Math.min(maxScroll, destY));
     startLoop();
   };
 
+  // Immediate zero-latency snap API for locking flush onto a subpage host section
+  window.grailSnapTo = function(targetElOrY) {
+    clearTimeout(snapTimer);
+    isAnimating = false;
+    measureSections();
+    let destY = 0;
+    if (typeof targetElOrY === 'number') {
+      destY = targetElOrY;
+    } else if (targetElOrY && typeof targetElOrY.offsetTop === 'number') {
+      const idx = sections.indexOf(targetElOrY);
+      destY = idx !== -1 ? sectionOffsets[idx] : targetElOrY.offsetTop;
+    }
+    destY = Math.max(0, Math.min(maxScroll, destY));
+    currentY = destY;
+    targetY = destY;
+    window.scrollTo(0, destY);
+    applyGrailTransforms(destY);
+    if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll();
+  };
+
   applyGrailTransforms(window.scrollY);
+})();
+
+/* ========================================================================= */
+/* SITE-WIDE SUBPAGE OUTER-SCROLL LOCK, SUBPAGE-ONLY PAGING & LANDING RESET  */
+/* ========================================================================= */
+(function initMediqSiteWideSubpageLockAndPaging() {
+  const rmq = typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)')
+    : { matches: false };
+
+  let isResettingSubpages = false;
+  let edgeAccum = 0;
+  let lastInnerScrollTime = 0;
+  let lastSwitchTime = 0;
+
+  window.__playSubpage3DEntrance = function(el, dir = 1) {
+    if (!el || rmq.matches) return;
+    if (el._sub3dTimer) {
+      clearTimeout(el._sub3dTimer);
+      el._sub3dTimer = null;
+    }
+    el.classList.remove('mediq-subpage-3d-next', 'mediq-subpage-3d-prev');
+    void el.offsetWidth;
+    const cls = dir < 0 ? 'mediq-subpage-3d-prev' : 'mediq-subpage-3d-next';
+    el.classList.add(cls);
+    const cleanup = () => {
+      el.classList.remove('mediq-subpage-3d-next', 'mediq-subpage-3d-prev');
+      if (el._sub3dTimer) {
+        clearTimeout(el._sub3dTimer);
+        el._sub3dTimer = null;
+      }
+    };
+    el.addEventListener('animationend', cleanup, { once: true });
+    el._sub3dTimer = setTimeout(cleanup, 580);
+  };
+
+  window.__unlockOuterPageScroll = function() {
+    edgeAccum = 0;
+    document.documentElement.classList.remove('mediq-subpage-locked');
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+    document.documentElement.style.scrollSnapType = '';
+  };
+
+  window.__resetAllSubpagesExcept = function(keepKey) {
+    if (isResettingSubpages) return;
+    isResettingSubpages = true;
+    try {
+      if (keepKey !== 'about' && (window.__aboutDeckCurrentIndex || 0) > 0 && typeof window.goToAboutSlide === 'function') {
+        window.goToAboutSlide(0, { silentReset: true });
+      }
+      if (keepKey !== 'products' && (window.__productsDeckCurrentIndex || 0) > 0 && typeof window.goToProductSlide === 'function') {
+        window.goToProductSlide(0, { silentReset: true });
+      }
+      const deckKeys = ['brands', 'services', 'resources'];
+      for (let i = 0; i < deckKeys.length; i++) {
+        const dk = deckKeys[i];
+        if (keepKey !== dk && typeof window.__getDeckSlideIndex === 'function' && window.__getDeckSlideIndex(dk) > 0 && typeof window.goToDeckSlide === 'function') {
+          window.goToDeckSlide(dk, 0, false, { silentReset: true });
+        }
+      }
+    } finally {
+      isResettingSubpages = false;
+    }
+  };
+
+  function getActiveManagedSubpage() {
+    if ((window.__aboutDeckCurrentIndex || 0) > 0) {
+      return {
+        key: 'about',
+        sec: document.getElementById('about'),
+        scrollEl: document.getElementById('about-subpage-scroll'),
+        subIdx: window.__aboutActiveSubpageIdx || 1,
+        maxIdx: 4,
+        go: (n) => {
+          if (typeof window.goToAboutSlide === 'function') window.goToAboutSlide(n);
+        }
+      };
+    }
+
+    const deckPairs = [
+      ['brands', 'brands'],
+      ['services', 'distribution'],
+      ['resources', 'resources']
+    ];
+    for (let i = 0; i < deckPairs.length; i++) {
+      const dk = deckPairs[i][0];
+      const secId = deckPairs[i][1];
+      const idx = typeof window.__getDeckSlideIndex === 'function' ? window.__getDeckSlideIndex(dk) : 0;
+      if (idx >= 1) {
+        const sec = document.getElementById(secId);
+        const slides = sec ? sec.querySelectorAll(`.deck-slide[data-deck="${dk}"]`) : [];
+        return {
+          key: dk,
+          sec,
+          scrollEl: slides[idx] || null,
+          subIdx: idx,
+          maxIdx: Math.max(1, slides.length - 1),
+          go: (n) => {
+            if (typeof window.goToDeckSlide === 'function') window.goToDeckSlide(dk, n, false);
+          }
+        };
+      }
+    }
+
+    return null;
+  }
+
+  window.__isAnyMediqSubpageOpen = function() {
+    return Boolean((window.__productsDeckCurrentIndex || 0) >= 1 || getActiveManagedSubpage());
+  };
+
+  window.__engageSubpageLock = function(keepKey, secEl) {
+    edgeAccum = 0;
+    lastSwitchTime = performance.now();
+    window.__resetAllSubpagesExcept(keepKey);
+
+    if (secEl) {
+      const approxDiff = Math.abs(window.scrollY - secEl.offsetTop);
+      if (approxDiff > 24 && typeof window.__sweepPageTransitionCurtain === 'function') {
+        window.__sweepPageTransitionCurtain();
+      }
+      document.documentElement.classList.remove('mediq-subpage-locked');
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      if (typeof window.grailSnapTo === 'function') {
+        window.grailSnapTo(secEl);
+      } else {
+        window.scrollTo(0, secEl.offsetTop);
+      }
+    }
+
+    document.documentElement.classList.add('mediq-subpage-locked');
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.scrollSnapType = 'none';
+
+    requestAnimationFrame(() => {
+      if (window.__isAnyMediqSubpageOpen && window.__isAnyMediqSubpageOpen()) {
+        if (secEl && Math.abs(secEl.getBoundingClientRect().top) > 2) {
+          document.documentElement.classList.remove('mediq-subpage-locked');
+          if (typeof window.grailSnapTo === 'function') {
+            window.grailSnapTo(secEl);
+          } else {
+            window.scrollTo(0, secEl.offsetTop);
+          }
+        }
+        document.documentElement.classList.add('mediq-subpage-locked');
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.scrollSnapType = 'none';
+      }
+    });
+  };
+
+  function isEventInsideOpenModal(target) {
+    if (!target || !target.nodeType) return false;
+    const brochureModal = document.getElementById('brochure-modal');
+    if (brochureModal && brochureModal.classList.contains('opacity-100') && brochureModal.contains(target)) {
+      return true;
+    }
+    const wwdModal = document.getElementById('wwd-modal');
+    if (wwdModal && !wwdModal.hidden && !wwdModal.classList.contains('hidden') && wwdModal.contains(target)) {
+      return true;
+    }
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenu && !mobileMenu.classList.contains('pointer-events-none') && mobileMenu.contains(target)) {
+      return true;
+    }
+    return false;
+  }
+
+  // Capture-phase wheel controller: 100% blocks outer main-page scroll & steps cleanly between subpages (1..maxIdx)
+  window.addEventListener('wheel', (e) => {
+    if (isEventInsideOpenModal(e.target)) return;
+
+    const active = getActiveManagedSubpage();
+    if (!active) return;
+
+    const dy = e.deltaMode === 1 ? e.deltaY * 36 : e.deltaY;
+    if (Math.abs(dy) < 0.5) return;
+
+    const now = performance.now();
+    const sc = active.scrollEl;
+    const maxSc = sc ? Math.max(0, sc.scrollHeight - sc.clientHeight) : 0;
+    const atTop = !sc || maxSc <= 2 || sc.scrollTop <= 1;
+    const atBottom = !sc || maxSc <= 2 || sc.scrollTop >= maxSc - 2;
+
+    if ((dy < 0 && atTop) || (dy > 0 && atBottom)) {
+      // STRICT ISOLATION: Never allow wheel at top/bottom boundary to scroll outer window or Home/Overview!
+      e.preventDefault();
+
+      if (now - lastInnerScrollTime >= 220 && now - lastSwitchTime >= 720) {
+        if ((edgeAccum > 0 && dy < 0) || (edgeAccum < 0 && dy > 0)) {
+          edgeAccum = 0;
+        }
+        edgeAccum += dy;
+
+        if (edgeAccum <= -140) {
+          edgeAccum = 0;
+          if (active.subIdx > 1) {
+            lastSwitchTime = now;
+            active.go(active.subIdx - 1);
+          }
+        } else if (edgeAccum >= 140) {
+          edgeAccum = 0;
+          if (active.subIdx < active.maxIdx) {
+            lastSwitchTime = now;
+            active.go(active.subIdx + 1);
+          }
+        }
+      }
+      return;
+    }
+
+    edgeAccum = 0;
+    lastInnerScrollTime = now;
+
+    // If pointer is outside the inner scroll container (e.g. over sticky header or subnavbar), forward scroll to subpage
+    if (sc && !sc.contains(e.target)) {
+      e.preventDefault();
+      sc.scrollTop += dy;
+    }
+  }, { passive: false, capture: true });
+
+  // Touch controller for mobile/tablet subpage isolation & boundary paging
+  let touchActive = false;
+  let touchLastY = 0;
+  let touchEdgeAccum = 0;
+
+  window.addEventListener('touchstart', (e) => {
+    if (isEventInsideOpenModal(e.target)) {
+      touchActive = false;
+      return;
+    }
+    const active = getActiveManagedSubpage();
+    if (!active || !e.touches || e.touches.length !== 1) {
+      touchActive = false;
+      return;
+    }
+    touchActive = true;
+    touchLastY = e.touches[0].clientY;
+    touchEdgeAccum = 0;
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!touchActive || !e.touches || e.touches.length !== 1) return;
+    const active = getActiveManagedSubpage();
+    if (!active) {
+      touchActive = false;
+      return;
+    }
+
+    const curY = e.touches[0].clientY;
+    const dy = touchLastY - curY;
+    touchLastY = curY;
+    if (Math.abs(dy) < 0.5) return;
+
+    const now = performance.now();
+    const sc = active.scrollEl;
+    const maxSc = sc ? Math.max(0, sc.scrollHeight - sc.clientHeight) : 0;
+    const atTop = !sc || maxSc <= 2 || sc.scrollTop <= 1;
+    const atBottom = !sc || maxSc <= 2 || sc.scrollTop >= maxSc - 2;
+
+    if ((dy < 0 && atTop) || (dy > 0 && atBottom)) {
+      if (e.cancelable) e.preventDefault();
+      if (now - lastInnerScrollTime >= 200 && now - lastSwitchTime >= 720) {
+        if ((touchEdgeAccum > 0 && dy < 0) || (touchEdgeAccum < 0 && dy > 0)) {
+          touchEdgeAccum = 0;
+        }
+        touchEdgeAccum += dy;
+        if (touchEdgeAccum <= -110 && active.subIdx > 1) {
+          touchEdgeAccum = 0;
+          lastSwitchTime = now;
+          active.go(active.subIdx - 1);
+        } else if (touchEdgeAccum >= 110 && active.subIdx < active.maxIdx) {
+          touchEdgeAccum = 0;
+          lastSwitchTime = now;
+          active.go(active.subIdx + 1);
+        }
+      }
+      return;
+    }
+
+    touchEdgeAccum = 0;
+    lastInnerScrollTime = now;
+    if (sc && !sc.contains(e.target)) {
+      if (e.cancelable) e.preventDefault();
+      sc.scrollTop += dy * 1.2;
+    }
+  }, { passive: false });
+
+  window.addEventListener('touchend', () => {
+    touchActive = false;
+    touchEdgeAccum = 0;
+  }, { passive: true });
+
+  // Keyboard scroll & subpage navigation guard when inside managed subpages
+  window.addEventListener('keydown', (e) => {
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT' || e.target.isContentEditable)) {
+      return;
+    }
+    if (isEventInsideOpenModal(e.target)) return;
+
+    const active = getActiveManagedSubpage();
+    if (!active) return;
+
+    const sc = active.scrollEl;
+    const maxSc = sc ? Math.max(0, sc.scrollHeight - sc.clientHeight) : 0;
+
+    if (active.key === 'about') {
+      if (e.key === 'ArrowRight' && active.subIdx < active.maxIdx) {
+        e.preventDefault();
+        active.go(active.subIdx + 1);
+        return;
+      }
+      if (e.key === 'ArrowLeft' && active.subIdx > 1) {
+        e.preventDefault();
+        active.go(active.subIdx - 1);
+        return;
+      }
+    }
+
+    if (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) {
+      e.preventDefault();
+      const step = e.key === 'ArrowDown' ? 160 : Math.round((sc ? sc.clientHeight : window.innerHeight) * 0.8);
+      if (sc && sc.scrollTop < maxSc - 2) {
+        sc.scrollBy({ top: step, behavior: 'smooth' });
+      } else if (active.subIdx < active.maxIdx) {
+        active.go(active.subIdx + 1);
+      }
+    } else if (e.key === 'ArrowUp' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) {
+      e.preventDefault();
+      const step = e.key === 'ArrowUp' ? 160 : Math.round((sc ? sc.clientHeight : window.innerHeight) * 0.8);
+      if (sc && sc.scrollTop > 1) {
+        sc.scrollBy({ top: -step, behavior: 'smooth' });
+      } else if (active.subIdx > 1) {
+        active.go(active.subIdx - 1);
+      }
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      if (sc) sc.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      if (sc) sc.scrollTo({ top: maxSc, behavior: 'smooth' });
+    }
+  });
 })();
