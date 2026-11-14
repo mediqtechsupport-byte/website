@@ -5255,6 +5255,7 @@ function createCartonGalaxyTopTexture() {
     window.addEventListener('resize', () => {
       const w = container.clientWidth;
       const h = container.clientHeight;
+      if (!w || !h) return;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
@@ -5262,13 +5263,79 @@ function createCartonGalaxyTopTexture() {
 
     // Initial play state sync
     syncPlayStateUI();
+    syncGalaxyRenderState();
   }
 
   /* --------------------------------------------------------------------------
-     13. RENDER LOOP
+     13. RENDER LOOP (VISIBILITY + SLIDE GATED — 0% GPU WHEN HIDDEN/COVERED)
      -------------------------------------------------------------------------- */
+  let galaxyRafId = 0;
+  let galaxyInView = false;
+  let galaxySlideVisible = false;
+  let galaxyDocVisible = typeof document === 'undefined' || !document.hidden;
+  let galaxyListenersBound = false;
+
+  function computeGalaxySlideVisible() {
+    const prodSec = document.getElementById('products');
+    const slideEl = container ? container.closest('.product-slide') : null;
+    if (prodSec && prodSec.classList.contains('at-spiral-active')) return false;
+    if (slideEl) {
+      return slideEl.classList.contains('opacity-100') && !slideEl.classList.contains('pointer-events-none');
+    }
+    return true;
+  }
+
+  function syncGalaxyRenderState() {
+    galaxySlideVisible = computeGalaxySlideVisible();
+    const shouldRun = !!renderer && !!scene && !!camera && galaxyInView && galaxySlideVisible && galaxyDocVisible;
+    if (shouldRun && !galaxyRafId) {
+      galaxyRafId = requestAnimationFrame(animate);
+    } else if (!shouldRun && galaxyRafId) {
+      cancelAnimationFrame(galaxyRafId);
+      galaxyRafId = 0;
+    }
+  }
+
+  function bindGalaxyVisibilityGates() {
+    if (galaxyListenersBound || !container) return;
+    galaxyListenersBound = true;
+
+    const prodSec = document.getElementById('products');
+    const slideEl = container.closest('.product-slide');
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        galaxyInView = entries.some((en) => en.isIntersecting);
+        syncGalaxyRenderState();
+      }, { rootMargin: '80px 0px', threshold: 0.01 });
+      io.observe(container);
+    } else {
+      galaxyInView = true;
+    }
+
+    if (typeof MutationObserver !== 'undefined') {
+      const mo = new MutationObserver(() => syncGalaxyRenderState());
+      if (prodSec) mo.observe(prodSec, { attributes: true, attributeFilter: ['class'] });
+      if (slideEl) mo.observe(slideEl, { attributes: true, attributeFilter: ['class'] });
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      galaxyDocVisible = !document.hidden;
+      syncGalaxyRenderState();
+    });
+
+    window.addEventListener('mediq:products-stage-change', () => {
+      syncGalaxyRenderState();
+    });
+
+    const rect = container.getBoundingClientRect();
+    galaxyInView = rect.width > 0 && rect.height > 0 && rect.bottom > -80 && rect.top < (window.innerHeight || 900) + 80;
+    syncGalaxyRenderState();
+  }
+
   function animate() {
-    requestAnimationFrame(animate);
+    galaxyRafId = 0;
+    if (!renderer || !scene || !camera || !galaxyInView || !galaxySlideVisible || !galaxyDocVisible) return;
 
     updateProceduralKinematics(0.016);
 
@@ -5284,11 +5351,17 @@ function createCartonGalaxyTopTexture() {
     }
 
     renderer.render(scene, camera);
+    galaxyRafId = requestAnimationFrame(animate);
+  }
+
+  function bootSimulator() {
+    initSimulator();
+    bindGalaxyVisibilityGates();
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initSimulator);
+    document.addEventListener('DOMContentLoaded', bootSimulator);
   } else {
-    initSimulator();
+    bootSimulator();
   }
 })();

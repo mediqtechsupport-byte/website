@@ -122,41 +122,80 @@
     pageSections.forEach((sec) => sectionObserver.observe(sec));
   }
 
-  const updateActiveNavOnScroll = () => {
-    const scrollMid = window.scrollY + window.innerHeight * 0.42;
-    let activeNavId = 'nav-home';
-    for (const item of trackedNavTargets) {
-      const el = document.getElementById(item.id);
-      if (!el || el.classList.contains('hidden') || el.offsetParent === null) continue;
-      const top = el.offsetTop;
-      if (scrollMid >= top) {
-        activeNavId = item.navId;
-      }
-    }
-    navLinks.forEach((link) => {
-      link.classList.toggle('is-active', link.id === activeNavId);
-    });
+  // Shared pre-rendered soft puff sprite cache (replaces 1000s of per-frame createRadialGradient allocations)
+  const __smokeSpriteCache = new Map();
+  window.__getMediqSmokeSprite = function(r, g, b) {
+    const key = r + ',' + g + ',' + b;
+    let sprite = __smokeSpriteCache.get(key);
+    if (sprite) return sprite;
+    sprite = document.createElement('canvas');
+    sprite.width = 128;
+    sprite.height = 128;
+    const sctx = sprite.getContext('2d');
+    const grad = sctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    grad.addColorStop(0, 'rgba(' + r + ',' + g + ',' + b + ',1)');
+    grad.addColorStop(0.5, 'rgba(' + r + ',' + g + ',' + b + ',0.44)');
+    grad.addColorStop(1, 'rgba(' + r + ',' + g + ',' + b + ',0)');
+    sctx.fillStyle = grad;
+    sctx.fillRect(0, 0, 128, 128);
+    __smokeSpriteCache.set(key, sprite);
+    return sprite;
+  };
 
-    // Update Floating Page Indicator Dots
-    let activePageId = 'hero';
-    for (const pid of pageTargetIds) {
+  let cachedNavOffsets = [];
+  let cachedPageOffsets = [];
+  let lastActiveNavId = '';
+  let lastActivePageId = '';
+
+  const refreshNavSectionOffsets = () => {
+    cachedNavOffsets = trackedNavTargets.map((item) => {
+      const el = document.getElementById(item.id);
+      if (!el || el.classList.contains('hidden')) return null;
+      return { navId: item.navId, top: el.offsetTop };
+    }).filter(Boolean);
+    cachedPageOffsets = pageTargetIds.map((pid) => {
       const el = document.getElementById(pid);
-      if (!el || el.classList.contains('hidden')) continue;
-      const top = el.offsetTop;
-      if (scrollMid >= top - 90) {
-        activePageId = pid;
-      }
+      if (!el || el.classList.contains('hidden')) return null;
+      return { pid, top: el.offsetTop };
+    }).filter(Boolean);
+  };
+  window.__refreshNavSectionOffsets = refreshNavSectionOffsets;
+  window.addEventListener('resize', refreshNavSectionOffsets, { passive: true });
+  window.addEventListener('load', refreshNavSectionOffsets, { passive: true });
+  refreshNavSectionOffsets();
+
+  const updateActiveNavOnScroll = (scrollYOverride) => {
+    if (!cachedNavOffsets.length) refreshNavSectionOffsets();
+    const sy = typeof scrollYOverride === 'number' ? scrollYOverride : window.scrollY;
+    const scrollMid = sy + (window.innerHeight || 900) * 0.42;
+
+    let activeNavId = 'nav-home';
+    for (let i = 0; i < cachedNavOffsets.length; i++) {
+      if (scrollMid >= cachedNavOffsets[i].top) activeNavId = cachedNavOffsets[i].navId;
     }
-    pageDotItems.forEach((dot) => {
-      const tgt = dot.getAttribute('data-target');
-      dot.classList.toggle('is-active', tgt === `#${activePageId}`);
-    });
+    if (activeNavId !== lastActiveNavId) {
+      lastActiveNavId = activeNavId;
+      navLinks.forEach((link) => {
+        link.classList.toggle('is-active', link.id === activeNavId);
+      });
+    }
+
+    let activePageId = 'hero';
+    for (let i = 0; i < cachedPageOffsets.length; i++) {
+      if (scrollMid >= cachedPageOffsets[i].top - 90) activePageId = cachedPageOffsets[i].pid;
+    }
+    if (activePageId !== lastActivePageId) {
+      lastActivePageId = activePageId;
+      pageDotItems.forEach((dot) => {
+        dot.classList.toggle('is-active', dot.getAttribute('data-target') === '#' + activePageId);
+      });
+    }
   };
   window.__updateActiveNavOnScroll = updateActiveNavOnScroll;
-  window.addEventListener('scroll', updateActiveNavOnScroll, { passive: true });
+  window.addEventListener('scroll', () => updateActiveNavOnScroll(), { passive: true });
   updateActiveNavOnScroll();
 
-  const transitionCurtain = document.getElementById('page-transition-curtain');
+    const transitionCurtain = document.getElementById('page-transition-curtain');
   let curtainTimer = null;
   const sweepTransitionCurtain = () => {
     if (!transitionCurtain) return;
@@ -603,7 +642,7 @@
       ? window.matchMedia('(prefers-reduced-motion: reduce)')
       : { matches: false };
 
-    let w = 1, h = 1, dpr = 1;
+    let w = 1, h = 1, dpr = 0.5;
     let t = 0;
 
     function rand(min, max) {
@@ -615,23 +654,22 @@
     }
 
     function resize() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = 0.5;
       const rect = canvas.getBoundingClientRect();
       w = Math.max(1, Math.floor(rect.width || window.innerWidth));
       h = Math.max(1, Math.floor(rect.height || window.innerHeight));
-      if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
-        canvas.width = w * dpr;
-        canvas.height = h * dpr;
+      const tw = Math.max(1, Math.round(w * dpr));
+      const th = Math.max(1, Math.round(h * dpr));
+      if (canvas.width !== tw || canvas.height !== th) {
+        canvas.width = tw;
+        canvas.height = th;
       }
     }
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    // Background Layer: 14 large radial gradient blobs (radius 180–420px)
     class Puff {
-      constructor(prewarm) {
-        this.reset(prewarm);
-      }
+      constructor(prewarm) { this.reset(prewarm); }
       reset(prewarm) {
         this.radius = rand(180, 420);
         this.x = rand(-this.radius * 0.25, w + this.radius * 0.25);
@@ -641,49 +679,33 @@
         this.life = rand(600, 1400);
         this.age = prewarm ? Math.floor(rand(0, this.life)) : 0;
         this.maxOpacity = rand(0.06, 0.16);
-        this.color = pickColor();
+        const [r, g, b] = pickColor();
+        this.sprite = window.__getMediqSmokeSprite(r, g, b);
       }
       update() {
         this.x += this.vx;
         this.y += this.vy;
         this.age++;
-        if (this.age >= this.life || this.y < -this.radius * 1.2) {
-          this.reset(false);
-        }
+        if (this.age >= this.life || this.y < -this.radius * 1.2) this.reset(false);
       }
       draw(c) {
         const p = Math.min(1, Math.max(0, this.age / this.life));
-        const fade = Math.sin(p * Math.PI);
-        const alpha = this.maxOpacity * fade;
-        if (alpha <= 0.001) return;
-
-        const [r, g, b] = this.color;
-        const grad = c.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
-        grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(4)})`);
-        grad.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${(alpha * 0.45).toFixed(4)})`);
-        grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
-
-        c.fillStyle = grad;
-        c.beginPath();
-        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        c.fill();
+        const alpha = this.maxOpacity * Math.sin(p * Math.PI);
+        if (alpha <= 0.002) return;
+        c.globalAlpha = alpha;
+        c.drawImage(this.sprite, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
       }
     }
 
-    // Foreground Layer: 18 upward-rising smoke wisps made of 18–32 linked nodes
     class Tendril {
-      constructor(prewarm) {
-        this.reset(prewarm);
-      }
+      constructor(prewarm) { this.reset(prewarm); }
       reset(prewarm) {
-        this.nodeCount = Math.floor(rand(18, 33)); // 18–32 linked nodes
-        this.spacing = rand(16, 26);
+        this.nodeCount = Math.floor(rand(16, 26));
+        this.spacing = rand(18, 28);
         this.baseX = rand(w * 0.04, w * 0.96);
         const chainHeight = this.nodeCount * this.spacing;
-        this.baseY = prewarm
-          ? rand(h * 0.25, h + chainHeight * 0.75)
-          : rand(h * 0.55, h + chainHeight * 0.85);
-        this.vy = -rand(0.28, 0.62);
+        this.baseY = prewarm ? rand(h * 0.20, h + chainHeight * 0.75) : rand(h * 0.50, h + chainHeight * 0.85);
+        this.vy = -rand(0.30, 0.65);
         this.vx = rand(-0.08, 0.08);
         this.swayFreq = rand(0.014, 0.032);
         this.swayOffset = rand(0, Math.PI * 2);
@@ -691,91 +713,72 @@
         this.life = rand(320, 700);
         this.age = prewarm ? Math.floor(rand(0, this.life)) : 0;
         this.maxOpacity = rand(0.07, 0.22);
-        this.color = pickColor();
-
-        // Node radii: 28–90px, shrinking toward the tip
+        const [r, g, b] = pickColor();
+        this.sprite = window.__getMediqSmokeSprite(r, g, b);
         const baseR = rand(58, 90);
         const tipR = rand(28, 40);
-        this.radii = Array.from({ length: this.nodeCount }, (_, i) => {
-          const frac = this.nodeCount > 1 ? i / (this.nodeCount - 1) : 0;
-          return baseR + (tipR - baseR) * frac;
-        });
+        this.radii = Array.from({ length: this.nodeCount }, (_, i) => baseR + (tipR - baseR) * (this.nodeCount > 1 ? i / (this.nodeCount - 1) : 0));
       }
       update() {
         this.baseX += this.vx;
         this.baseY += this.vy;
         this.age++;
-        const topY = this.baseY - this.nodeCount * this.spacing;
-        if (this.age >= this.life || topY < -140) {
-          this.reset(false);
-        }
+        if (this.age >= this.life || this.baseY - this.nodeCount * this.spacing < -140) this.reset(false);
       }
       draw(c, time) {
         const p = Math.min(1, Math.max(0, this.age / this.life));
-        let lifeEnv = 1;
-        if (p < 0.22) {
-          lifeEnv = p / 0.22;
-        } else if (p > 0.72) {
-          lifeEnv = (1 - p) / 0.28;
-        }
-        if (lifeEnv <= 0.001) return;
-
-        const [r, g, b] = this.color;
+        let lifeEnv = p < 0.22 ? p / 0.22 : (p > 0.72 ? (1 - p) / 0.28 : 1);
+        if (lifeEnv <= 0.002) return;
         const n = this.nodeCount;
         for (let i = 0; i < n; i++) {
           const frac = n > 1 ? i / (n - 1) : 0;
-          const swayX = Math.sin(time * this.swayFreq + this.swayOffset + i * 0.35) * this.sway * (0.4 + frac * 1.4);
-          const nx = this.baseX + swayX;
-          const ny = this.baseY - i * this.spacing;
+          const alpha = this.maxOpacity * lifeEnv * Math.sin(frac * Math.PI);
+          if (alpha <= 0.002) continue;
           const rad = this.radii[i];
-
-          // Sine envelope sin(frac * PI) to fade opacity at base and tip
-          const nodeEnv = Math.sin(frac * Math.PI);
-          const alpha = this.maxOpacity * lifeEnv * nodeEnv;
-          if (alpha <= 0.0015) continue;
-
-          const grad = c.createRadialGradient(nx, ny, 0, nx, ny, rad);
-          grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(4)})`);
-          grad.addColorStop(0.55, `rgba(${r}, ${g}, ${b}, ${(alpha * 0.42).toFixed(4)})`);
-          grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
-
-          c.fillStyle = grad;
-          c.beginPath();
-          c.arc(nx, ny, rad, 0, Math.PI * 2);
-          c.fill();
+          const nx = this.baseX + Math.sin(time * this.swayFreq + this.swayOffset + i * 0.35) * this.sway * (0.4 + frac * 1.4);
+          const ny = this.baseY - i * this.spacing;
+          c.globalAlpha = alpha;
+          c.drawImage(this.sprite, nx - rad, ny - rad, rad * 2, rad * 2);
         }
       }
     }
 
-    const puffs = Array.from({ length: 14 }, () => new Puff(true));
-    const tendrils = Array.from({ length: 18 }, () => new Tendril(true));
+    const puffs = Array.from({ length: 12 }, () => new Puff(true));
+    const tendrils = Array.from({ length: 14 }, () => new Tendril(true));
+    let isVisible = false;
+    let rafId = 0;
 
     function renderFrame() {
-      ctx.save();
+      if (!isVisible) { rafId = 0; return; }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
-
-      // 1. Draw Puffs (background layer)
       for (let i = 0; i < puffs.length; i++) {
         if (!reducedMotionMq.matches) puffs[i].update();
         puffs[i].draw(ctx);
       }
-
-      // 2. Draw Tendrils on top (foreground layer)
       for (let i = 0; i < tendrils.length; i++) {
         if (!reducedMotionMq.matches) tendrils[i].update();
         tendrils[i].draw(ctx, t);
       }
-
-      ctx.restore();
-
+      ctx.globalAlpha = 1;
       if (!reducedMotionMq.matches) {
         t += 1;
-        requestAnimationFrame(renderFrame);
+        rafId = requestAnimationFrame(renderFrame);
+      } else {
+        rafId = 0;
       }
     }
 
-    renderFrame();
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => { isVisible = en.isIntersecting; });
+        if (isVisible && !rafId) rafId = requestAnimationFrame(renderFrame);
+      }, { rootMargin: '140px 0px', threshold: 0.01 });
+      io.observe(canvas.parentElement || canvas);
+    } else {
+      isVisible = true;
+      rafId = requestAnimationFrame(renderFrame);
+    }
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initAboutSmokeCanvas);
@@ -783,7 +786,7 @@
     initAboutSmokeCanvas();
   }
 
-  // ─── 4C. 1ST PAGE (#HERO) ORGANIC MEDTECH BLUE FLUID SMOKE CANVAS ────────────
+    // ─── 4C. 1ST PAGE (#HERO) ORGANIC MEDTECH BLUE FLUID SMOKE CANVAS ────────────
   function initHeroSmokeCanvas() {
     const canvas = document.getElementById('hero-smoke-canvas');
     if (!canvas || canvas._smokeActive) return;
@@ -791,67 +794,67 @@
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    let w = 1, h = 1, dpr = 1;
+    const sprite = window.__getMediqSmokeSprite(18, 48, 102);
+    let w = 1, h = 1, dpr = 0.5;
     let t = 0;
 
     function resize() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = 0.5;
       const rect = canvas.getBoundingClientRect();
-      w = Math.max(1, Math.floor(rect.width));
-      h = Math.max(1, Math.floor(rect.height));
-      if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
-        canvas.width = w * dpr;
-        canvas.height = h * dpr;
+      w = Math.max(1, Math.floor(rect.width || window.innerWidth));
+      h = Math.max(1, Math.floor(rect.height || window.innerHeight));
+      const tw = Math.max(1, Math.round(w * dpr));
+      const th = Math.max(1, Math.round(h * dpr));
+      if (canvas.width !== tw || canvas.height !== th) {
+        canvas.width = tw;
+        canvas.height = th;
       }
     }
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    // 18 drifting organic smoke puffs across the hero background (concentrated on left/center)
-    const puffs = Array.from({ length: 18 }, (_, i) => ({
-      baseX: (i / 18) * 1.3 - 0.15,
+    const puffs = Array.from({ length: 16 }, (_, i) => ({
+      baseX: (i / 16) * 1.3 - 0.15,
       baseY: 0.12 + (i % 4) * 0.24,
       r: 220 + (i % 6) * 65,
       speed: 0.12 + (i % 5) * 0.06,
       phase: i * 1.42,
-      alpha: 0.38 + (i % 4) * 0.12,
-      hueShift: (i % 3)
+      alpha: 0.26 + (i % 4) * 0.08
     }));
 
-    function renderSmoke() {
-      t += 0.008; // Calm, serene organic fluid smoke drift
-      ctx.save();
-      ctx.scale(dpr, dpr);
-      ctx.clearRect(0, 0, w, h);
+    let isVisible = true;
+    let rafId = 0;
 
+    function renderSmoke() {
+      if (!isVisible) { rafId = 0; return; }
+      t += 0.008;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
       for (let i = 0; i < puffs.length; i++) {
         const p = puffs[i];
-        // Harmonic motion generating curling, organic smoke drift in exact #0a1d40 MedTech Blue
         const cx = (p.baseX + Math.sin(t * p.speed + p.phase) * 0.15 + Math.sin(t * 0.3 + p.phase * 0.7) * 0.04) * w;
         const cy = (p.baseY + Math.cos(t * p.speed * 0.85 + p.phase) * 0.10 + Math.cos(t * 0.25 + p.phase) * 0.03) * h;
         const rad = p.r * (1 + Math.sin(t * 0.55 + p.phase) * 0.18);
-
-        const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, rad);
-        // Pure #0a1d40 MedTech Blue Harmonic Spectrum (RGB 10, 29, 64 -> 20, 53, 112)
-        g.addColorStop(0, `rgba(20, 53, 112, ${(p.alpha * 0.68).toFixed(3)})`);
-        g.addColorStop(0.40, `rgba(16, 43, 92, ${(p.alpha * 0.45).toFixed(3)})`);
-        g.addColorStop(0.78, `rgba(10, 29, 64, ${(p.alpha * 0.20).toFixed(3)})`);
-        g.addColorStop(1, 'transparent');
-
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(cx, cy, rad, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.globalAlpha = p.alpha;
+        ctx.drawImage(sprite, cx - rad, cy - rad, rad * 2, rad * 2);
       }
-
-      ctx.restore();
-      requestAnimationFrame(renderSmoke);
+      ctx.globalAlpha = 1;
+      rafId = requestAnimationFrame(renderSmoke);
     }
-    requestAnimationFrame(renderSmoke);
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => { isVisible = en.isIntersecting; });
+        if (isVisible && !rafId) rafId = requestAnimationFrame(renderSmoke);
+      }, { rootMargin: '140px 0px', threshold: 0.01 });
+      io.observe(canvas.parentElement || canvas);
+    } else {
+      rafId = requestAnimationFrame(renderSmoke);
+    }
   }
   initHeroSmokeCanvas();
 
-  // Global helper for direct simulation jump
+    // Global helper for direct simulation jump
   window.selectSimulatorLens = (lensKey) => {
     const select = document.getElementById('vsim-lens-select');
     if (select) {
@@ -1103,9 +1106,11 @@
 
   // 9. Smart Inquiry Form Pre-Selection, Consent Validation & Submission Feedback
   const productSelect = document.getElementById('inq-product');
+  let selectedInquiryTopic = '';
   document.querySelectorAll('[data-inquire]').forEach((btn) => {
     btn.addEventListener('click', () => {
       const val = btn.getAttribute('data-inquire');
+      if (val) selectedInquiryTopic = val;
       if (productSelect && val) {
         productSelect.value = val;
         productSelect.dispatchEvent(new Event('change'));
@@ -1116,6 +1121,7 @@
   document.querySelectorAll('[data-select-inquiry]').forEach((btn) => {
     btn.addEventListener('click', () => {
       const val = btn.getAttribute('data-select-inquiry');
+      if (val) selectedInquiryTopic = val;
       if (productSelect && val) {
         productSelect.value = val;
         productSelect.dispatchEvent(new Event('change'));
@@ -1144,10 +1150,13 @@
         formFeedback.className = 'text-[10.5px] font-semibold text-ray';
         return;
       }
-      const selected = productSelect ? productSelect.value : 'Product Information';
-      formFeedback.textContent = `Thank you, ${name}. Your "${selected}" inquiry has been recorded for the MEDIQ team.`;
+      const selected = productSelect ? productSelect.value : selectedInquiryTopic;
+      formFeedback.textContent = selected
+        ? `Thank you, ${name}. Your "${selected}" inquiry has been recorded for the MEDIQ team.`
+        : `Thank you, ${name}. Your inquiry has been recorded for the MEDIQ team.`;
       formFeedback.className = 'text-[10.5px] font-semibold text-sky';
       quoteForm.reset();
+      selectedInquiryTopic = '';
       if (productSelect) productSelect.dispatchEvent(new Event('change'));
     });
   }
@@ -2965,23 +2974,35 @@
     };
 
     let vsimVisible = true;
-    const renderLoop = () => {
-      if (vsimVisible) {
-        frameCounter++;
-        if (true) {
-          analyzeLiveCameraDepth();
-        }
-        liveProximity += (targetProximity - liveProximity) * (targetProximity > liveProximity ? 0.65 : 0.28);
-        if (frameCounter % 4 === 0) {
-          updateDistanceBadgeUI();
-        }
+    let vsimDocVisible = !document.hidden;
+    let vsimRafId = 0;
 
-        renderPanelOptics(ctxLeft, vsimCanvasLeft.width, vsimCanvasLeft.height, activeLens);
-        if (isCompareOn && vsimCanvasRight.width && vsimCanvasRight.height) {
-          renderPanelOptics(ctxRight, vsimCanvasRight.width, vsimCanvasRight.height, compareTarget);
-        }
+    const syncVsimLoop = () => {
+      if (vsimVisible && vsimDocVisible) {
+        if (!vsimRafId) vsimRafId = requestAnimationFrame(renderLoop);
+      } else if (vsimRafId) {
+        cancelAnimationFrame(vsimRafId);
+        vsimRafId = 0;
       }
-      requestAnimationFrame(renderLoop);
+    };
+
+    const renderLoop = () => {
+      vsimRafId = 0;
+      if (!vsimVisible || !vsimDocVisible) return;
+      frameCounter++;
+      if (true) {
+        analyzeLiveCameraDepth();
+      }
+      liveProximity += (targetProximity - liveProximity) * (targetProximity > liveProximity ? 0.65 : 0.28);
+      if (frameCounter % 4 === 0) {
+        updateDistanceBadgeUI();
+      }
+
+      renderPanelOptics(ctxLeft, vsimCanvasLeft.width, vsimCanvasLeft.height, activeLens);
+      if (isCompareOn && vsimCanvasRight.width && vsimCanvasRight.height) {
+        renderPanelOptics(ctxRight, vsimCanvasRight.width, vsimCanvasRight.height, compareTarget);
+      }
+      if (vsimVisible && vsimDocVisible) vsimRafId = requestAnimationFrame(renderLoop);
     };
 
     const obs = new IntersectionObserver(
@@ -2993,13 +3014,18 @@
             tryAutoCamera();
           }
         });
+        syncVsimLoop();
       },
       { threshold: 0.08 }
     );
     obs.observe(vsimStage);
+    document.addEventListener('visibilitychange', () => {
+      vsimDocVisible = !document.hidden;
+      syncVsimLoop();
+    });
 
     syncUI();
-    requestAnimationFrame(renderLoop);
+    syncVsimLoop();
   }
 
   // 12. 21st.dev InfoCard Rotating Conic Border + True 3D Pop-Out & Interactive 360° 3D Spin Mode
@@ -3638,8 +3664,23 @@
     const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
     renderer.setPixelRatio(dpr);
 
+    let isVisible = true;
+    let docVisible = !document.hidden;
+    let stopped = false;
+
+    const shouldRender = () => !stopped && isVisible && docVisible;
+    const kickLoop = () => {
+      if (shouldRender() && !rafId) {
+        rafId = requestAnimationFrame(renderLoop);
+      } else if (!shouldRender() && rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    };
+
     const renderLoop = () => {
-      rafId = requestAnimationFrame(renderLoop);
+      rafId = 0;
+      if (!shouldRender()) return;
       const rect = canvas.getBoundingClientRect();
       if (rect.width > 0 && rect.height > 0) {
         const targetW = Math.round(rect.width * dpr);
@@ -3658,13 +3699,32 @@
       rootGroup.rotation.x += (targetRotX - rootGroup.rotation.x) * 0.14;
 
       renderer.render(scene, camera);
+      if (shouldRender()) rafId = requestAnimationFrame(renderLoop);
     };
 
-    renderLoop();
+    let io = null;
+    if ('IntersectionObserver' in window) {
+      io = new IntersectionObserver((entries) => {
+        isVisible = entries.some((en) => en.isIntersecting);
+        kickLoop();
+      }, { rootMargin: '80px 0px', threshold: 0.01 });
+      io.observe(canvas);
+    }
+    const onVisChange = () => {
+      docVisible = !document.hidden;
+      kickLoop();
+    };
+    document.addEventListener('visibilitychange', onVisChange);
+
+    kickLoop();
 
     active3DControllers.set(card, {
       stop: () => {
+        stopped = true;
         cancelAnimationFrame(rafId);
+        rafId = 0;
+        if (io) io.disconnect();
+        document.removeEventListener('visibilitychange', onVisChange);
         renderer.dispose();
         canvas.removeEventListener('pointerdown', onDown);
         canvas.removeEventListener('pointermove', onMove);
@@ -3887,8 +3947,20 @@
     window.addEventListener('pointerup', onUp);
 
     let rafId = 0;
+    let isVisible = false;
+    let docVisible = !document.hidden;
+    const shouldRender = () => isVisible && docVisible;
+    const syncLoop = () => {
+      if (shouldRender()) {
+        if (!rafId) rafId = requestAnimationFrame(renderLoop);
+      } else if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    };
     const renderLoop = () => {
-      rafId = requestAnimationFrame(renderLoop);
+      rafId = 0;
+      if (!shouldRender()) return;
       const rect = canvas.getBoundingClientRect();
       if (rect.width > 0 && rect.height > 0) {
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -3908,9 +3980,23 @@
       stageGroup.rotation.x += (targetRotX - stageGroup.rotation.x) * 0.12;
 
       renderer.render(scene, camera);
+      if (shouldRender()) rafId = requestAnimationFrame(renderLoop);
     };
 
-    renderLoop();
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        isVisible = entries.some((en) => en.isIntersecting);
+        syncLoop();
+      }, { rootMargin: '100px 0px', threshold: 0.01 });
+      io.observe(canvas.parentElement || canvas);
+    } else {
+      isVisible = true;
+      syncLoop();
+    }
+    document.addEventListener('visibilitychange', () => {
+      docVisible = !document.hidden;
+      syncLoop();
+    });
   };
 
   if (document.readyState === 'loading') {
@@ -4544,15 +4630,17 @@ void main() {
     let bounds = wavesShaderCanvas.getBoundingClientRect();
     let lastNow = null;
     const start = performance.now();
+    let isVisible = false;
+    let rafId = 0;
 
     const resizeShaderCanvas = () => {
       bounds = wavesShaderCanvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1);
       const measuredW = bounds.width > 10 ? bounds.width : window.innerWidth;
       const measuredH = bounds.height > 10 ? bounds.height : window.innerHeight;
       const rawW = Math.max(1, Math.round(measuredW * dpr));
       const rawH = Math.max(1, Math.round(measuredH * dpr));
-      const pixelScale = Math.min(1, Math.sqrt(2000000 / Math.max(1, rawW * rawH)));
+      const pixelScale = Math.min(1, Math.sqrt(750000 / Math.max(1, rawW * rawH)));
       const width = Math.max(1, Math.round(rawW * pixelScale));
       const height = Math.max(1, Math.round(rawH * pixelScale));
       if (wavesShaderCanvas.width !== width || wavesShaderCanvas.height !== height) {
@@ -4566,8 +4654,7 @@ void main() {
     window.addEventListener('resize', resizeShaderCanvas, { passive: true });
 
     window.addEventListener('pointermove', (e) => {
-      bounds = wavesShaderCanvas.getBoundingClientRect();
-      if (bounds.width === 0 || bounds.height === 0) return;
+      if (!isVisible || bounds.width === 0 || bounds.height === 0) return;
       const inside = e.clientX >= bounds.left && e.clientX <= bounds.right && e.clientY >= bounds.top && e.clientY <= bounds.bottom;
       if (!inside) {
         targetPresence = 0;
@@ -4578,21 +4665,68 @@ void main() {
       targetPresence = 1;
     }, { passive: true });
 
+    const isProductsWaves = canvasId === 'products-waves-shader-canvas';
+    const prodSecEl = isProductsWaves ? document.getElementById('products') : null;
+    let isDocVisible = !document.hidden;
+    let isCoveredBySpiral = !!(prodSecEl && prodSecEl.classList.contains('at-spiral-active'));
+
+    const shouldRenderSilk = () => isVisible && isDocVisible && !isCoveredBySpiral;
+    const syncSilkLoop = () => {
+      if (shouldRenderSilk()) {
+        bounds = wavesShaderCanvas.getBoundingClientRect();
+        if (!rafId) rafId = requestAnimationFrame(renderSilkShader);
+      } else {
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = 0;
+        }
+        lastNow = null;
+      }
+    };
+
     const renderSilkShader = (now) => {
-      requestAnimationFrame(renderSilkShader);
+      rafId = 0;
+      if (!shouldRenderSilk()) { lastNow = null; return; }
       const dt = lastNow === null ? 0.016 : Math.min((now - lastNow) / 1000, 0.1);
       lastNow = now;
-      const follow = 1 - Math.exp(-24 * dt);
+      const follow = 1 - Math.exp(-20 * dt);
       mouseX += (targetX - mouseX) * follow;
       mouseY += (targetY - mouseY) * follow;
       cursorPresence += (targetPresence - cursorPresence) * follow;
-      resizeShaderCanvas();
       gl.uniform4f(uni.scene, wavesShaderCanvas.width, wavesShaderCanvas.height, ((now - start) / 1000) * UNIFORMS.timeScale, UNIFORMS.colorCount);
       gl.uniform4f(uni.space, UNIFORMS.offsetX, UNIFORMS.offsetY, mouseX, mouseY);
       gl.uniform4f(uni.cursor, UNIFORMS.cursorEnabled ? cursorPresence : 0, UNIFORMS.cursorEffect, UNIFORMS.cursorStrength, UNIFORMS.cursorRadius);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
+      if (shouldRenderSilk()) rafId = requestAnimationFrame(renderSilkShader);
     };
-    requestAnimationFrame(renderSilkShader);
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => { isVisible = en.isIntersecting; });
+        syncSilkLoop();
+      }, { rootMargin: '160px 0px', threshold: 0.01 });
+      io.observe(wavesShaderCanvas.parentElement || wavesShaderCanvas);
+    } else {
+      isVisible = true;
+      syncSilkLoop();
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      isDocVisible = !document.hidden;
+      syncSilkLoop();
+    });
+
+    if (prodSecEl) {
+      const syncSpiral = () => {
+        isCoveredBySpiral = prodSecEl.classList.contains('at-spiral-active');
+        syncSilkLoop();
+      };
+      window.addEventListener('mediq:products-stage-change', syncSpiral);
+      if (typeof MutationObserver !== 'undefined') {
+        const mo = new MutationObserver(syncSpiral);
+        mo.observe(prodSecEl, { attributes: true, attributeFilter: ['class'] });
+      }
+    }
   }
 }
 initSilkWavesShader('hero-waves-shader-canvas');
@@ -4751,8 +4885,22 @@ if (photonCanvas) {
   };
 
   const startPhotonTime = performance.now();
+  let photonVisible = true;
+  let photonDocVisible = !document.hidden;
+  let photonRafId = 0;
+
+  const syncPhotonLoop = () => {
+    if (photonVisible && photonDocVisible) {
+      if (!photonRafId) photonRafId = requestAnimationFrame(renderPhotonLines);
+    } else if (photonRafId) {
+      cancelAnimationFrame(photonRafId);
+      photonRafId = 0;
+    }
+  };
+
   const renderPhotonLines = (now) => {
-    requestAnimationFrame(renderPhotonLines);
+    photonRafId = 0;
+    if (!photonVisible || !photonDocVisible) return;
     const t = (now - startPhotonTime) / 1000;
 
     pctx.save();
@@ -4822,8 +4970,21 @@ if (photonCanvas) {
     }
 
     pctx.restore();
+    if (photonVisible && photonDocVisible) photonRafId = requestAnimationFrame(renderPhotonLines);
   };
-  requestAnimationFrame(renderPhotonLines);
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      photonVisible = entries.some((en) => en.isIntersecting);
+      syncPhotonLoop();
+    }, { rootMargin: '160px 0px', threshold: 0.01 });
+    io.observe(photonCanvas.closest('section') || photonCanvas.parentElement || photonCanvas);
+  }
+  document.addEventListener('visibilitychange', () => {
+    photonDocVisible = !document.hidden;
+    syncPhotonLoop();
+  });
+  syncPhotonLoop();
 }
 
 // B. Interactive Specular Light Glint & Subtle Parallax on C-Shape Bionic Eye Lens
@@ -4874,8 +5035,22 @@ if (heroCanvas) {
     }
   }, { passive: true });
 
+  let opticsVisible = true;
+  let opticsDocVisible = !document.hidden;
+  let opticsRafId = 0;
+
+  const syncOpticsLoop = () => {
+    if (opticsVisible && opticsDocVisible) {
+      if (!opticsRafId) opticsRafId = requestAnimationFrame(animateOptics);
+    } else if (opticsRafId) {
+      cancelAnimationFrame(opticsRafId);
+      opticsRafId = 0;
+    }
+  };
+
   const animateOptics = () => {
-    requestAnimationFrame(animateOptics);
+    opticsRafId = 0;
+    if (!opticsVisible || !opticsDocVisible) return;
     pointerX += (targetX - pointerX) * 0.12;
     pointerY += (targetY - pointerY) * 0.12;
 
@@ -4902,8 +5077,21 @@ if (heroCanvas) {
       }
     }
     ctx.restore();
+    if (opticsVisible && opticsDocVisible) opticsRafId = requestAnimationFrame(animateOptics);
   };
-  requestAnimationFrame(animateOptics);
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      opticsVisible = entries.some((en) => en.isIntersecting);
+      syncOpticsLoop();
+    }, { rootMargin: '160px 0px', threshold: 0.01 });
+    io.observe(heroCanvas.closest('section') || heroCanvas.parentElement || heroCanvas);
+  }
+  document.addEventListener('visibilitychange', () => {
+    opticsDocVisible = !document.hidden;
+    syncOpticsLoop();
+  });
+  syncOpticsLoop();
 }
 
 // C. Live Surgical Workflow Demo Dialog
@@ -5225,7 +5413,8 @@ if (document.readyState === 'loading') {
 // =========================================================================
 function initIrisInteractiveCanvas() {
   const canvas = document.getElementById('hero-iris-interactive-canvas');
-  if (!canvas) return;
+  if (!canvas || canvas.dataset.irisInit === '1') return;
+  canvas.dataset.irisInit = '1';
 
   const ctx = canvas.getContext('2d');
   let w = 1, h = 1, dpr = 1;
@@ -5234,6 +5423,8 @@ function initIrisInteractiveCanvas() {
   let isHovered = false;
   const ripples = [];
   let animId = 0;
+  let irisVisible = true;
+  let irisDocVisible = !document.hidden;
 
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -5403,10 +5594,29 @@ function initIrisInteractiveCanvas() {
     }
 
     ctx.restore();
-    animId = requestAnimationFrame(render);
+    if (irisVisible && irisDocVisible) animId = requestAnimationFrame(render);
   }
 
-  animId = requestAnimationFrame(render);
+  const syncIrisLoop = () => {
+    if (irisVisible && irisDocVisible) {
+      if (!animId) animId = requestAnimationFrame(render);
+    } else if (animId) {
+      cancelAnimationFrame(animId);
+      animId = 0;
+    }
+  };
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      irisVisible = entries.some((en) => en.isIntersecting);
+      syncIrisLoop();
+    }, { rootMargin: '160px 0px', threshold: 0.01 });
+    io.observe(canvas.closest('section') || canvas.parentElement || canvas);
+  }
+  document.addEventListener('visibilitychange', () => {
+    irisDocVisible = !document.hidden;
+    syncIrisLoop();
+  });
+  syncIrisLoop();
 }
 
 initIrisInteractiveCanvas();
@@ -5435,19 +5645,24 @@ if (footerBackToTop) {
   });
 }
 
-// GSAP Cinematic Footer: parallax giant text, staggered reveal, magnetic pills
+// GSAP Cinematic Footer: parallax giant text, staggered reveal, magnetic pills, copy buttons
 const footerWrap = document.getElementById('site-footer');
 if (window.gsap && window.ScrollTrigger && footerWrap) {
   gsap.registerPlugin(ScrollTrigger);
   const giantText = footerWrap.querySelector('.footer-giant-bg-text');
-  gsap.fromTo(giantText, { y: '10vh', scale: 0.8, opacity: 0 }, {
-    y: '0vh', scale: 1, opacity: 1, ease: 'power1.out',
-    scrollTrigger: { trigger: footerWrap, start: 'top 80%', end: 'bottom bottom', scrub: 1 }
-  });
-  gsap.fromTo(['#footer-heading', '#footer-links'], { y: 50, opacity: 0 }, {
-    y: 0, opacity: 1, stagger: 0.15, ease: 'power3.out',
-    scrollTrigger: { trigger: footerWrap, start: 'top 60%', end: 'bottom bottom', scrub: 1 }
-  });
+  if (giantText) {
+    gsap.fromTo(giantText, { y: '10vh', scale: 0.8, opacity: 0 }, {
+      y: '0vh', scale: 1, opacity: 1, ease: 'power1.out',
+      scrollTrigger: { trigger: footerWrap, start: 'top 80%', end: 'bottom bottom', scrub: 1 }
+    });
+  }
+  const headingEl = footerWrap.querySelector('#footer-heading');
+  if (headingEl) {
+    gsap.fromTo(headingEl, { y: 16, opacity: 0.25 }, {
+      y: 0, opacity: 1, ease: 'power3.out',
+      scrollTrigger: { trigger: footerWrap, start: 'top 95%', end: 'bottom bottom', scrub: 1 }
+    });
+  }
 
   document.querySelectorAll('.magnetic-pill').forEach((el) => {
     el.addEventListener('mousemove', (e) => {
@@ -5462,6 +5677,32 @@ if (window.gsap && window.ScrollTrigger && footerWrap) {
   });
 }
 
+document.querySelectorAll('[data-copy-text]').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const val = btn.getAttribute('data-copy-text');
+    if (!val || btn.disabled) return;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(val);
+      }
+      const iconCopy = btn.querySelector('[data-copy-icon]');
+      const iconCheck = btn.querySelector('[data-check-icon]');
+      btn.disabled = true;
+      btn.setAttribute('aria-label', 'Copied');
+      if (iconCopy) iconCopy.classList.add('opacity-0', 'scale-0');
+      if (iconCheck) iconCheck.classList.remove('opacity-0', 'scale-0');
+      setTimeout(() => {
+        if (iconCopy) iconCopy.classList.remove('opacity-0', 'scale-0');
+        if (iconCheck) iconCheck.classList.add('opacity-0', 'scale-0');
+        btn.disabled = false;
+        btn.setAttribute('aria-label', 'Copy to clipboard');
+      }, 1500);
+    } catch (err) {
+      console.error('Failed to copy text:', err);
+    }
+  });
+});
+
 
 // =========================================================================
 // HERO LIQUID TEXT: WebGL2 Viscous Signed Distance Field Surface
@@ -5469,7 +5710,8 @@ if (window.gsap && window.ScrollTrigger && footerWrap) {
 function initHeroLiquidText() {
   const titleEl = document.getElementById('hero-title');
   const canvas = document.getElementById('hero-liquid-title-canvas');
-  if (!titleEl || !canvas) return;
+  if (!titleEl || !canvas || canvas.dataset.liquidInit === '1') return;
+  canvas.dataset.liquidInit = '1';
 
   let gl = null;
   try {
@@ -6008,14 +6250,46 @@ void main() {
   setupGL();
 
   let lastTime = performance.now();
+  let heroLiquidVisible = true;
+  let heroLiquidDocVisible = !document.hidden;
+  let heroLiquidRafId = 0;
+
+  function syncHeroLiquidLoop() {
+    if (heroLiquidVisible && heroLiquidDocVisible) {
+      if (!heroLiquidRafId) {
+        lastTime = performance.now();
+        heroLiquidRafId = requestAnimationFrame(loop);
+      }
+    } else if (heroLiquidRafId) {
+      cancelAnimationFrame(heroLiquidRafId);
+      heroLiquidRafId = 0;
+    }
+  }
+
   function loop(now) {
+    heroLiquidRafId = 0;
+    if (!heroLiquidVisible || !heroLiquidDocVisible) return;
     const dt = Math.min(0.05, (now - lastTime) / 1000);
     lastTime = now;
     stepSim(dt);
     draw();
-    requestAnimationFrame(loop);
+    if (heroLiquidVisible && heroLiquidDocVisible) {
+      heroLiquidRafId = requestAnimationFrame(loop);
+    }
   }
-  requestAnimationFrame(loop);
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      heroLiquidVisible = entries.some((en) => en.isIntersecting);
+      syncHeroLiquidLoop();
+    }, { rootMargin: '160px 0px', threshold: 0.01 });
+    io.observe(canvas.closest('section') || canvas.parentElement || canvas);
+  }
+  document.addEventListener('visibilitychange', () => {
+    heroLiquidDocVisible = !document.hidden;
+    syncHeroLiquidLoop();
+  });
+  syncHeroLiquidLoop();
 
   let resizeTimer = null;
   window.addEventListener('resize', () => {
@@ -6642,6 +6916,9 @@ function initAboutDeckController() {
           if (v.paused) v.play().catch(() => {});
         });
       }
+      if (false && typeof window !== 'undefined' && false) {
+        window.scrollTo({ top: sec.offsetTop, behavior: 'auto' });
+      }
       if (typeof window.__engageSubpageLock === 'function') {
         window.__engageSubpageLock('about', aboutSec);
       } else {
@@ -7104,13 +7381,57 @@ function initFoundationPartnershipStage() {
   if (reducedMotion) {
     frame(7800, true);
   } else {
-    const loop = (t) => {
-      if (!document.hidden) {
-        frame(t, false);
+    let fndVisible = true;
+    let fndSlideActive = true;
+    let fndDocVisible = !document.hidden;
+    let fndRafId = 0;
+
+    const slideEl = sec.closest('.about-slide');
+    const syncFndSlide = () => {
+      if (!slideEl) {
+        fndSlideActive = true;
+        return;
       }
-      requestAnimationFrame(loop);
+      fndSlideActive = !slideEl.classList.contains('opacity-0') && !slideEl.classList.contains('pointer-events-none');
     };
-    requestAnimationFrame(loop);
+    syncFndSlide();
+
+    const shouldRunFnd = () => fndVisible && fndSlideActive && fndDocVisible;
+    const syncFndLoop = () => {
+      if (shouldRunFnd()) {
+        if (!fndRafId) fndRafId = requestAnimationFrame(loop);
+      } else if (fndRafId) {
+        cancelAnimationFrame(fndRafId);
+        fndRafId = 0;
+      }
+    };
+
+    const loop = (t) => {
+      fndRafId = 0;
+      if (!shouldRunFnd()) return;
+      frame(t, false);
+      if (shouldRunFnd()) fndRafId = requestAnimationFrame(loop);
+    };
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        fndVisible = entries.some((en) => en.isIntersecting);
+        syncFndLoop();
+      }, { rootMargin: '120px 0px', threshold: 0.01 });
+      io.observe(sec);
+    }
+    if (slideEl && typeof MutationObserver !== 'undefined') {
+      const mo = new MutationObserver(() => {
+        syncFndSlide();
+        syncFndLoop();
+      });
+      mo.observe(slideEl, { attributes: true, attributeFilter: ['class'] });
+    }
+    document.addEventListener('visibilitychange', () => {
+      fndDocVisible = !document.hidden;
+      syncFndLoop();
+    });
+    syncFndLoop();
   }
 
   window.addEventListener('mousemove', (e) => {
@@ -7503,15 +7824,15 @@ function initProductsSmokeCanvas() {
   const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let w = window.innerWidth;
   let h = window.innerHeight;
-  let dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let dpr = 0.5;
   let t = 0;
 
   function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    dpr = 0.5;
     w = canvas.parentElement ? canvas.parentElement.clientWidth || window.innerWidth : window.innerWidth;
     h = canvas.parentElement ? canvas.parentElement.clientHeight || window.innerHeight : window.innerHeight;
-    canvas.width = Math.floor(w * dpr);
-    canvas.height = Math.floor(h * dpr);
+    canvas.width = Math.max(1, Math.round(w * dpr));
+    canvas.height = Math.max(1, Math.round(h * dpr));
     canvas.style.width = w + 'px';
     canvas.style.height = h + 'px';
   }
@@ -7530,9 +7851,7 @@ function initProductsSmokeCanvas() {
   const pickColor = () => PALETTE[Math.floor(Math.random() * PALETTE.length)];
 
   class Puff {
-    constructor(initial = false) {
-      this.reset(initial);
-    }
+    constructor(initial = false) { this.reset(initial); }
     reset(initial = false) {
       this.r = rand(180, 420);
       this.x = rand(-this.r * 0.35, w + this.r * 0.35);
@@ -7543,122 +7862,133 @@ function initProductsSmokeCanvas() {
       this.maxLife = Math.floor(rand(600, 1400));
       if (initial) this.life = Math.floor(rand(0, this.maxLife));
       this.maxOpacity = rand(0.06, 0.16);
-      this.color = pickColor();
+      const [r, g, b] = pickColor();
+      this.sprite = window.__getMediqSmokeSprite(r, g, b);
     }
     update() {
       this.x += this.vx;
       this.y += this.vy;
       this.life++;
-      if (this.life >= this.maxLife || this.y < -this.r * 1.2) {
-        this.reset(false);
-      }
+      if (this.life >= this.maxLife || this.y < -this.r * 1.15) this.reset(false);
     }
-    draw(ctx) {
-      const p = this.life / this.maxLife;
-      const env = Math.sin(p * Math.PI);
-      const alpha = Math.max(0, this.maxOpacity * env);
-      if (alpha <= 0.001) return;
-      const [cr, cg, cb] = this.color;
-      const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
-      g.addColorStop(0, `rgba(${cr}, ${cg}, ${cb}, ${alpha.toFixed(4)})`);
-      g.addColorStop(0.5, `rgba(${cr}, ${cg}, ${cb}, ${(alpha * 0.48).toFixed(4)})`);
-      g.addColorStop(1, `rgba(${cr}, ${cg}, ${cb}, 0)`);
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fill();
+    draw(c) {
+      const p = Math.min(1, this.life / this.maxLife);
+      const alpha = this.maxOpacity * Math.sin(p * Math.PI);
+      if (alpha <= 0.002) return;
+      c.globalAlpha = alpha;
+      c.drawImage(this.sprite, this.x - this.r, this.y - this.r, this.r * 2, this.r * 2);
     }
   }
 
   class Tendril {
-    constructor(initial = false) {
-      this.reset(initial);
-    }
+    constructor(initial = false) { this.reset(initial); }
     reset(initial = false) {
-      this.nodeCount = Math.floor(rand(18, 33));
-      this.baseX = rand(w * 0.04, w * 0.96);
+      this.nodeCount = Math.floor(rand(16, 26));
+      this.baseX = rand(w * 0.05, w * 0.95);
       this.spacing = rand(18, 28);
-      const chainHeight = this.nodeCount * this.spacing;
-      this.baseY = initial ? rand(h * 0.15, h + chainHeight * 0.6) : h + rand(40, 220);
-      this.vy = -rand(0.32, 0.72);
+      const chainH = this.nodeCount * this.spacing;
+      this.baseY = initial ? rand(h * 0.15, h + chainH * 0.8) : rand(h * 0.45, h + chainH * 0.9);
       this.vx = rand(-0.08, 0.08);
-      this.sway = rand(16, 42);
-      this.swayFreq = rand(0.009, 0.022);
+      this.vy = -rand(0.32, 0.70);
+      this.swayFreq = rand(0.015, 0.032);
       this.swayOffset = rand(0, Math.PI * 2);
+      this.sway = rand(22, 48);
       this.life = 0;
       this.maxLife = Math.floor(rand(320, 700));
       if (initial) this.life = Math.floor(rand(0, this.maxLife));
       this.maxOpacity = rand(0.07, 0.22);
-      this.color = pickColor();
-      this.baseRadius = rand(52, 90);
-      this.tipRadius = rand(28, 44);
+      this.baseRadius = rand(56, 88);
+      this.tipRadius = rand(26, 42);
+      const [r, g, b] = pickColor();
+      this.sprite = window.__getMediqSmokeSprite(r, g, b);
     }
     update() {
       this.baseX += this.vx;
       this.baseY += this.vy;
       this.life++;
-      const topY = this.baseY - this.nodeCount * this.spacing;
-      if (this.life >= this.maxLife || topY < -160) {
-        this.reset(false);
-      }
+      if (this.life >= this.maxLife || this.baseY < -this.nodeCount * this.spacing * 1.1) this.reset(false);
     }
-    draw(ctx, timeCounter) {
-      const p = this.life / this.maxLife;
-      let lifeEnv = 1;
-      if (p < 0.25) lifeEnv = p / 0.25;
-      else if (p > 0.72) lifeEnv = (1 - p) / 0.28;
-      lifeEnv = Math.max(0, Math.min(1, lifeEnv));
-      if (lifeEnv <= 0.001) return;
-
-      const [cr, cg, cb] = this.color;
+    draw(c, timeCounter) {
+      const p = Math.min(1, this.life / this.maxLife);
+      let lifeEnv = p < 0.22 ? p / 0.22 : (p > 0.72 ? Math.max(0, (1 - p) / 0.28) : 1);
+      if (lifeEnv <= 0.002) return;
       for (let i = 0; i < this.nodeCount; i++) {
         const frac = i / (this.nodeCount - 1);
-        const nodeEnv = Math.sin(frac * Math.PI);
-        const alpha = this.maxOpacity * lifeEnv * nodeEnv * 0.55;
-        if (alpha <= 0.001) continue;
-
+        const alpha = this.maxOpacity * lifeEnv * Math.sin(frac * Math.PI) * 0.55;
+        if (alpha <= 0.002) continue;
         const r = this.baseRadius * (1 - frac) + this.tipRadius * frac;
         const dx = Math.sin(timeCounter * this.swayFreq + this.swayOffset + i * 0.35) * this.sway * (0.4 + frac * 1.4);
         const nx = this.baseX + dx;
         const ny = this.baseY - i * this.spacing;
-
-        const g = ctx.createRadialGradient(nx, ny, 0, nx, ny, r);
-        g.addColorStop(0, `rgba(${cr}, ${cg}, ${cb}, ${alpha.toFixed(4)})`);
-        g.addColorStop(0.55, `rgba(${cr}, ${cg}, ${cb}, ${(alpha * 0.42).toFixed(4)})`);
-        g.addColorStop(1, `rgba(${cr}, ${cg}, ${cb}, 0)`);
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(nx, ny, r, 0, Math.PI * 2);
-        ctx.fill();
+        c.globalAlpha = alpha;
+        c.drawImage(this.sprite, nx - r, ny - r, r * 2, r * 2);
       }
     }
   }
 
-  const puffs = Array.from({ length: 14 }, () => new Puff(true));
-  const tendrils = Array.from({ length: 18 }, () => new Tendril(true));
+  const puffs = Array.from({ length: 12 }, () => new Puff(true));
+  const tendrils = Array.from({ length: 14 }, () => new Tendril(true));
+  const prodSecEl = document.getElementById('products');
+  let isVisible = false;
+  let docVisible = !document.hidden;
+  let isCoveredBySpiral = !!(prodSecEl && prodSecEl.classList.contains('at-spiral-active'));
+  let rafId = 0;
+
+  const shouldRenderSmoke = () => isVisible && docVisible && !isCoveredBySpiral && !prefersReducedMotion;
+  const syncSmokeLoop = () => {
+    if (shouldRenderSmoke()) {
+      if (!rafId) rafId = requestAnimationFrame(renderFrame);
+    } else if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+  };
 
   function renderFrame() {
+    rafId = 0;
+    if (!shouldRenderSmoke()) return;
     t += 1;
-    ctx.save();
-    ctx.scale(dpr, dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
-
     for (let i = 0; i < puffs.length; i++) {
-      if (!prefersReducedMotion) puffs[i].update();
+      puffs[i].update();
       puffs[i].draw(ctx);
     }
     for (let i = 0; i < tendrils.length; i++) {
-      if (!prefersReducedMotion) tendrils[i].update();
+      tendrils[i].update();
       tendrils[i].draw(ctx, t);
     }
-
-    ctx.restore();
-    if (!prefersReducedMotion) {
-      requestAnimationFrame(renderFrame);
+    ctx.globalAlpha = 1;
+    if (shouldRenderSmoke()) {
+      rafId = requestAnimationFrame(renderFrame);
     }
   }
 
-  renderFrame();
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { isVisible = en.isIntersecting; });
+      syncSmokeLoop();
+    }, { rootMargin: '140px 0px', threshold: 0.01 });
+    io.observe(canvas.parentElement || canvas);
+  } else {
+    isVisible = true;
+    syncSmokeLoop();
+  }
+  document.addEventListener('visibilitychange', () => {
+    docVisible = !document.hidden;
+    syncSmokeLoop();
+  });
+  if (prodSecEl) {
+    const syncSpiral = () => {
+      isCoveredBySpiral = prodSecEl.classList.contains('at-spiral-active');
+      syncSmokeLoop();
+    };
+    window.addEventListener('mediq:products-stage-change', syncSpiral);
+    if (typeof MutationObserver !== 'undefined') {
+      const mo = new MutationObserver(syncSpiral);
+      mo.observe(prodSecEl, { attributes: true, attributeFilter: ['class'] });
+    }
+  }
 }
 
 function initProductsDeckController() {
@@ -9773,23 +10103,42 @@ if (document.readyState === 'loading') {
       window.__lastExplicitSubpageOpenTime = performance.now();
     }
     state[deckKey] = idx;
+    const displayIdx = (deckKey === 'services' && idx >= 1 && idx <= 6) ? 7 : idx;
+    if (deckKey === 'services' && typeof window.__setServicesBookCarouselActive === 'function') {
+      const wantsBookshelf = idx >= 1 && idx <= 7;
+      const bookFocusIdx = (idx >= 1 && idx <= 6) ? (idx - 1) : 0;
+      window.__setServicesBookCarouselActive(wantsBookshelf, bookFocusIdx);
+    }
 
     slides.forEach((slide, i) => {
       slide.classList.remove(
         'opacity-100', 'pointer-events-auto', 'translate-x-0', 'z-10',
         'opacity-0', 'pointer-events-none', '-translate-x-12', 'translate-x-12', 'z-0'
       );
-      if (i === idx) {
+      if (i === displayIdx) {
         slide.classList.add('opacity-100', 'pointer-events-auto', 'translate-x-0', 'z-10');
         slide.scrollTop = 0;
+
+        if (deckKey === 'brands' && displayIdx === 0 && typeof window.closeAllPrincipalPel === 'function') {
+          window.closeAllPrincipalPel();
+        }
+        if (deckKey === 'brands' && (displayIdx === 1 || displayIdx === 2)) {
+          if (prevIdx === 0 && typeof window.closeAllPrincipalPel === 'function') {
+            window.closeAllPrincipalPel();
+          }
+          if (typeof window.refreshPrincipalPel === 'function') {
+            requestAnimationFrame(() => window.refreshPrincipalPel());
+            setTimeout(() => window.refreshPrincipalPel(), 240);
+          }
+        }
         if (typeof window.__triggerLotticiStagger === 'function') {
           window.__triggerLotticiStagger(slide);
         }
-        if (isSubpage && slide.firstElementChild && typeof window.__playSubpage3DEntrance === 'function') {
+        if (isSubpage && slide.id !== 'srv-book-carousel-slide' && slide.firstElementChild && typeof window.__playSubpage3DEntrance === 'function') {
           const dir = (prevIdx > 0 && idx < prevIdx) ? -1 : 1;
           window.__playSubpage3DEntrance(slide.firstElementChild, dir);
         }
-      } else if (i < idx) {
+      } else if (i < displayIdx) {
         slide.classList.add('opacity-0', 'pointer-events-none', '-translate-x-12', 'z-0');
       } else {
         slide.classList.add('opacity-0', 'pointer-events-none', 'translate-x-12', 'z-0');
@@ -9855,8 +10204,8 @@ if (document.readyState === 'loading') {
     sec.querySelectorAll('.br-cat-chip[data-br-chip]').forEach((chip) => {
       const isActive = chip.getAttribute('data-br-chip') === cat;
       chip.className = isActive
-        ? 'br-cat-chip min-h-[44px] px-5 rounded-full text-[13.5px] font-semibold tracking-wide transition-all cursor-pointer bg-[#3aa0db] text-[#0a1d40] border border-[#72c5f8] shadow-[0_0_20px_rgba(58,160,219,0.35)]'
-        : 'br-cat-chip min-h-[44px] px-5 rounded-full text-[13.5px] font-medium tracking-wide transition-all cursor-pointer bg-[#0a1d40]/75 text-[#dce7f5] border border-[#72c5f8]/25 hover:border-[#72c5f8]/60 hover:text-white';
+        ? 'br-cat-chip min-h-[38px] px-4 rounded-full text-xs font-semibold transition-all cursor-pointer bg-[#3aa0db] text-[#0a1d40] border border-[#72c5f8] shadow-[0_0_16px_rgba(58,160,219,0.35)]'
+        : 'br-cat-chip min-h-[38px] px-4 rounded-full text-xs font-medium transition-all cursor-pointer bg-[#0a1d40]/75 text-[#dce7f5] border border-[#72c5f8]/25 hover:border-[#72c5f8]/60 hover:text-white';
     });
     sec.querySelectorAll('.br-cat-col[data-br-col]').forEach((col) => {
       const colCat = col.getAttribute('data-br-col');
@@ -9865,6 +10214,458 @@ if (document.readyState === 'loading') {
       col.style.filter = match ? 'none' : 'grayscale(0.6)';
     });
   };
+
+  // feature-24 Interactive Console Pill Selector & Inquiry Navigation (Slide 1 & Slide 2 of #brands)
+  window.selectBrandsF24Topic = function (inputId, topicText) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    input.value = topicText;
+    input.focus();
+  };
+
+  window.submitBrandsF24Inquiry = function (inputId, inquiryType) {
+    const input = document.getElementById(inputId);
+    const contactSec = document.getElementById('contact');
+    const inquirySelect = document.querySelector('#contact select[name="inquiry"], #contact #contact-inquiry');
+    if (inquirySelect && inquiryType) {
+      Array.from(inquirySelect.options).forEach((opt) => {
+        if (opt.value === inquiryType || opt.text.includes(inquiryType)) {
+          inquirySelect.value = opt.value;
+        }
+      });
+    }
+    const msgField = document.querySelector('#contact textarea[name="message"], #contact textarea');
+    if (msgField && input && input.value.trim()) {
+      msgField.value = input.value.trim();
+    }
+    if (typeof window.goToDeckSlide === 'function') {
+      window.goToDeckSlide('brands', 0, false, { silentReset: true });
+    }
+    if (contactSec) {
+      if (typeof window.grailSnapTo === 'function') {
+        window.grailSnapTo(contactSec);
+      } else {
+        contactSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  };
+
+  // feature-24 Scroll-Triggered Directional Reveal for #brands Slide 2 + Pigment Experience Ledger for Slide 1
+  (function initBrandsFeature24Reveals() {
+    const scroller = document.getElementById('brands-profiles-scroller');
+    if (scroller) {
+      const items = scroller.querySelectorAll('[data-br-f24]');
+      if (items.length && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-in');
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { root: scroller, threshold: 0.05 }
+        );
+        items.forEach((el) => io.observe(el));
+      } else {
+        items.forEach((el) => el.classList.add('is-in'));
+      }
+    }
+  })();
+
+  // Pigment Experience Ledger — Shared 2D Canvas Watercolour Wash & Interactive Row Engine (#brands Slide 1 & Slide 2)
+  (function initBrandsPigmentLedgers() {
+    const roots = Array.from(document.querySelectorAll('#brands .pel-root'));
+    if (!roots.length) return;
+
+    const BLEED = 64;
+    const BLEED_X = 40;
+    const MAX_BUFFER_W = 540;
+    const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
+    const smoothstep = (a, b, x) => {
+      const t = clamp((x - a) / (b - a), 0, 1);
+      return t * t * (3 - 2 * t);
+    };
+    const hexToRgb = (hex) => {
+      let h = (hex || '#3aa0db').replace('#', '').trim();
+      if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+      const v = parseInt(h.slice(0, 6), 16);
+      return Number.isNaN(v) ? [58, 160, 219] : [(v >> 16) & 255, (v >> 8) & 255, v & 255];
+    };
+    const rampAt = (edge, body, core, t) => {
+      const u = clamp(t, 0, 1);
+      const a = u < 0.5 ? edge : body;
+      const b = u < 0.5 ? body : core;
+      const k = u < 0.5 ? u * 2 : (u - 0.5) * 2;
+      return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
+    };
+    const hash2 = (x, y, seed) => {
+      let h = (Math.imul(x | 0, 374761393) + Math.imul(y | 0, 668265263) + Math.imul(seed | 0, 2246822519)) | 0;
+      h = Math.imul(h ^ (h >>> 13), 1274126177);
+      h ^= h >>> 16;
+      return (h >>> 0) / 4294967296;
+    };
+    const valueNoise = (x, y, seed) => {
+      const ix = Math.floor(x), iy = Math.floor(y);
+      const fx = x - ix, fy = y - iy;
+      const sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy);
+      const a = hash2(ix, iy, seed), b = hash2(ix + 1, iy, seed);
+      const c = hash2(ix, iy + 1, seed), d = hash2(ix + 1, iy + 1, seed);
+      return a + (b - a) * sx + (c - a) * sy + (a - b - c + d) * sx * sy;
+    };
+    const makeBlobs = (seed) => {
+      const r = (i) => hash2(i, 7, seed);
+      const out = [];
+      for (let i = 0; i < 7; i++) {
+        out.push({
+          ox: -1 + (2 * i) / 6 + (r(i) - 0.5) * 0.22,
+          oy: (r(i + 20) - 0.5) * 0.85,
+          r: 0.74 + r(i + 40) * 0.34 - Math.abs(i - 3) * 0.05,
+          w: 0.82 + r(i + 60) * 0.42 + (i === 3 ? 0.25 : 0),
+          ph: r(i + 80) * 6.28,
+          sp: 0.2 + r(i + 100) * 0.32
+        });
+      }
+      return out;
+    };
+
+    const instances = [];
+
+    function setupLedger(root) {
+      const rows = Array.from(root.querySelectorAll('.pel-row[data-pel-row]'));
+      if (!rows.length) return null;
+
+      let openIndex = null;
+      let hovered = null;
+      let focused = null;
+      const strength = 0.82;
+      const residue = 0.24;
+      const reduced = typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let raf = 0, last = 0, frame = 0, clock = 0;
+
+      const smears = rows.map((li, i) => {
+        const seed = i * 7919 + 101;
+        const rawColors = (li.getAttribute('data-colors') || '#3aa0db,#0284c7,#72c5f8').split(',').map(hexToRgb);
+        const ramp = [rawColors[2].map((v, j) => v * 0.7 + rawColors[1][j] * 0.3), rawColors[1], rawColors[0]];
+        return {
+          li,
+          canvas: li.querySelector('.pel-ink'),
+          btn: li.querySelector('.pel-trigger'),
+          panel: li.querySelector('.pel-panel'),
+          nameEl: li.querySelector('.pel-name'),
+          ctx: null, img: null,
+          noise: new Float32Array(0), hue: new Float32Array(0), low: new Float32Array(0), grain: new Float32Array(0),
+          bw: 0, bh: 0, cssW: 0, cssH: 0, headH: 0,
+          homeX: 0, homeY: 0, bleedX: BLEED_X, nameW: 0, reach: i === 0 ? 0.62 : 0.54, dry: i > 2 ? 0.18 : 0.04,
+          dim: 1, dimTarget: 1, nameTop: 0, nameH: 0, lastActive: performance.now(),
+          ramp, level: 0.2, target: 0.75,
+          cx: 0, cy: 0, tx: 0, ty: 0, pointer: false,
+          blobs: makeBlobs(seed), seed, painted: false
+        };
+      });
+
+      const homeOf = (s) => [s.homeX ? s.bleedX + s.homeX : s.cssW * 0.65, BLEED + (s.homeY || s.headH * 0.5)];
+
+      const fitNames = () => {
+        smears.forEach((s) => {
+          const el = s.nameEl;
+          if (!el || !el.parentElement) return;
+          el.style.fontSize = '';
+          const base = parseFloat(getComputedStyle(el).fontSize) || 56;
+          const avail = el.parentElement.clientWidth;
+          if (avail > 0 && el.scrollWidth > avail) {
+            el.style.fontSize = Math.max(18, Math.floor(((base * avail) / el.scrollWidth) * 100) / 100) + 'px';
+          }
+        });
+      };
+
+      const sizeRow = (s) => {
+        const li = s.li;
+        if (!li || !s.canvas || !li.clientWidth) return;
+        const w = li.clientWidth, h = li.offsetHeight;
+        const headH = s.btn ? s.btn.offsetHeight : h;
+        s.bleedX = clamp(Math.floor(li.getBoundingClientRect().left - root.getBoundingClientRect().left) - 4, 0, BLEED_X);
+        s.cssW = w + s.bleedX * 2;
+        s.cssH = h + BLEED * 2;
+        s.headH = headH || h;
+        const scale = clamp(s.cssW / MAX_BUFFER_W, 1.8, 3.2);
+        const bw = Math.max(8, Math.round(s.cssW / scale));
+        const bh = Math.max(8, Math.round((s.cssH / s.cssW) * bw));
+        s.canvas.style.left = -s.bleedX + 'px';
+        s.canvas.style.width = 'calc(100% + ' + s.bleedX * 2 + 'px)';
+
+        if (s.nameEl) {
+          const lr = li.getBoundingClientRect();
+          const nr = s.nameEl.getBoundingClientRect();
+          if (nr.width > 0) {
+            s.homeX = nr.left - lr.left + nr.width / 2;
+            s.nameTop = nr.top - lr.top;
+            s.nameH = nr.height;
+            s.homeY = s.nameTop + nr.height * 0.5;
+            s.nameW = nr.width;
+          }
+        }
+
+        if (bw !== s.bw || bh !== s.bh || !s.img) {
+          s.bw = bw; s.bh = bh;
+          s.canvas.width = bw; s.canvas.height = bh;
+          s.ctx = s.canvas.getContext('2d');
+          s.img = s.ctx ? s.ctx.createImageData(bw, bh) : null;
+          const n = bw * bh;
+          s.noise = new Float32Array(n); s.hue = new Float32Array(n); s.low = new Float32Array(n); s.grain = new Float32Array(n);
+          const u = scale / 3;
+          for (let y = 0; y < bh; y++) {
+            for (let x = 0; x < bw; x++) {
+              const idx = y * bw + x, X = x * u, Y = y * u;
+              s.noise[idx] = 0.55 * valueNoise(X / 11, Y / 8, s.seed) + 0.3 * valueNoise(X / 4, Y / 4, s.seed + 11) + 0.15 * valueNoise(X / 1.6, Y / 1.6, s.seed + 17);
+              s.hue[idx] = valueNoise((0.8 * X + 0.6 * Y) / 20, (0.8 * Y - 0.6 * X) / 20, s.seed + 31);
+              s.low[idx] = valueNoise(X / 40, Y / 40, s.seed + 41);
+              s.grain[idx] = hash2(x, y, s.seed + 23);
+            }
+          }
+          s.painted = false;
+        }
+
+        if (!s.pointer) {
+          const [hx, hy] = homeOf(s);
+          s.tx = hx; s.ty = hy;
+          if (!s.cx) { s.cx = hx; s.cy = hy; }
+        }
+      };
+
+      const paintSmear = (s, time) => {
+        if (!s.ctx || !s.img) return;
+        const data = s.img.data;
+        data.fill(0);
+        const level = s.level;
+        if (level > 0.002) {
+          const bw = s.bw, bh = s.bh, sc = s.cssW / bw;
+          const grow = 1 - Math.pow(1 - clamp(level, 0, 1), 3);
+          const narrow = s.cssW < 560;
+          const span = clamp((s.nameW || s.cssW * 0.3) * s.reach, 60, 320) * (0.5 + 0.5 * grow);
+          const R = clamp(s.headH * (narrow ? 0.95 : 1.12), 68, 195) * (0.55 + 0.45 * grow);
+          const effStrength = Math.min(1, strength * 1.1) * s.dim;
+          const fade = smoothstep(0, 0.35, level) * effStrength * (1 - s.dry * 0.08);
+          const tooth = 0.76 + s.dry * 0.6;
+          const [edge, body, core] = s.ramp;
+          const faint = s.dim < 0.6;
+          const n = s.blobs.length;
+          const bx = new Float32Array(n), by = new Float32Array(n), br = new Float32Array(n);
+          let x0 = bw, x1 = 0, y0 = bh, y1 = 0;
+          const SQ = 1.65;
+          for (let k = 0; k < n; k++) {
+            const b = s.blobs[k];
+            const px = s.cx + b.ox * span + Math.sin(time * b.sp + b.ph) * R * 0.12;
+            const py = s.cy + b.oy * R * 0.4 + Math.cos(time * b.sp * 0.8 + b.ph) * R * 0.06;
+            const rr = (b.r * R) / sc;
+            bx[k] = px / sc; by[k] = py / sc; br[k] = rr * rr;
+            x0 = Math.min(x0, bx[k] - rr); x1 = Math.max(x1, bx[k] + rr);
+            y0 = Math.min(y0, by[k] - rr / SQ); y1 = Math.max(y1, by[k] + rr / SQ);
+          }
+          const xs = Math.max(0, Math.floor(x0)), xe = Math.min(bw - 1, Math.ceil(x1));
+          const ys = Math.max(0, Math.floor(y0)), ye = Math.min(bh - 1, Math.ceil(y1));
+          const bandTop = s.nameH ? s.nameTop - s.nameH * 0.3 : 0;
+          const bandBottom = s.nameH ? s.nameTop + s.nameH * 1.02 : s.headH - 6;
+          const top = (BLEED + Math.max(0, bandTop)) / sc;
+          const bottom = (BLEED + bandBottom) / sc;
+          const feather = Math.min(36, (bandBottom - bandTop) * 0.4) / sc;
+          const side = Math.max(s.bleedX - 4, 28) / sc;
+
+          for (let y = ys; y <= ye; y++) {
+            const env = smoothstep(top, top + feather, y) * (1 - smoothstep(bottom - feather, bottom, y));
+            if (env <= 0) continue;
+            for (let x = xs; x <= xe; x++) {
+              let f = 0;
+              for (let k = 0; k < n; k++) {
+                const dx = x - bx[k], dy = (y - by[k]) * SQ;
+                const d2 = dx * dx + dy * dy;
+                if (d2 < br[k]) {
+                  const q = 1 - d2 / br[k];
+                  f += q * q * s.blobs[k].w;
+                }
+              }
+              f *= env * smoothstep(0, side, x) * (1 - smoothstep(bw - 1 - side, bw - 1, x));
+              if (f < 0.04) continue;
+              const i = y * bw + x;
+              const fe = f * (1 - tooth / 2 + tooth * s.noise[i]) + (s.low[i] - 0.5) * 0.24;
+              const wash = smoothstep(0.2, 0.34, fe);
+              const rim = smoothstep(0.2, 0.3, fe) * (1 - smoothstep(0.3, 0.5, fe));
+              const depth = clamp(smoothstep(0.3, 1.55, fe) + (s.hue[i] - 0.5) * 0.6 + rim * (0.55 + s.dry * 0.4), 0, 1);
+              const c = rampAt(edge, body, core, faint ? 0.7 + depth * 0.3 : depth);
+              const g = s.grain[i];
+              const shade = 1 - rim * (0.07 + s.dry * 0.2) + (g - 0.5) * 0.05;
+              const a = (wash * (0.86 + 0.14 * depth) + rim * 0.1) * (0.9 + 0.1 * g * (1 + s.dry)) * fade;
+              const j = i * 4;
+              data[j] = c[0] * shade; data[j + 1] = c[1] * shade; data[j + 2] = c[2] * shade;
+              data[j + 3] = a > 1 ? 255 : a * 255;
+            }
+          }
+        }
+        s.ctx.putImageData(s.img, 0, 0);
+        s.painted = level > 0.002;
+      };
+
+      const kick = () => {
+        if (raf) return;
+        const tick = (now) => {
+          raf = 0;
+          const dt = last ? Math.min(0.05, (now - last) / 1000) : 0.016;
+          last = now; frame++;
+          let alive = false, moving = false, breathing = false;
+          for (const s of smears) {
+            if (!s.ctx) continue;
+            const prevLevel = s.level, prevX = s.cx, prevY = s.cy;
+            if (reduced) {
+              if (s.dim !== s.dimTarget) s.painted = false;
+              s.dim = s.dimTarget; s.level = s.target; s.cx = s.tx; s.cy = s.ty;
+            } else {
+              const tau = s.target > s.level ? 0.28 : 0.18;
+              s.level += (s.target - s.level) * (1 - Math.exp(-dt / tau));
+              if (Math.abs(s.target - s.level) < 0.002) s.level = s.target;
+              const prevDim = s.dim;
+              s.dim += (s.dimTarget - s.dim) * (1 - Math.exp(-dt / 0.18));
+              if (Math.abs(s.dimTarget - s.dim) < 0.002) s.dim = s.dimTarget;
+              if (s.dim !== prevDim) s.painted = false;
+              const k = 1 - Math.exp(-dt / 0.24);
+              s.cx += (s.tx - s.cx) * k; s.cy += (s.ty - s.cy) * k;
+            }
+            const changed = Math.abs(s.level - prevLevel) > 1e-4 || Math.abs(s.cx - prevX) > 0.05 || Math.abs(s.cy - prevY) > 0.05;
+            if (changed) moving = true;
+            const active = s.level > 0.002 || s.target > 0;
+            const breathes = active && !reduced && (now - s.lastActive < 3000);
+            if (breathes) breathing = true;
+            if (active) alive = true;
+            if (active || s.painted) {
+              if (changed || !s.painted || (breathes && frame % 2 === 0) || !active) paintSmear(s, clock);
+            }
+          }
+          if (breathing) clock += dt;
+          if (alive && (moving || breathing)) raf = requestAnimationFrame(tick);
+          else last = 0;
+        };
+        raf = requestAnimationFrame(tick);
+      };
+
+      const syncTargets = () => {
+        smears.forEach((s, i) => {
+          const isOpen = i === openIndex;
+          const pointed = i === hovered || i === focused;
+          const elsewhere = (hovered !== null && hovered !== i) || (focused !== null && focused !== i);
+          const lit = isOpen || pointed;
+          s.li.setAttribute('data-open', isOpen ? 'true' : 'false');
+          s.li.setAttribute('data-lit', lit ? 'true' : 'false');
+          if (s.btn) s.btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          if (s.panel) s.panel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+
+          const rest = Math.min(0.5, residue * (0.55 + s.dry * 0.75));
+          const next = pointed || isOpen ? 1 : (residue > 0 ? 0.75 : 0);
+          const dim = pointed ? 1 : isOpen ? (elsewhere ? 0.25 : 1) : rest;
+          if (next !== s.target || dim !== s.dimTarget) s.lastActive = performance.now();
+          s.target = next;
+          s.dimTarget = dim;
+          if (!s.pointer) {
+            const [hx, hy] = homeOf(s);
+            s.tx = hx; s.ty = hy;
+          }
+        });
+        kick();
+      };
+
+      smears.forEach((s, i) => {
+        const li = s.li;
+        if (s.btn) {
+          s.btn.addEventListener('click', () => {
+            s.pointer = false;
+            const [hx, hy] = homeOf(s);
+            s.tx = hx; s.ty = hy;
+            openIndex = openIndex === i ? null : i;
+            syncTargets();
+            setTimeout(() => smears.forEach(sizeRow), 180);
+          });
+          s.btn.addEventListener('focus', () => {
+            if (s.btn.matches(':focus-visible')) {
+              s.lastActive = performance.now();
+              focused = i;
+              syncTargets();
+            }
+          });
+          s.btn.addEventListener('blur', () => {
+            if (focused === i) { focused = null; syncTargets(); }
+          });
+        }
+        const onMove = (e) => {
+          if (e.pointerType === 'touch') return;
+          const r = li.getBoundingClientRect();
+          const hx = homeOf(s)[0];
+          const w = s.nameW || s.cssW * 0.3;
+          s.tx = clamp(hx + (e.clientX - r.left + s.bleedX - hx) * 0.35, hx - w * 0.18, hx + w * 0.12);
+          s.lastActive = performance.now();
+          const y0 = s.nameH ? s.nameTop + s.nameH * 0.3 : s.headH * 0.35;
+          const y1 = s.nameH ? s.nameTop + s.nameH * 0.7 : s.headH * 0.7;
+          s.ty = BLEED + clamp(e.clientY - r.top, y0, y1);
+          if (s.level < 0.05) { s.cx = s.tx; s.cy = s.ty; }
+          s.pointer = true;
+          kick();
+        };
+        li.addEventListener('pointerenter', (e) => {
+          if (e.pointerType !== 'touch') hovered = i;
+          onMove(e);
+          syncTargets();
+        });
+        li.addEventListener('pointermove', onMove);
+        li.addEventListener('pointerleave', () => {
+          s.pointer = false;
+          const [hx, hy] = homeOf(s);
+          s.tx = hx; s.ty = hy;
+          if (hovered === i) hovered = null;
+          syncTargets();
+        });
+      });
+
+      const refresh = () => {
+        fitNames();
+        smears.forEach((s) => { sizeRow(s); s.painted = false; });
+        syncTargets();
+      };
+
+      if (typeof ResizeObserver !== 'undefined') {
+        const ro = new ResizeObserver(refresh);
+        ro.observe(root);
+        rows.forEach((li) => ro.observe(li));
+      }
+      refresh();
+      return {
+        id: root.id,
+        refresh,
+        closeAll: () => {
+          if (openIndex === null) return;
+          openIndex = null;
+          syncTargets();
+          setTimeout(() => smears.forEach(sizeRow), 180);
+        },
+        openRow: (i) => { openIndex = i; syncTargets(); setTimeout(() => smears.forEach(sizeRow), 360); }
+      };
+    }
+
+    roots.forEach((root) => {
+      const inst = setupLedger(root);
+      if (inst) instances.push(inst);
+    });
+
+    window.refreshPrincipalPel = () => {
+      instances.forEach((inst) => inst.refresh());
+    };
+    window.closeAllPrincipalPel = () => {
+      instances.forEach((inst) => inst.closeAll());
+    };
+    window.openPrincipalPelRow = (i) => {
+      const p1 = instances.find((inst) => inst.id === 'principal-pigment-ledger');
+      if (p1) p1.openRow(i);
+    };
+
+    if (document.fonts) document.fonts.ready.then(window.refreshPrincipalPel).catch(() => {});
+  })();
 
   // Bind all navbar and dropdown items with [data-deck-target="deck:index"]
   document.querySelectorAll('[data-deck-target]').forEach((link) => {
@@ -9893,6 +10694,10 @@ if (document.readyState === 'loading') {
     if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT')) return;
     for (const [deckKey, secId] of Object.entries(DECK_MAP)) {
       if (!SUBPAGE_DECKS.has(deckKey)) continue;
+      if (deckKey === 'services') {
+        const bookSlideEl = document.getElementById('srv-book-carousel-slide');
+        if (bookSlideEl && bookSlideEl.classList.contains('opacity-100')) continue;
+      }
       const cur = state[deckKey] || 0;
       if (cur < 1) continue;
       const sec = document.getElementById(secId);
@@ -9909,7 +10714,7 @@ if (document.readyState === 'loading') {
     }
   });
 
-  // Initialize full-DPR Two-Layer Rising Smoke (Puff + Tendril) on all deck-smoke-canvas elements (including #brands-smoke-canvas)
+  // Initialize lightweight GPU-blitted Rising Smoke on visible .deck-smoke-canvas elements
   const canvases = document.querySelectorAll('.deck-smoke-canvas');
   canvases.forEach((canvas) => {
     if (canvas._smokeActive) return;
@@ -9930,35 +10735,29 @@ if (document.readyState === 'loading') {
       ? window.matchMedia('(prefers-reduced-motion: reduce)')
       : { matches: false };
 
-    let w = 1, h = 1, dpr = 1;
+    let w = 1, h = 1, dpr = 0.5;
     let t = 0;
 
-    function rand(min, max) {
-      return min + Math.random() * (max - min);
-    }
-
-    function pickColor() {
-      return PALETTE[Math.floor(Math.random() * PALETTE.length)];
-    }
+    function rand(min, max) { return min + Math.random() * (max - min); }
+    function pickColor() { return PALETTE[Math.floor(Math.random() * PALETTE.length)]; }
 
     function resize() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = 0.5;
       const rect = canvas.getBoundingClientRect();
       w = Math.max(1, Math.floor(rect.width || window.innerWidth));
       h = Math.max(1, Math.floor(rect.height || window.innerHeight));
-      if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
-        canvas.width = w * dpr;
-        canvas.height = h * dpr;
+      const tw = Math.max(1, Math.round(w * dpr));
+      const th = Math.max(1, Math.round(h * dpr));
+      if (canvas.width !== tw || canvas.height !== th) {
+        canvas.width = tw;
+        canvas.height = th;
       }
     }
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    // Background Layer: 16 large radial gradient smoke puffs (radius 180–420px)
     class DeckPuff {
-      constructor(prewarm) {
-        this.reset(prewarm);
-      }
+      constructor(prewarm) { this.reset(prewarm); }
       reset(prewarm) {
         this.radius = rand(180, 420);
         this.x = rand(-this.radius * 0.25, w + this.radius * 0.25);
@@ -9967,49 +10766,33 @@ if (document.readyState === 'loading') {
         this.vy = -rand(0.16, 0.38);
         this.life = rand(600, 1400);
         this.age = prewarm ? Math.floor(rand(0, this.life)) : 0;
-        this.maxOpacity = isBrands ? rand(0.08, 0.19) : rand(0.06, 0.16);
-        this.color = pickColor();
+        this.maxOpacity = isBrands ? rand(0.08, 0.18) : rand(0.06, 0.15);
+        const [r, g, b] = pickColor();
+        this.sprite = window.__getMediqSmokeSprite(r, g, b);
       }
       update() {
         this.x += this.vx;
         this.y += this.vy;
         this.age++;
-        if (this.age >= this.life || this.y < -this.radius * 1.2) {
-          this.reset(false);
-        }
+        if (this.age >= this.life || this.y < -this.radius * 1.2) this.reset(false);
       }
       draw(c) {
         const p = Math.min(1, Math.max(0, this.age / this.life));
-        const fade = Math.sin(p * Math.PI);
-        const alpha = this.maxOpacity * fade;
-        if (alpha <= 0.001) return;
-
-        const [r, g, b] = this.color;
-        const grad = c.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
-        grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(4)})`);
-        grad.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${(alpha * 0.45).toFixed(4)})`);
-        grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
-
-        c.fillStyle = grad;
-        c.beginPath();
-        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        c.fill();
+        const alpha = this.maxOpacity * Math.sin(p * Math.PI);
+        if (alpha <= 0.002) return;
+        c.globalAlpha = alpha;
+        c.drawImage(this.sprite, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
       }
     }
 
-    // Foreground Layer: 20 upward-rising sine-swaying smoke tendrils made of 18–32 linked nodes
     class DeckTendril {
-      constructor(prewarm) {
-        this.reset(prewarm);
-      }
+      constructor(prewarm) { this.reset(prewarm); }
       reset(prewarm) {
-        this.nodeCount = Math.floor(rand(18, 33));
-        this.spacing = rand(16, 26);
+        this.nodeCount = Math.floor(rand(15, 24));
+        this.spacing = rand(18, 28);
         this.baseX = rand(w * 0.04, w * 0.96);
         const chainHeight = this.nodeCount * this.spacing;
-        this.baseY = prewarm
-          ? rand(h * 0.20, h + chainHeight * 0.75)
-          : rand(h * 0.50, h + chainHeight * 0.85);
+        this.baseY = prewarm ? rand(h * 0.20, h + chainHeight * 0.75) : rand(h * 0.50, h + chainHeight * 0.85);
         this.vy = -rand(0.32, 0.68);
         this.vx = rand(-0.09, 0.09);
         this.swayFreq = rand(0.014, 0.032);
@@ -10017,94 +10800,87 @@ if (document.readyState === 'loading') {
         this.sway = rand(20, 48);
         this.life = rand(320, 700);
         this.age = prewarm ? Math.floor(rand(0, this.life)) : 0;
-        this.maxOpacity = isBrands ? rand(0.09, 0.25) : rand(0.07, 0.22);
-        this.color = pickColor();
-
+        this.maxOpacity = isBrands ? rand(0.08, 0.22) : rand(0.07, 0.20);
+        const [r, g, b] = pickColor();
+        this.sprite = window.__getMediqSmokeSprite(r, g, b);
         const baseR = rand(58, 92);
         const tipR = rand(28, 42);
-        this.radii = Array.from({ length: this.nodeCount }, (_, i) => {
-          const frac = this.nodeCount > 1 ? i / (this.nodeCount - 1) : 0;
-          return baseR + (tipR - baseR) * frac;
-        });
+        this.radii = Array.from({ length: this.nodeCount }, (_, i) => baseR + (tipR - baseR) * (this.nodeCount > 1 ? i / (this.nodeCount - 1) : 0));
       }
       update() {
         this.baseX += this.vx;
         this.baseY += this.vy;
         this.age++;
-        const topY = this.baseY - this.nodeCount * this.spacing;
-        if (this.age >= this.life || topY < -140) {
-          this.reset(false);
-        }
+        if (this.age >= this.life || this.baseY - this.nodeCount * this.spacing < -140) this.reset(false);
       }
       draw(c, time) {
         const p = Math.min(1, Math.max(0, this.age / this.life));
-        let lifeEnv = 1;
-        if (p < 0.22) {
-          lifeEnv = p / 0.22;
-        } else if (p > 0.72) {
-          lifeEnv = (1 - p) / 0.28;
-        }
-        if (lifeEnv <= 0.001) return;
-
-        const [r, g, b] = this.color;
+        let lifeEnv = p < 0.22 ? p / 0.22 : (p > 0.72 ? (1 - p) / 0.28 : 1);
+        if (lifeEnv <= 0.002) return;
         const n = this.nodeCount;
         for (let i = 0; i < n; i++) {
           const frac = n > 1 ? i / (n - 1) : 0;
-          const swayX = Math.sin(time * this.swayFreq + this.swayOffset + i * 0.35) * this.sway * (0.4 + frac * 1.4);
-          const nx = this.baseX + swayX;
-          const ny = this.baseY - i * this.spacing;
+          const alpha = this.maxOpacity * lifeEnv * Math.sin(frac * Math.PI);
+          if (alpha <= 0.002) continue;
           const rad = this.radii[i];
-
-          const nodeEnv = Math.sin(frac * Math.PI);
-          const alpha = this.maxOpacity * lifeEnv * nodeEnv;
-          if (alpha <= 0.0015) continue;
-
-          const grad = c.createRadialGradient(nx, ny, 0, nx, ny, rad);
-          grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(4)})`);
-          grad.addColorStop(0.55, `rgba(${r}, ${g}, ${b}, ${(alpha * 0.44).toFixed(4)})`);
-          grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
-
-          c.fillStyle = grad;
-          c.beginPath();
-          c.arc(nx, ny, rad, 0, Math.PI * 2);
-          c.fill();
+          const nx = this.baseX + Math.sin(time * this.swayFreq + this.swayOffset + i * 0.35) * this.sway * (0.4 + frac * 1.4);
+          const ny = this.baseY - i * this.spacing;
+          c.globalAlpha = alpha;
+          c.drawImage(this.sprite, nx - rad, ny - rad, rad * 2, rad * 2);
         }
       }
     }
 
-    const puffs = Array.from({ length: isBrands ? 16 : 14 }, () => new DeckPuff(true));
-    const tendrils = Array.from({ length: isBrands ? 20 : 18 }, () => new DeckTendril(true));
+    const puffs = Array.from({ length: 12 }, () => new DeckPuff(true));
+    const tendrils = Array.from({ length: 14 }, () => new DeckTendril(true));
+    let visible = false;
+    let docVisible = !document.hidden;
+    let rafId = 0;
 
-    let visible = isBrands;
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((en) => { visible = en.isIntersecting; });
-    }, { threshold: 0.01 });
-    io.observe(canvas.parentElement || canvas);
+    const shouldDrawDeckSmoke = () => visible && docVisible && !reducedMotionMq.matches;
+    const syncDeckSmoke = () => {
+      if (shouldDrawDeckSmoke()) {
+        if (!rafId) rafId = requestAnimationFrame(draw);
+      } else if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    };
 
     function draw() {
-      if (visible || isBrands) {
-        ctx.save();
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctx.clearRect(0, 0, w, h);
-
-        for (let i = 0; i < puffs.length; i++) {
-          if (!reducedMotionMq.matches) puffs[i].update();
-          puffs[i].draw(ctx);
-        }
-
-        for (let i = 0; i < tendrils.length; i++) {
-          if (!reducedMotionMq.matches) tendrils[i].update();
-          tendrils[i].draw(ctx, t);
-        }
-
-        ctx.restore();
-        if (!reducedMotionMq.matches) {
-          t += 1;
-        }
+      rafId = 0;
+      if (!visible || !docVisible) return;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < puffs.length; i++) {
+        if (!reducedMotionMq.matches) puffs[i].update();
+        puffs[i].draw(ctx);
       }
-      requestAnimationFrame(draw);
+      for (let i = 0; i < tendrils.length; i++) {
+        if (!reducedMotionMq.matches) tendrils[i].update();
+        tendrils[i].draw(ctx, t);
+      }
+      ctx.globalAlpha = 1;
+      if (!reducedMotionMq.matches && visible && docVisible) {
+        t += 1;
+        rafId = requestAnimationFrame(draw);
+      }
     }
-    draw();
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => { visible = en.isIntersecting; });
+        syncDeckSmoke();
+      }, { rootMargin: '140px 0px', threshold: 0.01 });
+      io.observe(canvas.parentElement || canvas);
+    } else {
+      visible = true;
+      syncDeckSmoke();
+    }
+    document.addEventListener('visibilitychange', () => {
+      docVisible = !document.hidden;
+      syncDeckSmoke();
+    });
   });
 })();
 
@@ -10281,73 +11057,59 @@ if (document.readyState === 'loading') {
     applyGrailTransforms(window.scrollY);
   });
 
-  // Apply Grail.app 3D Stacked-Card Scale, Pinned Parallax Lag, Rounded Corners & Inner Depth
+  // Apply pure GPU-composited Stacked-Card Scale, Parallax Depth & Opacity (zero filter/radius repaints)
   function applyGrailTransforms(scrollY) {
     for (let i = 0; i < sections.length; i++) {
       const sec = sections[i];
-      if (!sec || sec.id === 'site-footer') continue;
+      if (!sec || sec.id === 'site-footer' || sec.id === 'contact') continue;
 
       const baseTop = sectionOffsets[i] !== undefined ? sectionOffsets[i] : (i * vh);
       const relTop = baseTop - scrollY;
       const inner = innerStages[i];
 
-      // 1. Outgoing section receding underneath the rising next section (relTop < -1 and relTop > -vh)
+      // 1. Outgoing section receding underneath the rising next section
       if (relTop < -1 && relTop > -vh * 1.05) {
         const exitP = Math.min(1, Math.max(0, -relTop / vh));
-        const eExit = exitP * (2 - exitP); // Smooth quad ease-out
-
-        // Pinned downward parallax lag so the outgoing page lingers in 3D space while the next card slides over it
-        const lagY = exitP * vh * 0.44;
-        const scale = 1 - eExit * 0.095;
-        const radius = eExit * 30;
-        const brightness = 1 - eExit * 0.54;
+        const eExit = exitP * (2 - exitP);
+        const lagY = exitP * vh * 0.42;
+        const scale = 1 - eExit * 0.085;
+        const secOpacity = 1 - eExit * 0.48;
 
         sec.classList.add('grail-card-transitioning');
         sec.style.transform = `translate3d(0, ${lagY.toFixed(1)}px, 0) scale(${scale.toFixed(4)})`;
-        sec.style.borderRadius = `${radius.toFixed(1)}px`;
-        sec.style.filter = `brightness(${brightness.toFixed(3)})`;
+        sec.style.opacity = secOpacity.toFixed(3);
 
         if (inner) {
-          const innerY = -exitP * 38;
-          const innerScale = 1 - exitP * 0.03;
-          const innerOpacity = Math.max(0, 1 - exitP * 0.42);
+          const innerY = -exitP * 32;
+          const innerScale = 1 - exitP * 0.025;
+          const innerOpacity = Math.max(0, 1 - exitP * 0.35);
           inner.style.transform = `translate3d(0, ${innerY.toFixed(1)}px, 0) scale(${innerScale.toFixed(4)})`;
           inner.style.opacity = innerOpacity.toFixed(3);
         }
       }
-      // 2. Incoming section rising up over the receding previous section (relTop > 1 and relTop < vh)
+      // 2. Incoming section rising cleanly over the receding section
       else if (relTop > 1 && relTop < vh * 1.05) {
         const enterP = Math.min(1, Math.max(0, relTop / vh));
-        const topRadius = enterP * 30;
-        const cardScale = 1 - enterP * 0.022;
+        const cardScale = 1 - enterP * 0.018;
 
         sec.classList.add('grail-card-transitioning');
         sec.style.transform = `translate3d(0, 0, 0) scale(${cardScale.toFixed(4)})`;
-        sec.style.borderTopLeftRadius = `${topRadius.toFixed(1)}px`;
-        sec.style.borderTopRightRadius = `${topRadius.toFixed(1)}px`;
-        sec.style.borderBottomLeftRadius = '0px';
-        sec.style.borderBottomRightRadius = '0px';
-        sec.style.filter = 'none';
+        sec.style.opacity = '1';
 
         if (inner) {
-          const innerY = enterP * 68;
-          const innerScale = 1 - enterP * 0.045;
-          const innerOpacity = Math.max(0.15, 1 - enterP * 0.65);
+          const innerY = enterP * 56;
+          const innerScale = 1 - enterP * 0.035;
+          const innerOpacity = Math.max(0.2, 1 - enterP * 0.55);
           inner.style.transform = `translate3d(0, ${innerY.toFixed(1)}px, 0) scale(${innerScale.toFixed(4)})`;
           inner.style.opacity = innerOpacity.toFixed(3);
         }
       }
-      // 3. Settled at top of viewport or completely off-screen -> 100% crisp zero-transform state
+      // 3. Settled or off-screen -> clean state (only touch DOM if dirty)
       else {
-        if (sec.classList.contains('grail-card-transitioning') || sec.style.transform) {
+        if (sec.classList.contains('grail-card-transitioning') || sec.style.transform || sec.style.opacity) {
           sec.classList.remove('grail-card-transitioning');
           sec.style.transform = '';
-          sec.style.borderRadius = '';
-          sec.style.borderTopLeftRadius = '';
-          sec.style.borderTopRightRadius = '';
-          sec.style.borderBottomLeftRadius = '';
-          sec.style.borderBottomRightRadius = '';
-          sec.style.filter = '';
+          sec.style.opacity = '';
         }
         if (inner && (inner.style.transform || inner.style.opacity)) {
           inner.style.transform = '';
@@ -10357,12 +11119,12 @@ if (document.readyState === 'loading') {
     }
   }
 
-  // Smooth Lerp Momentum Scroll + Magnetic Page Settle (Desktop)
   let currentY = window.scrollY;
   let targetY = window.scrollY;
   let isAnimating = false;
   let lastWheelDir = 0;
   let snapTimer = null;
+  let lastTickTs = 0;
 
   function enableDesktopGrailMode() {
     if (window.innerWidth >= 1024) {
@@ -10374,7 +11136,6 @@ if (document.readyState === 'loading') {
   enableDesktopGrailMode();
   window.addEventListener('resize', enableDesktopGrailMode, { passive: true });
 
-  // Helper to check if an inner scrollable container (subpage) should consume the wheel event natively
   function shouldYieldToInnerScroll(e) {
     if (e.defaultPrevented) return true;
     if (typeof window.__isAnyMediqSubpageOpen === 'function' && window.__isAnyMediqSubpageOpen()) return true;
@@ -10384,8 +11145,7 @@ if (document.readyState === 'loading') {
     let el = e.target;
     while (el && el !== document.body && el !== document.documentElement) {
       if (el.nodeType === 1) {
-        const style = window.getComputedStyle(el);
-        const overflowY = style.overflowY;
+        const overflowY = window.getComputedStyle(el).overflowY;
         if ((overflowY === 'auto' || overflowY === 'scroll') && el.scrollHeight > el.clientHeight + 4) {
           const canScrollDown = e.deltaY > 0 && (el.scrollTop + el.clientHeight < el.scrollHeight - 2);
           const canScrollUp = e.deltaY < 0 && (el.scrollTop > 2);
@@ -10403,7 +11163,6 @@ if (document.readyState === 'loading') {
       if (!sectionOffsets.length) return;
       if (typeof window.__isAnyMediqSubpageOpen === 'function' && window.__isAnyMediqSubpageOpen()) return;
       if (document.documentElement.classList.contains('mediq-subpage-locked')) return;
-      // Find the section interval containing targetY
       let bestTarget = targetY;
       let minDist = Infinity;
 
@@ -10415,11 +11174,10 @@ if (document.readyState === 'loading') {
 
         if (targetY >= start - 4 && targetY <= end + 4) {
           const progress = (targetY - start) / span;
-          // Directional bias: if scrolling down past 18%, glide to next section; if scrolling up past 18%, glide to prev
           if (lastWheelDir > 0) {
-            bestTarget = progress > 0.18 ? end : start;
+            bestTarget = progress > 0.15 ? end : start;
           } else if (lastWheelDir < 0) {
-            bestTarget = progress < 0.82 ? start : end;
+            bestTarget = progress < 0.85 ? start : end;
           } else {
             bestTarget = progress >= 0.5 ? end : start;
           }
@@ -10440,33 +11198,38 @@ if (document.readyState === 'loading') {
 
       targetY = Math.max(0, Math.min(maxScroll, bestTarget));
       startLoop();
-    }, 150);
+    }, 105);
   }
 
-  function tick() {
+  function tick(now) {
     if (document.documentElement.classList.contains('mediq-subpage-locked')) {
       isAnimating = false;
+      lastTickTs = 0;
       return;
     }
+    const dt = lastTickTs ? Math.min(0.05, Math.max(0.001, (now - lastTickTs) / 1000)) : 0.016;
+    lastTickTs = now;
     const diff = targetY - currentY;
     if (Math.abs(diff) > 0.45) {
-      currentY += diff * 0.115;
+      currentY += diff * (1 - Math.exp(-15.5 * dt));
       window.scrollTo(0, currentY);
       applyGrailTransforms(currentY);
-      if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll();
+      if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll(currentY);
       requestAnimationFrame(tick);
     } else {
       currentY = targetY;
       window.scrollTo(0, currentY);
       applyGrailTransforms(currentY);
-      if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll();
+      if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll(currentY);
       isAnimating = false;
+      lastTickTs = 0;
     }
   }
 
   function startLoop() {
     if (!isAnimating) {
       isAnimating = true;
+      lastTickTs = 0;
       requestAnimationFrame(tick);
     }
   }
@@ -10481,9 +11244,8 @@ if (document.readyState === 'loading') {
       targetY = window.scrollY;
     }
 
-    // Normalize wheel delta across mouse wheels and trackpads
     const rawDelta = e.deltaMode === 1 ? e.deltaY * 36 : e.deltaY;
-    const clampedDelta = Math.max(-240, Math.min(240, rawDelta * 1.12));
+    const clampedDelta = Math.max(-420, Math.min(420, rawDelta * 1.45));
     lastWheelDir = clampedDelta > 0 ? 1 : (clampedDelta < 0 ? -1 : lastWheelDir);
 
     targetY = Math.max(0, Math.min(maxScroll, targetY + clampedDelta));
@@ -10491,7 +11253,7 @@ if (document.readyState === 'loading') {
     scheduleMagneticSettle();
   }, { passive: false });
 
-  // Sync when user scrolls via scrollbar, keyboard, or touch
+    // Sync when user scrolls via scrollbar, keyboard, or touch
   window.addEventListener('scroll', () => {
     if (!isAnimating) {
       currentY = window.scrollY;
@@ -10531,7 +11293,7 @@ if (document.readyState === 'loading') {
     destY = Math.max(0, Math.min(maxScroll, destY));
     currentY = destY;
     targetY = destY;
-    window.scrollTo(0, destY);
+    window.scrollTo({ top: destY, left: 0, behavior: 'instant' });
     applyGrailTransforms(destY);
     if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll();
   };
@@ -10570,7 +11332,7 @@ if (document.readyState === 'loading') {
       }
     };
     el.addEventListener('animationend', cleanup, { once: true });
-    el._sub3dTimer = setTimeout(cleanup, 580);
+    el._sub3dTimer = setTimeout(cleanup, 480);
   };
 
   window.__unlockOuterPageScroll = function() {
@@ -10665,7 +11427,7 @@ if (document.readyState === 'loading') {
       if (typeof window.grailSnapTo === 'function') {
         window.grailSnapTo(secEl);
       } else {
-        window.scrollTo(0, secEl.offsetTop);
+        window.scrollTo({ top: secEl.offsetTop, left: 0, behavior: 'instant' });
       }
     }
 
@@ -10681,7 +11443,7 @@ if (document.readyState === 'loading') {
           if (typeof window.grailSnapTo === 'function') {
             window.grailSnapTo(secEl);
           } else {
-            window.scrollTo(0, secEl.offsetTop);
+            window.scrollTo({ top: secEl.offsetTop, left: 0, behavior: 'instant' });
           }
         }
         document.documentElement.classList.add('mediq-subpage-locked');
@@ -10704,6 +11466,14 @@ if (document.readyState === 'loading') {
     }
     const mobileMenu = document.getElementById('mobile-menu');
     if (mobileMenu && !mobileMenu.classList.contains('pointer-events-none') && mobileMenu.contains(target)) {
+      return true;
+    }
+    const bookModal = document.getElementById('srv-book-reading-modal');
+    if (bookModal && bookModal.classList.contains('is-open') && bookModal.contains(target)) {
+      return true;
+    }
+    const bookSlide = document.getElementById('srv-book-carousel-slide');
+    if (bookSlide && bookSlide.classList.contains('opacity-100') && bookSlide.contains(target)) {
       return true;
     }
     return false;

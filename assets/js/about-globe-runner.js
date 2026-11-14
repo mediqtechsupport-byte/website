@@ -698,11 +698,60 @@
     container.addEventListener('pointerup', releaseDrag);
     container.addEventListener('pointercancel', releaseDrag);
 
-    // Animation Loop
+    // Animation Loop (Visibility + About-Slide Gated — 0% CPU/GPU offscreen or hidden)
     const clock = new THREE.Clock();
+    let rafId = 0;
+    let inView = true;
+    let slideActive = true;
+    let docVisible = !document.hidden;
+
+    const slideEl = container.closest('.about-slide');
+    const syncSlideState = () => {
+      if (!slideEl) {
+        slideActive = true;
+        return;
+      }
+      slideActive = !slideEl.classList.contains('opacity-0') && !slideEl.classList.contains('pointer-events-none');
+    };
+    syncSlideState();
+
+    const shouldRun = () => inView && slideActive && docVisible;
+    const syncRunState = () => {
+      if (shouldRun()) {
+        if (!rafId) {
+          clock.getDelta();
+          rafId = requestAnimationFrame(animate);
+        }
+      } else if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    };
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        inView = entries.some((en) => en.isIntersecting);
+        syncRunState();
+      }, { rootMargin: '80px 0px', threshold: 0.01 });
+      io.observe(container);
+    }
+
+    if (slideEl && typeof MutationObserver !== 'undefined') {
+      const mo = new MutationObserver(() => {
+        syncSlideState();
+        syncRunState();
+      });
+      mo.observe(slideEl, { attributes: true, attributeFilter: ['class'] });
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      docVisible = !document.hidden;
+      syncRunState();
+    });
 
     function animate() {
-      requestAnimationFrame(animate);
+      rafId = 0;
+      if (!shouldRun()) return;
 
       const delta = Math.min(clock.getDelta(), 0.05);
       const time = clock.getElapsedTime();
@@ -809,9 +858,12 @@
       }
 
       renderer.render(scene, camera);
+      if (shouldRun()) {
+        rafId = requestAnimationFrame(animate);
+      }
     }
 
-    animate();
+    syncRunState();
 
     // Window resize
     window.addEventListener('resize', () => {
