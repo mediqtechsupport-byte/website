@@ -135,11 +135,11 @@
     mctx.clearRect(0, 0, mw, mh);
 
     // Draw positive SOLID MEDIQ letterforms inside normalized projector frame (no globe circle!)
-    const leftPad = 32;
+    const leftPad = mw * 0.076;
     const drawW = mw - leftPad * 2;
     const scX = drawW / 903;
-    const scY = (mh * 0.38) / 236;
-    const topY = mh * 0.25;
+    const scY = (mh * 0.37) / 236;
+    const topY = mh * 0.185;
     const mx = (x) => leftPad + x * scX;
     const my = (y) => topY + y * scY;
 
@@ -200,14 +200,40 @@
       fillPoly([[791, 148], [822, 148], [898, 227], [869, 227]]);
     }
 
-    // Crisp horizontal particle rule & sub-branding bar beneath MEDIQ inside projector frame
-    mctx.fillStyle = '#bae6fd';
-    mctx.fillRect(mw * 0.10, mh * 0.70, mw * 0.80, 3.0);
+    function drawTrackedText(text, cx, cy, tracking) {
+      const chars = Array.from(text);
+      const widths = chars.map((ch) => mctx.measureText(ch).width);
+      const totalW = widths.reduce((sum, w) => sum + w, 0) + Math.max(0, chars.length - 1) * tracking;
+      let cursorX = cx - totalW * 0.5;
+      for (let i = 0; i < chars.length; i++) {
+        mctx.fillText(chars[i], cursorX, cy);
+        cursorX += widths[i] + tracking;
+      }
+    }
 
-    mctx.font = '700 18px Inter, system-ui, -apple-system, sans-serif';
-    mctx.textAlign = 'center';
+    // Crisp horizontal particle rule & sub-branding bar beneath MEDIQ inside projector frame
+    const ruleY = mh * 0.615;
+    mctx.fillStyle = '#bae6fd';
+    mctx.fillRect(mw * 0.076, ruleY, mw * 0.848, 5.0);
+
+    const line1 = 'PHARMA AND MEDICAL SUPPLIES';
+    const line2 = 'DISTRIBUTION';
+    const maxSubW = mw * 0.848;
+    const track1 = 1.6;
+    let subSize = 35;
+    while (subSize > 24) {
+      mctx.font = `700 ${subSize}px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif`;
+      const measured1 = mctx.measureText(line1).width + (line1.length - 1) * track1;
+      if (measured1 <= maxSubW) break;
+      subSize -= 1;
+    }
+
+    mctx.font = `700 ${subSize}px Inter, "Segoe UI", system-ui, -apple-system, sans-serif`;
+    mctx.textAlign = 'left';
     mctx.textBaseline = 'middle';
-    mctx.fillText('P H A R M A   I N C .', mw * 0.5, mh * 0.79);
+    mctx.fillStyle = '#ffffff';
+    drawTrackedText(line1, mw * 0.5, mh * 0.725, track1);
+    drawTrackedText(line2, mw * 0.5, mh * 0.845, 5.2);
 
     mctx.restore();
   }
@@ -217,8 +243,8 @@
     seed = 731905;
 
     // 1. Positive MEDIQ Particle Hologram Mapped Directly Onto Rectangular Projector Surface
-    const mw = 420;
-    const mh = 280;
+    const mw = 840;
+    const mh = 560;
     const off = document.createElement('canvas');
     off.width = mw;
     off.height = mh;
@@ -226,12 +252,11 @@
     traceMediqProjectorMask(octx, mw, mh);
 
     const img = octx.getImageData(0, 0, mw, mh).data;
-    const inside = (x, y) => {
+    const inside = (x, y, thresh = 96) => {
       if (x < 0 || y < 0 || x >= mw || y >= mh) return false;
-      return img[(y * mw + x) * 4 + 3] > 96;
+      return img[(y * mw + x) * 4 + 3] > thresh;
     };
 
-    const STEP = 3.2;
     const palette = [
       '255, 255, 255',
       '224, 242, 254',
@@ -242,66 +267,89 @@
 
     const refQuad = baseQuad || makeFallbackQuad(MED_X, MED_Y, MED_R);
     dots = [];
-    for (let fy = 4; fy < mh - 4; fy += STEP) {
-      for (let fx = 4; fx < mw - 4; fx += STEP) {
-        const ix = Math.round(fx);
-        const iy = Math.round(fy);
-        if (!inside(ix, iy)) continue;
 
-        const dStep = Math.round(STEP);
-        const isEdge =
-          !inside(ix - dStep, iy) || !inside(ix + dStep, iy) ||
-          !inside(ix, iy - dStep) || !inside(ix, iy + dStep);
-        const isSubBar = fy > mh * 0.67;
+    function sampleRegion(yStart, yEnd, step, thresh, jitter, zone) {
+      const dStep = Math.max(1, Math.round(step));
+      for (let fy = yStart; fy < yEnd; fy += step) {
+        for (let fx = 8; fx < mw - 8; fx += step) {
+          const ix = Math.round(fx);
+          const iy = Math.round(fy);
+          if (!inside(ix, iy, thresh)) continue;
 
-        const uHome = clamp((fx + (rand() - 0.5) * 0.85) / mw, 0.04, 0.96);
-        const vHome = clamp((fy + (rand() - 0.5) * 0.85) / mh, 0.06, 0.94);
-        const pt = mapQuad(refQuad, uHome, vHome);
+          const isEdge =
+            !inside(ix - dStep, iy, thresh) || !inside(ix + dStep, iy, thresh) ||
+            !inside(ix, iy - dStep, thresh) || !inside(ix, iy + dStep, thresh);
 
-        let rgb;
-        if (isSubBar) {
-          rgb = rand() < 0.45 ? palette[1] : palette[3];
-        } else if (isEdge) {
-          rgb = rand() < 0.78 ? palette[0] : palette[1];
-        } else {
-          const rCol = rand();
-          rgb = rCol < 0.34 ? palette[0] : rCol < 0.62 ? palette[1] : rCol < 0.84 ? palette[2] : palette[3];
+          const uHome = clamp((fx + (rand() - 0.5) * jitter) / mw, 0.04, 0.96);
+          const vHome = clamp((fy + (rand() - 0.5) * jitter) / mh, 0.06, 0.94);
+          const pt = mapQuad(refQuad, uHome, vHome);
+
+          let rgb;
+          let radius;
+          let baseAlpha;
+          let amp;
+          if (zone === 'rule') {
+            rgb = rand() < 0.55 ? palette[1] : palette[3];
+            radius = 0.72 + rand() * 0.36;
+            baseAlpha = 0.68 + rand() * 0.28;
+            amp = 0.0012;
+          } else if (zone === 'sub') {
+            const rSub = rand();
+            rgb = rSub < 0.48 ? palette[0] : rSub < 0.82 ? palette[1] : palette[2];
+            radius = 0.50 + rand() * 0.18;
+            baseAlpha = 0.84 + rand() * 0.16;
+            amp = 0.00042;
+          } else {
+            if (isEdge) {
+              rgb = rand() < 0.78 ? palette[0] : palette[1];
+            } else {
+              const rCol = rand();
+              rgb = rCol < 0.34 ? palette[0] : rCol < 0.62 ? palette[1] : rCol < 0.84 ? palette[2] : palette[3];
+            }
+            radius = isEdge ? (1.05 + rand() * 0.42) : (0.85 + rand() * 0.48);
+            baseAlpha = isEdge ? (0.86 + rand() * 0.14) : (0.64 + rand() * 0.34);
+            amp = isEdge ? 0.0014 : 0.0024;
+          }
+
+          const canAmbientStream = zone === 'main' && uHome < 0.24 && vHome > 0.16 && vHome < 0.58;
+          dots.push({
+            uHome,
+            vHome,
+            u: uHome,
+            v: vHome,
+            vu: 0,
+            vv: 0,
+            homeX: pt.x,
+            homeY: pt.y,
+            x: pt.x,
+            y: pt.y,
+            vx: 0,
+            vy: 0,
+            radius,
+            rgb,
+            baseAlpha,
+            phase: rand() * Math.PI * 2,
+            freq: 1.0 + rand() * 1.4,
+            amp,
+            canAmbientStream,
+            state: 0,
+            t: 0,
+            speed: 0.0055 + rand() * 0.006,
+            streamSpeed: 0.006,
+            sx: pt.x,
+            sy: pt.y,
+            cpx: pt.x,
+            cpy: pt.y,
+            sway: (rand() - 0.5) * 18,
+            streamCooldown: Math.floor(rand() * 210)
+          });
         }
-
-        const canAmbientStream = uHome < 0.24 && vHome > 0.22 && vHome < 0.72;
-        dots.push({
-          uHome,
-          vHome,
-          u: uHome,
-          v: vHome,
-          vu: 0,
-          vv: 0,
-          homeX: pt.x,
-          homeY: pt.y,
-          x: pt.x,
-          y: pt.y,
-          vx: 0,
-          vy: 0,
-          radius: isSubBar ? (0.72 + rand() * 0.45) : (isEdge ? (1.05 + rand() * 0.42) : (0.85 + rand() * 0.48)),
-          rgb,
-          baseAlpha: isSubBar ? (0.62 + rand() * 0.28) : (isEdge ? (0.86 + rand() * 0.14) : (0.64 + rand() * 0.34)),
-          phase: rand() * Math.PI * 2,
-          freq: 1.0 + rand() * 1.4,
-          amp: isEdge ? 0.0014 : 0.0024,
-          canAmbientStream,
-          state: 0,
-          t: 0,
-          speed: 0.0055 + rand() * 0.006,
-          streamSpeed: 0.006,
-          sx: pt.x,
-          sy: pt.y,
-          cpx: pt.x,
-          cpy: pt.y,
-          sway: (rand() - 0.5) * 18,
-          streamCooldown: Math.floor(rand() * 210)
-        });
       }
     }
+
+    sampleRegion(8, mh * 0.60, 6.4, 96, 1.7, 'main');
+    sampleRegion(mh * 0.60, mh * 0.645, 4.2, 96, 0.9, 'rule');
+    sampleRegion(mh * 0.645, mh - 12, 2.8, 68, 0.18, 'sub');
 
     // 2. Subtle Interior Projector Wave & Floating Hologram Sparkles (100% bounded inside rectangular screen!)
     opticalArcDots = [];
@@ -728,6 +776,16 @@
   let lastTs = performance.now();
   function loop(ts) {
     requestAnimationFrame(loop);
+    if (window.innerWidth < 1024) {
+      if (canvas.style.display !== 'none') {
+        canvas.style.display = 'none';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, CW, CH);
+      }
+      lastTs = ts;
+      return;
+    }
+    if (canvas.style.display === 'none') canvas.style.display = 'block';
     if (document.hidden || !visible || window.__fndLensPaused) {
       lastTs = ts;
       return;

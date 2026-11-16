@@ -12,12 +12,12 @@
   <meta property="og:description" content="Exclusive distributor of Rayner premium ophthalmic solutions." />
   <meta property="og:image" content="assets/img/hero-products.jpg" />
 
-  <!-- Fonts: Unified Site-Wide Plus Jakarta Sans + JetBrains Mono -->
+  <!-- Fonts: Unified Site-Wide Futura (with Jost Geometric Futura Webfont) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&display=swap"
     rel="stylesheet" />
 
   <!-- Preload hero image for fast LCP -->
@@ -25,15 +25,28 @@
   <link rel="icon"
     href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%230a1d40%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%228%22 fill=%22none%22 stroke=%22%233aa0db%22 stroke-width=%222.5%22/%3E%3C/svg%3E" />
 
+  <!-- Always start cleanly on Home (#hero) on every reload or back/forward restore -->
+  <script>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    if (window.location.hash) {
+      try {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      } catch (_) {}
+    }
+    window.scrollTo(0, 0);
+  </script>
+
   <!-- Inject Tailwind v4 @theme before browser compiler runs (keeps static CSS validator 100% error-free) -->
   <script>
     const twTheme = document.createElement('style');
     twTheme.setAttribute('type', 'text/tailwindcss');
     twTheme.textContent = `
       @theme {
-        --font-serif: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
-        --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
-        --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        --font-serif: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
+        --font-sans: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
+        --font-mono: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
         --color-ink: #0a1d40;
         --color-navy: #0a1d40;
         --color-navy-2: #0a1d40;
@@ -132,10 +145,12 @@
       --hover-text-color-1: #0a1d40;
       --hover-text-color-2: #ffffff;
       --hover-text-color-3: #ffffff;
-      --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
-      --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      --font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
-      --rtl-font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+      --font-futura: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
+      --font-sans: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
+      --font-serif: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
+      --font-mono: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
+      --font-family: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
+      --rtl-font-family: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
       --pattern-color1: rgba(58, 160, 219, 0.055);
       --pattern-color2: rgba(246, 242, 234, 0.035);
     }
@@ -157,13 +172,20 @@
 
     body {
       background-color: #0a1d40;
-      font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+      font-family: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
       color: #f6f2ea;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Unified Site-Wide Corporate Typography (Plus Jakarta Sans + JetBrains Mono) */
+    /* Unified Site-Wide Futura Typography (All Sections, Controls, Modals & SVG Text) */
+    html,
+    html body,
+    html body *,
+    html body *::before,
+    html body *::after,
+    html body #hero *,
+    html body #about *,
     html body #about .abt-serif,
     html body #products .prod-serif,
     html body #brands .br-serif,
@@ -181,8 +203,26 @@
     html body .font-serif,
     html body .med-tab-label,
     html body .med-ghost-word {
-      font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif !important;
-      letter-spacing: -0.025em;
+      font-family: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+    }
+
+    html body #hero .abt-serif,
+    html body #about .abt-serif,
+    html body #products .prod-serif,
+    html body #brands .br-serif,
+    html body #distribution .srv-serif,
+    html body #resources .res-serif,
+    html body #activities .news-serif,
+    html body #contact .cnt-serif,
+    html body .abt-serif,
+    html body .prod-serif,
+    html body .br-serif,
+    html body .srv-serif,
+    html body .res-serif,
+    html body .news-serif,
+    html body .cnt-serif,
+    html body .font-serif {
+      letter-spacing: -0.02em;
     }
 
     html body #about .abt-serif em,
@@ -205,7 +245,12 @@
     }
 
     html body .font-mono {
-      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+      font-family: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+    }
+
+    /* Hide bottom ticker marquee banners across #about slides without altering locked #about HTML */
+    #about .abt-ticker-strip {
+      display: none !important;
     }
 
     ::selection {
@@ -389,9 +434,10 @@
       scroll-snap-type: none !important;
     }
 
-    @media (max-width: 1024px) {
+    @media (max-width: 1023px) {
       html {
-        scroll-snap-type: y proximity;
+        scroll-snap-type: none !important;
+        scroll-behavior: smooth;
       }
     }
 
@@ -490,7 +536,7 @@
           --pel-ink: #f4f7fb;
           --pel-muted: rgba(184, 204, 226, 0.78);
           --pel-line: rgba(114, 197, 248, 0.2);
-          --pel-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+          --pel-display: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif;
         }
         #brands .pel-wrap { width: 100%; max-width: 100%; margin: 0 auto; }
         #brands .pel-head {
@@ -505,7 +551,7 @@
         }
         #brands .pel-title {
           margin: 0;
-          font-family: "Playfair Display", Georgia, serif;
+          font-family: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif;
           font-size: clamp(1.85rem, 3.4vw, 3.1rem);
           font-weight: 400;
           letter-spacing: -0.025em;
@@ -819,11 +865,8 @@
     }
 
     .grail-card-transitioning {
-      will-change: transform, opacity;
+      will-change: opacity;
       transition: none !important;
-      box-shadow:
-        0 -16px 38px rgba(2, 6, 16, 0.42),
-        0 -1px 0 rgba(114, 197, 248, 0.24);
     }
 
     .grail-inner-stage {
@@ -948,6 +991,12 @@
       pointer-events: auto;
     }
 
+    @media (max-width: 1279px) {
+      #page-dots-nav {
+        display: none !important;
+      }
+    }
+
     .page-dot-item {
       position: relative;
       display: flex;
@@ -1049,16 +1098,16 @@
       }
     }
 
-    /* Fullscreen optical sweep curtain when navigating between pages */
+    /* Fullscreen optical sweep curtain when navigating between pages (zero blur readback) */
     #page-transition-curtain {
       pointer-events: none;
       position: fixed;
       inset: 0;
       z-index: 55;
-      background: radial-gradient(circle at 50% 50%, rgba(58, 160, 219, 0.14), rgba(10, 29, 64, 0.45));
-      backdrop-filter: blur(4px);
+      background: radial-gradient(circle at 50% 50%, rgba(58, 160, 219, 0.12), rgba(10, 29, 64, 0.36));
       opacity: 0;
-      transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity;
+      transition: opacity 0.24s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     #page-transition-curtain.is-sweeping {
@@ -1572,14 +1621,18 @@
       filter: blur(3px);
     }
 
-    /* Active & Hover States */
+    /* Active, Hover & Keyboard Focus States (keeps lamp lit while browsing dropdown panel) */
     .spotlight-pill.is-active .spotlight-lamp,
-    .spotlight-pill:hover .spotlight-lamp {
+    .spotlight-pill:hover .spotlight-lamp,
+    #site-header li.group:hover > .spotlight-pill .spotlight-lamp,
+    #site-header li.group:focus-within > .spotlight-pill .spotlight-lamp {
       opacity: 1;
     }
 
     .spotlight-pill.is-active,
-    .spotlight-pill:hover {
+    .spotlight-pill:hover,
+    #site-header li.group:hover > .spotlight-pill,
+    #site-header li.group:focus-within > .spotlight-pill {
       background: transparent !important;
       border: none !important;
       box-shadow: none !important;
@@ -1587,21 +1640,42 @@
     }
 
     .spotlight-pill.is-active svg,
-    .spotlight-pill:hover svg {
+    .spotlight-pill:hover svg,
+    #site-header li.group:hover > .spotlight-pill svg,
+    #site-header li.group:focus-within > .spotlight-pill svg {
       color: #72c5f8;
     }
 
-    /* PREVENT DUAL-LIGHT LAPSE: When hovering any item, dim the static active lamp so ONLY ONE is lit */
-    #site-header ul:hover .spotlight-pill.is-active:not(:hover) .spotlight-lamp {
+    /* PREVENT DUAL-LIGHT LAPSE: Keep only hovered/focused nav group lit while dimming other static active pill */
+    #site-header ul:hover li:not(:hover):not(:focus-within) > .spotlight-pill.is-active .spotlight-lamp {
       opacity: 0 !important;
     }
 
-    #site-header ul:hover .spotlight-pill.is-active:not(:hover) {
+    #site-header ul:hover li:not(:hover):not(:focus-within) > .spotlight-pill.is-active {
       color: rgba(246, 242, 234, 0.8) !important;
     }
 
-    #site-header ul:hover .spotlight-pill.is-active:not(:hover) svg {
+    #site-header ul:hover li:not(:hover):not(:focus-within) > .spotlight-pill.is-active svg {
       color: rgba(58, 160, 219, 0.85) !important;
+    }
+
+    /* Immediately dismiss sticky :hover/:focus dropdown right after user selects a dropdown link */
+    #site-header li.is-dropdown-closed > .nav-dropdown-panel {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      transform: translateY(-0.5rem) !important;
+    }
+
+    /* Solid dark navy header bar when viewing light-mode #contact section */
+    #site-header.is-light-page #header-bar {
+      background-color: rgba(10, 29, 64, 0.94);
+      border-bottom-color: rgba(255, 255, 255, 0.14);
+      box-shadow: 0 4px 20px rgba(10, 29, 64, 0.14);
+    }
+
+    #page-dots-nav.is-light-page .page-dot-pill {
+      background: rgba(15, 23, 42, 0.28);
     }
 
     /* ========================================================== */
@@ -2563,6 +2637,611 @@
 
     .notched-card:hover .notched-btn svg {
       transform: translate(2px, -2px);
+    }
+
+    /* Multi-Device Adaptive Layout Rules (Phones, iPads & Tablets) */
+    :root {
+      --mob-pad-x: clamp(16px, 4.6vw, 32px);
+      --mob-pad-top: clamp(72px, 10svh, 94px);
+      --mob-pad-bot: clamp(20px, 3.2svh, 34px);
+      --mob-eyebrow: clamp(9.5px, 2.5vw, 11.5px);
+      --mob-title: clamp(25px, 6.8vw, 40px);
+      --mob-lead: clamp(13px, 3.4vw, 15.5px);
+      --mob-row-title: clamp(15px, 4.1vw, 18.5px);
+      --mob-row-sub: clamp(10.5px, 2.8vw, 12px);
+    }
+
+    html,
+    body {
+      overflow-x: clip;
+      max-width: 100%;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    main#top {
+      overflow-x: clip;
+    }
+
+    @media (max-width: 1023px) {
+      html:not(.mediq-subpage-locked) section.page-snap-section {
+        height: auto !important;
+        min-height: 100svh;
+        min-height: 100dvh;
+        max-height: none !important;
+        overflow-x: clip !important;
+        overflow-y: visible !important;
+      }
+
+      html:not(.mediq-subpage-locked) section.page-snap-section > div.relative.w-full.h-full {
+        height: auto !important;
+        min-height: 100svh;
+        min-height: 100dvh;
+        overflow-x: clip !important;
+        overflow-y: visible !important;
+      }
+
+      html:not(.mediq-subpage-locked) .about-slide[data-index="0"],
+      html:not(.mediq-subpage-locked) .product-slide[data-product-index="0"],
+      html:not(.mediq-subpage-locked) .deck-slide[data-slide-index="0"] {
+        position: relative !important;
+        inset: auto !important;
+        top: auto !important;
+        bottom: auto !important;
+        height: auto !important;
+        min-height: 100svh !important;
+        min-height: 100dvh !important;
+        overflow-x: clip !important;
+        overflow-y: visible !important;
+        padding-top: var(--mob-pad-top) !important;
+        padding-bottom: var(--mob-pad-bot) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+      }
+
+      /* Prevent double 100svh stacking inside Hero / About / Landing containers */
+      html:not(.mediq-subpage-locked) section.page-snap-section .ih-root,
+      html:not(.mediq-subpage-locked) section.page-snap-section .ih-hero {
+        min-height: 0 !important;
+        height: auto !important;
+      }
+
+      html:not(.mediq-subpage-locked) #hero {
+        justify-content: center !important;
+      }
+
+      html:not(.mediq-subpage-locked) #hero .ih-root {
+        min-height: 100svh !important;
+        min-height: 100dvh !important;
+        padding-top: var(--mob-pad-top) !important;
+        padding-bottom: var(--mob-pad-bot) !important;
+      }
+
+      /* Hide empty desktop spacer column in #hero & soften eye radial backdrop */
+      #hero .ih-art-lens-stage {
+        display: none !important;
+      }
+
+      #hero #hero-eye-lifespan-container {
+        opacity: 0.44;
+        -webkit-mask-image: radial-gradient(circle at 78% 24%, rgba(0, 0, 0, 0.85) 0%, transparent 72%) !important;
+        mask-image: radial-gradient(circle at 78% 24%, rgba(0, 0, 0, 0.85) 0%, transparent 72%) !important;
+      }
+
+      html:not(.mediq-subpage-locked) #contact,
+      html:not(.mediq-subpage-locked) #contact > div.relative.w-full.h-full,
+      html:not(.mediq-subpage-locked) #contact .deck-slide[data-slide-index="0"],
+      html:not(.mediq-subpage-locked) #site-footer {
+        min-height: auto !important;
+      }
+
+      /* Unified Shell & Editorial Copy Spacing (Matches Services Mobile Reference Layout) */
+      html:not(.mediq-subpage-locked) section.page-snap-section .ih-shell {
+        padding-left: var(--mob-pad-x) !important;
+        padding-right: var(--mob-pad-x) !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+      }
+
+      html:not(.mediq-subpage-locked) section.page-snap-section .ih-hero {
+        gap: clamp(14px, 2.2svh, 22px) !important;
+      }
+
+      html:not(.mediq-subpage-locked) section.page-snap-section .ih-hero-copy {
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+      }
+
+      html:not(.mediq-subpage-locked) #products .ih-hero-copy + div,
+      html:not(.mediq-subpage-locked) #distribution .ih-hero-copy + div,
+      html:not(.mediq-subpage-locked) #resources .ih-hero-copy + div {
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+      }
+
+      html:not(.mediq-subpage-locked) #brands .deck-slide[data-slide-index="0"] {
+        padding-left: var(--mob-pad-x) !important;
+        padding-right: var(--mob-pad-x) !important;
+      }
+
+      html:not(.mediq-subpage-locked) #activities .deck-slide[data-slide-index="0"] {
+        padding-top: var(--mob-pad-top) !important;
+        padding-bottom: var(--mob-pad-bot) !important;
+      }
+
+      html:not(.mediq-subpage-locked) #contact .deck-slide[data-slide-index="0"] {
+        padding: clamp(78px, 11vw, 96px) var(--mob-pad-x) clamp(32px, 5vw, 44px) !important;
+        box-sizing: border-box !important;
+      }
+
+      #contact-panel-form {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      #contact-panel-form .grid > div {
+        min-width: 0 !important;
+      }
+
+      /* Resized Proportional Mobile Buttons across Hero, About, Products, Brands, Services, Resources */
+      .ih-hero-ctas {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        gap: clamp(8px, 2.4vw, 12px) clamp(10px, 3vw, 16px) !important;
+        margin-top: clamp(14px, 2.1svh, 20px) !important;
+      }
+
+      .ih-btn-pill-primary,
+      #about .about-go-next {
+        padding: clamp(9px, 2.3vw, 11px) clamp(14px, 3.8vw, 20px) !important;
+        font-size: clamp(12px, 3.1vw, 13.5px) !important;
+        line-height: 1.1 !important;
+        gap: 6px !important;
+        min-height: 36px !important;
+      }
+
+      .ih-btn-pill-primary svg,
+      #about .about-go-next svg {
+        width: 14px !important;
+        height: 14px !important;
+        flex-shrink: 0 !important;
+      }
+
+      .ih-btn-video-secondary {
+        font-size: clamp(11.5px, 3.1vw, 13.5px) !important;
+        gap: 7px !important;
+        padding: 3px 4px !important;
+        min-height: 36px !important;
+        white-space: nowrap !important;
+      }
+
+      .ih-play-circle {
+        width: clamp(26px, 7vw, 30px) !important;
+        height: clamp(26px, 7vw, 30px) !important;
+        flex-shrink: 0 !important;
+      }
+
+      .ih-play-circle svg {
+        width: 12px !important;
+        height: 12px !important;
+      }
+
+      #brands .deck-slide[data-slide-index="0"] .br-cta-row {
+        gap: clamp(8px, 2.5vw, 14px) !important;
+        margin-bottom: clamp(14px, 2.2svh, 22px) !important;
+      }
+
+      #brands .deck-slide[data-slide-index="0"] .br-cta-row > a,
+      #brands .deck-slide[data-slide-index="0"] .br-cta-row > button {
+        height: auto !important;
+        min-height: 36px !important;
+        padding: clamp(9px, 2.3vw, 11px) clamp(15px, 4vw, 20px) !important;
+        font-size: clamp(12px, 3.1vw, 13.5px) !important;
+        line-height: 1.1 !important;
+        border-radius: 9999px !important;
+      }
+
+      #brands #brands-aller-silhouette-stage {
+        opacity: 0.34;
+        -webkit-mask-image: radial-gradient(circle at 75% 28%, rgba(0, 0, 0, 0.85) 0%, transparent 72%) !important;
+        mask-image: radial-gradient(circle at 75% 28%, rgba(0, 0, 0, 0.85) 0%, transparent 72%) !important;
+      }
+
+      /* Full-screen isolated overlay for active mobile subpages (eliminates section offset shift & neighboring bleed) */
+      html.mediq-subpage-locked section.page-snap-section.mediq-subpage-active-host {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        z-index: 44 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+      }
+
+      html.mediq-subpage-locked section.page-snap-section.mediq-subpage-active-host > div.relative.w-full.h-full {
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        overflow: hidden !important;
+      }
+
+      html.mediq-subpage-locked body.mediq-subpage-modal-open section.page-snap-section.mediq-subpage-active-host {
+        z-index: 62 !important;
+      }
+
+      .mediq-subnavbar {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .mediq-subnavbar::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Responsive fixes for About subpages inside #about-subpage-scroll (without modifying locked #about HTML) */
+      #about .abt-subpage-panel {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+
+      #about #about-vision-mission-block {
+        height: 215svh !important;
+      }
+
+      #about #wwd-forge-services-block {
+        height: 300svh !important;
+      }
+
+      #about .abt-forge-media-box {
+        width: min(100%, 348px) !important;
+        height: clamp(134px, 19.5svh, 178px) !important;
+        aspect-ratio: auto !important;
+      }
+
+      #about #forge-about-sticky,
+      #about #wwd-forge-sticky {
+        justify-content: space-between !important;
+        padding-top: 0 !important;
+        padding-bottom: 0;
+      }
+
+      #about #forge-about-sticky > .relative.z-10,
+      #about #wwd-forge-sticky > .relative.z-10 {
+        padding-top: 12px !important;
+        padding-bottom: 10px !important;
+        padding-left: 18px !important;
+        padding-right: 18px !important;
+        align-items: flex-start !important;
+        overflow-y: auto !important;
+      }
+
+      #about #forge-about-sticky .grid,
+      #about #wwd-forge-sticky .grid {
+        gap: 10px !important;
+      }
+
+      #about .forge-panels-stack {
+        margin-top: 2px !important;
+        margin-bottom: 2px !important;
+      }
+
+      #about .forge-text-panel {
+        transition-duration: 0.22s !important;
+      }
+
+      #about .forge-text-panel .size-7 {
+        width: 24px !important;
+        height: 24px !important;
+      }
+
+      #about .forge-text-panel .grid > div {
+        font-size: 12px !important;
+        gap: 8px !important;
+      }
+
+      /* Our Foundation Mobile Mode: Remove animated VR / particle background & idle stage void */
+      #about-sec-foundation {
+        background: #07193a !important;
+        min-height: auto !important;
+      }
+
+      #about-sec-foundation > .ih-shell.abt-subpage-shell {
+        padding-top: clamp(28px, 5vw, 40px) !important;
+        padding-bottom: clamp(28px, 5vw, 40px) !important;
+      }
+
+      #about-sec-foundation #fnd-vr-bg-canvas,
+      #about-sec-foundation .fnd-particles-gl,
+      #about-sec-foundation .fnd-partner-col,
+      #about-sec-foundation #fnd-partner-stage,
+      #about-sec-foundation #fnd-beam-channel {
+        display: none !important;
+      }
+
+      #about-sec-foundation .fnd-ticker-track {
+        animation: none !important;
+      }
+
+      #about-sec-foundation .fnd-copy {
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+      }
+
+      #about-sec-foundation #fnd-heading {
+        font-size: clamp(32px, 8vw, 44px) !important;
+      }
+
+      #hero h1,
+      #about h2,
+      #products h2,
+      #brands h2,
+      #distribution h2,
+      #resources h2,
+      #activities h2,
+      #contact h2 {
+        word-break: break-word;
+      }
+
+      #news-cf-stage {
+        max-width: 100vw;
+        overflow-x: clip;
+      }
+    }
+
+    /* Device-Adaptive Typography, Services-Style Section Format & Compact Index Rows */
+    @media (max-width: 1023px) {
+      #hero .ih-eyebrow,
+      #about .ih-eyebrow,
+      #products .ih-eyebrow,
+      #brands .br-eyebrow,
+      #distribution .ih-eyebrow,
+      #resources .ih-eyebrow {
+        font-size: var(--mob-eyebrow) !important;
+        letter-spacing: 0.14em !important;
+        line-height: 1.35 !important;
+        gap: 8px !important;
+        margin-bottom: 0 !important;
+      }
+
+      #hero .ih-eyebrow > span.w-12,
+      #about .ih-eyebrow > span.w-12,
+      #products .ih-eyebrow > span.w-12,
+      #brands .br-eyebrow > span.w-12,
+      #distribution .ih-eyebrow > span.w-12,
+      #resources .ih-eyebrow > span.w-12 {
+        width: 22px !important;
+        flex-shrink: 0 !important;
+      }
+
+      #hero h1.ih-h1,
+      #about h2.ih-h1,
+      #products h2,
+      #brands h2,
+      #distribution h2,
+      #resources h2 {
+        font-size: var(--mob-title) !important;
+        line-height: 1.12 !important;
+        margin-top: clamp(8px, 1.4svh, 14px) !important;
+        margin-bottom: 0 !important;
+      }
+
+      #hero .ih-lede,
+      #about .ih-lede,
+      #products .ih-lead,
+      #brands .br-lead,
+      #distribution .ih-lead,
+      #resources .ih-lead {
+        font-size: var(--mob-lead) !important;
+        line-height: 1.48 !important;
+        margin-top: clamp(8px, 1.4svh, 14px) !important;
+        margin-bottom: 0 !important;
+      }
+
+      #resources .ih-lead + p {
+        font-size: 10.5px !important;
+        line-height: 1.4 !important;
+        margin-top: 6px !important;
+      }
+
+      #about .about-slide[data-index="0"] .mt-8 {
+        margin-top: clamp(14px, 2.2svh, 20px) !important;
+      }
+
+      #products .ih-hero-copy + div > div.mb-6 {
+        margin-bottom: 8px !important;
+      }
+
+      #products .ih-hero-copy + div > div > div.border-b {
+        padding-bottom: 5px !important;
+        gap: 8px !important;
+      }
+
+      #products .ih-hero-copy + div .font-mono {
+        font-size: 9px !important;
+        letter-spacing: 0.12em !important;
+        line-height: 1.25 !important;
+      }
+
+      .lottici-index-row {
+        gap: 12px !important;
+        padding-top: clamp(8px, 1.25svh, 12px) !important;
+        padding-bottom: clamp(8px, 1.25svh, 12px) !important;
+      }
+
+      .lottici-index-row > span:first-child,
+      .lottici-index-row > div > span:first-child {
+        font-size: var(--mob-row-title) !important;
+        line-height: 1.24 !important;
+      }
+
+      .lottici-index-row > div {
+        min-width: 0 !important;
+        flex: 1 1 0% !important;
+      }
+
+      .lottici-index-row > div > span:nth-child(2) {
+        font-size: var(--mob-row-sub) !important;
+        line-height: 1.32 !important;
+        margin-top: 2px !important;
+      }
+    }
+
+    @media (max-width: 639px) {
+      #site-header nav {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+      }
+
+      .mediq-subnavbar__inner {
+        justify-content: flex-start !important;
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+      }
+
+      .mediq-subnavbar__tab,
+      .mediq-subnavbar__overview {
+        font-size: 10px !important;
+        letter-spacing: 0.12em !important;
+        padding: 0 10px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+      }
+
+      .deck-slide:not([data-slide-index="0"]) > div,
+      .product-slide:not([data-product-index="0"]) > div {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+      }
+
+      /* Keep Products / Resources sub-captions sleek 1-line summaries on narrow phones so all 01–04 fit cleanly */
+      #products .lottici-index-row > div > span:nth-child(2),
+      #resources .lottici-index-row > div > span:nth-child(2) {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+
+      #activities #news-cf-stage {
+        height: clamp(335px, 47svh, 410px) !important;
+        margin-bottom: 18px !important;
+      }
+
+      #activities .news-cf-card {
+        width: min(295px, 78vw) !important;
+        height: clamp(310px, 43svh, 380px) !important;
+      }
+
+      #activities .news-cf-nav-btn {
+        width: 38px !important;
+        height: 38px !important;
+      }
+
+      #hero .ih-btn-pill-primary {
+        padding: 9px 13px !important;
+        font-size: 11.5px !important;
+      }
+
+      #hero .ih-btn-video-secondary {
+        font-size: 11.5px !important;
+        gap: 6px !important;
+      }
+
+      #hero .ih-play-circle {
+        width: 24px !important;
+        height: 24px !important;
+      }
+
+      #about .forge-text-panel h2,
+      #about .forge-text-panel h3 {
+        font-size: clamp(21px, 5.5vw, 27px) !important;
+        margin-bottom: 0.35rem !important;
+      }
+
+      #about .forge-text-panel p {
+        font-size: 12.5px !important;
+        line-height: 1.42 !important;
+        margin-bottom: 0.42rem !important;
+      }
+
+      #about .forge-text-panel .grid {
+        gap: 5px !important;
+        padding-top: 6px !important;
+      }
+
+      #contact-panel-form {
+        padding: 20px 16px !important;
+        border-radius: 20px !important;
+      }
+
+      #contact #contact-title {
+        font-size: clamp(27px, 7.2vw, 34px) !important;
+      }
+
+      #contact-panel-form a[href^="mailto:"] {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+      }
+
+      #contact-panel-form .border-t > div {
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+      }
+
+      #contact button[type="submit"] {
+        padding: 10px 22px !important;
+        font-size: 13px !important;
+      }
+
+      #footer-inner > div > div > div {
+        padding-top: 24px !important;
+        padding-bottom: 18px !important;
+      }
+
+      #footer-inner .grid > div {
+        padding-top: 16px !important;
+        padding-bottom: 16px !important;
+      }
+
+      #footer-map-band #contact-map-wrap {
+        height: 295px !important;
+      }
+
+      #footer-map-band #contact-map-stage > div:first-of-type {
+        left: 12px !important;
+        top: 10px !important;
+        padding: 8px 10px !important;
+        max-width: calc(100% - 24px) !important;
+      }
+    }
+
+    /* Extra-Narrow Phones (<= 374px, e.g., iPhone SE 320px / compact Android 360px) */
+    @media (max-width: 374px) {
+      :root {
+        --mob-pad-x: 14px;
+        --mob-pad-top: clamp(66px, 9svh, 76px);
+        --mob-title: clamp(22px, 6.4vw, 27px);
+        --mob-lead: 12.5px;
+        --mob-row-title: 14.5px;
+      }
+    }
+
+    /* Short Landscape Phones */
+    @media (max-width: 1023px) and (max-height: 540px) {
+      :root {
+        --mob-pad-top: 66px;
+        --mob-pad-bot: 18px;
+      }
+      html:not(.mediq-subpage-locked) .about-slide[data-index="0"],
+      html:not(.mediq-subpage-locked) .product-slide[data-product-index="0"],
+      html:not(.mediq-subpage-locked) .deck-slide[data-slide-index="0"] {
+        min-height: auto !important;
+      }
     }
   </style>
   <!-- 21st.dev Gradient Button & Custom Glass Dropdown Styles (Website Palette) -->
@@ -3690,26 +4369,26 @@
   <!-- ============== HEADER ============== -->
   <header id="site-header" class="fixed inset-x-0 top-0 z-50 transition-all duration-500">
     <div
-      class="bg-[#0a1d40]/85 backdrop-blur-md border-b border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.3)] transition-all duration-500"
+      class="bg-[#0a1d40]/45 backdrop-blur-md border-b border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.3)] transition-all duration-500"
       id="header-bar">
-      <nav class="mx-auto flex h-20 max-w-[1720px] items-center justify-between gap-1.5 xl:gap-2 2xl:gap-3 px-4 sm:px-6 lg:px-5 xl:px-6 2xl:px-12"
+      <nav class="mx-auto flex h-20 max-w-[1720px] items-center justify-between gap-2 xl:gap-3 2xl:gap-5 px-4 sm:px-6 lg:px-5 xl:px-6 2xl:px-10"
         aria-label="Main navigation">
 
         <!-- Left Brand Mark: Official MediQ Wordmark (Pure White on Transparent Background) -->
         <a href="#hero" class="group flex items-center transition shrink-0" aria-label="MediQ Pharma Home">
           <img src="assets/img/mediq-wordmark-only.png?v=105.00" alt="MEDIQ Pharma and Medical Supplies Distribution"
-            class="h-8 sm:h-10 xl:h-10 2xl:h-12 w-auto object-contain transition group-hover:opacity-90 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]" />
+            class="h-8 sm:h-9 xl:h-10 2xl:h-11 w-auto object-contain transition group-hover:opacity-90 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]" />
         </a>
 
         <!-- Center: Original Layout Nav Links with Sleek Spotlight Lamp Hover & Active Effect -->
-        <ul class="hidden items-center gap-0.5 2xl:gap-2 lg:flex min-w-0">
+        <ul class="hidden lg:flex items-center gap-0.5 xl:gap-1 2xl:gap-2 min-w-0">
 
           <!-- 1. HOME -->
           <li class="relative py-2">
             <a id="nav-home" href="#top"
-              class="spotlight-pill is-active flex items-center gap-1.5 whitespace-nowrap px-1.5 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[11.5px] xl:text-[12px] 2xl:text-[13.5px] font-semibold tracking-wide">
+              class="spotlight-pill is-active flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60">
               <span class="spotlight-lamp"></span>
-              <svg class="size-4 text-sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                 <polyline points="9 22 9 12 15 12 15 22" />
               </svg>
@@ -3720,11 +4399,10 @@
           <!-- 2. ABOUT MEDIQ (Dropdown: Who We Are, What We Do, Foundation, Values) -->
           <li class="relative group py-2">
             <a id="nav-about" href="#about" data-slide-target="0"
-              onclick="if(window.goToAboutSlide){window.goToAboutSlide(0);}"
-              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap px-1.5 xl:px-2 2xl:px-3 py-2 text-cream/90 text-[11.5px] xl:text-[12px] 2xl:text-[13.5px] font-semibold tracking-wide"
-              aria-haspopup="true">
+              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60"
+              aria-haspopup="true" aria-expanded="false">
               <span class="spotlight-lamp"></span>
-              <svg class="size-4 text-sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
                 <path d="M9 22v-4h6v4" />
                 <path d="M8 6h.01" />
@@ -3742,10 +4420,10 @@
               </svg>
             </a>
             <div
-              class="pointer-events-none absolute left-0 top-full pt-2 opacity-0 -translate-y-2 transition-all duration-200 ease-out group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 z-50">
+              class="nav-dropdown-panel invisible pointer-events-none absolute left-0 top-full pt-2 opacity-0 -translate-y-2 transition-all duration-200 ease-out group-hover:visible group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 z-50">
               <div class="transparent-blue-dropdown w-64 rounded-2xl ring-1 ring-white/10 p-2 space-y-0.5">
                 <!-- Who We Are -->
-                <a href="#about" data-slide-target="1" onclick="if(window.goToAboutSlide){window.goToAboutSlide(1);}"
+                <a href="#about" data-slide-target="1"
                   class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
                   <span
                     class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
@@ -3766,7 +4444,7 @@
                   </svg>
                 </a>
                 <!-- What We Do -->
-                <a href="#about" data-slide-target="2" onclick="if(window.goToAboutSlide){window.goToAboutSlide(2);}"
+                <a href="#about" data-slide-target="2"
                   class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
                   <span
                     class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
@@ -3785,7 +4463,7 @@
                   </svg>
                 </a>
                 <!-- Foundation -->
-                <a href="#about" data-slide-target="3" onclick="if(window.goToAboutSlide){window.goToAboutSlide(3);}"
+                <a href="#about" data-slide-target="3"
                   class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
                   <span
                     class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
@@ -3806,7 +4484,7 @@
                   </svg>
                 </a>
                 <!-- Values -->
-                <a href="#about" data-slide-target="4" onclick="if(window.goToAboutSlide){window.goToAboutSlide(4);}"
+                <a href="#about" data-slide-target="4"
                   class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
                   <span
                     class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
@@ -3830,10 +4508,10 @@
           <!-- 3. PRODUCTS (Dropdown: Intraocular Lenses, Medical Supplies, Devices & Equipment, Product Catalogs) -->
           <li class="relative group py-2">
             <a id="nav-products" href="#products"
-              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap px-1.5 xl:px-2 2xl:px-3 py-2 text-cream/90 text-[11.5px] xl:text-[12px] 2xl:text-[13.5px] font-semibold tracking-wide"
-              aria-haspopup="true">
+              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60"
+              aria-haspopup="true" aria-expanded="false">
               <span class="spotlight-lamp"></span>
-              <svg class="size-4 text-sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="m7.5 4.27 9 5.15" />
                 <path
                   d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
@@ -3848,7 +4526,7 @@
               </svg>
             </a>
             <div
-              class="pointer-events-none absolute left-0 top-full pt-2 opacity-0 -translate-y-2 transition-all duration-200 ease-out group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 z-50">
+              class="nav-dropdown-panel invisible pointer-events-none absolute left-0 top-full pt-2 opacity-0 -translate-y-2 transition-all duration-200 ease-out group-hover:visible group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 z-50">
               <div class="transparent-blue-dropdown w-64 rounded-2xl ring-1 ring-white/10 p-2 space-y-0.5">
                 <!-- Established Ophthalmology · IOLs -->
                 <a href="#products" data-product-slide="1"
@@ -3934,10 +4612,10 @@
           <!-- 4. BRANDS & PARTNERS (Dropdown: Principal Brands, Brand Profiles, Downloadable Brochures) -->
           <li class="relative group py-2">
             <a id="nav-brands" href="#brands" data-deck-target="brands:0"
-              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap px-1.5 xl:px-2 2xl:px-3 py-2 text-cream/90 text-[11.5px] xl:text-[12px] 2xl:text-[13.5px] font-semibold tracking-wide"
-              aria-haspopup="true">
+              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60"
+              aria-haspopup="true" aria-expanded="false">
               <span class="spotlight-lamp"></span>
-              <svg class="size-4 text-sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="m11 17 2 2a1 1 0 0 0 1.4 0l4.3-4.3a1 1 0 0 0 0-1.4l-2.6-2.6a1 1 0 0 0-1.4 0L12 13" />
                 <path d="m14 14 2.5 2.5" />
                 <path d="m3 7 3-3a1 1 0 0 1 1.4 0l5.3 5.3a1 1 0 0 1 0 1.4L10 13" />
@@ -3953,7 +4631,7 @@
               </svg>
             </a>
             <div
-              class="pointer-events-none absolute left-0 top-full pt-2 opacity-0 -translate-y-2 transition-all duration-200 ease-out group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 z-50">
+              class="nav-dropdown-panel invisible pointer-events-none absolute left-0 top-full pt-2 opacity-0 -translate-y-2 transition-all duration-200 ease-out group-hover:visible group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 z-50">
               <div class="transparent-blue-dropdown w-64 rounded-2xl ring-1 ring-white/10 p-2 space-y-0.5">
                 <!-- Principal Brands -->
                 <a href="#brands" data-deck-target="brands:1"
@@ -4022,10 +4700,10 @@
           <!-- 5. SERVICES (Dropdown: Distribution, Product Support, Training & Education, Customer Service) -->
           <li class="relative group py-2">
             <a id="nav-services" href="#distribution" data-deck-target="services:0"
-              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap px-1.5 xl:px-2 2xl:px-3 py-2 text-cream/90 text-[11.5px] xl:text-[12px] 2xl:text-[13.5px] font-semibold tracking-wide"
-              aria-haspopup="true">
+              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60"
+              aria-haspopup="true" aria-expanded="false">
               <span class="spotlight-lamp"></span>
-              <svg class="size-4 text-sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="3" />
                 <path
                   d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
@@ -4038,7 +4716,7 @@
               </svg>
             </a>
             <div
-              class="pointer-events-none absolute left-0 top-full pt-2 opacity-0 -translate-y-2 transition-all duration-200 ease-out group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 z-50">
+              class="nav-dropdown-panel invisible pointer-events-none absolute left-0 top-full pt-2 opacity-0 -translate-y-2 transition-all duration-200 ease-out group-hover:visible group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 z-50">
               <div class="transparent-blue-dropdown w-72 rounded-2xl ring-1 ring-white/10 p-2 space-y-0.5">
                 <!-- 01 Importation & Distribution -->
                 <a href="#distribution" data-deck-target="services:1"
@@ -4171,10 +4849,10 @@
           <!-- 6. RESOURCES (Dropdown: Product Literature, Professional Education, 2026 Corporate Profile, Official Regulatory Guidance) -->
           <li class="relative group py-2">
             <a id="nav-resources" href="#resources" data-deck-target="resources:0"
-              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap px-1.5 xl:px-2 2xl:px-3 py-2 text-cream/90 text-[11.5px] xl:text-[12px] 2xl:text-[13.5px] font-semibold tracking-wide"
-              aria-haspopup="true">
+              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60"
+              aria-haspopup="true" aria-expanded="false">
               <span class="spotlight-lamp"></span>
-              <svg class="size-4 text-sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
                 <path d="M6 6h10" />
                 <path d="M6 10h10" />
@@ -4188,7 +4866,7 @@
               </svg>
             </a>
             <div
-              class="pointer-events-none absolute left-0 top-full pt-2 opacity-0 -translate-y-2 transition-all duration-200 ease-out group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 z-50">
+              class="nav-dropdown-panel invisible pointer-events-none absolute left-0 top-full pt-2 opacity-0 -translate-y-2 transition-all duration-200 ease-out group-hover:visible group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 z-50">
               <div class="transparent-blue-dropdown w-72 rounded-2xl ring-1 ring-white/10 p-2 space-y-0.5">
                 <!-- 01 Product-Approved Literature -->
                 <a href="#resources" data-deck-target="resources:1"
@@ -4279,9 +4957,9 @@
           <!-- 7. NEWS & EVENTS (Direct Link) -->
           <li class="relative py-2">
             <a id="nav-news" href="#activities" data-deck-target="news:0"
-              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap px-1.5 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[11.5px] xl:text-[12px] 2xl:text-[13.5px] font-semibold tracking-wide">
+              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60">
               <span class="spotlight-lamp"></span>
-              <svg class="size-4 text-sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
                 <line x1="16" x2="16" y1="2" y2="6" />
                 <line x1="8" x2="8" y1="2" y2="6" />
@@ -4294,9 +4972,9 @@
           <!-- 8. CONTACT US (Direct Link — Single Unified Page) -->
           <li class="relative py-2">
             <a id="nav-contact" href="#contact" data-deck-target="contact:0"
-              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap px-1.5 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[11.5px] xl:text-[12px] 2xl:text-[13.5px] font-semibold tracking-wide">
+              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60">
               <span class="spotlight-lamp"></span>
-              <svg class="size-4 text-sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect width="20" height="16" x="2" y="4" rx="2" />
                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
               </svg>
@@ -4308,14 +4986,13 @@
         <!-- Right side: Global Action Search Bar Trigger + Mobile burger -->
         <div class="flex items-center gap-2.5 shrink-0">
           <button id="mediq-search-trigger" type="button" data-mediq-search-open
-            aria-label="Search website (Ctrl+K)"
-            class="group inline-flex items-center gap-1.5 2xl:gap-2 rounded-full border border-sky/30 bg-[#0b234d]/80 px-2.5 2xl:px-3.5 py-1.5 text-[12px] font-medium text-cream/90 shadow-[0_4px_20px_rgba(0,0,0,0.28)] backdrop-blur-md transition-all hover:border-sky/65 hover:bg-sky/20 hover:text-white hover:shadow-[0_0_22px_rgba(58,160,219,0.28)] cursor-pointer">
-            <svg class="size-3.5 text-sky transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
+            aria-label="Filter by URI or name" title="Filter resources &amp; pages"
+            class="group inline-flex h-8 items-center gap-2 rounded-2xl border border-white/[0.14] bg-[#071530]/80 px-3 text-[12px] font-normal leading-none tracking-[0.02em] text-[#d6e2ef] backdrop-blur-md transition-all duration-200 hover:border-[#72c5f8]/45 hover:bg-[#0b2046]/90 hover:text-white hover:shadow-[0_6px_18px_rgba(0,0,0,0.34)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72c5f8]/35 cursor-pointer shrink-0">
+            <svg class="size-3.5 shrink-0 text-[#8fb0d3] transition-colors group-hover:text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+              <circle cx="11" cy="11" r="7.5" />
+              <path d="m20.5 20.5-4.1-4.1" stroke-linecap="round" />
             </svg>
-            <span class="hidden 2xl:inline tracking-wide text-pearl group-hover:text-white">Search</span>
-            <kbd class="hidden sm:inline-flex items-center rounded border border-sky/25 bg-white/10 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[#72c5f8]">⌘K</kbd>
+            <span class="hidden sm:inline font-normal text-[#9eb4cc] group-hover:text-white">Filter resources…</span>
           </button>
           <button id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false"
             aria-controls="mobile-menu"
@@ -4333,7 +5010,7 @@
 
     <!-- Mobile / tablet menu (Sleek Dark-Glass Floating Card) -->
     <div id="mobile-menu"
-      class="pointer-events-none fixed inset-0 top-14 bg-ink/65 p-3 opacity-0 backdrop-blur-md transition-opacity duration-300 sm:top-16 sm:p-5 lg:hidden">
+      class="pointer-events-none fixed inset-0 top-20 bg-ink/70 p-3 opacity-0 backdrop-blur-md transition-opacity duration-300 sm:p-5 lg:hidden">
       <div id="mobile-panel"
         class="relative mx-auto max-w-md -translate-y-3 max-h-[85vh] overflow-y-auto rounded-2xl border border-sky/25 bg-[#0a1d40]/95 p-5 text-cream shadow-[0_28px_80px_rgba(0,0,0,0.85)] ring-1 ring-white/10 backdrop-blur-2xl transition-all duration-300">
         <!-- Ambient top glow inside menu card -->
@@ -6958,7 +7635,7 @@
           pointer-events: auto;
         }
 
-        /* CRT screen-door grid + film grain filter over the whole spiral stage (like activetheory.net/work) */
+        /* Lightweight GPU-friendly CRT screen-door hairline scanlines over the spiral stage */
         .at-work-stage::after {
           content: "";
           position: absolute;
@@ -6966,12 +7643,10 @@
           z-index: 40;
           pointer-events: none;
           background-image:
-            repeating-linear-gradient(0deg, rgba(150, 170, 255, 0.07) 0px, rgba(150, 170, 255, 0.07) 1px, transparent 1px, transparent 3px),
-            repeating-linear-gradient(90deg, rgba(150, 170, 255, 0.055) 0px, rgba(150, 170, 255, 0.055) 1px, transparent 1px, transparent 3px),
-            url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-          opacity: 0.75;
-          mix-blend-mode: overlay;
-          opacity: 0.55;
+            repeating-linear-gradient(0deg, rgba(150, 170, 255, 0.045) 0px, rgba(150, 170, 255, 0.045) 1px, transparent 1px, transparent 3px),
+            repeating-linear-gradient(90deg, rgba(150, 170, 255, 0.032) 0px, rgba(150, 170, 255, 0.032) 1px, transparent 1px, transparent 3px);
+          opacity: 0.34;
+          transform: translateZ(0);
         }
 
         @keyframes atStageGrain {
@@ -7513,7 +8188,73 @@
 
         @media (max-width: 900px) {
           .at-work-detail-drawer {
-            padding: 16px 16px 195px 16px;
+            align-items: flex-start !important;
+            padding: 50px 14px 190px 14px !important;
+            overflow-y: auto !important;
+          }
+          .at-detail-showcase-frame {
+            aspect-ratio: auto !important;
+            height: auto !important;
+            max-height: none !important;
+            min-height: 0 !important;
+            padding: 14px 16px 12px !important;
+            gap: 6px !important;
+          }
+          .at-detail-showcase-frame > div:first-of-type {
+            font-size: 8.5px !important;
+            letter-spacing: 0.08em !important;
+            gap: 6px !important;
+            flex-wrap: wrap !important;
+            margin-bottom: 4px !important;
+          }
+          .at-detail-packshot-float {
+            max-height: clamp(72px, 13svh, 96px) !important;
+            margin-bottom: 8px !important;
+          }
+          .at-detail-giant-title {
+            font-size: clamp(20px, 5.4vw, 26px) !important;
+            line-height: 1.08 !important;
+            margin-bottom: 6px !important;
+          }
+          .at-detail-sub-question {
+            font-size: 11.5px !important;
+            line-height: 1.38 !important;
+            margin-bottom: 10px !important;
+          }
+          .at-detail-prove-btn {
+            padding: 8px 18px !important;
+            font-size: 9.5px !important;
+            letter-spacing: 0.12em !important;
+          }
+          .at-detail-footer-bar {
+            font-size: 8px !important;
+            letter-spacing: 0.08em !important;
+            padding-top: 8px !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            gap: 4px 10px !important;
+          }
+          .at-work-back-spiral-btn {
+            top: 10px !important;
+            right: 14px !important;
+            padding: 6px 12px !important;
+            font-size: 9.5px !important;
+          }
+          .at-chat-wrapper {
+            padding: 10px 14px 12px !important;
+          }
+          .at-chat-messages {
+            max-height: 108px !important;
+            margin-bottom: 6px !important;
+          }
+          .at-chat-line {
+            font-size: 9.5px !important;
+            line-height: 1.36 !important;
+            margin: 1px 0 1px 2px !important;
+          }
+          .at-chat-input {
+            padding: 6px 14px !important;
+            font-size: 10px !important;
           }
         }
 
@@ -10278,17 +11019,17 @@
           class="deck-slide absolute inset-x-0 top-20 bottom-0 w-full flex items-center justify-center px-6 sm:px-12 lg:px-20 py-8 transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10 overflow-y-auto lg:overflow-hidden"
           data-deck="brands" data-slide-index="0">
 
-          <!-- 3. Full-Bleed Right-Anchored 3D Humanoid + Spinning Globe Stage (Positioned & Blended Identically to Home Page #hero) -->
+          <!-- 3. Full-Bleed Right-Anchored 3D Humanoid + Spinning Globe Stage (Seamless Multi-Canvas 3D Blend) -->
           <div id="brands-aller-silhouette-stage"
             class="absolute inset-0 z-[5] overflow-hidden select-none"
-            style="-webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 32%, rgba(0,0,0,0.22) 42%, rgba(0,0,0,0.88) 51%, black 58%); mask-image: linear-gradient(to right, transparent 0%, transparent 32%, rgba(0,0,0,0.22) 42%, rgba(0,0,0,0.88) 51%, black 58%);">
+            style="-webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 20%, rgba(0,0,0,0.16) 29%, rgba(0,0,0,0.82) 38%, black 44%); mask-image: linear-gradient(to right, transparent 0%, transparent 20%, rgba(0,0,0,0.16) 29%, rgba(0,0,0,0.82) 38%, black 44%);">
 
             <!-- Soft Ambient Radial Backlight Centered Behind the Humanoid & Globe -->
             <div
-              class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_38%_48%_at_72%_48%,rgba(114,197,248,0.16)_0%,rgba(58,160,219,0.07)_48%,transparent_76%)] blur-2xl">
+              class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_44%_54%_at_70%_50%,rgba(114,197,248,0.18)_0%,rgba(58,160,219,0.08)_46%,transparent_76%)] blur-2xl">
             </div>
 
-            <!-- 3D WebGL Humanoid Bust + 88,000 Dispersing Particles Canvas -->
+            <!-- 3D WebGL Humanoid Bust + 88,000 Dispersing Particles + 3D Depth-Blended Holographic Globe -->
             <canvas id="brands-aller-webgl-canvas" aria-hidden="true"
               class="relative z-10 block w-full h-full transition-opacity duration-700 ease-out opacity-0"></canvas>
 
@@ -10296,58 +11037,80 @@
             <canvas id="brands-aller-ascii-canvas" aria-hidden="true"
               class="pointer-events-none absolute inset-0 z-20 block w-full h-full transition-opacity duration-700 ease-out opacity-0"></canvas>
 
-            <!-- 2D Interactive Wireframe Dotted Globe (RotatingEarth) Cradled & Spun by the Humanoid Hand -->
+            <!-- 2D Transparent Hit-Layer & Micro-HUD Canvas Synced to the 3D Hand-Held Globe -->
             <canvas id="brands-wireframe-globe-canvas"
               aria-label="Interactive wireframe dotted globe held and spun by the 3D humanoid hand"
               class="absolute inset-0 z-30 block w-full h-full transition-opacity duration-700 ease-out opacity-0"></canvas>
 
-            <!-- Soft Ambient Lens Radial & Edge Falloff on Far Right, Top & Bottom Edges (Exact Match to Home Page #hero) -->
+            <!-- Gentle Peripheral Falloff Only at Extreme Edges (Zero Bottom/Left Crop Cutoff) -->
             <div class="absolute inset-0 pointer-events-none z-[35]"
-              style="background: radial-gradient(ellipse 46% 56% at 72% 49%, transparent 50%, rgba(10,29,64,0.32) 76%, rgba(10,29,64,0.78) 100%), linear-gradient(to top, rgba(10,29,64,0.92) 0%, rgba(10,29,64,0.45) 8%, transparent 22%), linear-gradient(to bottom, rgba(10,29,64,0.55) 0%, transparent 14%);">
+              style="background: radial-gradient(ellipse 52% 62% at 72% 48%, transparent 56%, rgba(10,29,64,0.22) 82%, rgba(10,29,64,0.62) 100%), linear-gradient(to top, rgba(10,29,64,0.42) 0%, rgba(10,29,64,0.14) 8%, transparent 20%), linear-gradient(to bottom, rgba(10,29,64,0.42) 0%, transparent 12%);">
             </div>
           </div>
 
-          <!-- 4. Text Readability Contrast Scrim (Soft Gradient, Transparent on Right, Allows Wave & Smoke Motion Through — Exact Match to Home Page #hero) -->
+          <!-- 4. Text Readability Contrast Scrim (Soft Gradient, Transparent on Right Over Globe & Bust) -->
           <div class="absolute inset-0 pointer-events-none z-[8]"
-            style="background: linear-gradient(to right, rgba(10,29,64,0.55) 0%, rgba(10,29,64,0.3) 38%, transparent 65%);">
+            style="background: linear-gradient(to right, rgba(10,29,64,0.52) 0%, rgba(10,29,64,0.24) 34%, transparent 54%);">
           </div>
 
           <div
             class="relative z-20 w-full max-w-[1340px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center pointer-events-none">
 
-            <!-- Left Column: Eyebrow, 3-Line Headline, Narrative & Action Buttons -->
+            <!-- Left Copy Column: Eyebrow, 3-Line Headline, Narrative & Action Buttons -->
             <div class="lg:col-span-7 flex flex-col items-start text-left pointer-events-auto">
-              <p class="text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.22em] text-[#72c5f8] mb-4 sm:mb-5">
-                GLOBAL HEALTHCARE PARTNERSHIPS &nbsp;&bull;&nbsp; OPHTHALMIC FOUNDATION
+              <p class="br-eyebrow inline-flex items-center gap-2.5 text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.22em] text-[#72c5f8] mb-4 sm:mb-5">
+                <span>GLOBAL HEALTHCARE PARTNERSHIPS &nbsp;&bull;&nbsp; OPHTHALMIC FOUNDATION</span>
+                <span class="lg:hidden inline-block h-0.5 bg-sky/50 w-7 shrink-0"></span>
               </p>
 
               <h2 id="brands-title"
                 class="br-serif text-[38px] sm:text-[52px] xl:text-[62px] font-bold text-[#f4f7fb] tracking-[-0.025em] leading-[1.08] mb-6 sm:mb-7">
                 <span class="block">Bringing global</span>
                 <span class="block">medical technologies to</span>
-                <span class="block">Philippine institutions.</span>
+                <span class="block">Philippine <span class="text-[#72c5f8]">institutions.</span></span>
               </h2>
 
               <p
-                class="text-[15.5px] sm:text-[17px] text-[#9eb4cc] leading-[1.72] max-w-[610px] mb-8 sm:mb-10 font-normal">
+                class="br-lead text-[15.5px] sm:text-[17px] text-[#9eb4cc] leading-[1.72] max-w-[610px] mb-8 sm:mb-10 font-normal">
                 Beyond distribution, MEDIQ develops healthcare partnerships, builds product awareness and connects
                 international medical technologies with Philippine institutions &mdash; anchored by our established
                 specialty foundation in ophthalmology across importation and distribution, product marketing, sales and
                 commercialization, market development, education, and quality and customer support.
               </p>
 
-              <div class="flex flex-wrap items-center gap-4">
-                <!-- Partner with us -> Goes directly to Contact Info (#contact) -->
-                <a href="#contact"
-                  class="inline-flex items-center justify-center h-12 px-8 rounded-md bg-[#3aa0db] hover:bg-[#72c5f8] text-[#0a1d40] text-[14.5px] font-bold tracking-[0.01em] shadow-[0_10px_28px_rgba(58,160,219,0.35)] border border-[#72c5f8]/50 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer">
-                  Partner with us
-                </a>
-
+              <div class="br-cta-row flex flex-wrap items-center gap-4">
                 <!-- Explore More -> Goes to Slide 1 (Principal Brands Portfolio) -->
                 <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 1);}"
-                  class="inline-flex items-center justify-center h-12 px-8 rounded-md border border-[#72c5f8]/35 bg-[#0a1d40]/80 hover:bg-[#72c5f8]/12 hover:border-[#72c5f8]/70 text-[#f4f7fb] text-[14.5px] font-semibold tracking-[0.01em] transition-all duration-200 hover:-translate-y-0.5 cursor-pointer">
+                  class="inline-flex items-center justify-center h-12 px-8 rounded-md bg-[#3aa0db] hover:bg-[#72c5f8] text-[#0a1d40] text-[14.5px] font-bold tracking-[0.01em] shadow-[0_10px_28px_rgba(58,160,219,0.35)] border border-[#72c5f8]/50 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer lg:order-2">
                   Explore More
                 </button>
+
+                <!-- Partner with us -> Goes directly to Contact Info (#contact) -->
+                <a href="#contact"
+                  class="inline-flex items-center justify-center h-12 px-8 rounded-md border border-[#72c5f8]/35 bg-[#0a1d40]/80 hover:bg-[#72c5f8]/12 hover:border-[#72c5f8]/70 text-[#f4f7fb] text-[14.5px] font-semibold tracking-[0.01em] transition-all duration-200 hover:-translate-y-0.5 cursor-pointer lg:order-1">
+                  Partner with us
+                </a>
+              </div>
+            </div>
+
+            <!-- Mobile / Tablet Only Services-Style Hairline Index Rows (Desktop keeps open globe stage) -->
+            <div class="lg:hidden w-full pointer-events-auto relative z-20">
+              <div class="border-t border-[#72c5f8]/15">
+                <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 1);}"
+                  class="lottici-index-row w-full py-3 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
+                  <span class="br-serif min-w-0 flex-1 pr-1 text-[17px] font-semibold text-[#dce7f5] group-hover:text-white transition-colors">Principal Brands</span>
+                  <span class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">01</span>
+                </button>
+                <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 2);}"
+                  class="lottici-index-row w-full py-3 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
+                  <span class="br-serif min-w-0 flex-1 pr-1 text-[17px] font-semibold text-[#dce7f5] group-hover:text-white transition-colors">Brand Profiles &amp; Authorizations</span>
+                  <span class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">02</span>
+                </button>
+                <a href="assets/brochure/RayOne-EMV-Platform-Brochure-2024_2.2.pdf" download="RayOne EMV Platform Brochure 2024_2.2.pdf"
+                  class="lottici-index-row w-full py-3 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
+                  <span class="br-serif min-w-0 flex-1 pr-1 text-[17px] font-semibold text-[#dce7f5] group-hover:text-white transition-colors">Downloadable Brochures</span>
+                  <span class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">03</span>
+                </a>
               </div>
             </div>
 
@@ -10870,15 +11633,16 @@
 
         #srv-book-carousel-slide .bc-close {
           position: fixed;
-          top: 138px;
-          right: clamp(20px, 4vw, 48px);
-          width: 42px;
-          height: 42px;
+          top: 132px;
+          right: clamp(14px, 3.5vw, 44px);
+          width: 38px;
+          height: 38px;
           border: 1px solid rgba(114, 197, 248, 0.35);
           border-radius: 50%;
-          background: rgba(10, 29, 64, 0.85);
+          background: rgba(10, 29, 64, 0.88);
+          backdrop-filter: blur(8px);
           cursor: pointer;
-          z-index: 65;
+          z-index: 66;
           opacity: 0;
           pointer-events: none;
           display: flex;
@@ -10896,12 +11660,94 @@
         #srv-book-carousel-slide .bc-close.visible .bc-line-1 { transform: translateY(-50%) rotate(45deg); }
         #srv-book-carousel-slide .bc-close.visible .bc-line-2 { transform: translateY(-50%) rotate(-45deg); }
 
+        #srv-book-carousel-slide .bc-zoom-bar {
+          position: fixed;
+          top: 132px;
+          left: clamp(14px, 3.5vw, 44px);
+          z-index: 66;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 8px;
+          border-radius: 9999px;
+          border: 1px solid rgba(114, 197, 248, 0.32);
+          background: rgba(10, 29, 64, 0.88);
+          backdrop-filter: blur(10px);
+          box-shadow: 0 8px 24px rgba(2, 8, 22, 0.55);
+          opacity: 0;
+          pointer-events: none;
+          transform: translateY(-6px);
+          transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        #srv-book-carousel-slide.is-reading-open .bc-zoom-bar {
+          opacity: 1;
+          pointer-events: auto;
+          transform: translateY(0);
+        }
+        #srv-book-carousel-slide .bc-zoom-btn {
+          width: 28px;
+          height: 28px;
+          border-radius: 9999px;
+          border: 1px solid rgba(114, 197, 248, 0.24);
+          background: rgba(255, 255, 255, 0.06);
+          color: #f4f7fb;
+          font-size: 16px;
+          line-height: 1;
+          font-weight: 600;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: background 0.2s ease, border-color 0.2s ease;
+        }
+        #srv-book-carousel-slide .bc-zoom-btn:hover {
+          background: rgba(58, 160, 219, 0.26);
+          border-color: #72c5f8;
+        }
+        #srv-book-carousel-slide .bc-zoom-pct {
+          min-width: 44px;
+          height: 28px;
+          padding: 0 8px;
+          border-radius: 9999px;
+          border: none;
+          background: transparent;
+          color: #72c5f8;
+          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          cursor: pointer;
+        }
+        #srv-book-carousel-slide .bc-zoom-hint {
+          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-size: 10px;
+          letter-spacing: 0.08em;
+          color: rgba(203, 213, 225, 0.72);
+          padding-left: 4px;
+          padding-right: 4px;
+        }
+        #srv-book-carousel-slide.is-zoomed .bc-scene {
+          cursor: grab;
+        }
+        #srv-book-carousel-slide.is-zoomed .bc-scene:active {
+          cursor: grabbing;
+        }
+
         #srv-book-carousel-slide .bc-scene {
           position: absolute;
           inset: 0;
+          z-index: 2;
           perspective: 3000px;
           overflow: clip;
           cursor: grab;
+        }
+        #srv-book-carousel-slide .bc-library-veil {
+          background:
+            radial-gradient(ellipse 72% 66% at 50% 48%, rgba(8, 25, 60, 0.28) 0%, rgba(7, 20, 48, 0.52) 62%, rgba(4, 12, 30, 0.76) 100%),
+            linear-gradient(180deg, rgba(8, 24, 58, 0.40) 0%, rgba(10, 29, 64, 0.24) 48%, rgba(4, 13, 32, 0.56) 100%);
+          backdrop-filter: blur(1.8px) saturate(0.95);
+          -webkit-backdrop-filter: blur(1.8px) saturate(0.95);
+          box-shadow: inset 0 0 110px rgba(4, 12, 30, 0.55);
         }
         #srv-book-carousel-slide .bc-scene:active { cursor: grabbing; }
         #srv-book-carousel-slide .bc-track {
@@ -10910,6 +11756,43 @@
           left: 50%;
           transform-style: preserve-3d;
           will-change: transform;
+        }
+        #srv-book-carousel-slide .bc-shelf-ledge {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 20px;
+          border-radius: 3px 3px 5px 5px;
+          background: linear-gradient(180deg, #5c3a21 0%, #3d2413 42%, #24140a 100%);
+          border-top: 1px solid rgba(255, 224, 178, 0.36);
+          border-bottom: 2px solid #140b05;
+          box-shadow:
+            0 18px 34px rgba(2, 8, 22, 0.72),
+            0 4px 10px rgba(0, 0, 0, 0.55),
+            inset 0 2px 3px rgba(255, 219, 172, 0.22);
+          pointer-events: none;
+          transform-origin: center top;
+          will-change: transform, opacity;
+        }
+        #srv-book-carousel-slide .bc-shelf-ledge::before {
+          content: "";
+          position: absolute;
+          left: 16px;
+          right: 16px;
+          top: -8px;
+          height: 9px;
+          background: radial-gradient(ellipse at center, rgba(2, 6, 18, 0.68) 0%, rgba(2, 6, 18, 0) 75%);
+          pointer-events: none;
+        }
+        #srv-book-carousel-slide .bc-shelf-ledge::after {
+          content: "";
+          position: absolute;
+          left: 24px;
+          right: 24px;
+          top: 2px;
+          height: 1px;
+          background: linear-gradient(90deg, rgba(114, 197, 248, 0) 0%, rgba(214, 178, 118, 0.45) 50%, rgba(114, 197, 248, 0) 100%);
+          pointer-events: none;
         }
         #srv-book-carousel-slide .bc-wrapper {
           position: absolute;
@@ -11358,8 +12241,32 @@
 
 
         @media (max-width: 720px) {
+          #srv-book-carousel-slide .bc-close {
+            top: 132px;
+            right: 12px;
+            width: 34px;
+            height: 34px;
+          }
+          #srv-book-carousel-slide .bc-zoom-bar {
+            top: 132px;
+            left: 12px;
+            padding: 3px 6px;
+            gap: 4px;
+          }
+          #srv-book-carousel-slide .bc-zoom-btn {
+            width: 26px;
+            height: 26px;
+            font-size: 14px;
+          }
+          #srv-book-carousel-slide .bc-zoom-pct {
+            min-width: 38px;
+            height: 26px;
+            font-size: 10.5px;
+          }
           #srv-book-carousel-slide .bc-inside-spread,
-          #srv-book-carousel-slide .bc-page-spread { overflow-y: auto; }
+          #srv-book-carousel-slide .bc-page-spread {
+            overflow-y: auto;
+          }
         }
 
       </style>
@@ -11475,12 +12382,12 @@
               <div class="w-full max-w-[550px] lg:ml-auto py-6 relative z-20">
                 <div class="border-t border-[#72c5f8]/15">
                   <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 1);}"
-                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
+                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
                     <span
-                      class="srv-serif text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Strategic
+                      class="srv-serif min-w-0 flex-1 pr-1 text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Strategic
                       Importation &amp; Distribution</span>
                     <span
-                      class="inline-flex items-center gap-2 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
+                      class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
                       <span>01</span>
                       <svg
                         class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
@@ -11492,12 +12399,12 @@
                   </button>
 
                   <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 2);}"
-                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
+                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
                     <span
-                      class="srv-serif text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Product
+                      class="srv-serif min-w-0 flex-1 pr-1 text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Product
                       Marketing &amp; Brand Development</span>
                     <span
-                      class="inline-flex items-center gap-2 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
+                      class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
                       <span>02</span>
                       <svg
                         class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
@@ -11509,12 +12416,12 @@
                   </button>
 
                   <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 3);}"
-                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
+                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
                     <span
-                      class="srv-serif text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Sales,
+                      class="srv-serif min-w-0 flex-1 pr-1 text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Sales,
                       Promotion &amp; Commercialization</span>
                     <span
-                      class="inline-flex items-center gap-2 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
+                      class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
                       <span>03</span>
                       <svg
                         class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
@@ -11526,12 +12433,12 @@
                   </button>
 
                   <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 4);}"
-                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
+                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
                     <span
-                      class="srv-serif text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Market
+                      class="srv-serif min-w-0 flex-1 pr-1 text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Market
                       Development</span>
                     <span
-                      class="inline-flex items-center gap-2 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
+                      class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
                       <span>04</span>
                       <svg
                         class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
@@ -11543,12 +12450,12 @@
                   </button>
 
                   <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 5);}"
-                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
+                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
                     <span
-                      class="srv-serif text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Professional
+                      class="srv-serif min-w-0 flex-1 pr-1 text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Professional
                       Education</span>
                     <span
-                      class="inline-flex items-center gap-2 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
+                      class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
                       <span>05</span>
                       <svg
                         class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
@@ -11560,12 +12467,12 @@
                   </button>
 
                   <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 6);}"
-                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
+                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
                     <span
-                      class="srv-serif text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Quality
+                      class="srv-serif min-w-0 flex-1 pr-1 text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Quality
                       &amp; Customer Support</span>
                     <span
-                      class="inline-flex items-center gap-2 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
+                      class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
                       <span>06</span>
                       <svg
                         class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
@@ -11597,8 +12504,11 @@
           class="deck-slide absolute inset-x-0 top-[122px] bottom-0 w-full flex flex-col bg-[#040d20]/85 text-cream overflow-hidden transition-all duration-500 ease-out opacity-0 pointer-events-none translate-x-12 z-0"
           data-deck="services" data-slide-index="7">
           <canvas id="distribution-3d-atrium-canvas"
-            class="pointer-events-none absolute inset-0 z-0 block size-full opacity-100"
+            class="pointer-events-none absolute inset-0 z-0 block size-full opacity-[0.84]"
             aria-hidden="true"></canvas>
+          <div id="srv-library-transparent-veil"
+            class="bc-library-veil pointer-events-none absolute inset-0 z-[1]"
+            aria-hidden="true"></div>
 
 
           <button type="button" id="srv-bc-close" class="bc-close" aria-label="Close service reading view">
@@ -12312,7 +13222,7 @@
       <!-- Full-Bleed Dynamic Ambient Photo & Charcoal Vignette -->
       <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-[#0c0a09]">
         <img id="news-cf-ambience-img" src="assets/img/rayone-emv-brochure.jpg" alt="" aria-hidden="true"
-          style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.22) blur(32px);transform:scale(1.15);transition:opacity 1000ms ease,filter 1000ms ease;" />
+          style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.22) blur(16px);transform:translateZ(0) scale(1.1);transition:opacity 550ms ease;will-change:opacity;" />
         <div class="absolute inset-0"
           style="background:radial-gradient(circle at center, rgba(12,10,9,0.3) 0%, rgba(12,10,9,0.92) 100%);">
         </div>
@@ -12361,424 +13271,337 @@
     </section>
     <!-- ============== CONTACT US SINGLE-PAGE SECTION ============== -->
     <section id="contact" aria-labelledby="contact-title"
-      class="page-snap-section page-transition-section relative isolate w-full h-[100svh] min-h-[100svh] max-h-[100svh] overflow-hidden bg-[#040915] scroll-mt-0">
+      class="page-snap-section page-transition-section relative isolate w-full min-h-[100svh] lg:h-[100svh] overflow-hidden bg-[#0a1d40] text-[#f6f2ea] scroll-mt-0">
       <style id="contact-editorial-scoped-styles">
-        #contact .cnt-serif {
-          font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+        #contact .cnt-heading {
+          font-family: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif;
+          letter-spacing: -0.02em;
+          -webkit-font-smoothing: antialiased;
         }
 
-        #contact .cnt-eyebrow {
-          font-family: var(--font-sans, "Plus Jakarta Sans", sans-serif);
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.24em;
-          text-transform: uppercase;
-          color: #679cd0;
-        }
-
-        /* Redesigned Flagship Architectural Inquiry Console Card */
-        #contact #contact-panel-form {
-          position: relative;
-          border-radius: 20px;
-          border: 1px solid rgba(114, 197, 248, 0.22);
-          background: linear-gradient(155deg, rgba(7, 21, 52, 0.78) 0%, rgba(3, 10, 24, 0.68) 100%);
-          box-shadow: 0 32px 80px rgba(2, 7, 19, 0.72), inset 0 1px 0 rgba(186, 232, 255, 0.18);
-          backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
-          overflow: hidden;
-          transition: border-color 260ms ease, box-shadow 260ms ease;
-        }
-
-        #contact #contact-panel-form::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 2px;
-          background: linear-gradient(90deg, transparent 4%, rgba(114, 197, 248, 0.9) 32%, rgba(56, 189, 248, 0.45) 68%, transparent 96%);
-          pointer-events: none;
-        }
-
-        #contact #contact-panel-form:hover {
-          border-color: rgba(114, 197, 248, 0.36);
-        }
-
-        #contact .cnt-card-topbar {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 10px;
-          padding: 13px 20px;
-          background: rgba(4, 13, 32, 0.56);
-          border-bottom: 1px solid rgba(114, 197, 248, 0.14);
-        }
-
-        #contact .cnt-live-status {
-          display: inline-flex;
-          align-items: center;
-          gap: 7px;
-          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: 9.5px;
-          letter-spacing: 0.16em;
-          text-transform: uppercase;
-          color: #8ad8ff;
-        }
-
-        #contact .cnt-live-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 9999px;
-          background: #72c5f8;
-          box-shadow: 0 0 8px rgba(114, 197, 248, 0.95);
-        }
-
-        /* Icon-Prefixed Surgical Glass Input Wells */
-        #contact .cnt-field-wrap {
-          position: relative;
-        }
-
-        #contact .cnt-field-icon {
-          position: absolute;
-          left: 12px;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 14px;
-          height: 14px;
-          color: rgba(114, 197, 248, 0.56);
-          pointer-events: none;
-          transition: color 180ms ease;
-        }
-
-        #contact .cnt-input {
+        #contact .cnt-uline-input {
           width: 100%;
-          background: rgba(3, 10, 25, 0.68);
-          border: 1px solid rgba(114, 197, 248, 0.14);
-          border-bottom: 1.5px solid rgba(114, 197, 248, 0.24);
-          border-radius: 10px;
-          font-size: 12px;
-          color: #f4f9ff;
-          transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+          border: 0;
+          border-bottom: 1px solid rgba(114, 197, 248, 0.28);
+          background: transparent;
+          padding: 11px 0;
+          font-size: 14.5px;
+          color: #f6f2ea;
+          border-radius: 0;
+          transition: border-color 180ms ease;
         }
 
-        #contact .cnt-input-with-icon {
-          padding: 9px 12px 9px 34px;
+        #contact .cnt-uline-input::placeholder {
+          color: rgba(182, 212, 238, 0.56);
         }
 
-        #contact .cnt-textarea {
-          padding: 9px 12px;
-          resize: none;
-        }
-
-        #contact .cnt-input::placeholder {
-          color: rgba(206, 224, 245, 0.36);
-        }
-
-        #contact .cnt-input:focus {
-          background: rgba(4, 14, 34, 0.92);
-          border-color: rgba(114, 197, 248, 0.55);
-          border-bottom-color: #72c5f8;
-          box-shadow: 0 4px 18px rgba(56, 189, 248, 0.16);
+        #contact .cnt-uline-input:focus {
           outline: none;
-        }
-
-        #contact .cnt-field-wrap:focus-within .cnt-field-icon {
-          color: #9ae4ff;
-        }
-
-        /* Custom Obsidian Consent Checkbox (No Harsh Default White Box) */
-        #contact .cnt-consent-box {
-          border-radius: 11px;
-          border: 1px solid rgba(114, 197, 248, 0.14);
-          background: rgba(3, 11, 28, 0.56);
-          transition: border-color 180ms ease, background-color 180ms ease;
-        }
-
-        #contact .cnt-consent-box:hover {
-          border-color: rgba(114, 197, 248, 0.28);
+          border-bottom-color: #72c5f8;
         }
 
         #contact #inq-consent {
-          appearance: none;
-          -webkit-appearance: none;
+          accent-color: #3aa0db;
           width: 16px;
           height: 16px;
-          border-radius: 5px;
-          border: 1.5px solid rgba(114, 197, 248, 0.45);
-          background: rgba(3, 12, 30, 0.85);
-          display: grid;
-          place-items: center;
+          border-radius: 4px;
           cursor: pointer;
-          transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
         }
 
-        #contact #inq-consent:checked {
-          background: #3aa0db;
-          border-color: #9ae4ff;
-          box-shadow: 0 0 12px rgba(114, 197, 248, 0.45);
+        #contact #form-feedback.text-sky {
+          color: #72c5f8 !important;
         }
 
-        #contact #inq-consent:checked::after {
-          content: "";
-          width: 5px;
-          height: 9px;
-          border: solid #041028;
-          border-width: 0 2px 2px 0;
-          transform: rotate(42deg) translate(-0.5px, -0.5px);
+        #contact #form-feedback.text-ray {
+          color: #fb7185 !important;
         }
 
-        #contact .cnt-submit-btn {
-          background: linear-gradient(135deg, #3aa0db 0%, #72c5f8 100%);
-          color: #041028;
-          border-radius: 11px;
-          box-shadow: 0 8px 26px rgba(58, 160, 219, 0.38);
-          transition: transform 180ms ease, filter 180ms ease, box-shadow 180ms ease;
+        #contact-map-wrap.is-map-expanded {
+          position: fixed;
+          inset: 92px 24px 20px 24px;
+          height: auto !important;
+          z-index: 60;
+          box-shadow: 0 28px 80px rgba(3, 10, 24, 0.72);
+          border-radius: 24px;
         }
 
-        #contact .cnt-submit-btn:hover {
-          filter: brightness(1.08);
-          transform: translateY(-1px);
-          box-shadow: 0 12px 32px rgba(114, 197, 248, 0.5);
-        }
-
-        /* Floating transparent ocean-side pins over the right-side Philippines map */
-        #contact #contact-ph-pins {
-          position: absolute;
-          inset: 0;
-          z-index: 30;
-          pointer-events: none;
+        #contact-map-close-expand {
           display: none;
         }
 
-        @media (min-width: 1024px) {
-          #contact #contact-ph-pins {
-            display: block;
-          }
-        }
-
-        #contact .cnt-map-pin {
-          position: absolute;
-          top: 0;
-          left: 0;
-          pointer-events: auto;
+        #contact-map-wrap.is-map-expanded #contact-map-close-expand {
           display: inline-flex;
-          align-items: center;
-          gap: 7px;
-          background: transparent;
-          border: none;
-          padding: 4px 6px;
-          cursor: pointer;
-          opacity: 0.88;
-          transition: opacity 180ms ease;
-        }
-
-        #contact .cnt-map-pin:hover,
-        #contact .cnt-map-pin:focus-visible,
-        #contact .cnt-map-pin.is-active {
-          opacity: 1;
-          outline: none;
-        }
-
-        #contact .cnt-map-pin-right {
-          margin-left: 14px;
-          margin-top: -15px;
-        }
-
-        #contact .cnt-map-pin-left {
-          flex-direction: row-reverse;
-          text-align: right;
-          margin-left: -170px;
-          margin-top: -15px;
-        }
-
-        #contact .cnt-map-pin-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 9999px;
-          background: #72c5f8;
-          box-shadow: 0 0 10px rgba(114, 197, 248, 0.9);
-          flex-shrink: 0;
-          transition: transform 180ms ease, background-color 180ms ease;
-        }
-
-        #contact .cnt-map-pin:hover .cnt-map-pin-dot,
-        #contact .cnt-map-pin.is-active .cnt-map-pin-dot {
-          background: #ffffff;
-          transform: scale(1.3);
-        }
-
-        #contact .cnt-map-pin-text {
-          display: flex;
-          flex-direction: column;
-          line-height: 1.15;
-          padding: 3px 8px;
-          border-radius: 6px;
-          background: rgba(4, 10, 24, 0.58);
-          backdrop-filter: blur(4px);
-          -webkit-backdrop-filter: blur(4px);
-          text-shadow: 0 2px 10px rgba(2, 7, 19, 0.98);
-        }
-
-        #contact .cnt-map-pin-text strong {
-          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: 9.5px;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          color: #e6f6ff;
-          font-weight: 600;
-        }
-
-        #contact .cnt-map-pin-text em {
-          font-style: normal;
-          font-size: 9px;
-          color: #7ac0eb;
         }
       </style>
 
-      <!-- Persistent Ambient MediQ Obsidian Space, Silk Waves & Right-Side 3D Philippines Map -->
-      <div id="contact-vr-bg-host" class="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-[#040915]">
-        <!-- 1. Silk Waves Shader Background -->
+      <!-- Persistent Ambient MediQ Navy, Silk Waves Shader, Two-Layer Smoke & Fine Architectural Grid -->
+      <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-[#0a1d40]" aria-hidden="true">
         <canvas id="contact-waves-shader-canvas"
-          class="pointer-events-none absolute inset-0 z-0 block size-full opacity-22 transition-opacity duration-500"
+          class="pointer-events-none absolute inset-0 z-0 block size-full opacity-45 transition-opacity duration-500"
           aria-hidden="true"></canvas>
-
-        <!-- 2. Two-Layer HTML5 Canvas Smoke Animation -->
         <canvas id="contact-smoke-canvas"
-          class="deck-smoke-canvas pointer-events-none absolute inset-0 z-[1] block size-full opacity-30"
+          class="deck-smoke-canvas pointer-events-none absolute inset-0 z-[1] block size-full opacity-95"
           aria-hidden="true"></canvas>
-
-        <!-- 3. Subtle Fine Architectural Grid Texture -->
         <div
-          class="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(rgba(114,197,248,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(114,197,248,0.02)_1px,transparent_1px)] [background-size:32px_32px]">
+          class="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(rgba(114,197,248,0.032)_1px,transparent_1px),linear-gradient(90deg,rgba(114,197,248,0.032)_1px,transparent_1px)] [background-size:32px_32px]">
         </div>
-
-        <div class="absolute -left-24 top-1/4 h-[38rem] w-[38rem] rounded-full bg-sky/10 blur-[170px]"></div>
-        <div class="absolute right-0 top-1/3 h-[42rem] w-[42rem] rounded-full bg-[#0a1d40]/35 blur-[190px]"></div>
+        <div class="absolute -left-24 top-1/4 h-[38rem] w-[38rem] rounded-full bg-[radial-gradient(circle,rgba(58,160,219,0.16)_0%,transparent_70%)]"></div>
+        <div class="absolute right-0 top-1/3 h-[42rem] w-[42rem] rounded-full bg-[radial-gradient(circle,rgba(13,42,90,0.48)_0%,transparent_70%)]"></div>
+        <div class="pointer-events-none absolute inset-0 z-[3] mx-auto max-w-[1380px] px-6 sm:px-10 lg:px-16">
+          <div class="grid h-full w-full grid-cols-3 border-x border-[#72c5f8]/[0.07]">
+            <div class="border-r border-[#72c5f8]/[0.07]"></div>
+            <div class="border-r border-[#72c5f8]/[0.07]"></div>
+            <div></div>
+          </div>
+        </div>
       </div>
 
-      <!-- Floating Map Hub Pin Overlay on Right Open Philippines Stage -->
-      <div id="contact-ph-pins" aria-label="Philippine Regional Hubs"></div>
-
       <!-- Single Page Container -->
-      <div class="relative w-full h-full overflow-hidden">
-        <!-- SINGLE PAGE (SLIDE 0): LEFT REDESIGNED INQUIRY CONSOLE + RIGHT PHILIPPINES NETWORK MAP -->
+      <div class="relative z-10 w-full h-full overflow-hidden">
         <div
-          class="deck-slide absolute inset-x-0 top-20 bottom-0 w-full flex flex-col justify-center bg-transparent text-cream px-5 sm:px-10 lg:px-16 py-3 overflow-y-auto lg:overflow-hidden transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10"
+          class="deck-slide relative lg:absolute inset-x-0 lg:top-20 lg:bottom-0 w-full flex flex-col justify-start lg:justify-center bg-transparent px-5 sm:px-8 lg:px-12 pt-24 pb-10 lg:py-6 overflow-y-auto transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10"
           data-deck="contact" data-slide-index="0">
-          <div class="relative z-20 w-full max-w-[1380px] mx-auto flex flex-col justify-center">
+          <div class="relative z-20 w-full max-w-[1260px] mx-auto">
 
-            <!-- Left Half: Header + Redesigned Inquiry Console Card | Right Half: Full-Height 3D Philippines Map -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-              <div class="lg:col-span-6 flex flex-col justify-center">
-                <!-- Compact Editorial Header Block -->
-                <div class="mb-3 pb-2.5 border-b border-[#72c5f8]/20">
-                  <div class="cnt-eyebrow mb-1">08 &bull; CONTACT US &mdash; INSTITUTIONAL SUPPLY, MARKETING, EDUCATION
-                    &amp; PARTNERSHIPS</div>
-                  <h2 id="contact-title"
-                    class="cnt-serif text-[23px] sm:text-[29px] xl:text-[31px] font-bold text-[#f6f2ea] tracking-[-0.02em] leading-[1.12]">
-                    Connect with <span class="text-[#72c5f8]">MEDIQ</span> across healthcare &amp; commercial teams.
-                  </h2>
-                </div>
+            <!-- Unified Editorial Glass Card (Matches Single-Card Two-Pane Contact Architecture) -->
+            <div id="contact-panel-form"
+              class="relative overflow-hidden rounded-[28px] bg-[#071530]/92 backdrop-blur-sm border border-[#72c5f8]/20 shadow-[0_32px_90px_rgba(3,10,24,0.62)] p-7 sm:p-10 lg:px-14 lg:py-11">
+              <div class="pointer-events-none absolute inset-x-16 top-0 h-px bg-gradient-to-r from-transparent via-[#72c5f8]/45 to-transparent" aria-hidden="true"></div>
 
-                <div id="contact-panel-form" class="flex flex-col justify-between">
-                  <!-- Sleek Console Top Bar -->
-                  <div class="cnt-card-topbar">
-                    <div class="flex items-center gap-2.5">
-                      <span class="cnt-live-dot"></span>
-                      <h3 class="text-[12px] font-mono uppercase tracking-[0.18em] text-[#f4f9ff] font-semibold">Direct
-                        Inquiry Console</h3>
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-9 lg:gap-0 items-stretch">
+
+                <!-- Left Pane: Brand Eyebrow, Display Headline, Narrative & Hairline Details Rows -->
+                <div class="lg:col-span-6 min-w-0 lg:pr-12 xl:pr-14 lg:border-r lg:border-[#72c5f8]/12 flex flex-col justify-between">
+                  <div>
+                    <div class="flex flex-wrap items-center gap-3.5 mb-5">
+                      <img src="assets/img/mediq-wordmark-only.png?v=105.00" alt="MEDIQ Pharma and Medical Supplies Distribution"
+                        class="h-7 sm:h-8 w-auto object-contain drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]" />
+                      <span class="inline-flex items-center gap-1.5 rounded-full border border-[#72c5f8]/25 bg-[#0a214a]/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#9ec5e6]">
+                        <span class="size-1.5 rounded-full bg-[#3aa0db]" aria-hidden="true"></span>
+                        Direct Desk
+                      </span>
                     </div>
-                    <span class="cnt-live-status">PH National Desk</span>
+                    <h2 id="contact-title"
+                      class="cnt-heading text-[34px] sm:text-[42px] xl:text-[46px] font-normal text-[#f4f7fb] leading-[1.10] max-w-[410px] mb-5">
+                      <span class="block">We are always ready</span>
+                      <span class="block">to help you and</span>
+                      <span class="block">answer your</span>
+                      <span class="block">questions</span>
+                    </h2>
+                    <p class="text-[13.5px] sm:text-[14px] leading-[1.65] tracking-[0.005em] text-[#9eb4cc] max-w-[445px] mb-8">
+                      Connect with MEDIQ Pharma Inc. across hospital supply, our ophthalmic IOL portfolio, and institutional commercial partner teams.
+                    </p>
                   </div>
 
-                  <form id="quote-form" class="p-5 sm:p-6 flex flex-col justify-between flex-1 gap-3.5" novalidate>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  <!-- 4 Hairline-Separated Key-Value Rows -->
+                  <div class="border-t border-[#72c5f8]/12 divide-y divide-[#72c5f8]/12 text-[13px]">
+                    <div class="grid grid-cols-1 sm:grid-cols-[135px_1fr] gap-1 sm:gap-4 py-3.5 items-start">
+                      <span class="text-[#7e9aba]">Institutional desk</span>
                       <div>
-                        <label for="inq-name"
-                          class="block text-[9.5px] font-mono font-bold uppercase tracking-wider text-sky">Full Name
-                          *</label>
-                        <div class="cnt-field-wrap mt-1">
-                          <svg class="cnt-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                          </svg>
-                          <input id="inq-name" name="name" type="text" required placeholder="Full Name"
-                            class="cnt-input cnt-input-with-icon" />
-                        </div>
+                        <div class="font-medium text-[#f4f7fb]">Direct Inquiry Console</div>
+                        <a href="mailto:mediqtechsupport@gmail.com"
+                          class="mt-1 inline-flex items-center gap-1.5 rounded-full border border-[#72c5f8]/25 bg-[#0a214a]/70 px-2.5 py-0.5 font-mono text-[11.5px] text-[#72c5f8] hover:border-[#72c5f8]/60 hover:text-white transition-colors">
+                          mediqtechsupport@gmail.com
+                        </a>
                       </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-[135px_1fr] gap-1 sm:gap-4 py-3.5 items-start">
+                      <span class="text-[#7e9aba]">Location</span>
                       <div>
-                        <label for="inq-clinic"
-                          class="block text-[9.5px] font-mono font-bold uppercase tracking-wider text-sky">Organization /
-                          Institution *</label>
-                        <div class="cnt-field-wrap mt-1">
-                          <svg class="cnt-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <path d="M3 21h18" />
-                            <path d="M5 21V7l8-4v18" />
-                            <path d="M19 21V11l-6-4" />
-                          </svg>
-                          <input id="inq-clinic" name="clinic" type="text" required
-                            placeholder="Hospital, Medical Center or Surgical Clinic"
-                            class="cnt-input cnt-input-with-icon" />
-                        </div>
+                        <div class="font-medium text-[#f4f7fb]">Marikina &mdash; Pasig, Metro Manila</div>
+                        <div class="text-[12.5px] text-[#7e9aba] mt-0.5">Serving Luzon, Visayas and Mindanao</div>
                       </div>
-                      <div class="sm:col-span-2">
-                        <label for="inq-email"
-                          class="block text-[9.5px] font-mono font-bold uppercase tracking-wider text-sky">Business Email
-                          *</label>
-                        <div class="cnt-field-wrap mt-1">
-                          <svg class="cnt-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-[135px_1fr] gap-1 sm:gap-4 py-3.5 items-center">
+                      <span class="text-[#7e9aba]">Mobile</span>
+                      <div>
+                        <a href="tel:+639457954365"
+                          class="font-mono text-[#f4f7fb] underline underline-offset-4 decoration-[#72c5f8]/40 hover:text-[#72c5f8] transition-colors">
+                          0945 795 4365
+                        </a>
+                      </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-[135px_1fr] gap-2 sm:gap-4 pt-3.5 items-center">
+                      <span class="text-[#7e9aba]">Connect</span>
+                      <div class="flex items-center gap-3 text-[#dbeafe]">
+                        <!-- Viber -->
+                        <a href="viber://chat?number=%2B639457954365" aria-label="MEDIQ on Viber (+63 945 795 4365)" title="Viber: 0945 795 4365"
+                          class="flex size-8 items-center justify-center rounded-full border border-[#72c5f8]/20 bg-[#0b1f44]/70 hover:border-[#72c5f8]/55 hover:text-[#72c5f8] transition-colors">
+                          <svg class="size-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M12.2 2C6.88 2 3 5.45 3 10.22c0 2.74 1.24 4.96 3.24 6.38v3.18c0 .44.52.68.85.39l2.75-2.38c.76.17 1.56.26 2.36.26 5.32 0 8.8-3.27 8.8-7.83S17.52 2 12.2 2Zm3.95 11.42c-.3.84-1.48 1.54-2.16 1.62-.58.07-1.31.12-4.23-1.1-3.56-1.48-5.82-5.06-6-5.3-.17-.24-1.43-1.9-1.43-3.63 0-1.72.89-2.56 1.25-2.92.3-.3.79-.44 1.26-.44.15 0 .29.01.41.01.36.02.54.04.78.61.3.71 1.02 2.49 1.11 2.67.09.18.18.42.06.66-.11.24-.2.35-.38.55-.18.21-.35.37-.53.6-.16.2-.35.42-.14.79.21.37.94 1.54 2.02 2.49 1.39 1.24 2.52 1.63 2.94 1.8.3.12.66.09.89-.15.29-.3.65-.8 1.01-1.3.26-.35.58-.4.93-.27.35.12 2.2 1.04 2.58 1.23.38.19.63.28.72.44.09.16.09.92-.21 1.76Z"/>
+                          </svg>
+                        </a>
+                        <!-- Telegram -->
+                        <a href="https://t.me/mediqpharma" target="_blank" rel="noopener noreferrer" aria-label="MEDIQ on Telegram" title="Telegram: @mediqpharma"
+                          class="flex size-8 items-center justify-center rounded-full border border-[#72c5f8]/20 bg-[#0b1f44]/70 hover:border-[#72c5f8]/55 hover:text-[#72c5f8] transition-colors">
+                          <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="m22 2-7 20-4-9-9-4Z" />
+                            <path d="M22 2 11 13" />
+                          </svg>
+                        </a>
+                        <!-- Mobile Phone -->
+                        <a href="tel:+639457954365" aria-label="Call MEDIQ Mobile 0945 795 4365" title="Mobile: 0945 795 4365"
+                          class="flex size-8 items-center justify-center rounded-full border border-[#72c5f8]/20 bg-[#0b1f44]/70 hover:border-[#72c5f8]/55 hover:text-[#72c5f8] transition-colors">
+                          <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                          </svg>
+                        </a>
+                        <!-- Email -->
+                        <a href="mailto:mediqtechsupport@gmail.com" aria-label="Email mediqtechsupport@gmail.com" title="Email: mediqtechsupport@gmail.com"
+                          class="flex size-8 items-center justify-center rounded-full border border-[#72c5f8]/20 bg-[#0b1f44]/70 hover:border-[#72c5f8]/55 hover:text-[#72c5f8] transition-colors">
+                          <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <rect x="2" y="4" width="20" height="16" rx="2" />
                             <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                           </svg>
-                          <input id="inq-email" name="email" type="email" required placeholder="name@organization.com"
-                            class="cnt-input cnt-input-with-icon" />
-                        </div>
+                        </a>
                       </div>
-                      <div class="sm:col-span-2">
-                        <label for="inq-message"
-                          class="block text-[9.5px] font-mono font-bold uppercase tracking-wider text-sky">Inquiry
-                          Summary</label>
-                        <textarea id="inq-message" name="message" rows="3"
-                          placeholder="Describe your institutional, partnership, educational, or product inquiry. Do not include patient-identifiable details."
-                          class="cnt-input cnt-textarea mt-1"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Pane: Minimalist Inquiry Form with Topic Pills & Direct Dispatch -->
+                <div class="lg:col-span-6 min-w-0 lg:pl-12 xl:pl-14 flex flex-col justify-center">
+                  <div class="mb-6">
+                    <h3 class="cnt-heading text-[24px] sm:text-[26px] font-semibold text-[#f4f7fb] leading-tight">Get in touch</h3>
+                    <p class="mt-2 text-[13.5px] leading-[1.55] text-[#9eb4cc] max-w-[440px]">
+                      Tell us what your institution needs: product inquiries, supply requirements, or partnership goals.
+                    </p>
+                  </div>
+
+                  <form id="quote-form" action="https://formsubmit.co/mediqtechsupport@gmail.com" method="POST" class="flex flex-col gap-5" novalidate>
+                    <input type="hidden" name="_subject" value="MEDIQ Pharma — New Website Inquiry" />
+                    <input type="hidden" name="_template" value="table" />
+                    <input type="hidden" name="_autoresponse" value="Thank you for contacting MEDIQ Pharma and Medical Supplies Distribution Inc. We have received your message and our Commercial & Technical Support team will reply shortly. Direct channels: Viber / Mobile +63 945 795 4365 | Telegram t.me/mediqpharma | Email mediqtechsupport@gmail.com" />
+                    <input type="hidden" id="inq-subject" name="subject" value="Hospital supply" />
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+                      <div>
+                        <label for="inq-name" class="sr-only">Full name *</label>
+                        <input id="inq-name" name="name" type="text" required placeholder="Full name *"
+                          class="cnt-uline-input" />
+                      </div>
+                      <div>
+                        <label for="inq-clinic" class="sr-only">Organization / clinic *</label>
+                        <input id="inq-clinic" name="clinic" type="text" required
+                          placeholder="Organization / clinic *" class="cnt-uline-input" />
                       </div>
                     </div>
 
-                    <!-- Custom Styled Privacy Notice & Explicit Contact Consent -->
-                    <label for="inq-consent"
-                      class="cnt-consent-box flex items-start gap-2.5 px-3 py-2 cursor-pointer">
+                    <!-- Work Email Field (Inquiries dispatch automatically to mediqtechsupport@gmail.com) -->
+                    <div>
+                      <label for="inq-email" class="sr-only">Work email *</label>
+                      <input id="inq-email" name="email" type="email" required
+                        placeholder="Work email *"
+                        class="cnt-uline-input" />
+                    </div>
+
+                    <!-- Selectable Inquiry Topic Pills -->
+                    <div id="contact-topic-pills" class="flex flex-wrap items-center gap-2 pt-0.5" role="group" aria-label="Inquiry topic">
+                      <button type="button" data-contact-topic="Hospital supply" aria-pressed="true"
+                        class="rounded-full border border-[#72c5f8]/65 bg-[#123568]/80 px-3.5 py-1.5 text-[11.5px] font-medium text-white shadow-[0_0_16px_rgba(58,160,219,0.22)] transition-colors cursor-pointer">
+                        Hospital supply
+                      </button>
+                      <button type="button" data-contact-topic="IOL portfolio" aria-pressed="false"
+                        class="rounded-full border border-[#72c5f8]/22 bg-[#0a1d40]/60 px-3.5 py-1.5 text-[11.5px] font-medium text-[#9eb4cc] hover:border-[#72c5f8]/50 hover:text-white transition-colors cursor-pointer">
+                        IOL portfolio
+                      </button>
+                      <button type="button" data-contact-topic="Partnership" aria-pressed="false"
+                        class="rounded-full border border-[#72c5f8]/22 bg-[#0a1d40]/60 px-3.5 py-1.5 text-[11.5px] font-medium text-[#9eb4cc] hover:border-[#72c5f8]/50 hover:text-white transition-colors cursor-pointer">
+                        Partnership
+                      </button>
+                      <button type="button" data-contact-topic="Something else" aria-pressed="false"
+                        class="rounded-full border border-[#72c5f8]/22 bg-[#0a1d40]/60 px-3.5 py-1.5 text-[11.5px] font-medium text-[#9eb4cc] hover:border-[#72c5f8]/50 hover:text-white transition-colors cursor-pointer">
+                        Something else
+                      </button>
+                    </div>
+
+                    <div>
+                      <label for="inq-message" class="sr-only">Message</label>
+                      <textarea id="inq-message" name="message" rows="2"
+                        placeholder="Message"
+                        class="cnt-uline-input resize-none"></textarea>
+                    </div>
+
+                    <label for="inq-consent" class="flex items-start gap-2.5 pt-0.5 cursor-pointer">
                       <input id="inq-consent" name="consent" type="checkbox" required class="mt-0.5 shrink-0" />
-                      <span class="text-[10px] leading-[1.42] text-[#a5bbd4]">
-                        <strong class="text-[#eef5fd] font-semibold">Privacy &amp; Contact Consent:</strong> I consent to
-                        MEDIQ collecting and using my business contact details solely to respond to this inquiry under the
-                        Philippine Data Privacy Act, and confirm no patient-identifiable information is included.
+                      <span class="text-[11.5px] leading-[1.45] text-[#9eb4cc]">
+                        I agree to MEDIQ using my business contact details to respond, in line with the Philippine Data Privacy Act.
                       </span>
                     </label>
 
-                    <div
-                      class="pt-2.5 border-t border-[#72c5f8]/15 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                      <p id="form-feedback" class="text-[10.5px] text-[#92aac5]">For institutions, manufacturers, partners
-                        &amp; healthcare professionals.</p>
+                    <div class="pt-2 flex flex-wrap items-center justify-between gap-4">
                       <button type="submit"
-                        class="cnt-submit-btn group inline-flex items-center justify-center gap-2 font-bold text-xs px-5 py-2.5 cursor-pointer shrink-0">
-                        <span>Submit Inquiry</span>
-                        <svg class="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                          <path d="m9 18 6-6-6-6" />
-                        </svg>
+                        class="inline-flex items-center justify-center rounded-full bg-[#4da8f0] hover:bg-[#70beff] text-[#041022] font-semibold text-[13.5px] px-7 py-3 shadow-[0_0_28px_rgba(77,168,240,0.45)] cursor-pointer transition-colors">
+                        <span>Send message</span>
                       </button>
+                      <p id="form-feedback" class="text-[11.5px] text-[#7e9aba]">PH National Commercial Desk</p>
                     </div>
                   </form>
                 </div>
-              </div>
 
-              <!-- Right 6 columns intentionally open so the nationwide 3D Map of the Philippines shines cleanly -->
-              <div class="hidden lg:block lg:col-span-6 pointer-events-none" aria-hidden="true"></div>
+              </div>
             </div>
 
           </div>
         </div>
       </div>
     </section>
+
+    <!-- Branded MEDIQ Inquiry Confirmation Receipt Modal -->
+    <div id="contact-confirmation-modal"
+      class="hidden fixed inset-0 z-[110] grid place-items-center bg-[#030916]/80 p-4 backdrop-blur-md opacity-0 transition-opacity duration-300"
+      role="dialog" aria-modal="true" aria-labelledby="cfm-title">
+      <div class="relative w-full max-w-[540px] overflow-hidden rounded-[24px] border border-[#72c5f8]/25 bg-[#071530]/95 shadow-[0_32px_90px_rgba(0,0,0,0.72)] text-[#f4f7fb]">
+        <div class="flex items-center justify-between border-b border-[#72c5f8]/15 bg-[#051026]/90 px-6 py-4">
+          <img src="assets/img/mediq-wordmark-only.png?v=105.00" alt="MEDIQ Pharma" class="h-6 w-auto object-contain" />
+          <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/35 bg-emerald-500/15 px-3 py-1 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-emerald-300">
+            <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+            Confirmed
+          </span>
+        </div>
+        <div class="p-6 sm:p-7 space-y-4">
+          <div>
+            <p id="cfm-ref" class="font-mono text-[11px] uppercase tracking-[0.16em] text-[#72c5f8] mb-1">Reference MQ-000000</p>
+            <h3 id="cfm-title" class="text-[21px] font-semibold leading-snug text-white">We have received your message</h3>
+            <p class="mt-1.5 text-[13.5px] leading-relaxed text-[#9eb4cc]">
+              Thank you, <strong id="cfm-name" class="text-white font-semibold">Partner</strong>. Your institutional inquiry has been logged for MEDIQ Technical &amp; Commercial Support and a confirmation notice has been prepared.
+            </p>
+          </div>
+          <div class="rounded-2xl border border-[#72c5f8]/15 bg-[#051024]/80 p-4 text-[12.5px] space-y-2">
+            <div class="flex justify-between gap-4 border-b border-[#72c5f8]/10 pb-2">
+              <span class="text-[#7e9aba]">Organization</span>
+              <span id="cfm-clinic" class="text-right font-medium text-[#f4f7fb]"></span>
+            </div>
+            <div class="flex justify-between gap-4 border-b border-[#72c5f8]/10 pb-2">
+              <span class="text-[#7e9aba]">Email</span>
+              <span id="cfm-email" class="text-right font-mono text-[#72c5f8]"></span>
+            </div>
+            <div class="flex justify-between gap-4 border-b border-[#72c5f8]/10 pb-2">
+              <span class="text-[#7e9aba]">Topic</span>
+              <span id="cfm-topic" class="text-right text-[#f4f7fb]"></span>
+            </div>
+            <div class="pt-0.5">
+              <span class="block text-[#7e9aba] mb-1">Submitted Message</span>
+              <p id="cfm-message" class="text-[#dce7f3] leading-relaxed line-clamp-3"></p>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+            <div class="flex flex-wrap items-center gap-2 text-[11.5px] text-[#9eb4cc]">
+              <a href="viber://chat?number=%2B639457954365" class="rounded-full border border-[#72c5f8]/25 bg-[#0a214a]/70 px-3 py-1.5 hover:border-[#72c5f8]/60 hover:text-white transition-colors">Viber</a>
+              <a href="https://t.me/mediqpharma" target="_blank" rel="noopener noreferrer" class="rounded-full border border-[#72c5f8]/25 bg-[#0a214a]/70 px-3 py-1.5 hover:border-[#72c5f8]/60 hover:text-white transition-colors">Telegram</a>
+              <a href="tel:+639457954365" class="rounded-full border border-[#72c5f8]/25 bg-[#0a214a]/70 px-3 py-1.5 hover:border-[#72c5f8]/60 hover:text-white transition-colors">0945 795 4365</a>
+            </div>
+            <button type="button" id="cfm-close-btn"
+              class="rounded-full bg-[#4da8f0] hover:bg-[#70beff] text-[#041022] font-semibold text-[12.5px] px-5 py-2 cursor-pointer transition-colors">
+              Done
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
   <!-- ============== COMPACT FULL-WIDTH WEB FOOTER ============== -->
   <div id="site-footer" class="page-snap-section page-transition-section relative z-30 w-full bg-[#0a1d40]">
@@ -12787,7 +13610,7 @@
     <!-- Ambient Diagonal Light Beams (ContactPage Aesthetic in MEDIQ Navy & Cyan) -->
     <div aria-hidden="true" class="pointer-events-none absolute inset-0 isolate z-0 opacity-85 overflow-hidden">
       <div class="absolute top-0 left-0 h-[28rem] w-[24rem] -translate-y-32 -rotate-45 rounded-full bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,rgba(114,197,248,0.12)_0%,rgba(58,160,219,0.03)_50%,transparent_80%)]"></div>
-      <div class="footer-aurora absolute right-[-8%] bottom-[-25%] h-[300px] w-[42vw] rounded-full opacity-50 blur-[90px]"></div>
+      <div class="footer-aurora absolute right-[-8%] bottom-[-25%] h-[340px] w-[44vw] rounded-full opacity-75"></div>
     </div>
 
     <!-- Full-Width Web Footer Container -->
@@ -12797,6 +13620,7 @@
       <div class="w-full border-b border-[#72c5f8]/15">
         <div class="mx-auto flex w-full max-w-[1640px] flex-col sm:flex-row sm:items-end justify-between gap-4 px-6 sm:px-10 lg:px-16 pt-10 sm:pt-12 pb-6">
           <div>
+            <img src="assets/img/mediq-wordmark-only.png?v=105.00" alt="MEDIQ Pharma" class="h-6 sm:h-7 w-auto object-contain mb-3 drop-shadow-[0_2px_10px_rgba(0,0,0,0.4)]" />
             <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[#72c5f8]/90 mb-2">
               Institutional Stewardship &amp; Directory
             </p>
@@ -12850,9 +13674,10 @@
               <div class="flex items-center justify-between gap-2 py-1">
                 <div class="space-y-1.5 min-w-0">
                   <a href="#contact" onclick="if(window.navigateToSection){event.preventDefault();window.navigateToSection('#contact');}" class="block font-mono text-sm sm:text-[15px] font-medium tracking-wide text-white hover:text-[#72c5f8] hover:underline truncate">Direct Inquiry Form</a>
+                  <a href="mailto:mediqtechsupport@gmail.com" class="block font-mono text-xs text-[#72c5f8] hover:text-white hover:underline truncate">mediqtechsupport@gmail.com</a>
                   <a href="https://mediqvision.com/mobile/index.html" target="_blank" rel="noopener noreferrer" class="block font-mono text-xs text-[#8ba3be] hover:text-[#72c5f8] hover:underline truncate">mediqvision.com</a>
                 </div>
-                <button type="button" data-copy-text="https://mediqvision.com/mobile/index.html" aria-label="Copy to clipboard" class="relative grid size-8 shrink-0 place-items-center rounded-md text-[#8ba3be] transition-colors hover:bg-[#72c5f8]/15 hover:text-white cursor-pointer">
+                <button type="button" data-copy-text="mediqtechsupport@gmail.com" aria-label="Copy support email" class="relative grid size-8 shrink-0 place-items-center rounded-md text-[#8ba3be] transition-colors hover:bg-[#72c5f8]/15 hover:text-white cursor-pointer">
                   <svg data-copy-icon class="size-3.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
                   <svg data-check-icon class="absolute size-3.5 scale-0 opacity-0 text-emerald-400 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
                 </button>
@@ -12872,10 +13697,10 @@
               </div>
               <div class="flex items-center justify-between gap-2 py-1">
                 <div class="space-y-1">
-                  <span class="block font-mono text-sm sm:text-[15px] font-medium tracking-wide text-white">Metro Manila, Philippines</span>
+                  <span class="block font-mono text-sm sm:text-[15px] font-medium tracking-wide text-white">Marikina – Pasig, Metro Manila</span>
                   <span class="block font-mono text-xs text-[#8ba3be]">Luzon &bull; Visayas &bull; Mindanao</span>
                 </div>
-                <button type="button" data-copy-text="Metro Manila, Philippines" aria-label="Copy location" class="relative grid size-8 shrink-0 place-items-center rounded-md text-[#8ba3be] transition-colors hover:bg-[#72c5f8]/15 hover:text-white cursor-pointer">
+                <button type="button" data-copy-text="Marikina - Pasig, Metro Manila, Philippines" aria-label="Copy location" class="relative grid size-8 shrink-0 place-items-center rounded-md text-[#8ba3be] transition-colors hover:bg-[#72c5f8]/15 hover:text-white cursor-pointer">
                   <svg data-copy-icon class="size-3.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
                   <svg data-check-icon class="absolute size-3.5 scale-0 opacity-0 text-emerald-400 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
                 </button>
@@ -12895,8 +13720,8 @@
               </div>
               <div class="flex flex-col justify-center gap-2 py-0.5">
                 <div class="flex items-center justify-between gap-2">
-                  <a href="https://m.me/mediqpharma" target="_blank" rel="noopener noreferrer" class="font-mono text-sm sm:text-[15px] font-medium tracking-wide text-white hover:text-[#72c5f8] hover:underline truncate">m.me/mediqpharma</a>
-                  <button type="button" data-copy-text="https://m.me/mediqpharma" aria-label="Copy Messenger handle" class="relative grid size-8 shrink-0 place-items-center rounded-md text-[#8ba3be] transition-colors hover:bg-[#72c5f8]/15 hover:text-white cursor-pointer">
+                  <a href="viber://chat?number=%2B639457954365" class="font-mono text-sm sm:text-[15px] font-medium tracking-wide text-white hover:text-[#72c5f8] hover:underline truncate">Viber &middot; 0945 795 4365</a>
+                  <button type="button" data-copy-text="09457954365" aria-label="Copy Viber number" class="relative grid size-8 shrink-0 place-items-center rounded-md text-[#8ba3be] transition-colors hover:bg-[#72c5f8]/15 hover:text-white cursor-pointer">
                     <svg data-copy-icon class="size-3.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
                     <svg data-check-icon class="absolute size-3.5 scale-0 opacity-0 text-emerald-400 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
                   </button>
@@ -12904,6 +13729,13 @@
                 <div class="flex items-center justify-between gap-2">
                   <a href="https://t.me/mediqpharma" target="_blank" rel="noopener noreferrer" class="font-mono text-sm sm:text-[15px] font-medium tracking-wide text-white hover:text-[#72c5f8] hover:underline truncate">t.me/mediqpharma</a>
                   <button type="button" data-copy-text="https://t.me/mediqpharma" aria-label="Copy Telegram handle" class="relative grid size-8 shrink-0 place-items-center rounded-md text-[#8ba3be] transition-colors hover:bg-[#72c5f8]/15 hover:text-white cursor-pointer">
+                    <svg data-copy-icon class="size-3.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                    <svg data-check-icon class="absolute size-3.5 scale-0 opacity-0 text-emerald-400 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+                  </button>
+                </div>
+                <div class="flex items-center justify-between gap-2">
+                  <a href="tel:+639457954365" class="font-mono text-xs text-[#72c5f8] hover:text-white hover:underline truncate">Mobile: +63 945 795 4365</a>
+                  <button type="button" data-copy-text="09457954365" aria-label="Copy Mobile number" class="relative grid size-8 shrink-0 place-items-center rounded-md text-[#8ba3be] transition-colors hover:bg-[#72c5f8]/15 hover:text-white cursor-pointer">
                     <svg data-copy-icon class="size-3.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
                     <svg data-check-icon class="absolute size-3.5 scale-0 opacity-0 text-emerald-400 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
                   </button>
@@ -12928,6 +13760,98 @@
 
     </div>
   </footer>
+
+  <!-- Full-Bleed Edge-to-Edge Interactive Map Under Footer (Marikina – Pasig) -->
+  <div id="footer-map-band"
+    class="relative z-30 w-full border-t border-[#72c5f8]/20 bg-[#06132c] p-0">
+    <style>
+      #footer-map-band #contact-map-wrap.is-map-expanded {
+        position: fixed;
+        inset: 92px 24px 20px 24px;
+        height: auto !important;
+        z-index: 60;
+        box-shadow: 0 28px 80px rgba(3, 10, 24, 0.72);
+        border-radius: 20px;
+        border: 1px solid rgba(114, 197, 248, 0.25);
+      }
+      #footer-map-band #contact-map-close-expand {
+        display: none;
+      }
+      #footer-map-band #contact-map-wrap.is-map-expanded #contact-map-close-expand {
+        display: inline-flex;
+      }
+      #footer-map-band .maplibregl-ctrl-bottom-right {
+        left: 20px;
+        right: auto;
+        bottom: 10px;
+      }
+      #footer-map-band .maplibregl-ctrl-attrib {
+        background: rgba(9, 10, 14, 0.72) !important;
+        color: rgba(161, 161, 170, 0.85) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 6px !important;
+        font-size: 9.5px !important;
+      }
+      #footer-map-band .maplibregl-ctrl-attrib a {
+        color: rgba(147, 197, 253, 0.85) !important;
+      }
+    </style>
+    <div class="w-full">
+      <div id="contact-map-wrap"
+        class="relative w-full h-[270px] sm:h-[310px] xl:h-[340px] rounded-none overflow-hidden border-0 bg-[#071630] transition-all duration-300">
+        <div id="contact-map-stage" class="relative w-full h-full cursor-grab active:cursor-grabbing select-none">
+          <canvas id="contact-map-canvas" class="block w-full h-full"
+            aria-label="Interactive sapphire map of MediQ Pharma in Marikina and Pasig, Metro Manila"></canvas>
+
+          <!-- Top-Left Floating Map Info Card -->
+          <div
+            class="absolute left-5 sm:left-8 top-4 z-10 rounded-[10px] bg-[#091c3d]/92 backdrop-blur-md shadow-[0_6px_24px_rgba(3,10,24,0.45)] border border-[#72c5f8]/25 px-3.5 py-2.5 flex items-start gap-3 max-w-[300px]">
+            <div class="min-w-0">
+              <div class="text-[12px] font-semibold text-[#f6f2ea] leading-tight truncate">MediQ Pharma Inc.</div>
+              <div class="text-[10px] text-[#9ec5e6] leading-snug mt-0.5">Marikina &ndash; Pasig, Metro Manila &middot; NCR</div>
+              <div class="flex items-center gap-1 mt-1 text-[10px] text-[#b6d4ee]">
+                <span class="font-semibold text-[#f6f2ea]">5.0</span>
+                <span class="text-[#72c5f8] tracking-[-0.04em]">&starf;&starf;&starf;&starf;&starf;</span>
+                <span class="text-[#9ec5e6]">Rayner UK Partner</span>
+              </div>
+              <button type="button" id="contact-map-zoom-toggle"
+                class="mt-1 text-[10px] font-medium text-[#72c5f8] hover:text-white hover:underline cursor-pointer">
+                View larger map
+              </button>
+            </div>
+
+            <a href="https://www.google.com/maps/search/?api=1&query=Marikina+Pasig+Metro+Manila+Philippines" target="_blank"
+              rel="noopener noreferrer"
+              class="flex flex-col items-center justify-center shrink-0 pl-2.5 border-l border-[#72c5f8]/20 text-[#72c5f8] hover:text-white transition-colors">
+              <span class="flex size-6 items-center justify-center rounded-full bg-[#3aa0db]/20">
+                <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <path d="M9 18v-6a3 3 0 0 1 3-3h6" />
+                  <path d="m14 5 4 4-4 4" />
+                </svg>
+              </span>
+              <span class="text-[9.5px] font-medium mt-0.5">Directions</span>
+            </a>
+          </div>
+
+          <!-- Expanded Modal Close Pill -->
+          <button type="button" id="contact-map-close-expand"
+            class="absolute right-3.5 top-3.5 z-20 items-center gap-1.5 rounded-full bg-[#091c3d]/95 px-3 py-1.5 text-[11px] font-semibold text-[#f6f2ea] shadow-md border border-[#72c5f8]/25 hover:bg-[#133262] cursor-pointer">
+            <span>Close larger map</span>
+          </button>
+
+          <!-- Compact Map Zoom Controls (Bottom-Right) -->
+          <div class="absolute right-3.5 bottom-3.5 z-10 flex items-center gap-1 rounded-[8px] bg-[#091c3d]/92 p-1 shadow-[0_4px_16px_rgba(3,10,24,0.45)] border border-[#72c5f8]/25">
+            <button type="button" id="contact-map-zoom-in" aria-label="Zoom in map"
+              class="flex size-6 items-center justify-center rounded text-[13px] font-semibold text-[#dbeafe] hover:bg-[#16396d] cursor-pointer">+</button>
+            <button type="button" id="contact-map-zoom-out" aria-label="Zoom out map"
+              class="flex size-6 items-center justify-center rounded text-[13px] font-semibold text-[#dbeafe] hover:bg-[#16396d] cursor-pointer">&minus;</button>
+            <button type="button" id="contact-map-reset" aria-label="Center map" title="Center on Marikina – Pasig"
+              class="flex size-6 items-center justify-center rounded text-[11px] font-semibold text-[#dbeafe] hover:bg-[#16396d] cursor-pointer">&#8982;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   </div>
 
   <!-- ============== INTERACTIVE 12-PAGE BROCHURE LIGHTBOX MODAL ============== -->
@@ -12992,22 +13916,22 @@
   <script src="assets/js/ScrollTrigger.min.js"></script>
     <script src="assets/js/GLTFLoader.js?v=3.00" defer></script>
   <script src="assets/js/foundation-logo-data.js?v=1.00" defer></script>
-  <script src="assets/js/foundation-particles-gl.js?v=4.63" defer></script>
-  <script src="assets/js/foundation-vr-scene.js?v=1.00" defer></script>
-  <script src="assets/js/main.js?v=388.24" defer></script>
+  <script src="assets/js/foundation-particles-gl.js?v=4.64" defer></script>
+  <script src="assets/js/foundation-vr-scene.js?v=1.03" defer></script>
+  <script src="assets/js/main.js?v=388.40" defer></script>
   <script src="assets/js/galaxy-delivery-3d.js?v=14.41" defer></script>
-  <script src="assets/js/about-route-globe.js?v=9.00" defer></script>
-  <script src="assets/js/aller-silhouette.js?v=7.00" defer></script>
+  <script src="assets/js/about-route-globe.js?v=9.01" defer></script>
+  <script src="assets/js/aller-silhouette.js?v=9.00" defer></script>
   <script src="assets/js/core-values-monument.js?v=16.00" defer></script>
-  <script src="assets/js/products-warp-carousel.js?v=1.03" defer></script>
-  <script src="assets/js/products-active-theory.js?v=11.06" defer></script>
+  <script src="assets/js/products-warp-carousel.js?v=1.04" defer></script>
+  <script src="assets/js/products-active-theory.js?v=11.07" defer></script>
   <script src="assets/js/services-liquid-text.js?v=1.04" defer></script>
-  <script src="assets/js/news-coverflow.js?v=1.03" defer></script>
-  <script src="assets/js/services-3d-backdrop.js?v=1.03" defer></script>
+  <script src="assets/js/news-coverflow.js?v=1.04" defer></script>
+  <script src="assets/js/services-3d-backdrop.js?v=2.01" defer></script>
   <script src="assets/js/services-book-character.js?v=1.00" defer></script>
-  <script src="assets/js/services-book-carousel.js?v=1.13" defer></script>
-  <script src="assets/js/site-search.js?v=1.00" defer></script>
-  <script src="assets/js/contact-vr-scene.js?v=1.00" defer></script>
+  <script src="assets/js/services-book-carousel.js?v=1.14" defer></script>
+  <script src="assets/js/site-search.js?v=3.01" defer></script>
+  <script src="assets/js/contact-map.js?v=2.00" defer></script>
   <script>
     window.handleMediqNewsletterSubmit = function (event, formEl) {
       if (event) event.preventDefault();

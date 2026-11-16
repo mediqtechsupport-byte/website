@@ -10,7 +10,7 @@
   'use strict';
 
   const DEFAULT_FONT =
-    '"Inter", "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, system-ui, "Helvetica Neue", Arial, sans-serif';
+    '"Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif';
 
   // Signature 6x7 B-spline mesh generator + box-matched presets
   function hexToRgbTuple(hex) {
@@ -286,58 +286,85 @@
     return out;
   }
 
-  function paintMesh(ctx, w, h, mesh) {
-    const grid = meshGrid(mesh);
-    const img = ctx.createImageData(w, h);
-    const d = img.data;
-    const wx = new Float32Array(w * 4);
-    const ix = new Int32Array(w * 4);
-    const tmp = [0, 0, 0, 0];
-    for (let x = 0; x < w; x++) {
-      const u = ((x + 0.5) / w) * 5;
-      const i = Math.floor(u);
-      bspline(u - i, tmp);
-      for (let k = 0; k < 4; k++) {
-        wx[x * 4 + k] = tmp[k];
-        ix[x * 4 + k] = Math.min(5, Math.max(0, i - 1 + k));
-      }
-    }
-    const row = new Float32Array(6 * 3);
-    let seed = 1234567;
-    for (let y = 0; y < h; y++) {
-      const v = ((y + 0.5) / h) * 6;
-      const j = Math.floor(v);
-      bspline(v - j, tmp);
-      row.fill(0);
-      for (let k = 0; k < 4; k++) {
-        const jj = Math.min(6, Math.max(0, j - 1 + k));
-        const wy = tmp[k];
-        for (let i = 0; i < 6; i++) {
-          const c = grid[jj * 6 + i];
-          row[i * 3] += c[0] * wy;
-          row[i * 3 + 1] += c[1] * wy;
-          row[i * 3 + 2] += c[2] * wy;
-        }
-      }
-      for (let x = 0; x < w; x++) {
-        let r = 0, g = 0, b = 0;
+  const SHARED_MESH_CACHE = new Map();
+  const SHARED_IMAGE_CACHE = new Map();
+
+  function getCachedMeshCanvas(mesh) {
+    const src = mesh && mesh.length ? mesh : MESH_PRESETS.cyan.mesh;
+    const key = src.join('|');
+    let cached = SHARED_MESH_CACHE.get(key);
+    if (cached) return cached;
+
+    const mw = 72;
+    const mh = 90;
+    const mcv = document.createElement('canvas');
+    mcv.width = mw;
+    mcv.height = mh;
+    const mctx = mcv.getContext('2d');
+    if (mctx) {
+      const grid = meshGrid(src);
+      const img = mctx.createImageData(mw, mh);
+      const d = img.data;
+      const wx = new Float32Array(mw * 4);
+      const ix = new Int32Array(mw * 4);
+      const tmp = [0, 0, 0, 0];
+      for (let x = 0; x < mw; x++) {
+        const u = ((x + 0.5) / mw) * 5;
+        const i = Math.floor(u);
+        bspline(u - i, tmp);
         for (let k = 0; k < 4; k++) {
-          const wgt = wx[x * 4 + k];
-          const i3 = ix[x * 4 + k] * 3;
-          r += row[i3] * wgt;
-          g += row[i3 + 1] * wgt;
-          b += row[i3 + 2] * wgt;
+          wx[x * 4 + k] = tmp[k];
+          ix[x * 4 + k] = Math.min(5, Math.max(0, i - 1 + k));
         }
-        seed = (seed * 1103515245 + 12345) & 0x7fffffff;
-        const n = (seed / 0x7fffffff - 0.5) * 1.6;
-        const o = (y * w + x) * 4;
-        d[o] = r + n;
-        d[o + 1] = g + n;
-        d[o + 2] = b + n;
-        d[o + 3] = 255;
       }
+      const row = new Float32Array(6 * 3);
+      let seed = 1234567;
+      for (let y = 0; y < mh; y++) {
+        const v = ((y + 0.5) / mh) * 6;
+        const j = Math.floor(v);
+        bspline(v - j, tmp);
+        row.fill(0);
+        for (let k = 0; k < 4; k++) {
+          const jj = Math.min(6, Math.max(0, j - 1 + k));
+          const wy = tmp[k];
+          for (let i = 0; i < 6; i++) {
+            const c = grid[jj * 6 + i];
+            row[i * 3] += c[0] * wy;
+            row[i * 3 + 1] += c[1] * wy;
+            row[i * 3 + 2] += c[2] * wy;
+          }
+        }
+        for (let x = 0; x < mw; x++) {
+          let r = 0, g = 0, b = 0;
+          for (let k = 0; k < 4; k++) {
+            const wgt = wx[x * 4 + k];
+            const i3 = ix[x * 4 + k] * 3;
+            r += row[i3] * wgt;
+            g += row[i3 + 1] * wgt;
+            b += row[i3 + 2] * wgt;
+          }
+          seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+          const n = (seed / 0x7fffffff - 0.5) * 1.4;
+          const o = (y * mw + x) * 4;
+          d[o] = r + n;
+          d[o + 1] = g + n;
+          d[o + 2] = b + n;
+          d[o + 3] = 255;
+        }
+      }
+      mctx.putImageData(img, 0, 0);
     }
-    ctx.putImageData(img, 0, 0);
+    SHARED_MESH_CACHE.set(key, mcv);
+    return mcv;
+  }
+
+  function paintMesh(ctx, w, h, mesh) {
+    const meshCanvas = getCachedMeshCanvas(mesh);
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(meshCanvas, 0, 0, w, h);
+    ctx.restore();
   }
 
   function fontStr(weight, px, family) {
@@ -385,7 +412,7 @@
 
     if (card.codeTag) {
       ctx.save();
-      ctx.font = fontStr(500, 7.2, 'monospace, ' + family);
+      ctx.font = fontStr(500, 7.2, family);
       ctx.fillStyle = rgba(white, 0.56);
       ctx.textAlign = 'right';
       ctx.fillText(card.codeTag, CW - 16, 35);
@@ -656,6 +683,7 @@ float sdRound(vec2 p, vec2 b, float r){
 vec4 shadeCard(vec4 pose, vec2 ps, float fx, float fy, out float depth){
   depth = 1e9;
   if (pose.w < 0.0) return vec4(0.0);
+  if (abs(pose.x) > 460.0 && pose.x * ps.x < 0.0) return vec4(0.0);
   float k = ps.x / F;
   float c = cos(pose.z), sn = sin(pose.z);
   float den = sn * k - c;
@@ -978,6 +1006,7 @@ void main(){
       t0: 0,
       n: STEP_FRAMES,
       v: 0,
+      omega: 6.2,
       mode: 'rest',
       nextAuto: Infinity,
       autoPending: false,
@@ -1000,33 +1029,50 @@ void main(){
     const topQ = new Float64Array(4);
     const topAbs = new Float64Array(4);
 
-    const imageCache = new Map();
+    let lastUploadedSignature = '';
     let pendingImgRedraw = 0;
 
     function getPackshotImage(src) {
       if (!src) return null;
-      let rec = imageCache.get(src);
+      let rec = SHARED_IMAGE_CACHE.get(src);
       if (rec) return rec;
       const img = new Image();
       img.decoding = 'async';
-      rec = { img };
-      imageCache.set(src, rec);
+      rec = { img, loaded: false };
+      SHARED_IMAGE_CACHE.set(src, rec);
       img.onload = () => {
+        rec.loaded = true;
         if (disposed || pendingImgRedraw) return;
         pendingImgRedraw = requestAnimationFrame(() => {
           pendingImgRedraw = 0;
           if (disposed || !list.length) return;
+          lastUploadedSignature = '';
           texW = 0;
           resize();
-          if (!paused && inView) draw(performance.now() / 1000);
+          if (!paused && inView && isDocVisible) draw(performance.now() / 1000);
         });
       };
       img.src = src;
       return rec;
     }
 
+    function computeSignature(w) {
+      let readyCount = 0;
+      const ids = [];
+      for (let i = 0; i < list.length; i++) {
+        const c = list[i];
+        const rec = c.image ? SHARED_IMAGE_CACHE.get(c.image) : null;
+        if (rec && rec.img && rec.img.complete && rec.img.naturalWidth > 0) readyCount++;
+        ids.push((c.codeTag || c.title || i) + ':' + (c.image || ''));
+      }
+      return w + '|' + readyCount + '|' + ids.join(';');
+    }
+
     function paintAll(w) {
       if (!list.length) return;
+      const sig = computeSignature(w);
+      if (sig === lastUploadedSignature && texW === w) return;
+      lastUploadedSignature = sig;
       cardCanvases = list.map((card) => {
         if (card.image) {
           const rec = getPackshotImage(card.image);
@@ -1053,9 +1099,15 @@ void main(){
 
     function resize() {
       const r = container.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      const nextW = Math.max(2, Math.round((r.width || window.innerWidth) * dpr));
-      const nextH = Math.max(2, Math.round((r.height || (window.innerHeight - 128)) * dpr));
+      const baseDpr = window.innerWidth < 1024 ? 1.15 : 1.35;
+      let dpr = Math.min(window.devicePixelRatio || 1, baseDpr);
+      const cssW = r.width || window.innerWidth;
+      const cssH = r.height || (window.innerHeight - 128);
+      if (cssW * cssH * dpr * dpr > 2600000) {
+        dpr = Math.max(1.0, Math.sqrt(2600000 / Math.max(1, cssW * cssH)));
+      }
+      const nextW = Math.max(2, Math.round(cssW * dpr));
+      const nextH = Math.max(2, Math.round(cssH * dpr));
       if (nextW !== W || nextH !== H) {
         W = nextW;
         H = nextH;
@@ -1064,8 +1116,8 @@ void main(){
         restDrawn = false;
       }
       unit = Math.min(W / 720, H / 440);
-      const want = Math.min(1024, Math.max(256, Math.round(CW * unit * 1.25)));
-      if (list.length && want !== texW) paintAll(want);
+      const want = Math.min(896, Math.max(256, Math.round(CW * unit * 1.18)));
+      if (list.length && (want !== texW || !lastUploadedSignature)) paintAll(want);
     }
 
     function poseSet(P, out) {
@@ -1127,24 +1179,35 @@ void main(){
       }
     }
 
+    function normalizeModuloPosition() {
+      if (N > 0 && Math.abs(L.P) >= N * 2) {
+        const shift = Math.floor(L.P / N) * N;
+        L.P -= shift;
+        L.to -= shift;
+        L.dragP -= shift;
+      }
+      L.index = mod(L.index, realCount);
+    }
+
     function progressAt(now) {
-      if (L.mode === 'spin') {
-        const f = (now - L.t0) * 30;
-        L.P = L.from + (L.to - L.from) * spinN(f, L.n);
-        if (f >= L.n) L.mode = 'rest';
-      } else if (L.mode === 'spring') {
-        const dt = Math.min(0.034, Math.max(0, now - L.lastT));
+      if (L.mode === 'spin' || L.mode === 'spring') {
+        const dt = Math.min(0.032, Math.max(0.0005, now - L.lastT));
         L.lastT = now;
+        const w = L.omega || 6.4;
+        const k = w * w;
+        const damp = 2.0 * w;
         const sub = 4;
+        const h = dt / sub;
         for (let i = 0; i < sub; i++) {
-          const acc = -60 * (L.P - L.to) - 13 * L.v;
-          L.v += (acc * dt) / sub;
-          L.P += (L.v * dt) / sub;
+          const acc = -k * (L.P - L.to) - damp * L.v;
+          L.v += acc * h;
+          L.P += L.v * h;
         }
-        if (Math.abs(L.P - L.to) < 4e-4 && Math.abs(L.v) < 3e-3) {
+        if (Math.abs(L.P - L.to) < 2.5e-4 && Math.abs(L.v) < 6e-4) {
           L.P = L.to;
           L.v = 0;
           L.mode = 'rest';
+          normalizeModuloPosition();
         }
       } else if (L.mode === 'fade') {
         const m = Math.min(1, (now - L.fadeT0) / 0.45);
@@ -1208,10 +1271,11 @@ void main(){
       inLoop = true;
       try {
         const now = performance.now() / 1000;
-        if (!rmq.matches && L.mode !== 'drag' && L.mode !== 'spring' && now >= L.nextAuto) {
-          L.nextAuto = Math.max(L.nextAuto + gap, now + gap * 0.5);
-          L.autoPending = true;
+        if (!rmq.matches && L.mode === 'rest' && now >= L.nextAuto) {
+          L.nextAuto = now + gap;
           goToIndex(L.index + stepN, true);
+        } else if (!rmq.matches && L.mode !== 'drag' && now >= L.nextAuto + 0.25) {
+          L.nextAuto = now + gap;
         }
         if (L.mode === 'rest') {
           if (!restDrawn) {
@@ -1227,6 +1291,7 @@ void main(){
           const mix = draw(now);
           if (L.mode === 'rest' && mix === 0) {
             restDrawn = true;
+            if (!rmq.matches) L.nextAuto = now + Math.max(2.0, gap - 1.35);
             scheduleAuto(now);
             return;
           }
@@ -1262,15 +1327,14 @@ void main(){
         L.P = Math.round(L.P) + delta;
         L.mode = 'fade';
         L.fadeT0 = now;
-      } else if (L.mode !== 'spring') {
-        const base = Math.round(L.P - DRIFT) + delta;
-        L.from = L.P;
-        L.to = base + DRIFT;
-        L.t0 = now;
-        L.n = isAuto ? gap * 30 : STEP_FRAMES;
-        L.mode = 'spin';
+      } else {
+        const baseTarget = (L.mode === 'spring' || L.mode === 'spin') ? Math.round(L.to) : Math.round(L.P);
+        L.to = baseTarget + delta;
+        L.lastT = now;
+        L.omega = isAuto ? 5.2 : 7.4;
+        L.mode = 'spring';
       }
-      if (!isAuto) L.nextAuto = now + gap;
+      L.nextAuto = now + gap;
       kick();
     }
 
@@ -1337,8 +1401,9 @@ void main(){
       }
       if (now - L.lastT > 0.08) L.v = 0;
       const target = Math.round(L.P + L.v * 0.16);
-      const from = Math.round(L.dragP - DRIFT);
+      const from = Math.round(L.dragP);
       L.to = target;
+      L.omega = 8.4;
       L.mode = 'spring';
       L.lastT = now;
       const next = L.index + (target - from);
@@ -1416,21 +1481,21 @@ void main(){
         realCount = rawCards.length;
         N = list.length;
         glowCols = list.map((c) => parseColor(c.glow || '#7fd0f0'));
-        texW = 0; // force repaint
 
         const idx = startIndex || 0;
         const t0 = performance.now() / 1000;
-        L.index = idx;
+        L.index = mod(idx, realCount);
+        L.v = 0;
         if (!rmq.matches) {
-          L.from = idx - stepN + DRIFT;
-          L.to = idx + DRIFT;
-          L.t0 = t0 - REST_PHASE / 30;
-          L.n = STEP_FRAMES;
-          L.mode = 'spin';
-          L.P = L.from + (L.to - L.from) * spin(REST_PHASE);
-          L.nextAuto = t0 + LEAD;
+          L.P = L.index - 0.52;
+          L.to = L.index;
+          L.lastT = t0;
+          L.omega = 7.4;
+          L.mode = 'spring';
+          L.nextAuto = t0 + gap;
         } else {
-          L.P = idx;
+          L.P = L.index;
+          L.to = L.index;
           L.mode = 'rest';
           L.nextAuto = t0 + gap;
         }
@@ -1450,7 +1515,7 @@ void main(){
       wheel(deltaY) {
         const now = performance.now();
         wheelAccum += deltaY;
-        if (Math.abs(wheelAccum) >= 38 && now - lastWheelStepTs > 150) {
+        if (Math.abs(wheelAccum) >= 34 && now - lastWheelStepTs > 115) {
           const dir = wheelAccum > 0 ? 1 : -1;
           wheelAccum = 0;
           lastWheelStepTs = now;

@@ -4,7 +4,9 @@
   "description": "MediQ Pharma - Exclusive Distributor of Rayner Ophthalmic Solutions",
   "scripts": {
     "dev": "npx http-server -p 5500 -c-1 .",
-    "start": "npx http-server -p 5500 -c-1 ."
+    "start": "npx http-server -p 5500 -c-1 .",
+    "build": "node scripts/build-pages.js",
+    "build:cf": "node scripts/build-pages.js"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.5.0",

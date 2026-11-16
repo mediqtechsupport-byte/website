@@ -5,7 +5,14 @@
 (function initServicesBookCarousel() {
   const BASE_OPEN_W = 240;
   const BASE_GAP = 78;
+  const SHELF_HOLD_SEC = 1.0;
+  const FLOAT_DURATION_SEC = 0.92;
+  const FLOAT_STAGGER_SEC = 0.055;
   const smoothstep = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+  const smootherstep = (t) => {
+    const u = Math.max(0, Math.min(1, t));
+    return u * u * u * (u * (u * 6 - 15) + 10);
+  };
 
   const SERVICE_BOOKS = [
     {
@@ -427,7 +434,10 @@
 
     if (!trackEl) return;
 
-    trackEl.innerHTML = SERVICE_BOOKS.map(renderBookDom).join('');
+    trackEl.innerHTML =
+      '<div id="srv-bc-shelf-ledge" class="bc-shelf-ledge" aria-hidden="true"></div>' +
+      SERVICE_BOOKS.map(renderBookDom).join('');
+    const shelfLedgeEl = document.getElementById('srv-bc-shelf-ledge');
     const wrappers = Array.from(trackEl.querySelectorAll('.bc-wrapper'));
 
     const state = {
@@ -440,11 +450,45 @@
       opened: -1,
       openness: new Array(SERVICE_BOOKS.length).fill(0),
       spreadAlpha: 0,
+      zoomTarget: 1,
+      zoomCurrent: 1,
+      panXTarget: 0,
+      panXCurrent: 0,
+      panYTarget: 0,
+      panYCurrent: 0,
+      panDragging: false,
+      panMoved: false,
+      panStartX: 0,
+      panStartY: 0,
+      panOriginX: 0,
+      panOriginY: 0,
+      pinchStartDist: 0,
+      pinchStartZoom: 1,
+      lastTapMs: 0,
       rafId: null,
       lastTime: 0,
       active: false,
       lastRenderedIdx: -1,
+      introActive: false,
+      introStartMs: 0,
+      introFocusIdx: 0,
     };
+
+    // Inject interactive Zoom toolbar directly above the reading view (clear of book text)
+    let zoomBar = slide.querySelector('#srv-bc-zoom-bar');
+    if (!zoomBar) {
+      zoomBar = document.createElement('div');
+      zoomBar.id = 'srv-bc-zoom-bar';
+      zoomBar.className = 'bc-zoom-bar';
+      zoomBar.setAttribute('aria-label', 'Book Zoom Controls');
+      zoomBar.innerHTML =
+        '<button type="button" data-bc-zoom="out" class="bc-zoom-btn" aria-label="Zoom out">&minus;</button>' +
+        '<button type="button" data-bc-zoom="reset" class="bc-zoom-pct" title="Reset Zoom (100%)">100%</button>' +
+        '<button type="button" data-bc-zoom="in" class="bc-zoom-btn" aria-label="Zoom in">+</button>' +
+        '<span class="bc-zoom-hint hidden sm:inline">Pinch / Scroll / Drag</span>';
+      slide.appendChild(zoomBar);
+    }
+    const zoomPctBtn = zoomBar.querySelector('[data-bc-zoom="reset"]');
 
     let openW = BASE_OPEN_W;
     let gap = BASE_GAP;
@@ -454,6 +498,7 @@
     let stageHeight = 700;
     let stageWidth = 1280;
     let openZoom = 1.18;
+    let topControlReserve = 46;
     const rotZs = SERVICE_BOOKS.map((b) => b.rotZ || 0);
     const clamp = (v) => Math.max(0, Math.min(v, SERVICE_BOOKS.length - 1));
 
@@ -470,14 +515,60 @@
       pagesBottom: el.querySelector('.bc-pages-bottom'),
     }));
 
+    function clampBookPan(px, py, z) {
+      if (z <= 1.02) return { x: 0, y: 0 };
+      const idx = state.opened !== -1 ? state.opened : 0;
+      const bH = bookHeights[idx] || 350;
+      const totalSpreadW = 2 * openW * openZoom * z;
+      const totalSpreadH = bH * openZoom * z;
+      const maxX = Math.max(0, (totalSpreadW - stageWidth * 0.88) / 2);
+      const maxY = Math.max(0, (totalSpreadH - (stageHeight - topControlReserve - 20)) / 2);
+      return {
+        x: Math.max(-maxX, Math.min(maxX, px)),
+        y: Math.max(-maxY, Math.min(maxY, py)),
+      };
+    }
+
+    function setBookZoom(nextZoom, focusClientX, focusClientY) {
+      const clampedZ = Math.max(1.0, Math.min(2.6, nextZoom));
+      if (clampedZ <= 1.03) {
+        state.zoomTarget = 1.0;
+        state.panXTarget = 0;
+        state.panYTarget = 0;
+      } else {
+        state.zoomTarget = clampedZ;
+        let nextPanX = state.panXTarget;
+        let nextPanY = state.panYTarget;
+        if (typeof focusClientX === 'number' && typeof focusClientY === 'number') {
+          const rect = slide.getBoundingClientRect();
+          const normX = (focusClientX - (rect.left + rect.width / 2)) / Math.max(1, rect.width / 2);
+          const normY = (focusClientY - (rect.top + rect.height / 2)) / Math.max(1, rect.height / 2);
+          const maxB = clampBookPan(-normX * openW * openZoom * clampedZ * 0.55, -normY * 180 * clampedZ, clampedZ);
+          nextPanX = maxB.x;
+          nextPanY = maxB.y;
+        } else {
+          const bound = clampBookPan(state.panXTarget, state.panYTarget, clampedZ);
+          nextPanX = bound.x;
+          nextPanY = bound.y;
+        }
+        state.panXTarget = nextPanX;
+        state.panYTarget = nextPanY;
+      }
+      if (zoomPctBtn) {
+        zoomPctBtn.textContent = `${Math.round(state.zoomTarget * 100)}%`;
+      }
+      slide.classList.toggle('is-zoomed', state.zoomTarget > 1.03);
+    }
+
     function updateLayoutMetrics() {
       const rect = slide.getBoundingClientRect();
       stageWidth = rect.width > 120 ? rect.width : window.innerWidth;
       stageHeight = rect.height > 120 ? rect.height : Math.max(420, window.innerHeight - 122);
 
       trackBottom = Math.round(Math.max(52, Math.min(96, stageHeight * 0.11)));
-      const topHeadroom = Math.round(Math.max(48, Math.min(96, stageHeight * 0.11)));
-      const availableH = Math.max(320, stageHeight - trackBottom - topHeadroom);
+      topControlReserve = stageWidth < 768 ? 50 : 44;
+      const topHeadroom = Math.round(Math.max(54, Math.min(96, stageHeight * 0.12)));
+      const availableH = Math.max(300, stageHeight - trackBottom - topHeadroom);
 
       const scaleH = availableH / 395;
       const scaleW = stageWidth < 640 ? stageWidth / 400 : stageWidth / 900;
@@ -493,7 +584,8 @@
       const targetSpreadW = stageWidth < 640 ? stageWidth * 0.94 : Math.min(930, stageWidth * 0.88);
       const maxZoomW = targetSpreadW / (2 * openW);
       const maxBookH = Math.max(...bookHeights);
-      const maxZoomH = (stageHeight * 0.88) / (maxBookH * 1.03);
+      const availReadingH = Math.max(240, stageHeight - topControlReserve - 16);
+      const maxZoomH = availReadingH / (maxBookH * 1.02);
       const minZoom = stageWidth < 640 ? 0.72 : 1.02;
       openZoom = Math.max(minZoom, Math.min(1.36, Math.min(maxZoomW, maxZoomH)));
 
@@ -560,12 +652,14 @@
     function openBookSpread(idx) {
       const clamped = clamp(idx);
       if (!SERVICE_BOOKS[clamped]) return;
+      state.introActive = false;
       if (sceneEl) {
         sceneEl.scrollLeft = 0;
         sceneEl.scrollTop = 0;
       }
       state.target = clamped;
       state.opened = clamped;
+      setBookZoom(1.0);
       slide.classList.add('is-reading-open');
       if (closeBtn) closeBtn.classList.add('visible');
       wrappers.forEach((el, k) => {
@@ -575,6 +669,7 @@
 
     function closeBookSpread() {
       state.opened = -1;
+      setBookZoom(1.0);
       slide.classList.remove('is-reading-open');
       if (closeBtn) closeBtn.classList.remove('visible');
       wrappers.forEach((el) => el.classList.remove('is-book-open'));
@@ -596,6 +691,10 @@
       state.current += (state.target - state.current) * trackLerp;
       const targetSpread = state.opened !== -1 ? 1 : 0;
       state.spreadAlpha += (targetSpread - state.spreadAlpha) * openLerp;
+      const zoomLerp = 1 - Math.exp(-12 * dt);
+      state.zoomCurrent += (state.zoomTarget - state.zoomCurrent) * zoomLerp;
+      state.panXCurrent += (state.panXTarget - state.panXCurrent) * zoomLerp;
+      state.panYCurrent += (state.panYTarget - state.panYCurrent) * zoomLerp;
 
       const positions = [];
       let left = 0;
@@ -631,6 +730,38 @@
         window.__updateServices3dBackdrop(state.current, state.spreadAlpha);
       }
 
+      if (state.introActive && !state.introStartMs) {
+        state.introStartMs = ts;
+      }
+      const introElapsed = state.introActive ? Math.max(0, (ts - state.introStartMs) / 1000) : 99;
+      const shelfScale = 0.86;
+      const shelfGap = 4;
+      const shelfZ = -130;
+      const shelfBaseY = 6;
+      let totalShelfW = 0;
+      for (let i = 0; i < spineWidths.length; i++) {
+        totalShelfW += spineWidths[i] * shelfScale + (i > 0 ? shelfGap : 0);
+      }
+      let shelfCursor = -totalShelfW / 2;
+
+      if (shelfLedgeEl) {
+        if (state.introActive) {
+          const ledgeFade =
+            1 - smootherstep(Math.max(0, Math.min(1, (introElapsed - (SHELF_HOLD_SEC + 0.05)) / 0.65)));
+          if (ledgeFade > 0.01) {
+            const ledgeW = Math.round(totalShelfW + 128);
+            shelfLedgeEl.style.display = 'block';
+            shelfLedgeEl.style.width = `${ledgeW}px`;
+            shelfLedgeEl.style.opacity = ledgeFade.toFixed(3);
+            shelfLedgeEl.style.transform = `translateX(${(-ledgeW / 2).toFixed(2)}px) translateY(${(shelfBaseY + (1 - ledgeFade) * 14).toFixed(2)}px) translateZ(${(shelfZ - (1 - ledgeFade) * 40).toFixed(2)}px)`;
+          } else {
+            shelfLedgeEl.style.display = 'none';
+          }
+        } else {
+          shelfLedgeEl.style.display = 'none';
+        }
+      }
+
       for (let i = 0; i < wrappers.length; i++) {
         const el = wrappers[i];
         const parts = bookDomParts[i];
@@ -648,21 +779,23 @@
         const easeSwing = smoothstep(swingP);
         const facing = Math.max(eo, easeRise);
 
-        const shelfScale = 1 + eo * 0.05;
-        const scale = shelfScale + easeRise * (openZoom - shelfScale);
+        const activeOpenScale = openZoom * (state.opened === i ? state.zoomCurrent : 1);
+        const liveBaseScale = 1 + eo * 0.05;
+        let scale = liveBaseScale + easeRise * (activeOpenScale - liveBaseScale);
 
         let x = positions[i] - cameraX + (1 - facing) * (spineWidths[i] / 2);
         let z = facing * 60;
         let y = 0;
-        const rotateY = (1 - facing) * 90;
-        const rotZ = rotZs[i] * (1 - facing) * (1 - easeRise);
+        let rotateY = (1 - facing) * 90;
+        let rotZ = rotZs[i] * (1 - facing) * (1 - easeRise);
 
-        // Keeps center spine at x_screen = 0 as cover swings -172deg open
-        x += easeSwing * ((scale * openW) / 2);
+        // Keeps center spine at x_screen = 0 as cover swings -172deg open & reserves top bar clearance
+        x += easeSwing * ((scale * openW) / 2) + (state.opened === i ? easeRise * state.panXCurrent : 0);
         z += easeRise * 84;
         const bookH = bookHeights[i];
-        const openShiftY = trackBottom + bookH / 2 - stageHeight / 2;
-        y += easeRise * openShiftY;
+        const targetCenterY = topControlReserve + Math.max(240, stageHeight - topControlReserve - 16) / 2;
+        const openShiftY = trackBottom + bookH / 2 - stageHeight + targetCenterY;
+        y += easeRise * openShiftY + (state.opened === i ? easeRise * state.panYCurrent : 0);
 
         if (state.opened !== i && state.spreadAlpha > 0.005) {
           const openRef = state.opened !== -1 ? state.opened : state.current;
@@ -674,6 +807,27 @@
           el.style.opacity = '1';
         }
 
+        let floatWeight = 1;
+        if (state.introActive) {
+          const scaledSpine = spineWidths[i] * shelfScale;
+          const shelfSpineCenterX = shelfCursor + scaledSpine / 2;
+          shelfCursor += scaledSpine + shelfGap;
+          const shelfX = shelfSpineCenterX - (openW / 2) * (1 - shelfScale);
+          const shelfY = shelfBaseY + (bookH / 2) * (1 - shelfScale);
+
+          const stagger = Math.abs(i - state.introFocusIdx) * FLOAT_STAGGER_SEC;
+          const rawFloat = (introElapsed - (SHELF_HOLD_SEC + stagger)) / FLOAT_DURATION_SEC;
+          floatWeight = smootherstep(rawFloat);
+          const liftArc = -34 * Math.sin(floatWeight * Math.PI);
+
+          x = shelfX + (x - shelfX) * floatWeight;
+          y = shelfY + (y - shelfY) * floatWeight + liftArc;
+          z = shelfZ + (z - shelfZ) * floatWeight;
+          scale = shelfScale + (scale - shelfScale) * floatWeight;
+          rotateY = 90 + (rotateY - 90) * floatWeight;
+          rotZ *= floatWeight;
+        }
+
         const zIndex = state.opened === i ? 240 : Math.round(100 - Math.abs(diff) * 10);
         el.style.zIndex = String(zIndex);
         el.style.pointerEvents = state.opened !== -1 && state.opened !== i ? 'none' : 'auto';
@@ -683,7 +837,19 @@
         if (parts.hinge) {
           parts.hinge.style.transform = `translateZ(${spineWidths[i] / 2}px) rotateY(${(easeSwing * -172).toFixed(2)}deg)`;
         }
-        if (parts.spine) parts.spine.style.filter = `brightness(${(0.68 + eo * 0.32).toFixed(2)})`;
+        if (parts.spine) {
+          const liveBright = 0.68 + eo * 0.32;
+          const shelfBright = 0.94;
+          const spineBright = shelfBright + (liveBright - shelfBright) * floatWeight;
+          parts.spine.style.filter = `brightness(${spineBright.toFixed(2)})`;
+        }
+      }
+
+      if (
+        state.introActive &&
+        introElapsed >= SHELF_HOLD_SEC + Math.max(0, wrappers.length - 1) * FLOAT_STAGGER_SEC + FLOAT_DURATION_SEC
+      ) {
+        state.introActive = false;
       }
 
       if (typeof window.__updateServicesBookExplorer === 'function') {
@@ -756,26 +922,74 @@
       });
     }
 
+    if (zoomBar) {
+      zoomBar.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const btn = e.target.closest('[data-bc-zoom]');
+        if (!btn) return;
+        const mode = btn.getAttribute('data-bc-zoom');
+        if (mode === 'in') {
+          setBookZoom(state.zoomTarget < 1.25 ? 1.65 : state.zoomTarget + 0.45);
+        } else if (mode === 'out') {
+          setBookZoom(state.zoomTarget - 0.45);
+        } else if (mode === 'reset') {
+          setBookZoom(1.0);
+        }
+      });
+    }
+
     if (sceneEl) {
       sceneEl.addEventListener('click', (e) => {
-        if (state.opened === -1 || state.moved) return;
+        if (state.opened === -1 || state.moved || state.panMoved) return;
+        if (e.target.closest('#srv-bc-zoom-bar')) return;
         if (!e.target.closest('.bc-wrapper')) {
           closeBookSpread();
+        }
+      });
+
+      sceneEl.addEventListener('dblclick', (e) => {
+        if (!state.active || state.opened === -1) return;
+        if (e.target.closest('button, a, #srv-bc-zoom-bar')) return;
+        e.preventDefault();
+        if (state.zoomTarget > 1.2) {
+          setBookZoom(1.0);
+        } else {
+          setBookZoom(1.85, e.clientX, e.clientY);
         }
       });
 
       sceneEl.addEventListener(
         'wheel',
         (e) => {
-          if (!state.active || state.opened !== -1) return;
+          if (!state.active) return;
           e.preventDefault();
+          if (state.opened !== -1) {
+            const delta = Math.sign(e.deltaY) * -0.22;
+            if (Math.abs(delta) > 0) {
+              setBookZoom(state.zoomTarget + delta, state.zoomTarget <= 1.05 ? e.clientX : undefined, state.zoomTarget <= 1.05 ? e.clientY : undefined);
+            }
+            return;
+          }
+          state.introActive = false;
           state.target = clamp(state.target + Math.sign(e.deltaY || e.deltaX) * 0.45);
         },
         { passive: false }
       );
 
       sceneEl.addEventListener('mousedown', (e) => {
-        if (!state.active || state.opened !== -1) return;
+        if (!state.active) return;
+        if (e.target.closest('button, a, #srv-bc-zoom-bar')) return;
+        if (state.opened !== -1 && state.zoomTarget > 1.03) {
+          state.panDragging = true;
+          state.panMoved = false;
+          state.panStartX = e.clientX;
+          state.panStartY = e.clientY;
+          state.panOriginX = state.panXTarget;
+          state.panOriginY = state.panYTarget;
+          return;
+        }
+        if (state.opened !== -1) return;
+        state.introActive = false;
         state.dragging = true;
         state.moved = false;
         state.startX = e.clientX;
@@ -783,6 +997,15 @@
       });
 
       window.addEventListener('mousemove', (e) => {
+        if (state.panDragging && state.active && state.opened !== -1) {
+          const dx = e.clientX - state.panStartX;
+          const dy = e.clientY - state.panStartY;
+          if (Math.hypot(dx, dy) > 5) state.panMoved = true;
+          const bounded = clampBookPan(state.panOriginX + dx, state.panOriginY + dy, state.zoomTarget);
+          state.panXTarget = bounded.x;
+          state.panYTarget = bounded.y;
+          return;
+        }
         if (!state.dragging || !state.active || state.opened !== -1) return;
         const dx = e.clientX - state.startX;
         if (Math.abs(dx) > 6) state.moved = true;
@@ -791,8 +1014,10 @@
 
       const endDrag = () => {
         state.dragging = false;
+        state.panDragging = false;
         setTimeout(() => {
           state.moved = false;
+          state.panMoved = false;
         }, 40);
       };
       window.addEventListener('mouseup', endDrag);
@@ -800,7 +1025,42 @@
       sceneEl.addEventListener(
         'touchstart',
         (e) => {
-          if (!state.active || state.opened !== -1) return;
+          if (!state.active) return;
+          if (state.opened !== -1) {
+            if (e.touches.length === 2) {
+              const dx = e.touches[0].clientX - e.touches[1].clientX;
+              const dy = e.touches[0].clientY - e.touches[1].clientY;
+              state.pinchStartDist = Math.hypot(dx, dy);
+              state.pinchStartZoom = state.zoomTarget;
+              state.panDragging = false;
+              return;
+            }
+            if (e.touches.length === 1) {
+              if (!e.target.closest('button, a, #srv-bc-zoom-bar')) {
+                const nowMs = Date.now();
+                if (nowMs - state.lastTapMs < 290) {
+                  state.lastTapMs = 0;
+                  if (state.zoomTarget > 1.2) {
+                    setBookZoom(1.0);
+                  } else {
+                    setBookZoom(1.85, e.touches[0].clientX, e.touches[0].clientY);
+                  }
+                  return;
+                }
+                state.lastTapMs = nowMs;
+              }
+              if (state.zoomTarget > 1.03 && !e.target.closest('button, a, #srv-bc-zoom-bar')) {
+                state.panDragging = true;
+                state.panMoved = false;
+                state.panStartX = e.touches[0].clientX;
+                state.panStartY = e.touches[0].clientY;
+                state.panOriginX = state.panXTarget;
+                state.panOriginY = state.panYTarget;
+              }
+            }
+            return;
+          }
+          state.introActive = false;
           state.dragging = true;
           state.moved = false;
           state.startX = e.touches[0].clientX;
@@ -812,15 +1072,39 @@
       sceneEl.addEventListener(
         'touchmove',
         (e) => {
-          if (!state.dragging || !state.active || state.opened !== -1) return;
+          if (!state.active) return;
+          if (state.opened !== -1) {
+            if (e.touches.length === 2 && state.pinchStartDist > 10) {
+              if (e.cancelable) e.preventDefault();
+              const dx = e.touches[0].clientX - e.touches[1].clientX;
+              const dy = e.touches[0].clientY - e.touches[1].clientY;
+              const dist = Math.hypot(dx, dy);
+              setBookZoom(state.pinchStartZoom * (dist / state.pinchStartDist));
+              return;
+            }
+            if (state.panDragging && e.touches.length === 1 && state.zoomTarget > 1.03) {
+              if (e.cancelable) e.preventDefault();
+              const dx = e.touches[0].clientX - state.panStartX;
+              const dy = e.touches[0].clientY - state.panStartY;
+              if (Math.hypot(dx, dy) > 5) state.panMoved = true;
+              const bounded = clampBookPan(state.panOriginX + dx, state.panOriginY + dy, state.zoomTarget);
+              state.panXTarget = bounded.x;
+              state.panYTarget = bounded.y;
+            }
+            return;
+          }
+          if (!state.dragging) return;
           const dx = e.touches[0].clientX - state.startX;
           if (Math.abs(dx) > 6) state.moved = true;
           state.target = clamp(state.scrollStart + dx * -0.0085);
         },
-        { passive: true }
+        { passive: false }
       );
 
-      sceneEl.addEventListener('touchend', endDrag);
+      sceneEl.addEventListener('touchend', () => {
+        state.pinchStartDist = 0;
+        endDrag();
+      });
     }
 
     document.addEventListener('keydown', (e) => {
@@ -834,8 +1118,14 @@
         if (e.key === 'ArrowRight') openBookSpread((state.opened + 1) % SERVICE_BOOKS.length);
         return;
       }
-      if (e.key === 'ArrowLeft') state.target = clamp(Math.round(state.target) - 1);
-      if (e.key === 'ArrowRight') state.target = clamp(Math.round(state.target) + 1);
+      if (e.key === 'ArrowLeft') {
+        state.introActive = false;
+        state.target = clamp(Math.round(state.target) - 1);
+      }
+      if (e.key === 'ArrowRight') {
+        state.introActive = false;
+        state.target = clamp(Math.round(state.target) + 1);
+      }
     });
 
     controller = {
@@ -852,6 +1142,9 @@
         state.target = clamped;
         if (!wasActive) {
           state.current = clamped;
+          state.introActive = true;
+          state.introStartMs = 0;
+          state.introFocusIdx = clamped;
         }
         state.lastRenderedIdx = -1;
         updateUiState(clamped);
@@ -862,6 +1155,8 @@
       },
       deactivate() {
         state.active = false;
+        state.introActive = false;
+        if (shelfLedgeEl) shelfLedgeEl.style.display = 'none';
         closeBookSpread();
         if (typeof window.__setServicesBookExplorerActive === 'function') {
           window.__setServicesBookExplorerActive(false);
@@ -878,6 +1173,7 @@
           sceneEl.scrollTop = 0;
         }
         state.active = true;
+        state.introActive = false;
         if (typeof window.__setServicesBookExplorerActive === 'function') {
           window.__setServicesBookExplorerActive(true);
         }

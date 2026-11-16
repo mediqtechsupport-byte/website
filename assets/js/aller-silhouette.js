@@ -106,54 +106,64 @@
   };
 
   const HAND_FINGERS_WORLD = [
-    // 0: Thumb (Opposable radial side cradling lower-left of the globe)
+    // 0: Thumb (Opposable radial saddle + proximal/distal phalanx cradling lower-left of globe)
     {
       name: 'thumb',
       nodes: [
-        { p: [-0.188, 0.456, 0.154], rx: 0.0145, ry: 0.013, crv: 20 },
-        { p: [-0.212, 0.476, 0.172], rx: 0.0125, ry: 0.011, crv: 26 },
-        { p: [-0.224, 0.498, 0.188], rx: 0.0102, ry: 0.009, crv: 32 },
-        { p: [-0.218, 0.518, 0.198], rx: 0.0080, ry: 0.007, crv: 36 }
+        { p: [-0.184, 0.455, 0.152], rx: 0.0105, ry: 0.0092, crv: 18 },
+        { p: [-0.204, 0.468, 0.165], rx: 0.0092, ry: 0.0080, crv: 26 },
+        { p: [-0.219, 0.483, 0.178], rx: 0.0084, ry: 0.0072, crv: 36 },
+        { p: [-0.228, 0.499, 0.190], rx: 0.0072, ry: 0.0062, crv: 28 },
+        { p: [-0.225, 0.514, 0.200], rx: 0.0062, ry: 0.0052, crv: 34 },
+        { p: [-0.218, 0.524, 0.206], rx: 0.0050, ry: 0.0040, crv: 40 }
       ]
     },
-    // 1: Index Finger (Lower front-left cradle of globe)
+    // 1: Index Finger (Articulated 3-phalanx taper resting gently along front-left globe limb)
     {
       name: 'index',
       nodes: [
-        { p: [-0.188, 0.468, 0.178], rx: 0.0115, ry: 0.0105, crv: 22 },
-        { p: [-0.198, 0.484, 0.204], rx: 0.0100, ry: 0.0090, crv: 28 },
-        { p: [-0.195, 0.502, 0.220], rx: 0.0085, ry: 0.0075, crv: 33 },
-        { p: [-0.186, 0.518, 0.226], rx: 0.0070, ry: 0.0062, crv: 37 }
+        { p: [-0.184, 0.466, 0.178], rx: 0.0082, ry: 0.0072, crv: 24 },
+        { p: [-0.192, 0.475, 0.194], rx: 0.0074, ry: 0.0065, crv: 20 },
+        { p: [-0.196, 0.486, 0.210], rx: 0.0075, ry: 0.0066, crv: 36 },
+        { p: [-0.195, 0.499, 0.223], rx: 0.0064, ry: 0.0056, crv: 24 },
+        { p: [-0.190, 0.511, 0.231], rx: 0.0060, ry: 0.0051, crv: 35 },
+        { p: [-0.184, 0.520, 0.235], rx: 0.0047, ry: 0.0038, crv: 42 }
       ]
     },
-    // 2: Middle Finger (Lower front-center cradle of globe)
+    // 2: Middle Finger (Tallest central cradle finger with subtle PIP/DIP joint definition)
     {
       name: 'middle',
       nodes: [
-        { p: [-0.164, 0.466, 0.184], rx: 0.0120, ry: 0.0110, crv: 22 },
-        { p: [-0.168, 0.482, 0.212], rx: 0.0105, ry: 0.0094, crv: 28 },
-        { p: [-0.164, 0.501, 0.228], rx: 0.0088, ry: 0.0078, crv: 34 },
-        { p: [-0.160, 0.519, 0.233], rx: 0.0072, ry: 0.0064, crv: 38 }
+        { p: [-0.163, 0.464, 0.183], rx: 0.0084, ry: 0.0074, crv: 24 },
+        { p: [-0.166, 0.473, 0.201], rx: 0.0076, ry: 0.0067, crv: 20 },
+        { p: [-0.167, 0.485, 0.219], rx: 0.0078, ry: 0.0068, crv: 38 },
+        { p: [-0.164, 0.499, 0.232], rx: 0.0066, ry: 0.0058, crv: 24 },
+        { p: [-0.161, 0.512, 0.238], rx: 0.0061, ry: 0.0052, crv: 36 },
+        { p: [-0.158, 0.522, 0.241], rx: 0.0048, ry: 0.0039, crv: 44 }
       ]
     },
-    // 3: Ring Finger (Lower front-right cradle of globe)
+    // 3: Ring Finger (Lower front-right cradle finger following globe curve)
     {
       name: 'ring',
       nodes: [
-        { p: [-0.141, 0.467, 0.180], rx: 0.0112, ry: 0.0102, crv: 22 },
-        { p: [-0.136, 0.483, 0.206], rx: 0.0096, ry: 0.0086, crv: 27 },
-        { p: [-0.134, 0.500, 0.222], rx: 0.0082, ry: 0.0074, crv: 32 },
-        { p: [-0.136, 0.516, 0.226], rx: 0.0068, ry: 0.0060, crv: 36 }
+        { p: [-0.143, 0.465, 0.179], rx: 0.0078, ry: 0.0069, crv: 24 },
+        { p: [-0.139, 0.474, 0.197], rx: 0.0070, ry: 0.0062, crv: 20 },
+        { p: [-0.137, 0.485, 0.213], rx: 0.0072, ry: 0.0063, crv: 36 },
+        { p: [-0.136, 0.498, 0.226], rx: 0.0061, ry: 0.0053, crv: 24 },
+        { p: [-0.136, 0.510, 0.232], rx: 0.0056, ry: 0.0048, crv: 34 },
+        { p: [-0.138, 0.518, 0.234], rx: 0.0045, ry: 0.0037, crv: 40 }
       ]
     },
-    // 4: Little Finger / Pinky (Lower outer-right cradle of globe)
+    // 4: Little Finger / Pinky (Slender outer-right support along lower globe curve)
     {
       name: 'pinky',
       nodes: [
-        { p: [-0.121, 0.470, 0.168], rx: 0.0096, ry: 0.0088, crv: 20 },
-        { p: [-0.111, 0.484, 0.192], rx: 0.0084, ry: 0.0078, crv: 26 },
-        { p: [-0.108, 0.500, 0.205], rx: 0.0072, ry: 0.0066, crv: 31 },
-        { p: [-0.112, 0.514, 0.210], rx: 0.0060, ry: 0.0054, crv: 35 }
+        { p: [-0.125, 0.468, 0.169], rx: 0.0068, ry: 0.0060, crv: 22 },
+        { p: [-0.118, 0.476, 0.184], rx: 0.0061, ry: 0.0054, crv: 18 },
+        { p: [-0.114, 0.486, 0.199], rx: 0.0062, ry: 0.0055, crv: 34 },
+        { p: [-0.113, 0.497, 0.210], rx: 0.0053, ry: 0.0046, crv: 22 },
+        { p: [-0.114, 0.507, 0.215], rx: 0.0049, ry: 0.0042, crv: 32 },
+        { p: [-0.116, 0.515, 0.217], rx: 0.0040, ry: 0.0033, crv: 38 }
       ]
     }
   ];
@@ -201,7 +211,7 @@
       );
     }
 
-    function addLoftedTube(nodes, radialSegs, stepsPerSeg, capEnd) {
+    function addLoftedTube(nodes, radialSegs, stepsPerSeg, capEnd, capRatio) {
       const samples = [];
       const n = nodes.length;
       for (let i = 0; i < n - 1; i++) {
@@ -291,81 +301,162 @@
         rings.push({ indices: ring, tx, ty, tz, b1x, b1y, b1z, b2x, b2y, b2z, smp });
       }
 
-      // Stitch adjacent rings into triangles
+      // Stitch adjacent rings into outward-facing CCW triangles
       for (let s = 0; s < rings.length - 1; s++) {
         const rA = rings[s].indices;
         const rB = rings[s + 1].indices;
         for (let j = 0; j < radialSegs; j++) {
           const jNext = (j + 1) % radialSegs;
-          extraIdx.push(rA[j], rB[j], rB[jNext]);
-          extraIdx.push(rA[j], rB[jNext], rA[jNext]);
+          extraIdx.push(rA[j], rB[jNext], rB[j]);
+          extraIdx.push(rA[j], rA[jNext], rB[jNext]);
         }
       }
 
-      // Rounded hemispherical fingertip / palm dome cap at the end of the tube
+      // Multi-ring hemispherical dome cap at the end of the tube (smooth rounded fingertips & zero dark holes)
       if (capEnd && rings.length > 0) {
         const endR = rings[rings.length - 1];
         const smp = endR.smp;
+        const domeRings = 5;
+        let prevRing = endR.indices;
+        const capReach = Math.min(smp.rx, smp.ry) * (typeof capRatio === 'number' ? capRatio : 1.05);
+        for (let k = 1; k < domeRings; k++) {
+          const phi = (k / domeRings) * (Math.PI * 0.5);
+          const cosPhi = Math.cos(phi);
+          const sinPhi = Math.sin(phi);
+          const axialOffset = capReach * sinPhi;
+          const dRing = [];
+          for (let j = 0; j < radialSegs; j++) {
+            const theta = (j / radialSegs) * Math.PI * 2;
+            const ct = Math.cos(theta);
+            const st = Math.sin(theta);
+            const flat = st > 0 ? 0.86 : 1.04;
+            const ox = ct * smp.rx * cosPhi;
+            const oy = st * smp.ry * flat * cosPhi;
+            const wx = smp.p[0] + endR.tx * axialOffset + endR.b1x * ox + endR.b2x * oy;
+            const wy = smp.p[1] + endR.ty * axialOffset + endR.b1y * ox + endR.b2y * oy;
+            const wz = smp.p[2] + endR.tz * axialOffset + endR.b1z * ox + endR.b2z * oy;
+
+            const rnx = endR.b1x * (ct / smp.rx) + endR.b2x * (st / smp.ry);
+            const rny = endR.b1y * (ct / smp.rx) + endR.b2y * (st / smp.ry);
+            const rnz = endR.b1z * (ct / smp.rx) + endR.b2z * (st / smp.ry);
+            const rLen = Math.hypot(rnx, rny, rnz) || 1;
+            const nx = (rnx / rLen) * cosPhi + endR.tx * sinPhi;
+            const ny = (rny / rLen) * cosPhi + endR.ty * sinPhi;
+            const nz = (rnz / rLen) * cosPhi + endR.tz * sinPhi;
+            dRing.push(pushWorldVertex(wx, wy, wz, nx, ny, nz, smp.crv + k * 2));
+          }
+          for (let j = 0; j < radialSegs; j++) {
+            const jNext = (j + 1) % radialSegs;
+            extraIdx.push(prevRing[j], dRing[jNext], dRing[j]);
+            extraIdx.push(prevRing[j], prevRing[jNext], dRing[jNext]);
+          }
+          prevRing = dRing;
+        }
         const tipCenterIdx = pushWorldVertex(
-          smp.p[0] + endR.tx * smp.rx * 0.75,
-          smp.p[1] + endR.ty * smp.rx * 0.75,
-          smp.p[2] + endR.tz * smp.rx * 0.75,
+          smp.p[0] + endR.tx * capReach,
+          smp.p[1] + endR.ty * capReach,
+          smp.p[2] + endR.tz * capReach,
           endR.tx,
           endR.ty,
           endR.tz,
-          smp.crv + 8
+          smp.crv + 12
         );
-        const lastRing = endR.indices;
         for (let j = 0; j < radialSegs; j++) {
           const jNext = (j + 1) % radialSegs;
-          extraIdx.push(lastRing[j], lastRing[jNext], tipCenterIdx);
+          extraIdx.push(prevRing[j], prevRing[jNext], tipCenterIdx);
         }
       }
     }
 
-    // 1. Sculpted Upper-Arm -> Elbow -> Forearm -> Wrist -> Cupped Metacarpal Palm
+    // 1. Sculpted Upper-Arm Connected Along Left Deltoid -> Graceful Elbow -> Slim Forearm -> Wrist
     addLoftedTube(
       [
-        { p: [-0.124, 0.492, -0.034], rx: 0.044, ry: 0.040, crv: 14 },
-        { p: [-0.142, 0.392, 0.002], rx: 0.040, ry: 0.036, crv: 16 },
-        { p: [-0.152, 0.362, 0.046], rx: 0.036, ry: 0.032, crv: 18 },
-        { p: [-0.158, 0.392, 0.096], rx: 0.033, ry: 0.027, crv: 20 },
-        { p: [-0.159, 0.436, 0.138], rx: 0.027, ry: 0.019, crv: 22 },
-        { p: [-0.158, 0.464, 0.162], rx: 0.040, ry: 0.017, crv: 26 },
-        { p: [-0.158, 0.474, 0.182], rx: 0.042, ry: 0.014, crv: 30 }
+        { p: [-0.155, 0.445, -0.055], rx: 0.042, ry: 0.036, crv: 14 },
+        { p: [-0.161, 0.408, -0.012], rx: 0.035, ry: 0.030, crv: 18 },
+        { p: [-0.162, 0.398, 0.038], rx: 0.031, ry: 0.026, crv: 20 },
+        { p: [-0.161, 0.422, 0.095], rx: 0.025, ry: 0.019, crv: 22 },
+        { p: [-0.159, 0.448, 0.136], rx: 0.021, ry: 0.013, crv: 26 },
+        { p: [-0.158, 0.460, 0.158], rx: 0.028, ry: 0.011, crv: 28 },
+        { p: [-0.157, 0.466, 0.175], rx: 0.032, ry: 0.009, crv: 32 }
+      ],
+      28,
+      5,
+      true,
+      0.35
+    );
+
+    const handPalmStartVertex = nextVert;
+
+    // 2. Sculpted Flattened Trapezoid Palm Bridge Anchoring Finger Roots (Zero Bulbous Sphere)
+    addLoftedTube(
+      [
+        { p: [-0.158, 0.452, 0.140], rx: 0.022, ry: 0.011, crv: 22 },
+        { p: [-0.157, 0.460, 0.160], rx: 0.031, ry: 0.010, crv: 28 },
+        { p: [-0.156, 0.466, 0.178], rx: 0.034, ry: 0.0085, crv: 34 }
       ],
       24,
-      5,
-      true
+      4,
+      true,
+      0.28
     );
 
-    // 2. Thenar Eminence (Thumb Base Muscle Pad on Outer-Left Palm)
+    // 3. Slim Anatomical Thenar & Hypothenar Muscle Pads Blending Smoothly into Palm Sides
     addLoftedTube(
       [
-        { p: [-0.172, 0.438, 0.140], rx: 0.017, ry: 0.014, crv: 20 },
-        { p: [-0.186, 0.456, 0.156], rx: 0.020, ry: 0.016, crv: 25 },
-        { p: [-0.198, 0.470, 0.170], rx: 0.016, ry: 0.013, crv: 28 }
+        { p: [-0.166, 0.446, 0.138], rx: 0.013, ry: 0.010, crv: 22 },
+        { p: [-0.177, 0.456, 0.148], rx: 0.014, ry: 0.010, crv: 28 },
+        { p: [-0.184, 0.461, 0.156], rx: 0.011, ry: 0.0085, crv: 32 }
       ],
       14,
       4,
-      true
+      true,
+      0.55
     );
-
-    // 3. Hypothenar Eminence (Ulnar Muscle Pad on Outer-Right Palm)
     addLoftedTube(
       [
-        { p: [-0.144, 0.440, 0.142], rx: 0.015, ry: 0.013, crv: 20 },
-        { p: [-0.132, 0.458, 0.160], rx: 0.018, ry: 0.014, crv: 24 },
-        { p: [-0.122, 0.470, 0.172], rx: 0.014, ry: 0.011, crv: 28 }
+        { p: [-0.148, 0.447, 0.140], rx: 0.0115, ry: 0.0095, crv: 22 },
+        { p: [-0.136, 0.458, 0.155], rx: 0.0125, ry: 0.0095, crv: 28 },
+        { p: [-0.128, 0.466, 0.167], rx: 0.0095, ry: 0.0075, crv: 32 }
       ],
       14,
       4,
-      true
+      true,
+      0.55
     );
 
-    // 4. Five Articulated Fingers Cupping the Lower Hemisphere of the Globe
+    // 4. Dorsal Metacarpal Tendon Bridges Connecting Wrist Into Index, Middle, Ring, Pinky Roots
+    const metacarpalEnds = [
+      { root: [-0.184, 0.466, 0.178], r: 0.0082 },
+      { root: [-0.163, 0.464, 0.183], r: 0.0084 },
+      { root: [-0.143, 0.465, 0.179], r: 0.0078 },
+      { root: [-0.125, 0.468, 0.169], r: 0.0068 }
+    ];
+    for (let m = 0; m < metacarpalEnds.length; m++) {
+      const me = metacarpalEnds[m];
+      addLoftedTube(
+        [
+          { p: [-0.158, 0.449, 0.138], rx: 0.0085, ry: 0.0065, crv: 26 },
+          {
+            p: [
+              (-0.158 + me.root[0]) * 0.5,
+              (0.449 + me.root[1]) * 0.5 - 0.003,
+              (0.138 + me.root[2]) * 0.5
+            ],
+            rx: 0.0092,
+            ry: 0.0068,
+            crv: 34
+          },
+          { p: me.root, rx: me.r, ry: me.r * 0.88, crv: 30 }
+        ],
+        12,
+        3,
+        false
+      );
+    }
+
+    // 5. Five Articulated 3-Phalanx Fingers Cupping the Lower Hemisphere of the Globe
     for (let f = 0; f < HAND_FINGERS_WORLD.length; f++) {
-      addLoftedTube(HAND_FINGERS_WORLD[f].nodes, 16, 4, true);
+      addLoftedTube(HAND_FINGERS_WORLD[f].nodes, 18, 4, true, 1.05);
     }
 
     const totalVerts = nextVert;
@@ -381,6 +472,9 @@
     mergedCrv.set(baseMesh.crv, 0);
     mergedCrv.set(extraCrv, baseMesh.crv.length);
 
+    const isHandArr = new Float32Array(totalVerts);
+    isHandArr.fill(1.0, handStartVertex);
+
     const mergedIdx = new Uint16Array(baseMesh.idx.length + extraIdx.length);
     mergedIdx.set(baseMesh.idx, 0);
     mergedIdx.set(extraIdx, baseMesh.idx.length);
@@ -389,8 +483,10 @@
       pos: mergedPos,
       nrm: mergedNrm,
       crv: mergedCrv,
+      isHand: isHandArr,
       idx: mergedIdx,
-      handStartVertex: handStartVertex
+      handStartVertex: handStartVertex,
+      handPalmStartVertex: handPalmStartVertex
     };
   }
 
@@ -487,12 +583,22 @@ vec3 headNormal(vec3 n, float w){ return rotY(rotX(n, uPitch * w), uYaw * w); }`
       uFanR: { value: (CFG.dustFan * Math.PI) / 180 }
     };
 
+    const cosBaseGlobe = Math.cos(CFG.baseYaw);
+    const sinBaseGlobe = Math.sin(CFG.baseYaw);
+    const globeLocalPos = new THREE.Vector3(
+      cosBaseGlobe * HAND_GLOBE_WORLD.center[0] - sinBaseGlobe * HAND_GLOBE_WORLD.center[2],
+      HAND_GLOBE_WORLD.center[1],
+      sinBaseGlobe * HAND_GLOBE_WORLD.center[0] + cosBaseGlobe * HAND_GLOBE_WORLD.center[2]
+    );
+
     const { pos, nrm, crv, idx } = meshData;
+    const isHandAttr = meshData.isHand || new Float32Array(pos.length / 3);
     const vertexCount = pos.length / 3;
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     geometry.setAttribute('normal', new THREE.BufferAttribute(nrm, 3, true));
     geometry.setAttribute('aCrv', new THREE.BufferAttribute(crv, 1, true));
+    geometry.setAttribute('aIsHand', new THREE.BufferAttribute(isHandAttr, 1));
     geometry.setIndex(new THREE.BufferAttribute(idx, 1));
 
     const normVec3 = (arr) => new THREE.Vector3(arr[0], arr[1], arr[2]).normalize();
@@ -500,12 +606,15 @@ vec3 headNormal(vec3 n, float w){ return rotY(rotX(n, uPitch * w), uYaw * w); }`
     const bodyMaterial = new THREE.ShaderMaterial({
       side: THREE.DoubleSide,
       transparent: true,
+      depthWrite: true,
       uniforms: {
         uTime: sharedUniforms.uTime,
         uYaw: sharedUniforms.uYaw,
         uPitch: sharedUniforms.uPitch,
         uCellFreq: sharedUniforms.uCellFreq,
         uLime: { value: new THREE.Vector3(CFG.lime[0], CFG.lime[1], CFG.lime[2]) },
+        uGlobeLocal: { value: globeLocalPos.clone() },
+        uGlobeR: { value: HAND_GLOBE_WORLD.radius },
         uKeyDir: { value: normVec3(CFG.keyDir) },
         uKey: { value: CFG.key },
         uFillDir: { value: normVec3(CFG.fillDir) },
@@ -527,22 +636,27 @@ vec3 headNormal(vec3 n, float w){ return rotY(rotX(n, uPitch * w), uYaw * w); }`
         headDeformGLSL +
         `
 attribute float aCrv;
-varying vec3 vN; varying vec3 vObj; varying vec3 vView; varying float vCrv;
+attribute float aIsHand;
+varying vec3 vN; varying vec3 vObj; varying vec3 vObjN; varying vec3 vView; varying float vCrv; varying float vIsHand;
 void main(){
   vCrv = aCrv;
+  vIsHand = aIsHand;
   float w = headW(position);
   vec3 p = headDeform(position, w);
-  vObj = position;
-  vN = normalize(normalMatrix * normalize(headNormal(normal, w)));
+  vec3 hn = normalize(headNormal(normal, w));
+  vObj = p;
+  vObjN = hn;
+  vN = normalize(normalMatrix * hn);
   vec4 mv = modelViewMatrix * vec4(p, 1.0);
   vView = -mv.xyz;
   gl_Position = projectionMatrix * mv;
 }`,
       fragmentShader: `
 uniform float uTime; uniform vec3 uLime; uniform float uCellFreq;
+uniform vec3 uGlobeLocal; uniform float uGlobeR;
 uniform vec3 uKeyDir, uFillDir, uTopDir; uniform float uKey, uFill, uTop, uSpec, uTone, uShade;
 uniform vec3 uFrontDir; uniform float uFront, uRidge, uChest, uLightA, uFrontGrain, uRimA;
-varying vec3 vN; varying vec3 vObj; varying vec3 vView; varying float vCrv;
+varying vec3 vN; varying vec3 vObj; varying vec3 vObjN; varying vec3 vView; varying float vCrv; varying float vIsHand;
 float hash(vec3 p){ p = fract(p*0.3183099 + vec3(0.1,0.2,0.3)); p *= 17.0; return fract(p.x*p.y*p.z*(p.x+p.y+p.z)); }
 float vnoise(vec3 p){
   vec3 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
@@ -552,6 +666,7 @@ float vnoise(vec3 p){
 }
 void main(){
   vec3 N = normalize(vN); if (!gl_FrontFacing) N = -N; vec3 V = normalize(vView);
+  vec3 objN = normalize(vObjN); if (!gl_FrontFacing) objN = -objN;
   float fres = 1.0 - max(dot(N, V), 0.0);
   float y = vObj.y;
   vec3 cp = vObj * uCellFreq;
@@ -570,29 +685,39 @@ void main(){
   float edge = pow(fres, 2.0);
   float wk = 0.5 + 0.5 * dot(N, uKeyDir), wf = 0.5 + 0.5 * dot(N, uFillDir), wt = 0.5 + 0.5 * dot(N, uTopDir);
   float wr = 0.5 + 0.5 * dot(N, uFrontDir);
+
+  // Subtle globe contact bounce (dark midnight shadow preserved so Aller micro-grain defines form)
+  vec3 toGlobe = uGlobeLocal - vObj;
+  float globeDist = length(toGlobe);
+  float globeFacing = clamp(dot(objN, toGlobe / max(globeDist, 1e-4)) * 0.50 + 0.35, 0.0, 1.0);
+  float globeProx = exp(-max(globeDist - uGlobeR, 0.0) * 18.0);
+  float globeLight = globeProx * globeFacing * (0.35 + 0.65 * vIsHand);
+
   vec3 navyShadow = vec3(0.026, 0.076, 0.172);
   vec3 col = navyShadow + uShade * (0.060 * wk * wk * uKey + 0.040 * wf * wf * uFill + 0.045 * wt * wt * uTop + 0.010 * wr * wr * wr * uFront);
   col += uShade * (0.030 * key + 0.012 * top);
   col += 0.050 * vnoise(cp * 0.25) * (0.15 + key);
   col += vec3(0.76, 0.90, 1.00) * spec;
+  col += vec3(0.022, 0.072, 0.148) * globeLight * 0.28;
+
   float bodyF = mix(uChest, 1.0, smoothstep(0.60, 0.74, y));
-  float dens = (1.05 * key + 0.15 * fill + 0.75 * top + uFrontGrain * front) * bodyF + 0.20 * edge * (0.3 + key) + 1.60 * ridge;
-  float gl = clamp(key + 0.85 * top + 0.45 * fill + 0.50 * front + ridge, 0.0, 1.0);
+  float handGrainBoost = vIsHand * (0.20 * pow(fres, 1.5) + 0.24 * globeLight);
+  float dens = (1.05 * key + 0.15 * fill + 0.75 * top + uFrontGrain * front) * bodyF + 0.20 * edge * (0.3 + key) + 1.60 * ridge + handGrainBoost;
+  float gl = clamp(key + 0.85 * top + 0.45 * fill + 0.50 * front + ridge + 0.38 * globeLight, 0.0, 1.0);
   float tw = 0.80 + 0.20 * sin(uTime * 2.2 + h3 * 40.0);
   float g = pow(clamp(dens, 0.0, 1.0), 0.75);
   if (h2 < g * 1.25 && dc < 0.18 + 0.30 * g) {
     float b = (0.50 + 0.50 * h1) * tw * (0.22 + 0.88 * gl);
-    bool lime = h3 > 1.0 - 0.85 * pow(key, 1.5);
+    bool lime = h3 > 1.0 - 0.85 * pow(max(key, globeLight * 0.55), 1.5);
     vec3 sc = lime ? uLime : vec3(0.56, 0.70, 0.86) + vec3(0.22) * min(ridge, 1.0);
     float la = lime ? uRimA : mix(uLightA, uRimA, 0.5 * key);
     col = mix(col, sc * b, 0.94 * la);
   }
-  col += (uLime * pow(fres, 2.4) * key * 0.16 + vec3(0.45, 0.77, 0.97) * pow(fres, 2.6) * 0.18) * uLightA;
-  float bottomFade = smoothstep(0.308, 0.458, vObj.y);
-  float rightShoulderFade = 1.0 - smoothstep(0.175, 0.258, vObj.x);
+  col += (uLime * pow(fres, 2.5) * (key * 0.16 + globeLight * 0.24) + vec3(0.45, 0.77, 0.97) * pow(fres, 2.7) * 0.18) * uLightA;
+  float bottomFade = smoothstep(0.320, 0.435, vObj.y);
+  float rightShoulderFade = 1.0 - smoothstep(0.180, 0.275, vObj.x);
   float edgeAlpha = clamp(bottomFade * rightShoulderFade, 0.0, 1.0);
-  vec3 bgNavy = vec3(0.039, 0.114, 0.251);
-  col = mix(bgNavy, col, smoothstep(0.0, 0.65, edgeAlpha));
+  if (edgeAlpha < 0.015) discard;
   gl_FragColor = vec4(col, edgeAlpha);
 }`
     });
@@ -910,26 +1035,35 @@ void main(){
       { repel: 0.5 * CFG.mouseRepel, limeShare: 0, flakes: 1, allFlakes: 1 }
     );
 
-    // Layer 5: Sculpted 3D Forearm, Wrist, Palm & 5 Fingers Particle & Digital Flake Dispersion (4,200)
+    // Layer 5: Sculpted Arm & Anatomical Hand Surface Stardust Blend (5,200 micro-stipples)
     const handStart = meshData.handStartVertex || 0;
-    const handCount = Math.max(1, vertexCount - handStart);
-    if (handStart > 0 && handCount > 10) {
+    const handPalmStart = meshData.handPalmStartVertex || vertexCount;
+    const armSpan = Math.max(1, handPalmStart - handStart);
+    const fingerCount = Math.max(1, vertexCount - handPalmStart);
+    if (handStart > 0 && armSpan > 10) {
       createParticleLayer(
-        4200,
+        5200,
         (i, pArr, dArr, sArr, szArr) => {
-          const vIdx = handStart + Math.floor(Math.random() * handCount);
-          copyPos(pArr, i, vIdx, i % 9 === 0 ? 0.003 : 0);
-          const ang = ((110 + (Math.random() - 0.5) * 95) * Math.PI) / 180;
-          const mag = (0.35 + 0.55 * Math.random()) * 0.52;
+          const onArm = i % 3 === 0;
+          const vIdx = onArm
+            ? handStart + Math.floor(Math.random() * armSpan)
+            : handPalmStart + Math.floor(Math.random() * fingerCount);
+          copyPos(pArr, i, vIdx, i % 12 === 0 ? 0.0025 : 0);
+          const ang = onArm
+            ? ((25 + (Math.random() - 0.5) * 85) * Math.PI) / 180
+            : ((92 + (Math.random() - 0.5) * 48) * Math.PI) / 180;
+          const mag = onArm
+            ? (0.20 + 0.40 * Math.random()) * 0.34
+            : (0.04 + 0.14 * Math.random()) * 0.14;
           dArr[3 * i] = Math.cos(ang) * mag;
           dArr[3 * i + 1] = Math.abs(Math.sin(ang)) * mag;
-          dArr[3 * i + 2] = (Math.random() - 0.35) * 0.25 * mag;
-          const isFlake = i % 9 === 0;
-          const w = isFlake ? Math.random() * CFG.flakeShare * 0.95 : Math.random();
+          dArr[3 * i + 2] = (Math.random() - 0.5) * 0.18 * mag;
+          const isFlake = onArm && i % 15 === 0;
+          const w = isFlake ? Math.random() * CFG.flakeShare * 0.92 : 0.25 + 0.75 * Math.random();
           setSeed(sArr, i, w);
-          szArr[i] = isFlake ? 0.001 + 0.0013 * Math.random() : calcSize(w);
+          szArr[i] = onArm ? calcSize(w) * 0.88 : (0.00038 + 0.00046 * Math.random());
         },
-        { repel: 0.75 * CFG.mouseRepel, limeShare: 0.08, flakes: 1, allFlakes: 0 }
+        { repel: 0.70 * CFG.mouseRepel, limeShare: 0.08, flakes: 1, allFlakes: 0 }
       );
     }
 
@@ -1128,6 +1262,7 @@ void main(){
           }
           if (rings.length > 0) globeState.landRings = rings;
           if (newDots.length > 400) globeState.allDots = newDots;
+          if (typeof rebuildGlobe3DData === 'function') rebuildGlobe3DData();
         })
         .catch(() => {
           // Offline / sandboxed environment uses preloaded MEDIQ_WORLD_DOTS + OFFLINE_CONTINENT_RINGS seamlessly
@@ -1206,8 +1341,8 @@ void main(){
       viewHalfH = camDist * tanFov;
       viewHalfW = viewHalfH * aspect;
 
-      // Anchor the 3D humanoid bust & spinning globe on the right half of the full-bleed stage (matching #hero)
-      const rightScreenFrac = cssW >= 1024 ? 0.745 : 0.56;
+      // Anchor the 3D humanoid bust & spinning globe cleanly on the right without colliding with left mask or text
+      const rightScreenFrac = cssW >= 1024 ? 0.775 : 0.56;
       const ndcShiftX = (rightScreenFrac - 0.5) * 2;
       camTarget.x = frame.target[0] - ndcShiftX * viewHalfW;
       camera.position.set(camTarget.x, camTarget.y, camDist);
@@ -1478,286 +1613,458 @@ void main(){
       ];
     }
 
-    function renderWireframeDottedGlobe(dt, bodyYawVal) {
-      if (!globeCtx || !globeCanvas) return;
-      globeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      globeCtx.clearRect(0, 0, cssW, cssH);
+    // =========================================================================
+    // TRUE 3D HOLOGRAPHIC WIREFRAME DOTTED GLOBE INSIDE HAND DEPTH BUFFER
+    // =========================================================================
+    const GLOBE_R = HAND_GLOBE_WORLD.radius;
+    const globeGroup = new THREE.Group();
+    globeGroup.position.copy(globeLocalPos);
+    globeGroup.rotation.y = -CFG.baseYaw;
+    rootGroup.add(globeGroup);
+
+    const spinGroup = new THREE.Group();
+    spinGroup.rotation.order = 'XYZ';
+    globeGroup.add(spinGroup);
+
+    const globeUniforms = {
+      uTime: sharedUniforms.uTime,
+      uScale: sharedUniforms.uScale,
+      uZoom: { value: 1.0 },
+      uGlobeR: { value: GLOBE_R }
+    };
+
+    function lngLatToSphereVec(lng, lat, r, out) {
+      const phi = lat * DEG2RAD;
+      const lam = lng * DEG2RAD;
+      const cp = Math.cos(phi);
+      out[0] = r * cp * Math.sin(lam);
+      out[1] = r * Math.sin(phi);
+      out[2] = r * cp * Math.cos(lam);
+    }
+
+    // 1. Soft Volumetric Sapphire-Cyan Palm Cradle Halo Billboard Behind Globe
+    const globeHaloGeo = new THREE.PlaneGeometry(GLOBE_R * 3.1, GLOBE_R * 3.1);
+    const globeHaloMat = new THREE.ShaderMaterial({
+      uniforms: { uTime: sharedUniforms.uTime },
+      vertexShader: `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  vec4 mvCenter = modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0);
+  mvCenter.xy += position.xy * 1.0;
+  mvCenter.z -= 0.015;
+  gl_Position = projectionMatrix * mvCenter;
+}`,
+      fragmentShader: `
+uniform float uTime;
+varying vec2 vUv;
+void main() {
+  float d = length(vUv - 0.5) * 2.0;
+  if (d > 1.0) discard;
+  float glow = exp(-d * d * 4.4) * (0.28 + 0.04 * sin(uTime * 1.8));
+  vec3 col = mix(vec3(0.07, 0.25, 0.56), vec3(0.28, 0.75, 0.98), smoothstep(0.9, 0.15, d));
+  gl_FragColor = vec4(col, glow);
+}`,
+      transparent: true,
+      depthWrite: false,
+      depthTest: true,
+      blending: THREE.AdditiveBlending
+    });
+    const globeHaloMesh = new THREE.Mesh(globeHaloGeo, globeHaloMat);
+    globeHaloMesh.renderOrder = 0;
+    globeGroup.add(globeHaloMesh);
+
+    // 2. Holographic Ocean Sphere with Smooth Fresnel Atmospheric Falloff (Zero Hard Rim)
+    const oceanGeo = new THREE.SphereGeometry(GLOBE_R * 0.992, 64, 48);
+    const oceanMat = new THREE.ShaderMaterial({
+      uniforms: { uTime: sharedUniforms.uTime, uGlobeR: globeUniforms.uGlobeR },
+      vertexShader: `
+varying vec3 vViewN;
+varying vec3 vViewDir;
+varying vec3 vLocalPos;
+void main() {
+  vLocalPos = position;
+  vViewN = normalize(normalMatrix * normal);
+  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  vViewDir = normalize(-mv.xyz);
+  gl_Position = projectionMatrix * mv;
+}`,
+      fragmentShader: `
+uniform float uTime;
+uniform float uGlobeR;
+varying vec3 vViewN;
+varying vec3 vViewDir;
+varying vec3 vLocalPos;
+void main() {
+  vec3 N = normalize(vViewN);
+  vec3 V = normalize(vViewDir);
+  float front = clamp(dot(N, V), 0.0, 1.0);
+  float rim = pow(1.0 - front, 2.3);
+  float edgeFeather = smoothstep(0.0, 0.14, front);
+  float palmFade = smoothstep(-uGlobeR * 0.96, -uGlobeR * 0.42, vLocalPos.y);
+
+  vec3 coreCol = mix(vec3(0.032, 0.098, 0.230), vec3(0.095, 0.295, 0.595), rim);
+  vec3 atmoCol = vec3(0.45, 0.77, 0.97);
+  vec3 col = coreCol + atmoCol * pow(1.0 - front, 3.0) * 0.52;
+
+  float baseAlpha = mix(0.44, 0.68, rim) * edgeFeather * (0.45 + 0.55 * palmFade);
+  gl_FragColor = vec4(col, baseAlpha);
+}`,
+      transparent: true,
+      depthWrite: false,
+      depthTest: true
+    });
+    const oceanMesh = new THREE.Mesh(oceanGeo, oceanMat);
+    oceanMesh.renderOrder = 1;
+    globeGroup.add(oceanMesh);
+
+    // 3. 3D Graticule Wireframe (15-deg Meridians & Parallels)
+    const gratPositions = [];
+    const gratNormals = [];
+    const tmpA = [0, 0, 0];
+    const tmpB = [0, 0, 0];
+    const pushSegOnSphere = (arrPos, arrNrm, a, b) => {
+      arrPos.push(a[0], a[1], a[2], b[0], b[1], b[2]);
+      const la = Math.hypot(a[0], a[1], a[2]) || 1;
+      const lb = Math.hypot(b[0], b[1], b[2]) || 1;
+      arrNrm.push(a[0] / la, a[1] / la, a[2] / la, b[0] / lb, b[1] / lb, b[2] / lb);
+    };
+    for (let lng = -180; lng < 180; lng += 15) {
+      for (let lat = -85; lat < 85; lat += 5) {
+        lngLatToSphereVec(lng, lat, GLOBE_R * 1.000, tmpA);
+        lngLatToSphereVec(lng, lat + 5, GLOBE_R * 1.000, tmpB);
+        pushSegOnSphere(gratPositions, gratNormals, tmpA, tmpB);
+      }
+    }
+    for (let lat = -75; lat <= 75; lat += 15) {
+      for (let lng = -180; lng < 180; lng += 5) {
+        lngLatToSphereVec(lng, lat, GLOBE_R * 1.000, tmpA);
+        lngLatToSphereVec(lng + 5, lat, GLOBE_R * 1.000, tmpB);
+        pushSegOnSphere(gratPositions, gratNormals, tmpA, tmpB);
+      }
+    }
+    const gratGeo = new THREE.BufferGeometry();
+    gratGeo.setAttribute('position', new THREE.Float32BufferAttribute(gratPositions, 3));
+    gratGeo.setAttribute('normal', new THREE.Float32BufferAttribute(gratNormals, 3));
+
+    const createSphereLineMat = (colorHex, frontAlpha, backAlpha) =>
+      new THREE.ShaderMaterial({
+        uniforms: { uColor: { value: new THREE.Color(colorHex) } },
+        vertexShader: `
+varying float vFront;
+void main() {
+  vec3 vn = normalize(normalMatrix * normal);
+  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  vFront = dot(vn, normalize(-mv.xyz));
+  gl_Position = projectionMatrix * mv;
+}`,
+        fragmentShader: `
+uniform vec3 uColor;
+varying float vFront;
+void main() {
+  float a = mix(${backAlpha.toFixed(3)}, ${frontAlpha.toFixed(3)}, smoothstep(-0.18, 0.30, vFront));
+  gl_FragColor = vec4(uColor, a);
+}`,
+        transparent: true,
+        depthWrite: false,
+        depthTest: true
+      });
+
+    const graticuleLines = new THREE.LineSegments(
+      gratGeo,
+      createSphereLineMat(0x72c5f8, 0.21, 0.03)
+    );
+    graticuleLines.renderOrder = 2;
+    spinGroup.add(graticuleLines);
+
+    // 4. Dynamic 3D Continent Coastlines + Halftone Land Dots (Syncs with Natural Earth / Offline Data)
+    let coastLinesMesh = null;
+    let landDotsPoints = null;
+    const coastMat = createSphereLineMat(0xbae6fd, 0.56, 0.05);
+    const dotsMat = new THREE.ShaderMaterial({
+      uniforms: {
+        uScale: globeUniforms.uScale,
+        uZoom: globeUniforms.uZoom
+      },
+      vertexShader: `
+attribute float aHighlight;
+uniform float uScale;
+uniform float uZoom;
+varying float vFront;
+varying float vHighlight;
+void main() {
+  vHighlight = aHighlight;
+  vec3 vn = normalize(normalMatrix * normal);
+  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  vFront = dot(vn, normalize(-mv.xyz));
+  float basePt = aHighlight > 1.5 ? 0.00245 : (aHighlight > 0.5 ? 0.00215 : 0.00165);
+  gl_PointSize = max((basePt * uZoom * uScale) / (-mv.z), 1.4);
+  gl_Position = projectionMatrix * mv;
+}`,
+      fragmentShader: `
+varying float vFront;
+varying float vHighlight;
+void main() {
+  float r = length(gl_PointCoord - 0.5);
+  float mask = smoothstep(0.50, 0.22, r);
+  if (mask < 0.02) discard;
+  float hemi = smoothstep(-0.14, 0.24, vFront);
+  vec3 col = vHighlight > 0.5 ? vec3(0.220, 0.741, 0.973) : vec3(0.557, 0.729, 0.886);
+  float frontA = vHighlight > 0.5 ? 0.96 : 0.76;
+  float alpha = mask * mix(0.06, frontA, hemi);
+  gl_FragColor = vec4(col, alpha);
+}`,
+      transparent: true,
+      depthWrite: false,
+      depthTest: true
+    });
+
+    function rebuildGlobe3DData() {
+      if (coastLinesMesh) {
+        spinGroup.remove(coastLinesMesh);
+        coastLinesMesh.geometry.dispose();
+        coastLinesMesh = null;
+      }
+      if (landDotsPoints) {
+        spinGroup.remove(landDotsPoints);
+        landDotsPoints.geometry.dispose();
+        landDotsPoints = null;
+      }
+
+      const cPos = [];
+      const cNrm = [];
+      for (let r = 0; r < globeState.landRings.length; r++) {
+        const ring = globeState.landRings[r];
+        if (!ring || ring.length < 2) continue;
+        for (let i = 0; i < ring.length - 1; i++) {
+          lngLatToSphereVec(ring[i][0], ring[i][1], GLOBE_R * 1.001, tmpA);
+          lngLatToSphereVec(ring[i + 1][0], ring[i + 1][1], GLOBE_R * 1.001, tmpB);
+          pushSegOnSphere(cPos, cNrm, tmpA, tmpB);
+        }
+      }
+      if (cPos.length > 0) {
+        const cGeo = new THREE.BufferGeometry();
+        cGeo.setAttribute('position', new THREE.Float32BufferAttribute(cPos, 3));
+        cGeo.setAttribute('normal', new THREE.Float32BufferAttribute(cNrm, 3));
+        coastLinesMesh = new THREE.LineSegments(cGeo, coastMat);
+        coastLinesMesh.renderOrder = 3;
+        spinGroup.add(coastLinesMesh);
+      }
+
+      const dots = globeState.allDots;
+      if (dots && dots.length > 0) {
+        const dPos = new Float32Array(dots.length * 3);
+        const dNrm = new Float32Array(dots.length * 3);
+        const dHi = new Float32Array(dots.length);
+        for (let i = 0; i < dots.length; i++) {
+          lngLatToSphereVec(dots[i].lng, dots[i].lat, GLOBE_R * 1.003, tmpA);
+          dPos[i * 3] = tmpA[0];
+          dPos[i * 3 + 1] = tmpA[1];
+          dPos[i * 3 + 2] = tmpA[2];
+          const l = Math.hypot(tmpA[0], tmpA[1], tmpA[2]) || 1;
+          dNrm[i * 3] = tmpA[0] / l;
+          dNrm[i * 3 + 1] = tmpA[1] / l;
+          dNrm[i * 3 + 2] = tmpA[2] / l;
+          dHi[i] = dots[i].highlight || 0;
+        }
+        const dGeo = new THREE.BufferGeometry();
+        dGeo.setAttribute('position', new THREE.BufferAttribute(dPos, 3));
+        dGeo.setAttribute('normal', new THREE.BufferAttribute(dNrm, 3));
+        dGeo.setAttribute('aHighlight', new THREE.BufferAttribute(dHi, 1));
+        landDotsPoints = new THREE.Points(dGeo, dotsMat);
+        landDotsPoints.renderOrder = 4;
+        spinGroup.add(landDotsPoints);
+      }
+    }
+    rebuildGlobe3DData();
+
+    // 5. Pulsing PH & UK Beacons on the 3D Surface
+    const beaconPos = new Float32Array(6);
+    const beaconNrm = new Float32Array(6);
+    const beaconPhase = new Float32Array([0.0, 2.1]);
+    [
+      [121.0, 14.6],
+      [-0.13, 51.5]
+    ].forEach((coord, idx) => {
+      lngLatToSphereVec(coord[0], coord[1], GLOBE_R * 1.007, tmpA);
+      beaconPos[idx * 3] = tmpA[0];
+      beaconPos[idx * 3 + 1] = tmpA[1];
+      beaconPos[idx * 3 + 2] = tmpA[2];
+      const l = Math.hypot(tmpA[0], tmpA[1], tmpA[2]) || 1;
+      beaconNrm[idx * 3] = tmpA[0] / l;
+      beaconNrm[idx * 3 + 1] = tmpA[1] / l;
+      beaconNrm[idx * 3 + 2] = tmpA[2] / l;
+    });
+    const beaconGeo = new THREE.BufferGeometry();
+    beaconGeo.setAttribute('position', new THREE.BufferAttribute(beaconPos, 3));
+    beaconGeo.setAttribute('normal', new THREE.BufferAttribute(beaconNrm, 3));
+    beaconGeo.setAttribute('aPhase', new THREE.BufferAttribute(beaconPhase, 1));
+    const beaconMat = new THREE.ShaderMaterial({
+      uniforms: {
+        uTime: sharedUniforms.uTime,
+        uScale: globeUniforms.uScale,
+        uZoom: globeUniforms.uZoom
+      },
+      vertexShader: `
+attribute float aPhase;
+uniform float uScale;
+uniform float uZoom;
+varying float vFront;
+varying float vPhase;
+void main() {
+  vPhase = aPhase;
+  vec3 vn = normalize(normalMatrix * normal);
+  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  vFront = dot(vn, normalize(-mv.xyz));
+  gl_PointSize = max((0.011 * uZoom * uScale) / (-mv.z), 6.0);
+  gl_Position = projectionMatrix * mv;
+}`,
+      fragmentShader: `
+uniform float uTime;
+varying float vFront;
+varying float vPhase;
+void main() {
+  if (vFront < 0.04) discard;
+  float r = length(gl_PointCoord - 0.5) * 2.0;
+  if (r > 1.0) discard;
+  float pulse = 0.45 + 0.35 * sin(uTime * 3.2 + vPhase);
+  float core = smoothstep(0.32, 0.14, r);
+  float ring = smoothstep(0.10, 0.0, abs(r - pulse));
+  float alpha = clamp(core * 0.95 + ring * 0.72, 0.0, 1.0) * smoothstep(0.04, 0.25, vFront);
+  vec3 col = mix(vec3(0.220, 0.741, 0.973), vec3(0.878, 0.949, 0.996), core);
+  gl_FragColor = vec4(col, alpha);
+}`,
+      transparent: true,
+      depthWrite: false,
+      depthTest: true
+    });
+    const beaconPoints = new THREE.Points(beaconGeo, beaconMat);
+    beaconPoints.renderOrder = 5;
+    spinGroup.add(beaconPoints);
+
+    // 6. Tilted 3D Orbital Halo Ring & Orbiting Energy Motes (Passing In Front & Behind in 3D Depth)
+    const orbitGroup = new THREE.Group();
+    orbitGroup.rotation.set(0.26, 0.10, -0.22);
+    globeGroup.add(orbitGroup);
+
+    const orbitSegs = 96;
+    const orbitR = GLOBE_R * 1.15;
+    const orbitPos = new Float32Array(orbitSegs * 3);
+    const orbitAng = new Float32Array(orbitSegs);
+    for (let i = 0; i < orbitSegs; i++) {
+      const a = (i / orbitSegs) * Math.PI * 2;
+      orbitPos[i * 3] = Math.cos(a) * orbitR;
+      orbitPos[i * 3 + 1] = 0;
+      orbitPos[i * 3 + 2] = Math.sin(a) * orbitR;
+      orbitAng[i] = a;
+    }
+    const orbitGeo = new THREE.BufferGeometry();
+    orbitGeo.setAttribute('position', new THREE.BufferAttribute(orbitPos, 3));
+    orbitGeo.setAttribute('aAngle', new THREE.BufferAttribute(orbitAng, 1));
+    const orbitMat = new THREE.ShaderMaterial({
+      uniforms: { uTime: sharedUniforms.uTime },
+      vertexShader: `
+attribute float aAngle;
+varying float vAngle;
+void main() {
+  vAngle = aAngle;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}`,
+      fragmentShader: `
+uniform float uTime;
+varying float vAngle;
+void main() {
+  float wave = 0.55 + 0.45 * sin(vAngle * 2.0 - uTime * 1.4);
+  gl_FragColor = vec4(vec3(0.447, 0.773, 0.973), 0.30 * wave);
+}`,
+      transparent: true,
+      depthWrite: false,
+      depthTest: true
+    });
+    const orbitLoop = new THREE.LineLoop(orbitGeo, orbitMat);
+    orbitLoop.renderOrder = 4;
+    orbitGroup.add(orbitLoop);
+
+    const MOTE_COUNT = 10;
+    const motePositions = new Float32Array(MOTE_COUNT * 3);
+    const moteSizes = new Float32Array(MOTE_COUNT);
+    for (let i = 0; i < MOTE_COUNT; i++) {
+      moteSizes[i] = i % 2 === 0 ? 0.0022 : 0.0017;
+    }
+    const moteGeo = new THREE.BufferGeometry();
+    const motePosAttr = new THREE.BufferAttribute(motePositions, 3);
+    moteGeo.setAttribute('position', motePosAttr);
+    moteGeo.setAttribute('aSize', new THREE.BufferAttribute(moteSizes, 1));
+    const moteMat = new THREE.ShaderMaterial({
+      uniforms: { uScale: globeUniforms.uScale, uZoom: globeUniforms.uZoom },
+      vertexShader: `
+attribute float aSize;
+uniform float uScale;
+uniform float uZoom;
+void main() {
+  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  gl_PointSize = max((aSize * uZoom * uScale) / (-mv.z), 2.0);
+  gl_Position = projectionMatrix * mv;
+}`,
+      fragmentShader: `
+void main() {
+  gl_FragColor = vec4(vec3(0.447, 0.808, 0.984), 0.85);
+}`,
+      transparent: true,
+      depthWrite: false,
+      depthTest: true
+    });
+    const orbitMotes = new THREE.Points(moteGeo, moteMat);
+    orbitMotes.renderOrder = 5;
+    orbitGroup.add(orbitMotes);
+
+    function syncGlobe3DAndHitArea(dt, bodyYawVal) {
+      if (globeCtx && globeCanvas) {
+        globeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        globeCtx.clearRect(0, 0, cssW, cssH);
+      }
 
       if (globeState.autoRotate && !globeState.dragging && !reduced) {
         globeState.rotLng += globeState.rotationSpeed * (dt * 60);
         if (globeState.rotLng > 180) globeState.rotLng -= 360;
       }
 
-      // Lock the 2D Wireframe Dotted Globe directly into the 3D cupped palm of the sculpted hand
+      const bobLocalY = reduced ? 0 : Math.sin(elapsed * 1.65) * 0.0022;
+      globeGroup.position.set(globeLocalPos.x, globeLocalPos.y + bobLocalY, globeLocalPos.z);
+      globeGroup.scale.setScalar(globeState.zoomScale);
+      globeUniforms.uZoom.value = globeState.zoomScale;
+
+      spinGroup.rotation.x = globeState.rotLat * DEG2RAD;
+      spinGroup.rotation.y = globeState.rotLng * DEG2RAD;
+
+      for (let i = 0; i < MOTE_COUNT; i++) {
+        const ang = elapsed * (0.95 + (i % 3) * 0.18) + (i / MOTE_COUNT) * Math.PI * 2;
+        const rr = orbitR * (0.98 + 0.06 * Math.sin(elapsed + i));
+        motePositions[i * 3] = Math.cos(ang) * rr;
+        motePositions[i * 3 + 1] = Math.sin(ang * 2.0 + i) * GLOBE_R * 0.035;
+        motePositions[i * 3 + 2] = Math.sin(ang) * rr;
+      }
+      motePosAttr.needsUpdate = true;
+
+      // Update projected 2D hit-test center & radius so pointer drag/zoom stay locked onto the 3D globe
       const deltaYaw = bodyYawVal - CFG.baseYaw;
       const cd = Math.cos(deltaYaw);
       const sd = Math.sin(deltaYaw);
       const gwx = HAND_GLOBE_WORLD.center[0];
-      const gwy = HAND_GLOBE_WORLD.center[1];
+      const gwy = HAND_GLOBE_WORLD.center[1] + bobLocalY;
       const gwz = HAND_GLOBE_WORLD.center[2];
       const grx = cd * gwx + sd * gwz;
       const grz = -sd * gwx + cd * gwz;
 
       globeAnchorVec.set(grx, gwy, grz).project(camera);
-      globeTopVec.set(grx, gwy + HAND_GLOBE_WORLD.radius, grz).project(camera);
-      globeBotVec.set(grx, gwy - HAND_GLOBE_WORLD.radius, grz).project(camera);
+      globeTopVec.set(grx, gwy + GLOBE_R, grz).project(camera);
+      globeBotVec.set(grx, gwy - GLOBE_R, grz).project(camera);
 
       globeState.cx = ((globeAnchorVec.x + 1) * 0.5) * cssW;
       globeState.cy = ((-globeAnchorVec.y + 1) * 0.5) * cssH;
       const projTopY = ((-globeTopVec.y + 1) * 0.5) * cssH;
       const projBotY = ((-globeBotVec.y + 1) * 0.5) * cssH;
       globeState.baseRadius = Math.max(68, Math.abs(projBotY - projTopY) * 0.5);
-
-      // Subtle breathing sync with the hand
-      const bobY = reduced ? 0 : Math.sin(elapsed * 1.65) * 2.2;
-      const cx = globeState.cx;
-      const cy = globeState.cy + bobY;
-      const scaleFactor = globeState.zoomScale;
-      const R = globeState.baseRadius * scaleFactor;
-      const rotLng = globeState.rotLng;
-      const rotLat = globeState.rotLat;
-
-      // Project 3D palm center to anchor the palm-to-globe energy cradle
-      const pwx = HAND_GLOBE_WORLD.palmCenter[0];
-      const pwy = HAND_GLOBE_WORLD.palmCenter[1];
-      const pwz = HAND_GLOBE_WORLD.palmCenter[2];
-      shoulderVec.set(cd * pwx + sd * pwz, pwy, -sd * pwx + cd * pwz).project(camera);
-      const palmX = ((shoulderVec.x + 1) * 0.5) * cssW;
-      const palmY = ((-shoulderVec.y + 1) * 0.5) * cssH;
-
-      // 1. Palm Cradle Aura & Energy Ring between the 3D Cupped Palm and the Globe Sphere
-      globeCtx.save();
-      const auraGrad = globeCtx.createRadialGradient(cx, cy, R * 0.35, cx, cy, R * 1.38);
-      auraGrad.addColorStop(0, 'rgba(56, 189, 248, 0.16)');
-      auraGrad.addColorStop(0.65, 'rgba(37, 99, 235, 0.09)');
-      auraGrad.addColorStop(1, 'rgba(10, 29, 64, 0)');
-      globeCtx.fillStyle = auraGrad;
-      globeCtx.beginPath();
-      globeCtx.arc(cx, cy, R * 1.38, 0, Math.PI * 2);
-      globeCtx.fill();
-
-      // Luminous blue palm-cupping energy ring right above the knuckles
-      const ringRx = R * 0.72;
-      const ringRy = ringRx * 0.22;
-      const ringY = (cy + R * 0.94 + palmY) * 0.5;
-      globeCtx.save();
-      globeCtx.translate((cx + palmX) * 0.5, ringY);
-      globeCtx.rotate(-0.06);
-      globeCtx.beginPath();
-      globeCtx.ellipse(0, 0, ringRx, ringRy, 0, 0, Math.PI * 2);
-      globeCtx.strokeStyle = 'rgba(114, 197, 248, 0.42)';
-      globeCtx.lineWidth = 1.3 * scaleFactor;
-      globeCtx.setLineDash([7 * scaleFactor, 5 * scaleFactor]);
-      globeCtx.lineDashOffset = -elapsed * 18;
-      globeCtx.stroke();
-      globeCtx.restore();
-      globeCtx.restore();
-
-      // 2. Draw Ocean (Semi-Translucent Holographic MEDIQ Sapphire Sphere — Blended with Humanoid)
-      globeCtx.save();
-      globeCtx.beginPath();
-      globeCtx.arc(cx, cy, R, 0, Math.PI * 2);
-      const oceanGrad = globeCtx.createRadialGradient(
-        cx - R * 0.24,
-        cy - R * 0.24,
-        R * 0.06,
-        cx,
-        cy,
-        R
-      );
-      oceanGrad.addColorStop(0, 'rgba(13, 38, 78, 0.72)');
-      oceanGrad.addColorStop(0.64, 'rgba(8, 23, 52, 0.58)');
-      oceanGrad.addColorStop(0.90, 'rgba(10, 29, 64, 0.34)');
-      oceanGrad.addColorStop(1, 'rgba(14, 42, 86, 0.10)');
-      globeCtx.fillStyle = oceanGrad;
-      globeCtx.fill();
-
-      // Soft luminous sky-blue atmospheric sphere rim (no harsh white sticker border)
-      globeCtx.strokeStyle = 'rgba(114, 197, 248, 0.38)';
-      globeCtx.lineWidth = 1.25 * scaleFactor;
-      globeCtx.stroke();
-
-      // Clip all graticule lines, land outlines, and halftone dots strictly inside the globe circle
-      globeCtx.clip();
-
-      // 3. Draw 15-degree Orthographic Graticule (Meridians & Parallels)
-      globeCtx.beginPath();
-      // Meridians every 15 degrees
-      for (let lng = -180; lng < 180; lng += 15) {
-        let pen = false;
-        for (let lat = -85; lat <= 85; lat += 5) {
-          const p = orthoProject(lng, lat, cx, cy, R, rotLng, rotLat);
-          if (p) {
-            if (!pen) {
-              globeCtx.moveTo(p[0], p[1]);
-              pen = true;
-            } else {
-              globeCtx.lineTo(p[0], p[1]);
-            }
-          } else {
-            pen = false;
-          }
-        }
-      }
-      // Parallels every 15 degrees
-      for (let lat = -75; lat <= 75; lat += 15) {
-        let pen = false;
-        for (let lng = -180; lng <= 180; lng += 5) {
-          const p = orthoProject(lng, lat, cx, cy, R, rotLng, rotLat);
-          if (p) {
-            if (!pen) {
-              globeCtx.moveTo(p[0], p[1]);
-              pen = true;
-            } else {
-              globeCtx.lineTo(p[0], p[1]);
-            }
-          } else {
-            pen = false;
-          }
-        }
-      }
-      globeCtx.strokeStyle = '#72c5f8';
-      globeCtx.lineWidth = 0.95 * scaleFactor;
-      globeCtx.globalAlpha = 0.16;
-      globeCtx.stroke();
-      globeCtx.globalAlpha = 1;
-
-      // 4. Draw Continent & Island Land Outlines (Soft Ice-Blue Harmonized with Humanoid Particles)
-      if (globeState.landRings.length > 0) {
-        globeCtx.beginPath();
-        for (let r = 0; r < globeState.landRings.length; r++) {
-          drawOrthoPolyline(globeCtx, globeState.landRings[r], cx, cy, R, rotLng, rotLat);
-        }
-        globeCtx.strokeStyle = '#bae6fd';
-        globeCtx.lineWidth = 0.95 * scaleFactor;
-        globeCtx.globalAlpha = 0.48;
-        globeCtx.stroke();
-        globeCtx.globalAlpha = 1;
-      }
-
-      // 5. Draw Halftone Dots across all Continents (allDots)
-      const dots = globeState.allDots;
-      const dotRadius = 1.2 * scaleFactor;
-      const twoPi = Math.PI * 2;
-
-      // Batch standard land dots in MEDIQ soft steel-sky blue (#8ebae2) and highlighted partner hub dots (#38bdf8)
-      globeCtx.beginPath();
-      for (let i = 0; i < dots.length; i++) {
-        const d = dots[i];
-        if (d.highlight !== 0) continue;
-        const p = orthoProject(d.lng, d.lat, cx, cy, R, rotLng, rotLat);
-        if (p && p[2] > 0.02) {
-          globeCtx.moveTo(p[0] + dotRadius, p[1]);
-          globeCtx.arc(p[0], p[1], dotRadius, 0, twoPi);
-        }
-      }
-      globeCtx.fillStyle = 'rgba(142, 186, 226, 0.66)';
-      globeCtx.fill();
-
-      // Highlighted Philippines & UK Partner Dots in MEDIQ Neon Sky-Blue
-      globeCtx.beginPath();
-      for (let i = 0; i < dots.length; i++) {
-        const d = dots[i];
-        if (d.highlight === 0) continue;
-        const p = orthoProject(d.lng, d.lat, cx, cy, R, rotLng, rotLat);
-        if (p && p[2] > 0.02) {
-          const hr = dotRadius * (d.highlight === 2 ? 1.45 : 1.25);
-          globeCtx.moveTo(p[0] + hr, p[1]);
-          globeCtx.arc(p[0], p[1], hr, 0, twoPi);
-        }
-      }
-      globeCtx.fillStyle = '#38bdf8';
-      globeCtx.fill();
-
-      // Pulsing Philippines (Manila 121.0E, 14.6N) & Rayner UK (London -0.13E, 51.5N) beacons when visible
-      const beacons = [
-        { lng: 121.0, lat: 14.6, label: 'PH' },
-        { lng: -0.13, lat: 51.5, label: 'UK' }
-      ];
-      for (let b = 0; b < beacons.length; b++) {
-        const bp = orthoProject(beacons[b].lng, beacons[b].lat, cx, cy, R, rotLng, rotLat);
-        if (bp && bp[2] > 0.08) {
-          const pulseR = (3.5 + 3.5 * (0.5 + 0.5 * Math.sin(elapsed * 3.2 + b * 2))) * scaleFactor;
-          globeCtx.beginPath();
-          globeCtx.arc(bp[0], bp[1], pulseR, 0, twoPi);
-          globeCtx.strokeStyle = 'rgba(56, 189, 248, 0.75)';
-          globeCtx.lineWidth = 1.2 * scaleFactor;
-          globeCtx.stroke();
-
-          globeCtx.beginPath();
-          globeCtx.arc(bp[0], bp[1], 2.2 * scaleFactor, 0, twoPi);
-          globeCtx.fillStyle = '#e0f2fe';
-          globeCtx.fill();
-        }
-      }
-
-      // Soft inner fresnel atmospheric blend along the right & bottom rim where the globe meets the humanoid
-      const rimBlend = globeCtx.createRadialGradient(cx, cy, R * 0.68, cx, cy, R);
-      rimBlend.addColorStop(0, 'rgba(10, 29, 64, 0)');
-      rimBlend.addColorStop(0.75, 'rgba(14, 42, 86, 0.14)');
-      rimBlend.addColorStop(1, 'rgba(56, 189, 248, 0.18)');
-      globeCtx.fillStyle = rimBlend;
-      globeCtx.beginPath();
-      globeCtx.arc(cx, cy, R, 0, twoPi);
-      globeCtx.fill();
-
-      globeCtx.restore();
-
-      // 6. Outer Orbital Spin Ring & Floating Particle Motes around the Globe
-      globeCtx.save();
-      globeCtx.translate(cx, cy);
-      globeCtx.rotate(-0.22);
-      globeCtx.beginPath();
-      globeCtx.ellipse(0, 0, R * 1.14, R * 0.26, 0, 0.18, Math.PI - 0.18);
-      globeCtx.strokeStyle = 'rgba(114, 197, 248, 0.32)';
-      globeCtx.lineWidth = 1.05 * scaleFactor;
-      globeCtx.stroke();
-
-      // Orbiting blue square flake motes matching the humanoid's particle dispersion
-      for (let m = 0; m < 4; m++) {
-        const ang = elapsed * 1.15 + m * (Math.PI * 0.5);
-        if (Math.sin(ang) > -0.15) {
-          const mx = Math.cos(ang) * R * 1.14;
-          const my = Math.sin(ang) * R * 0.26;
-          globeCtx.fillStyle = m % 2 === 0 ? '#38bdf8' : '#d8eaf8';
-          globeCtx.fillRect(mx - 2 * scaleFactor, my - 2 * scaleFactor, 4 * scaleFactor, 4 * scaleFactor);
-        }
-      }
-      globeCtx.restore();
-
-      // 7. Smooth Continuous Crescent Feather at the Bottom & Right Edge (Zero Bumpy Notches)
-      globeCtx.save();
-      globeCtx.globalCompositeOperation = 'destination-out';
-
-      // Smoothly feather the lower cradle of the globe into the 3D WebGL hand & fingers
-      const bottomEraseGrad = globeCtx.createLinearGradient(cx, cy + R * 0.58, cx, cy + R * 1.02);
-      bottomEraseGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
-      bottomEraseGrad.addColorStop(0.55, 'rgba(0, 0, 0, 0.28)');
-      bottomEraseGrad.addColorStop(0.85, 'rgba(0, 0, 0, 0.68)');
-      bottomEraseGrad.addColorStop(1, 'rgba(0, 0, 0, 0.94)');
-      globeCtx.fillStyle = bottomEraseGrad;
-      globeCtx.beginPath();
-      globeCtx.arc(cx, cy, R * 1.05, 0.05 * Math.PI, 0.95 * Math.PI);
-      globeCtx.fill();
-
-      // Softly feather the upper-right rim where the globe overlaps the humanoid's neck/chest silhouette
-      const rightRimGrad = globeCtx.createRadialGradient(
-        cx + R * 0.78,
-        cy - R * 0.15,
-        R * 0.05,
-        cx + R * 0.78,
-        cy - R * 0.15,
-        R * 0.65
-      );
-      rightRimGrad.addColorStop(0, 'rgba(0, 0, 0, 0.32)');
-      rightRimGrad.addColorStop(0.6, 'rgba(0, 0, 0, 0.12)');
-      rightRimGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      globeCtx.fillStyle = rightRimGrad;
-      globeCtx.beginPath();
-      globeCtx.arc(cx, cy, R * 1.05, 0, Math.PI * 2);
-      globeCtx.fill();
-
-      globeCtx.restore();
     }
 
     function animate(now) {
@@ -1802,9 +2109,9 @@ void main(){
       sharedUniforms.uMouseOn.value = mouseOnSmooth;
       sharedUniforms.uMouse.value.set(pointer.x * viewHalfW, pointer.y * viewHalfH);
 
+      syncGlobe3DAndHitArea(dt, bodyYaw);
       renderer.render(scene, camera);
       renderAsciiMatrix(dt, headYawRel, curPitch, bodyYaw, isPointerFresh);
-      renderWireframeDottedGlobe(dt, bodyYaw);
 
       rafId = requestAnimationFrame(animate);
     }

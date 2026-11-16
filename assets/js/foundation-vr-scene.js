@@ -6,21 +6,19 @@
  *     slate-navy acoustic slat wall, frosted Venetian-blind side window overlooking night
  *     lights, recessed ceiling LED troffers, bookshelves, indoor plant, wall certificate)
  *   - Balanced Cinema VR cursor head-look parallax camera
- *   - Realistic Articulated Male Doctor seated at an open architectural desk with full
- *     hips, thighs, knees, shins, trousers, socks, and leather dress shoes planted on
- *     the office rug/floor:
- *       1) Stressed over messy paperwork (furrowed brows, hand on temple, tapping desk)
- *       2) Angry grab & crumple of a sheet into a 3D jagged paper ball
- *       3) Energetic throw diagonally up-right that ignites into a Shooting Star
- *       4) Lands dead-center on the live MEDIQ Particle Globe, triggering
- *          __fndOnStarImpact() to energize and reform the globe
+ *   - Realistic Articulated Male Doctor seated thoughtfully at an open architectural desk:
+ *       1) Deep pensive "Thinker" contemplation (chin poised gently in right hand, left hand
+ *          resting serenely on desk folio)
+ *       2) Rising crystalline 3D Thought Orbs & synaptic light trail ascending from his brow
+ *       3) Head tilts gently upward in quiet inspiration as his thought stream materializes
+ *          MEDIQ across the illuminated projection board via __fndOnStarImpact()
  */
 (function initFoundationVrScene() {
   'use strict';
 
   const SEC_ID = 'about-sec-foundation';
   const CANVAS_ID = 'fnd-vr-bg-canvas';
-  const LOOP_DURATION = 13.5;
+  const LOOP_DURATION = 9.5;
 
   function clamp(v, lo, hi) {
     return Math.max(lo, Math.min(hi, v));
@@ -33,6 +31,62 @@
   function smoothstep(t) {
     const x = clamp(t, 0, 1);
     return x * x * (3 - 2 * x);
+  }
+
+  function smootherstep(t) {
+    const x = clamp(t, 0, 1);
+    return x * x * x * (x * (x * 6 - 15) + 10);
+  }
+
+  function makeHumanSkinTexture() {
+    const c = document.createElement('canvas');
+    c.width = 256;
+    c.height = 128;
+    const ctx = c.getContext('2d');
+    const bg = ctx.createLinearGradient(0, 0, 0, 128);
+    bg.addColorStop(0, '#edc0a3');
+    bg.addColorStop(0.55, '#e8b391');
+    bg.addColorStop(1, '#dc9f7e');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, 256, 128);
+    // Subtle cheek blush and facial tone variation across equator (UV u ~ 0.16 & 0.34 or 0.72)
+    const addWarmth = (cx, cy, r, col) => {
+      const g = ctx.createRadialGradient(cx, cy, 1, cx, cy, r);
+      g.addColorStop(0, col);
+      g.addColorStop(1, 'rgba(232,179,145,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, 256, 128);
+    };
+    addWarmth(128, 70, 32, 'rgba(218, 126, 108, 0.22)');
+    addWarmth(166, 70, 32, 'rgba(218, 126, 108, 0.22)');
+    addWarmth(147, 56, 26, 'rgba(255, 224, 200, 0.20)');
+    addWarmth(147, 88, 22, 'rgba(182, 118, 96, 0.14)');
+    const tex = new THREE.CanvasTexture(c);
+    tex.needsUpdate = true;
+    return tex;
+  }
+
+  function makeHairTexture() {
+    const c = document.createElement('canvas');
+    c.width = 128;
+    c.height = 128;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#181c28';
+    ctx.fillRect(0, 0, 128, 128);
+    for (let i = 0; i < 160; i++) {
+      ctx.strokeStyle = i % 3 === 0 ? 'rgba(58,72,102,0.34)' : 'rgba(10,14,22,0.45)';
+      ctx.lineWidth = 1.2;
+      const x = (i * 19) % 128;
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.quadraticCurveTo(x + Math.sin(i) * 6, 64, (x + 8) % 128, 128);
+      ctx.stroke();
+    }
+    const tex = new THREE.CanvasTexture(c);
+    tex.wrapS = THREE.RepeatWrapping;
+    tex.wrapT = THREE.RepeatWrapping;
+    tex.needsUpdate = true;
+    return tex;
   }
 
   function makeGlowTexture(innerRgba, midRgba) {
@@ -116,7 +170,7 @@
     ctx.fillStyle = '#0f3366';
     ctx.fillRect(0, 0, 256, 22);
     ctx.fillStyle = '#72c5f8';
-    ctx.font = 'bold 9px sans-serif';
+    ctx.font = 'bold 9px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('MEDIQ EMR  |  CLINIC WORKQUEUE', 10, 14);
     ctx.fillStyle = '#f87171';
     ctx.beginPath();
@@ -179,14 +233,14 @@
     ctx.lineWidth = 4;
     ctx.strokeRect(8, 8, 176, 128);
     ctx.fillStyle = '#0f2954';
-    ctx.font = 'bold 14px serif';
+    ctx.font = 'bold 14px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('OPHTHALMOLOGY', 96, 36);
-    ctx.font = 'bold 20px monospace';
+    ctx.font = 'bold 20px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('E', 96, 62);
-    ctx.font = 'bold 13px monospace';
+    ctx.font = 'bold 13px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('F P', 96, 80);
-    ctx.font = 'bold 10px monospace';
+    ctx.font = 'bold 10px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('T O Z', 96, 95);
     ctx.fillStyle = '#c59d43';
     ctx.beginPath();
@@ -197,15 +251,57 @@
     return tex;
   }
 
-  function createLimb(parent, rTop, rBot, len, mat) {
-    const g = new THREE.CylinderGeometry(rTop, rBot, len, 14);
-    const m = new THREE.Mesh(g, mat);
-    m.position.y = -len * 0.5;
+  function createOrganicLimb(parent, profilePts, mat, segs) {
+    const v2 = profilePts.map(([r, y]) => new THREE.Vector2(Math.max(0.002, r), y));
+    const geo = new THREE.LatheGeometry(v2, segs || 18);
+    const m = new THREE.Mesh(geo, mat);
     parent.add(m);
-    const j = new THREE.Mesh(new THREE.SphereGeometry(rBot * 0.96, 12, 10), mat);
-    j.position.y = -len;
-    parent.add(j);
     return m;
+  }
+
+  function buildSculptedHumanHeadGeo() {
+    const geo = new THREE.SphereGeometry(0.104, 30, 24);
+    const pos = geo.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      let x = pos.getX(i);
+      let y = pos.getY(i);
+      let z = pos.getZ(i);
+
+      // Elongate adult cranium vertically and slightly narrow front-to-back mask
+      y *= 1.13;
+      x *= 0.87;
+      z *= 0.96;
+
+      // Subtle temple pinch cleanly shaping upper forehead
+      if (y > 0.015 && z > 0.0) {
+        x *= 1 - 0.08 * smoothstep((y - 0.015) / 0.08);
+      }
+      // Subtle brow ridge projection
+      if (z > 0.025 && y > 0.01 && y < 0.048 && Math.abs(x) < 0.068) {
+        const browF = Math.sin(smoothstep((y - 0.01) / 0.038) * Math.PI) * (1 - Math.abs(x) / 0.072);
+        z += 0.0075 * browF;
+      }
+      // Cheekbone fullness & slight eye socket hollow
+      if (z > 0.02 && y > -0.02 && y < 0.025) {
+        const cheek = smoothstep((Math.abs(x) - 0.022) / 0.045) * (1 - Math.abs(y) / 0.035);
+        z += 0.009 * cheek;
+      }
+      // Organic tapered lower jaw & softly rounded chin (no boxy edges!)
+      if (y < -0.015) {
+        const jawU = smoothstep((-0.015 - y) / 0.105);
+        x *= 1 - 0.40 * jawU;
+        if (z > 0) {
+          z += 0.018 * jawU * (1 - Math.min(1, Math.abs(x) / 0.055));
+        } else {
+          z *= 1 - 0.25 * jawU;
+        }
+        y -= 0.012 * jawU * (1 - Math.min(1, Math.abs(x) / 0.045));
+      }
+
+      pos.setXYZ(i, x, y, z);
+    }
+    geo.computeVertexNormals();
+    return geo;
   }
 
   function createCrumpledPaperGeo(radius) {
@@ -478,7 +574,9 @@
     projCornerBR.position.set(1.04, -0.68, 0.054);
     const projCornerBL = new THREE.Object3D();
     projCornerBL.position.set(-1.04, -0.68, 0.054);
-    projGroup.add(projCenterAnchor, projTopAnchor, projCornerTL, projCornerTR, projCornerBR, projCornerBL);
+    const projThoughtDockAnchor = new THREE.Object3D();
+    projThoughtDockAnchor.position.set(-1.38, -0.78, 0.14);
+    projGroup.add(projCenterAnchor, projTopAnchor, projCornerTL, projCornerTR, projCornerBR, projCornerBL, projThoughtDockAnchor);
 
     // 7. Low Executive Credenza / Medical Bookcase neatly below the wall projector screen (zero overlap!)
     const shelfGroup = new THREE.Group();
@@ -575,6 +673,7 @@
       projCornerTR,
       projCornerBR,
       projCornerBL,
+      projThoughtDockAnchor,
       projScreenMat,
       projBeamMat,
     };
@@ -717,8 +816,8 @@
     lampBulb.position.set(0.38, deskY + 0.49, -0.04);
     station.add(lampBulb);
 
-    const deskWarmLight = new THREE.PointLight(0xfbbf24, 2.35, 4.6, 1.7);
-    deskWarmLight.position.set(0.30, deskY + 0.42, 0.05);
+    const deskWarmLight = new THREE.PointLight(0xfbbf24, 1.05, 3.2, 2.1);
+    deskWarmLight.position.set(0.36, deskY + 0.36, 0.22);
     station.add(deskWarmLight);
 
     // Ceramic Coffee Mug & Desk Stacks
@@ -742,25 +841,7 @@
       station.add(sh);
     });
 
-    // Small Mesh Office Trash Bin on the rug beside desk right leg (with prior discarded balls!)
-    const binGroup = new THREE.Group();
-    binGroup.position.set(0.58, 0.0, 0.18);
-    station.add(binGroup);
-    const binMesh = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.135, 0.105, 0.28, 14, 1, true),
-      new THREE.MeshStandardMaterial({ color: 0x1e355e, metalness: 0.55, roughness: 0.4, side: THREE.DoubleSide })
-    );
-    binMesh.position.y = 0.145;
-    binGroup.add(binMesh);
-    const binRim = new THREE.Mesh(new THREE.TorusGeometry(0.135, 0.009, 8, 18), matMetal);
-    binRim.rotation.x = Math.PI * 0.5;
-    binRim.position.y = 0.285;
-    binGroup.add(binRim);
-    [[-0.03, 0.06, 0.02], [0.035, 0.08, -0.02]].forEach(([bx, by, bz]) => {
-      const waste = new THREE.Mesh(createCrumpledPaperGeo(0.046), matPaper);
-      waste.position.set(bx, by, bz);
-      binGroup.add(waste);
-    });
+    // Minimalist clear executive rug space beside desk right leg
 
     // Ergonomic 5-Star Office Swivel Chair with Casters on Rug (y = 0)
     const chairGroup = new THREE.Group();
@@ -828,20 +909,24 @@
       color: 0x172554,
       roughness: 0.85,
     });
+    const skinTex = makeHumanSkinTexture();
     const matSkin = new THREE.MeshStandardMaterial({
-      color: 0xeac09e,
-      roughness: 0.58,
+      map: skinTex,
+      color: 0xffffff,
+      roughness: 0.54,
+      metalness: 0.02,
     });
     const matHair = new THREE.MeshStandardMaterial({
-      color: 0x111726,
-      roughness: 0.62,
+      map: makeHairTexture(),
+      color: 0xffffff,
+      roughness: 0.68,
     });
     const matSteth = new THREE.MeshStandardMaterial({
-      color: 0x72c5f8,
-      emissive: 0x3aa0db,
-      emissiveIntensity: 0.38,
-      metalness: 0.45,
-      roughness: 0.28,
+      color: 0x3aa0db,
+      emissive: 0x1e5c8c,
+      emissiveIntensity: 0.24,
+      metalness: 0.42,
+      roughness: 0.34,
     });
 
     // Doctor pelvis root sits at y = 0.48 on seat (0.45); floor = 0
@@ -849,274 +934,479 @@
     doctor.position.set(0.02, 0.48, -0.49);
     station.add(doctor);
 
-    // Pelvis / seated trouser hips
-    const pelvis = new THREE.Mesh(new THREE.CylinderGeometry(0.135, 0.14, 0.12, 14), matTrousers);
-    pelvis.scale.set(1.18, 0.9, 0.78);
-    pelvis.position.set(0, 0.02, 0.0);
+    // Organic seated hip & pelvis contour
+    const pelvis = new THREE.Mesh(new THREE.SphereGeometry(0.145, 22, 16), matTrousers);
+    pelvis.scale.set(1.16, 0.52, 0.88);
+    pelvis.position.set(0, 0.018, 0.015);
     doctor.add(pelvis);
 
-    // Complete Articulated Legs: Hip -> Thigh -> Knee -> Shin/Calf -> Ankle -> Dress Shoe on floor (y = 0.006)
+    // Complete Seamless Organic Legs: Contoured Thigh -> Natural Knee -> Sculpted Calf -> Ankle -> Shoe
     const legSpecs = [
-      { side: -1, hipX: -0.098, splayY: -0.09, shinPitchX: -0.08 },
-      { side: 1, hipX: 0.098, splayY: 0.11, shinPitchX: 0.06 },
+      { hipX: -0.095, splayY: -0.08, shinPitchX: -0.07 },
+      { hipX: 0.095, splayY: 0.10, shinPitchX: 0.05 },
     ];
     legSpecs.forEach(({ hipX, splayY, shinPitchX }) => {
       const hip = new THREE.Group();
-      hip.position.set(hipX, -0.005, 0.04);
+      hip.position.set(hipX, 0.0, 0.04);
       hip.rotation.y = splayY;
       doctor.add(hip);
 
-      // Thigh (extends forward +Z slightly pitched down -0.14 rad so knee is at y_station ≈ 0.42)
       const thighGroup = new THREE.Group();
-      thighGroup.rotation.x = 0.14; // tilts +Z slightly downward (-Y)
+      thighGroup.rotation.x = 0.14;
       hip.add(thighGroup);
 
-      const thighMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.066, 0.052, 0.40, 14), matTrousers);
+      // Anatomically contoured trouser thigh tapering gently into knee
+      const thighMesh = createOrganicLimb(
+        thighGroup,
+        [
+          [0.068, 0.0],
+          [0.071, 0.09],
+          [0.064, 0.22],
+          [0.055, 0.34],
+          [0.050, 0.405],
+        ],
+        matTrousers,
+        18
+      );
       thighMesh.rotation.x = Math.PI * 0.5;
-      thighMesh.position.set(0, 0, 0.20);
-      thighGroup.add(thighMesh);
 
-      const kneeJoint = new THREE.Mesh(new THREE.SphereGeometry(0.053, 12, 10), matTrousers);
-      kneeJoint.position.set(0, 0, 0.40);
-      thighGroup.add(kneeJoint);
-
-      // Shin / Calf going vertically down from knee (local y = 0) to ankle (local y = -0.365)
       const knee = new THREE.Group();
       knee.position.set(0, 0, 0.40);
-      knee.rotation.x = -0.14 + shinPitchX; // counteracts thigh pitch so shin goes cleanly downward!
+      knee.rotation.x = -0.14 + shinPitchX;
       thighGroup.add(knee);
 
-      const shinMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.051, 0.039, 0.365, 14), matTrousers);
-      shinMesh.position.set(0, -0.1825, 0);
-      knee.add(shinMesh);
+      // Smooth rounded knee blend cap inside trouser drape
+      const kneeCap = new THREE.Mesh(new THREE.SphereGeometry(0.051, 16, 12), matTrousers);
+      kneeCap.scale.set(1.0, 1.05, 1.05);
+      knee.add(kneeCap);
 
-      // Tailored trouser cuff near ankle
-      const cuff = new THREE.Mesh(new THREE.CylinderGeometry(0.044, 0.046, 0.042, 14), matTrousers);
-      cuff.position.set(0, -0.34, 0);
+      // Sculpted calf + tapered lower trouser leg
+      createOrganicLimb(
+        knee,
+        [
+          [0.041, -0.365],
+          [0.044, -0.30],
+          [0.053, -0.18],
+          [0.054, -0.08],
+          [0.050, 0.0],
+        ],
+        matTrousers,
+        18
+      );
+
+      // Natural tailored trouser break cuff
+      const cuff = new THREE.Mesh(new THREE.TorusGeometry(0.043, 0.008, 8, 18), matTrousers);
+      cuff.rotation.x = Math.PI * 0.5;
+      cuff.position.set(0, -0.352, 0);
       knee.add(cuff);
 
-      // Ankle + Sculpted Leather Dress Shoe planted cleanly onto the office rug/floor!
       const ankle = new THREE.Group();
       ankle.position.set(0, -0.365, 0);
-      ankle.rotation.x = -shinPitchX; // keeps shoe sole completely level with floor!
+      ankle.rotation.x = -shinPitchX;
       knee.add(ankle);
 
       const shoe = buildDressShoe(matShoe, matSole, matSock);
       ankle.add(shoe);
     });
 
-    // Adult Male Upper Torso (anatomical broad-shouldered tapered ribcage, NOT a straight pipe)
+    // Organic Contoured Torso & Tailored Clinical Coat (continuous draped cloth silhouettes, zero cardboard boxes)
     const torso = new THREE.Group();
-    torso.position.set(0, 0.06, -0.01);
+    torso.position.set(0, 0.055, -0.01);
     doctor.add(torso);
 
-    const chestCore = new THREE.Mesh(new THREE.CylinderGeometry(0.168, 0.132, 0.44, 16), matScrubs);
-    chestCore.scale.set(1.16, 1.0, 0.68);
-    chestCore.position.y = 0.22;
-    torso.add(chestCore);
+    const chestCore = createOrganicLimb(
+      torso,
+      [
+        [0.128, -0.01],
+        [0.132, 0.09],
+        [0.150, 0.22],
+        [0.168, 0.34],
+        [0.162, 0.415],
+        [0.068, 0.465],
+      ],
+      matScrubs,
+      24
+    );
+    chestCore.scale.set(1.18, 1.0, 0.72);
 
-    // Lab coat back & left/right open front panels (reveals scrubs + necktie silhouette)
-    const coatBack = new THREE.Mesh(new THREE.CylinderGeometry(0.175, 0.15, 0.45, 16, 1, false, Math.PI * 0.65, Math.PI * 1.7), matCoat);
-    coatBack.scale.set(1.16, 1.0, 0.72);
-    coatBack.position.y = 0.225;
+    // Seamless draped coat shell wrapping torso naturally (open front revealing V-neck scrub shirt)
+    const coatBackGeo = new THREE.LatheGeometry(
+      [
+        new THREE.Vector2(0.155, -0.06),
+        new THREE.Vector2(0.144, 0.04),
+        new THREE.Vector2(0.146, 0.16),
+        new THREE.Vector2(0.164, 0.30),
+        new THREE.Vector2(0.178, 0.40),
+        new THREE.Vector2(0.148, 0.44),
+      ],
+      28,
+      Math.PI * 0.58,
+      Math.PI * 1.84
+    );
+    const coatBack = new THREE.Mesh(coatBackGeo, matCoat);
+    coatBack.scale.set(1.18, 1.0, 0.75);
     torso.add(coatBack);
 
+    // Rolled curved coat lapels (organic TubeGeometry following curved collarbones — zero rectangular planks!)
     [-1, 1].forEach((side) => {
-      const frontPanel = new THREE.Mesh(new THREE.BoxGeometry(0.115, 0.43, 0.05), matCoat);
-      frontPanel.position.set(side * 0.102, 0.215, 0.096);
-      frontPanel.rotation.y = side * -0.18;
-      torso.add(frontPanel);
-
-      const lapel = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.20, 0.018), matCoat);
-      lapel.position.set(side * 0.068, 0.34, 0.122);
-      lapel.rotation.z = side * -0.22;
-      lapel.rotation.y = side * -0.14;
-      torso.add(lapel);
+      const lapelCurve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(side * 0.052, 0.445, -0.015),
+        new THREE.Vector3(side * 0.072, 0.405, 0.092),
+        new THREE.Vector3(side * 0.068, 0.305, 0.126),
+        new THREE.Vector3(side * 0.056, 0.15, 0.118),
+        new THREE.Vector3(side * 0.068, -0.04, 0.105),
+      ]);
+      const lapelGeo = new THREE.TubeGeometry(lapelCurve, 18, 0.024, 10, false);
+      lapelGeo.scale(1.25, 1.0, 0.65);
+      torso.add(new THREE.Mesh(lapelGeo, matCoat));
     });
 
-    // Lower coat skirt tails draping softly over seated hips
-    [-0.145, 0.145].forEach((cx) => {
-      const coatFlap = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.17, 0.22), matCoat);
-      coatFlap.position.set(cx, -0.01, 0.03);
-      coatFlap.rotation.z = cx < 0 ? 0.14 : -0.14;
-      torso.add(coatFlap);
-    });
+    // Sculpted trapezius / rounded shoulder yoke uniting neck cleanly into sleeves
+    const shoulderYoke = new THREE.Mesh(new THREE.SphereGeometry(0.175, 24, 14), matCoat);
+    shoulderYoke.scale.set(1.26, 0.36, 0.64);
+    shoulderYoke.position.set(0, 0.415, 0.0);
+    torso.add(shoulderYoke);
 
-    // Chest pocket ID badge
+    // Subtle pocket ID badge clipped softly onto left chest
     const badge = new THREE.Mesh(
-      new THREE.BoxGeometry(0.048, 0.064, 0.01),
-      new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.4 })
+      new THREE.BoxGeometry(0.044, 0.058, 0.008),
+      new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.42 })
     );
-    badge.position.set(0.105, 0.30, 0.128);
+    badge.position.set(0.108, 0.295, 0.124);
+    badge.rotation.y = -0.22;
     torso.add(badge);
-    const badgeBar = new THREE.Mesh(new THREE.BoxGeometry(0.042, 0.014, 0.012), matSteth);
-    badgeBar.position.set(0.105, 0.32, 0.129);
+    const badgeBar = new THREE.Mesh(new THREE.BoxGeometry(0.038, 0.012, 0.010), matSteth);
+    badgeBar.position.set(0.108, 0.314, 0.125);
+    badgeBar.rotation.y = -0.22;
     torso.add(badgeBar);
 
-    const shoulders = new THREE.Mesh(new THREE.SphereGeometry(0.175, 16, 10), matCoat);
-    shoulders.scale.set(1.26, 0.34, 0.62);
-    shoulders.position.y = 0.415;
-    torso.add(shoulders);
-
-    // Doctor stethoscope around neck + chrome diaphragm resting on right chest
-    const stethLoop = new THREE.Mesh(new THREE.TorusGeometry(0.102, 0.011, 8, 22, Math.PI * 1.38), matSteth);
-    stethLoop.rotation.x = Math.PI * 0.40;
-    stethLoop.rotation.z = -Math.PI * 0.19;
-    stethLoop.position.set(0, 0.435, 0.02);
-    torso.add(stethLoop);
+    // Natural flexible doctor stethoscope curve draped around collar
+    const stethCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-0.088, 0.25, 0.118),
+      new THREE.Vector3(-0.082, 0.39, 0.075),
+      new THREE.Vector3(-0.055, 0.46, -0.025),
+      new THREE.Vector3(0, 0.458, -0.078),
+      new THREE.Vector3(0.058, 0.456, -0.025),
+      new THREE.Vector3(0.078, 0.38, 0.08),
+      new THREE.Vector3(0.068, 0.27, 0.122),
+    ]);
+    torso.add(new THREE.Mesh(new THREE.TubeGeometry(stethCurve, 28, 0.009, 8, false), matSteth));
 
     const stethChestpiece = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.022, 0.022, 0.012, 14),
-      new THREE.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.85, roughness: 0.2 })
+      new THREE.CylinderGeometry(0.021, 0.021, 0.012, 16),
+      new THREE.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.85, roughness: 0.22 })
     );
     stethChestpiece.rotation.x = Math.PI * 0.5;
-    stethChestpiece.position.set(-0.072, 0.24, 0.128);
+    stethChestpiece.position.set(-0.088, 0.242, 0.122);
     torso.add(stethChestpiece);
 
-    // Realistic Adult Male Head & Face Proportions (not a toy sphere!)
+    // -----------------------------------------------------------------------
+    // ANATOMICALLY PROPORTIONED HUMAN HEAD, EXPRESSIVE EYES & NATURAL HAIR
+    // -----------------------------------------------------------------------
     const headPivot = new THREE.Group();
-    headPivot.position.set(0, 0.46, 0.01);
+    headPivot.position.set(0, 0.455, 0.005);
     torso.add(headPivot);
 
-    const neckMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.044, 0.052, 0.095, 12), matSkin);
-    neckMesh.position.y = 0.045;
-    headPivot.add(neckMesh);
+    // Contoured human neck flaring subtly into sternocleidomastoid base
+    createOrganicLimb(
+      headPivot,
+      [
+        [0.064, -0.01],
+        [0.050, 0.035],
+        [0.044, 0.075],
+        [0.046, 0.115],
+      ],
+      matSkin,
+      18
+    );
 
     const head = new THREE.Group();
-    head.position.y = 0.165;
+    head.position.set(0, 0.185, 0.008);
     headPivot.add(head);
 
-    // Elongated adult cranium + sculpted jawline + ears + nose
-    const cranium = new THREE.Mesh(new THREE.SphereGeometry(0.105, 18, 14), matSkin);
-    cranium.scale.set(0.86, 1.04, 0.96);
+    // World-tracked neural origin just above-right of temple where glowing Thought Orbs emerge
+    const thoughtOriginAnchor = new THREE.Object3D();
+    thoughtOriginAnchor.position.set(0.095, 0.15, 0.03);
+    head.add(thoughtOriginAnchor);
+
+    // Continuous sculpted human face & cranium (single organic mesh!)
+    const cranium = new THREE.Mesh(buildSculptedHumanHeadGeo(), matSkin);
     head.add(cranium);
 
-    const jaw = new THREE.Mesh(new THREE.BoxGeometry(0.108, 0.075, 0.105), matSkin);
-    jaw.position.set(0, -0.052, 0.018);
-    head.add(jaw);
-
-    const chin = new THREE.Mesh(new THREE.SphereGeometry(0.044, 12, 10), matSkin);
-    chin.scale.set(1.05, 0.72, 0.95);
-    chin.position.set(0, -0.082, 0.045);
-    head.add(chin);
-
-    const nose = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.044, 0.036), matSkin);
-    nose.position.set(0, -0.012, 0.098);
-    nose.rotation.x = -0.22;
+    // Sculpted smooth human nose bridge + soft tip
+    const noseCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0, 0.022, 0.086),
+      new THREE.Vector3(0, -0.002, 0.104),
+      new THREE.Vector3(0, -0.022, 0.109),
+      new THREE.Vector3(0, -0.029, 0.095),
+    ]);
+    const nose = new THREE.Mesh(new THREE.TubeGeometry(noseCurve, 12, 0.010, 10, false), matSkin);
     head.add(nose);
 
-    [-0.088, 0.088].forEach((ex) => {
-      const ear = new THREE.Mesh(new THREE.SphereGeometry(0.022, 10, 8), matSkin);
-      ear.scale.set(0.45, 1.1, 0.72);
-      ear.position.set(ex, -0.01, -0.008);
+    // Sculpted subtle upper & lower human lips (natural rose-terracotta curve)
+    const matLip = new THREE.MeshStandardMaterial({ color: 0xb96c5a, roughness: 0.52 });
+    const lipUpper = new THREE.Mesh(
+      new THREE.TubeGeometry(
+        new THREE.CatmullRomCurve3([
+          new THREE.Vector3(-0.020, -0.056, 0.074),
+          new THREE.Vector3(-0.007, -0.052, 0.084),
+          new THREE.Vector3(0.0, -0.054, 0.085),
+          new THREE.Vector3(0.007, -0.052, 0.084),
+          new THREE.Vector3(0.020, -0.056, 0.074),
+        ]),
+        14,
+        0.0042,
+        8,
+        false
+      ),
+      matLip
+    );
+    const lipLower = new THREE.Mesh(
+      new THREE.TubeGeometry(
+        new THREE.CatmullRomCurve3([
+          new THREE.Vector3(-0.017, -0.060, 0.075),
+          new THREE.Vector3(0, -0.063, 0.084),
+          new THREE.Vector3(0.017, -0.060, 0.075),
+        ]),
+        12,
+        0.0048,
+        8,
+        false
+      ),
+      matLip
+    );
+    head.add(lipUpper, lipLower);
+
+    // Organic sculpted ears on left & right
+    [-1, 1].forEach((side) => {
+      const ear = new THREE.Mesh(new THREE.SphereGeometry(0.021, 12, 10), matSkin);
+      ear.scale.set(0.38, 1.15, 0.68);
+      ear.position.set(side * 0.087, -0.008, -0.008);
+      ear.rotation.y = side * -0.18;
       head.add(ear);
     });
 
-    // Dark eyes + animated eyebrows (furrowed when stressed!)
-    const matEyeDark = new THREE.MeshBasicMaterial({ color: 0x0f172a });
-    [-0.033, 0.033].forEach((ex) => {
-      const eye = new THREE.Mesh(new THREE.SphereGeometry(0.011, 8, 8), matEyeDark);
-      eye.position.set(ex, 0.008, 0.092);
-      head.add(eye);
+    // Real Human Eyes (warm off-white sclera + dark hazel iris + deep pupil + crisp catchlight + upper eyelid!)
+    const matSclera = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.22 });
+    const matIris = new THREE.MeshStandardMaterial({ color: 0x3e2718, roughness: 0.25 });
+    const matPupil = new THREE.MeshBasicMaterial({ color: 0x0b0f19 });
+    const matLid = new THREE.MeshStandardMaterial({ color: 0xd99f80, roughness: 0.58 });
+    [-0.032, 0.032].forEach((ex) => {
+      const eyeGrp = new THREE.Group();
+      eyeGrp.position.set(ex, 0.010, 0.081);
+      eyeGrp.rotation.y = ex < 0 ? -0.14 : 0.14;
+
+      const sclera = new THREE.Mesh(new THREE.SphereGeometry(0.0125, 14, 12), matSclera);
+      sclera.scale.set(1.18, 0.78, 0.72);
+      eyeGrp.add(sclera);
+
+      const iris = new THREE.Mesh(new THREE.SphereGeometry(0.0068, 12, 10), matIris);
+      iris.scale.set(1.0, 1.0, 0.45);
+      iris.position.set(0, 0, 0.0074);
+      eyeGrp.add(iris);
+
+      const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.0034, 10, 8), matPupil);
+      pupil.position.set(0, 0, 0.0094);
+      eyeGrp.add(pupil);
+
+      const eyelid = new THREE.Mesh(
+        new THREE.TorusGeometry(0.0128, 0.0034, 8, 14, Math.PI),
+        matLid
+      );
+      eyelid.scale.set(1.16, 0.74, 0.85);
+      eyelid.position.set(0, 0.002, 0.0025);
+      eyeGrp.add(eyelid);
+
+      head.add(eyeGrp);
     });
 
-    const browL = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.008, 0.012), matHair);
-    browL.position.set(-0.034, 0.028, 0.096);
-    const browR = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.008, 0.012), matHair);
-    browR.position.set(0.034, 0.028, 0.096);
+    // Softly Arched Tapered Organic Eyebrows (animated during stress & calm relief!)
+    const browGeoL = new THREE.TubeGeometry(
+      new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-0.016, 0.0, 0.003),
+        new THREE.Vector3(0.0, 0.004, 0.005),
+        new THREE.Vector3(0.016, -0.002, 0.0),
+      ]),
+      10,
+      0.0032,
+      7,
+      false
+    );
+    const browGeoR = new THREE.TubeGeometry(
+      new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-0.016, -0.002, 0.0),
+        new THREE.Vector3(0.0, 0.004, 0.005),
+        new THREE.Vector3(0.016, 0.0, 0.003),
+      ]),
+      10,
+      0.0032,
+      7,
+      false
+    );
+    const browL = new THREE.Mesh(browGeoL, matHair);
+    browL.position.set(-0.032, 0.029, 0.088);
+    const browR = new THREE.Mesh(browGeoR, matHair);
+    browR.position.set(0.032, 0.029, 0.088);
     head.add(browL, browR);
 
-    // Mouth line
-    const mouth = new THREE.Mesh(
-      new THREE.BoxGeometry(0.042, 0.006, 0.01),
-      new THREE.MeshBasicMaterial({ color: 0x8b4d3e })
-    );
-    mouth.position.set(0, -0.056, 0.076);
-    head.add(mouth);
-
-    // Tailored men's short haircut (side taper + swept crown, no bowl mushroom!)
-    const hairTop = new THREE.Mesh(
-      new THREE.SphereGeometry(0.109, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.50),
+    // Layered Organic Men's Tailored Hair (swept contoured crown & side tapers — NO cube block!)
+    const hairCap = new THREE.Mesh(
+      new THREE.SphereGeometry(0.106, 24, 18, 0, Math.PI * 2, 0, Math.PI * 0.54),
       matHair
     );
-    hairTop.scale.set(0.88, 0.92, 1.0);
-    hairTop.rotation.x = -0.26;
-    hairTop.position.set(0, 0.026, -0.012);
-    head.add(hairTop);
+    hairCap.scale.set(0.91, 1.06, 1.01);
+    hairCap.rotation.x = -0.34;
+    hairCap.position.set(0, 0.018, -0.014);
+    head.add(hairCap);
 
-    const hairBack = new THREE.Mesh(new THREE.CylinderGeometry(0.088, 0.072, 0.11, 12, 1, false, Math.PI * 0.55, Math.PI * 0.9), matHair);
-    hairBack.position.set(0, -0.005, -0.022);
-    head.add(hairBack);
+    // Smooth curved swept front hair wave using deformed spheres + tapered locks
+    const waveCore = new THREE.Mesh(new THREE.SphereGeometry(0.056, 18, 14), matHair);
+    waveCore.scale.set(1.42, 0.46, 0.88);
+    waveCore.position.set(0.008, 0.088, 0.030);
+    waveCore.rotation.set(0.32, -0.14, -0.10);
+    head.add(waveCore);
 
-    const hairFrontQuiff = new THREE.Mesh(new THREE.BoxGeometry(0.115, 0.034, 0.068), matHair);
-    hairFrontQuiff.position.set(0.01, 0.088, 0.032);
-    hairFrontQuiff.rotation.set(0.28, -0.1, -0.08);
-    head.add(hairFrontQuiff);
+    const sideSweep = new THREE.Mesh(new THREE.SphereGeometry(0.044, 14, 12), matHair);
+    sideSweep.scale.set(1.15, 0.42, 0.72);
+    sideSweep.position.set(-0.035, 0.078, 0.036);
+    sideSweep.rotation.set(0.28, 0.25, 0.22);
+    head.add(sideSweep);
 
-    // Sleek dark-titanium rectangular eyeglasses (no bright toy rings!)
-    const matGlassesFrame = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.78, roughness: 0.25 });
-    [-0.035, 0.035].forEach((gx) => {
-      const lensRim = new THREE.Mesh(new THREE.BoxGeometry(0.048, 0.028, 0.006), matGlassesFrame);
-      lensRim.position.set(gx, 0.008, 0.102);
-      // Hollow look via slim blue-tinted glass inset
-      const glassPane = new THREE.Mesh(
-        new THREE.PlaneGeometry(0.042, 0.022),
-        new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.22 })
-      );
-      glassPane.position.z = 0.004;
-      lensRim.add(glassPane);
-      head.add(lensRim);
-
-      const templeArm = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.005, 0.10), matGlassesFrame);
-      templeArm.position.set(gx + (gx < 0 ? -0.025 : 0.025), 0.01, 0.052);
-      head.add(templeArm);
+    [-1, 1].forEach((side) => {
+      const sideburn = new THREE.Mesh(new THREE.SphereGeometry(0.028, 12, 10), matHair);
+      sideburn.scale.set(0.38, 1.45, 0.95);
+      sideburn.position.set(side * 0.081, 0.016, 0.008);
+      head.add(sideburn);
     });
-    const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.005, 0.006), matGlassesFrame);
-    bridge.position.set(0, 0.011, 0.102);
-    head.add(bridge);
 
-    // Articulated Doctor Arms with Slim Tapered Sleeves, Wrists, Palms & Fingers
+    // Sleek Slim Titanium Wire-Rim Glasses (crystal-clear lenses so human eyes stay sharp & expressive!)
+    const matGlassesFrame = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.72, roughness: 0.28 });
+    [-0.032, 0.032].forEach((gx) => {
+      const rimWire = new THREE.Mesh(new THREE.TorusGeometry(0.0185, 0.0019, 8, 28), matGlassesFrame);
+      rimWire.scale.set(1.16, 0.84, 1.0);
+      rimWire.position.set(gx, 0.011, 0.098);
+      rimWire.rotation.y = gx < 0 ? -0.10 : 0.10;
+      head.add(rimWire);
+
+      const lensGlass = new THREE.Mesh(
+        new THREE.CircleGeometry(0.018, 22),
+        new THREE.MeshBasicMaterial({ color: 0xbae6fd, transparent: true, opacity: 0.12, side: THREE.DoubleSide })
+      );
+      lensGlass.scale.set(1.14, 0.82, 1.0);
+      lensGlass.position.set(gx, 0.011, 0.0975);
+      lensGlass.rotation.y = gx < 0 ? -0.10 : 0.10;
+      head.add(lensGlass);
+
+      const templeWire = new THREE.Mesh(new THREE.CylinderGeometry(0.0015, 0.0015, 0.096, 8), matGlassesFrame);
+      templeWire.rotation.x = Math.PI * 0.5;
+      templeWire.position.set(gx + (gx < 0 ? -0.022 : 0.022), 0.012, 0.050);
+      head.add(templeWire);
+    });
+    const noseBridge = new THREE.Mesh(
+      new THREE.TorusGeometry(0.009, 0.0016, 6, 12, Math.PI),
+      matGlassesFrame
+    );
+    noseBridge.position.set(0, 0.011, 0.099);
+    head.add(noseBridge);
+
+    // Articulated Doctor Arms with Seamless Contoured Sleeves, Rounded Wrists & 5-Finger Human Hands
     function createDoctorArm(xSign) {
       const sh = new THREE.Group();
-      sh.position.set(xSign * 0.205, 0.405, 0.01);
+      sh.position.set(xSign * 0.205, 0.402, 0.01);
       torso.add(sh);
 
-      const shJoint = new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 10), matCoat);
-      sh.add(shJoint);
-      createLimb(sh, 0.044, 0.036, 0.23, matCoat);
+      // Smooth deltoid cap blending sleeve organically into torso
+      const deltoid = new THREE.Mesh(new THREE.SphereGeometry(0.049, 16, 14), matCoat);
+      deltoid.scale.set(0.95, 1.12, 0.92);
+      sh.add(deltoid);
+
+      createOrganicLimb(
+        sh,
+        [
+          [0.036, -0.232],
+          [0.041, -0.16],
+          [0.046, -0.08],
+          [0.048, -0.01],
+          [0.038, 0.02],
+        ],
+        matCoat,
+        18
+      );
 
       const el = new THREE.Group();
       el.position.set(0, -0.23, 0);
       sh.add(el);
-      createLimb(el, 0.036, 0.031, 0.20, matCoat);
 
-      // Coat sleeve cuff & flesh wrist
-      const cuff = new THREE.Mesh(new THREE.CylinderGeometry(0.034, 0.035, 0.025, 10), matCoat);
+      const elbowCap = new THREE.Mesh(new THREE.SphereGeometry(0.036, 14, 12), matCoat);
+      el.add(elbowCap);
+
+      createOrganicLimb(
+        el,
+        [
+          [0.033, -0.195],
+          [0.034, -0.12],
+          [0.038, -0.05],
+          [0.036, 0.0],
+        ],
+        matCoat,
+        16
+      );
+
+      // Soft sleeve cuff + natural tapered wrist
+      const cuff = new THREE.Mesh(new THREE.TorusGeometry(0.032, 0.006, 8, 18), matCoat);
+      cuff.rotation.x = Math.PI * 0.5;
       cuff.position.y = -0.19;
       el.add(cuff);
 
-      const wrist = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.021, 0.03, 10), matSkin);
-      wrist.position.y = -0.21;
-      el.add(wrist);
+      createOrganicLimb(
+        el,
+        [
+          [0.020, -0.228],
+          [0.022, -0.195],
+        ],
+        matSkin,
+        14
+      );
 
-      // Sculpted human hand (palm + grouped fingers + thumb)
+      // Anatomically sculpted 5-finger human hand (rounded palm + 4 tapered fingers + opposable thumb)
       const hand = new THREE.Group();
-      hand.position.y = -0.228;
+      hand.position.y = -0.226;
       el.add(hand);
 
-      const palm = new THREE.Mesh(new THREE.BoxGeometry(0.052, 0.054, 0.022), matSkin);
-      palm.position.y = -0.024;
+      const palm = new THREE.Mesh(new THREE.SphereGeometry(0.028, 14, 12), matSkin);
+      palm.scale.set(0.96, 1.08, 0.44);
+      palm.position.set(0, -0.025, 0.002);
       hand.add(palm);
 
-      const fingers = new THREE.Mesh(new THREE.BoxGeometry(0.048, 0.046, 0.018), matSkin);
-      fingers.position.set(0, -0.062, 0.006);
-      fingers.rotation.x = 0.35;
-      hand.add(fingers);
+      // 4 natural slightly curved fingers
+      [-0.0165, -0.0055, 0.0055, 0.0165].forEach((fx, idx) => {
+        const fLen = idx === 1 ? 0.048 : idx === 0 || idx === 2 ? 0.044 : 0.036;
+        const finger = createOrganicLimb(
+          hand,
+          [
+            [0.0042, -fLen],
+            [0.0056, -fLen * 0.5],
+            [0.0062, 0.0],
+          ],
+          matSkin,
+          8
+        );
+        finger.position.set(fx, -0.046, 0.004);
+        finger.rotation.x = 0.34 + idx * 0.03;
+      });
 
-      const thumb = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.036, 0.018), matSkin);
-      thumb.position.set(xSign * -0.032, -0.026, 0.014);
-      thumb.rotation.z = xSign * 0.45;
-      hand.add(thumb);
+      const thumb = createOrganicLimb(
+        hand,
+        [
+          [0.0052, -0.036],
+          [0.0068, -0.016],
+          [0.0075, 0.0],
+        ],
+        matSkin,
+        8
+      );
+      thumb.position.set(xSign * -0.024, -0.022, 0.012);
+      thumb.rotation.set(0.28, 0, xSign * 0.52);
 
       return { sh, el, hand };
     }
@@ -1124,97 +1414,32 @@
     const leftArm = createDoctorArm(-1);
     const rightArm = createDoctorArm(1);
 
-    // Active Paper Prop (starts on desk -> grabs -> crumples -> thrown as Shooting Star)
+    // Tidy resting clinical folio lying flat on desk (no stressful crumpling or throwing!)
     const activeSheet = new THREE.Mesh(new THREE.PlaneGeometry(0.24, 0.30), matPaper);
     activeSheet.rotation.x = -Math.PI * 0.5;
-    activeSheet.position.set(0.04, deskY + 0.036, 0.14);
+    activeSheet.rotation.z = 0.06;
+    activeSheet.position.set(0.02, deskY + 0.026, 0.12);
     station.add(activeSheet);
-
-    const matCrumple = new THREE.MeshStandardMaterial({
-      color: 0xe2e8f0,
-      emissive: 0x38bdf8,
-      emissiveIntensity: 0.2,
-      roughness: 0.45,
-      flatShading: true,
-    });
-    const handCrumple = new THREE.Mesh(createCrumpledPaperGeo(0.088), matCrumple);
-    handCrumple.visible = false;
-    station.add(handCrumple);
 
     return {
       station,
       doctor,
       torso,
       headPivot,
+      head,
+      thoughtOriginAnchor,
       browL,
       browR,
       leftArm,
       rightArm,
       activeSheet,
-      handCrumple,
       deskY,
       deskWarmLight,
     };
   }
 
-  function buildShootingStar(scene) {
-    const starGroup = new THREE.Group();
-    starGroup.visible = false;
-
-    const coreGeo = createCrumpledPaperGeo(0.105);
-    const coreMat = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      transparent: true,
-      opacity: 1,
-    });
-    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-    starGroup.add(coreMesh);
-
-    const glowTex = makeGlowTexture('rgba(255,255,255,1)', 'rgba(56,189,248,0.68)');
-    const spriteMat = new THREE.SpriteMaterial({
-      map: glowTex,
-      color: 0xe0f2fe,
-      transparent: true,
-      opacity: 0.95,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-    const glowSprite = new THREE.Sprite(spriteMat);
-    glowSprite.scale.set(0.95, 0.95, 1);
-    starGroup.add(glowSprite);
-
-    const TRAIL_COUNT = 78;
-    const trailPos = new Float32Array(TRAIL_COUNT * 3);
-    const trailCol = new Float32Array(TRAIL_COUNT * 3);
-    const trailGeo = new THREE.BufferGeometry();
-    trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPos, 3));
-    trailGeo.setAttribute('color', new THREE.BufferAttribute(trailCol, 3));
-
-    const trailMat = new THREE.PointsMaterial({
-      size: 0.14,
-      map: glowTex,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.92,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-    });
-    const trailPoints = new THREE.Points(trailGeo, trailMat);
-    trailPoints.visible = false;
-
-    scene.add(starGroup, trailPoints);
-
-    return {
-      starGroup,
-      coreMesh,
-      glowSprite,
-      trailPoints,
-      trailGeo,
-      trailPos,
-      trailCol,
-      TRAIL_COUNT,
-      history: [],
-    };
+  function buildThinkingVisuals() {
+    return null;
   }
 
   const sec = document.getElementById(SEC_ID);
@@ -1250,20 +1475,19 @@
   const BASE_CAM = new THREE.Vector3(0, 0.14, 3.85);
   camera.position.copy(BASE_CAM);
 
-  // Indoor architectural ceiling + key + subtle rim lighting over obsidian cinema background
-  const hemi = new THREE.HemisphereLight(0xcbd5e1, 0x111827, 0.92);
-  const ceilingFill = new THREE.PointLight(0xe0f2fe, 0.95, 13, 1.35);
+  // Indoor architectural ceiling + balanced cinema lighting (zero face overexposure)
+  const hemi = new THREE.HemisphereLight(0xcbd5e1, 0x111827, 0.72);
+  const ceilingFill = new THREE.PointLight(0xe0f2fe, 0.78, 13, 1.35);
   ceilingFill.position.set(0.8, 3.25, -2.2);
-  const key = new THREE.DirectionalLight(0xe0f2fe, 0.85);
+  const key = new THREE.DirectionalLight(0xe0f2fe, 0.66);
   key.position.set(-2.2, 3.8, 3.5);
-  const rim = new THREE.DirectionalLight(0x38bdf8, 0.72);
+  const rim = new THREE.DirectionalLight(0x38bdf8, 0.62);
   rim.position.set(3.8, 2.0, -2.5);
   scene.add(hemi, ceilingFill, key, rim);
 
   const envObj = buildEnvironment(scene);
   const work = buildDoctorWorkstation();
   scene.add(work.station);
-  const star = buildShootingStar(scene);
 
   let width = 1280;
   let height = 720;
@@ -1398,6 +1622,10 @@
 
   let simClock = 0;
   let impactTriggeredThisLoop = false;
+  const thoughtStartPos = new THREE.Vector3();
+  const tmpTangent = new THREE.Vector3();
+  const tmpViewDir = new THREE.Vector3();
+  const tmpSide = new THREE.Vector3();
   let visible = true;
 
   if ('IntersectionObserver' in window) {
@@ -1418,12 +1646,15 @@
   window.__setFndVrSceneTime = function (tSec) {
     simClock = Number(tSec) || 0;
     impactTriggeredThisLoop = false;
-    star.history.length = 0;
   };
 
-  // Sync initial frame immediately so MEDIQ globe starts hidden (reveal=0) until paper throw!
-  updateStoryboard(0);
-  renderer.render(scene, camera);
+  // Sync initial frame cleanly on desktop only (mobile hides VR background animation)
+  if (window.innerWidth >= 1024) {
+    updateStoryboard(0);
+    renderer.render(scene, camera);
+  } else {
+    canvas.style.display = 'none';
+  }
 
   function updateStoryboard(dt) {
     const prevT = simClock % LOOP_DURATION;
@@ -1432,7 +1663,6 @@
 
     if (t < prevT) {
       impactTriggeredThisLoop = false;
-      star.history.length = 0;
     }
 
     // Balanced Cinema VR Cursor Head-Look Parallax
@@ -1461,17 +1691,17 @@
     }
     dAttr.needsUpdate = true;
 
-    // Show MEDIQ particle globe + shower particles ONLY after the doctor throws the crumpled paper!
+    // Reveal dotted MEDIQ projection quickly as his ascending thoughts reach the screen
     let globeReveal = 0;
-    if (t >= 6.20 && t < 6.80) {
-      globeReveal = smoothstep((t - 6.20) / 0.60);
-    } else if (t >= 6.80 && t < 12.15) {
+    if (t >= 2.00 && t < 2.75) {
+      globeReveal = smoothstep((t - 2.00) / 0.75);
+    } else if (t >= 2.75 && t < 8.35) {
       globeReveal = 1;
-    } else if (t >= 12.15 && t < 13.18) {
-      globeReveal = 1 - smoothstep((t - 12.15) / 1.03);
+    } else if (t >= 8.35 && t < 9.25) {
+      globeReveal = 1 - smoothstep((t - 8.35) / 0.90);
     }
 
-    // Illuminate 3D wall projector screen + lock MEDIQ Particles pixel-accurately inside the black screen across VR parallax!
+    // Illuminate 3D wall projector screen + lock MEDIQ Particles pixel-accurately inside the black screen across VR parallax
     if (width >= 1024 && !baseRectSynced) {
       syncProjectorBaseRect();
     }
@@ -1494,200 +1724,74 @@
       window.__setFndGlobeReveal(globeReveal);
     }
 
-    const { torso, headPivot, browL, browR, leftArm, rightArm, activeSheet, handCrumple, deskY } = work;
+    const { torso, headPivot, browL, browR, leftArm, rightArm, activeSheet } = work;
 
-    if (t < 3.4) {
-      // ACT 1: Stressed in clinic office (furrowed brows, left hand held cleanly at temple, right tapping paperwork)
-      const u = t / 3.4;
-      const shake = Math.sin(t * 9.5) * 0.14 * smoothstep(Math.sin(u * Math.PI));
-      const slump = smoothstep(u);
+    // Keep clinical desk sheet serenely flat (never crumpled or discarded)
+    activeSheet.visible = true;
 
-      torso.rotation.set(0.20 + slump * 0.12, 0, Math.sin(t * 2.2) * 0.035);
-      headPivot.rotation.set(0.28 + Math.sin(t * 3.1) * 0.05, shake, Math.sin(t * 2.7) * 0.06);
-      browL.rotation.z = -0.26;
-      browR.rotation.z = 0.26;
-
-      // Left arm angles outward cleanly around shoulder so hand touches left temple WITHOUT clipping chest!
-      leftArm.sh.rotation.set(-1.18, 0.22, -0.58);
-      leftArm.el.rotation.set(-1.42 + Math.sin(t * 4.2) * 0.06, 0, 0.48);
-
-      const tap = Math.max(0, Math.sin(t * 11)) * 0.08;
-      rightArm.sh.rotation.set(-0.74, -0.14, 0.24);
-      rightArm.el.rotation.set(-0.62 - tap, 0, -0.06);
-
-      activeSheet.visible = true;
-      activeSheet.position.set(0.04, deskY + 0.036, 0.14);
-      activeSheet.rotation.set(-Math.PI * 0.5, 0, Math.sin(t * 14) * 0.02);
-      activeSheet.scale.set(1, 1, 1);
-      handCrumple.visible = false;
-      star.starGroup.visible = false;
-      star.trailPoints.visible = false;
-    } else if (t < 5.2) {
-      // ACT 2: Angry snatch & crumple!
-      const u = (t - 3.4) / 1.8;
-      const grab = smoothstep(Math.min(1, u * 2.2));
-      const crushJitter = u > 0.3 ? Math.sin(t * 42) * 0.045 : 0;
-
-      torso.rotation.set(lerp(0.30, 0.16, grab), Math.sin(t * 18) * 0.04, 0);
-      headPivot.rotation.set(lerp(0.30, 0.14, grab), Math.sin(t * 22) * 0.05, 0);
-      browL.rotation.z = -0.34;
-      browR.rotation.z = 0.34;
-
-      leftArm.sh.rotation.set(lerp(-1.18, -1.02, grab), 0.36, lerp(-0.58, 0.26 + crushJitter, grab));
-      leftArm.el.rotation.set(-0.85 + crushJitter, 0, lerp(0.48, -0.30, grab));
-      rightArm.sh.rotation.set(lerp(-0.74, -1.04, grab), -0.36, -0.26 - crushJitter);
-      rightArm.el.rotation.set(-0.85 - crushJitter, 0, 0.30);
-
-      if (u < 0.34) {
-        const s = 1 - (u / 0.34) * 0.68;
-        activeSheet.visible = true;
-        activeSheet.position.set(0.04, lerp(deskY + 0.036, deskY + 0.26, u / 0.34), lerp(0.14, 0.0, u / 0.34));
-        activeSheet.scale.set(s, s, 1);
-        handCrumple.visible = false;
-      } else {
-        activeSheet.visible = false;
-        handCrumple.visible = true;
-        const cPulse = 1.0 - (u - 0.34) * 0.28 + Math.sin(t * 36) * 0.06;
-        handCrumple.position.set(0.04, deskY + 0.26, 0.0);
-        handCrumple.scale.setScalar(cPulse);
-        handCrumple.rotation.set(t * 5, t * 7, 0);
-        handCrumple.material.emissiveIntensity = lerp(0.2, 1.8, (u - 0.34) / 0.66);
-      }
-      star.starGroup.visible = false;
-      star.trailPoints.visible = false;
-    } else if (t < 5.65) {
-      // ACT 3A: Arm wind-up & snap throw toward upper-right!
-      const u = (t - 5.2) / 0.45;
-      browL.rotation.z = -0.28;
-      browR.rotation.z = 0.28;
-      if (u < 0.55) {
-        const w = smoothstep(u / 0.55);
-        torso.rotation.set(lerp(0.16, -0.14, w), lerp(0, -0.42, w), 0);
-        headPivot.rotation.set(0.04, 0.26 * w, 0);
-        leftArm.sh.rotation.set(-0.52, 0.15, -0.24);
-        leftArm.el.rotation.set(-0.48, 0, 0);
-        rightArm.sh.rotation.set(lerp(-1.04, -2.55, w), -0.35, 0.45 * w);
-        rightArm.el.rotation.set(lerp(-0.85, -0.25, w), 0, 0);
-      } else {
-        const r = smoothstep((u - 0.55) / 0.45);
-        torso.rotation.set(lerp(-0.14, 0.18, r), lerp(-0.42, 0.36, r), 0);
-        headPivot.rotation.set(lerp(0.04, -0.22, r), lerp(0.26, -0.22, r), 0);
-        rightArm.sh.rotation.set(lerp(-2.55, -1.15, r), -0.2, 0.28);
-        rightArm.el.rotation.set(lerp(-0.25, -0.08, r), 0, 0);
-      }
-      work.station.updateMatrixWorld(true);
-      rightArm.hand.getWorldPosition(handWorld);
-      handCrumple.visible = u < 0.88;
-      if (handCrumple.visible) {
-        const loc = work.station.worldToLocal(handWorld.clone());
-        handCrumple.position.copy(loc);
-        handCrumple.material.emissiveIntensity = 2.4;
-      }
-      star.starGroup.visible = false;
-      star.trailPoints.visible = false;
-    } else if (t < 7.15) {
-      // ACT 3B + 4: Crumpled paper blasts diagonally up-right -> hits MEDIQ globe!
-      const flightU = clamp((t - 5.62) / 1.48, 0, 1);
-      const easeU = flightU < 0.5 ? 2 * flightU * flightU : 1 - Math.pow(-2 * flightU + 2, 2) / 2;
-
-      handCrumple.visible = false;
-      activeSheet.visible = false;
-
-      const watchRelax = smoothstep(Math.min(1, flightU * 2));
-      torso.rotation.set(lerp(0.18, -0.06, watchRelax), lerp(0.36, 0.12, watchRelax), 0);
-      headPivot.rotation.set(lerp(-0.22, -0.32, watchRelax), lerp(-0.22, -0.14, watchRelax), 0);
-      browL.rotation.z = lerp(-0.28, 0.06, watchRelax);
-      browR.rotation.z = lerp(0.28, -0.06, watchRelax);
-      rightArm.sh.rotation.set(lerp(-1.15, -0.35, watchRelax), -0.1, 0.16);
-      rightArm.el.rotation.set(lerp(-0.08, -0.82, watchRelax), 0, 0);
-      leftArm.sh.rotation.set(-0.45, 0.1, -0.18);
-      leftArm.el.rotation.set(-0.65, 0, 0);
-
-      work.station.updateMatrixWorld(true);
-      rightArm.hand.getWorldPosition(tmpStart);
-      if (flightU > 0.05) {
-        tmpStart.set(work.station.position.x + 0.24, work.station.position.y + 1.32, work.station.position.z + 0.16);
-      }
-      const targetWorld = getGlobeWorldTarget();
-      tmpCtrl.set(
-        (tmpStart.x + targetWorld.x) * 0.5 - 0.35,
-        Math.max(tmpStart.y, targetWorld.y) + 0.75,
-        (tmpStart.z + targetWorld.z) * 0.5 + 0.35
-      );
-
-      const inv = 1 - easeU;
-      const sx = inv * inv * tmpStart.x + 2 * inv * easeU * tmpCtrl.x + easeU * easeU * targetWorld.x;
-      const sy = inv * inv * tmpStart.y + 2 * inv * easeU * tmpCtrl.y + easeU * easeU * targetWorld.y;
-      const sz = inv * inv * tmpStart.z + 2 * inv * easeU * tmpCtrl.z + easeU * easeU * targetWorld.z;
-
-      star.starGroup.visible = true;
-      star.starGroup.position.set(sx, sy, sz);
-      star.coreMesh.rotation.set(simClock * 11, simClock * 14, simClock * 7);
-      const flare = 0.85 + Math.sin(simClock * 28) * 0.2 + (1 - flightU) * 0.15;
-      star.glowSprite.scale.set(1.05 * flare, 1.05 * flare, 1);
-
-      star.history.unshift({ x: sx, y: sy, z: sz });
-      if (star.history.length > star.TRAIL_COUNT) star.history.pop();
-      star.trailPoints.visible = true;
-
-      for (let i = 0; i < star.TRAIL_COUNT; i++) {
-        const pt = star.history[Math.min(i, star.history.length - 1)] || { x: sx, y: sy, z: sz };
-        const age = i / star.TRAIL_COUNT;
-        const j = Math.sin(i * 1.9 + simClock * 18) * 0.03 * age;
-        star.trailPos[i * 3] = pt.x + j;
-        star.trailPos[i * 3 + 1] = pt.y + Math.cos(i * 2.3) * 0.025 * age;
-        star.trailPos[i * 3 + 2] = pt.z;
-
-        const fade = Math.pow(1 - age, 1.6);
-        star.trailCol[i * 3] = lerp(0.45, 1.0, fade);
-        star.trailCol[i * 3 + 1] = lerp(0.75, 0.98, fade);
-        star.trailCol[i * 3 + 2] = 1.0;
-      }
-      star.trailGeo.attributes.position.needsUpdate = true;
-      star.trailGeo.attributes.color.needsUpdate = true;
-
-      if (flightU >= 0.56 && !impactTriggeredThisLoop) {
-        impactTriggeredThisLoop = true;
-        if (typeof window.__fndOnStarImpact === 'function') {
-          window.__fndOnStarImpact(1.0);
-        }
-      }
+    // Doctor Choreography: Pensive "Thinker" pose -> upward gaze of insight while thinking of MEDIQ
+    let gazeUpMix = 0;
+    if (t < 1.55) {
+      gazeUpMix = 0;
+    } else if (t < 2.65) {
+      gazeUpMix = smootherstep((t - 1.55) / 1.10);
+    } else if (t < 8.35) {
+      gazeUpMix = 1;
     } else {
-      // ACT 5: Calm relief in office -> graceful reset
-      const u = (t - 7.15) / (LOOP_DURATION - 7.15);
-      star.starGroup.visible = false;
-      star.trailPoints.visible = false;
+      gazeUpMix = 1 - smootherstep((t - 8.35) / 1.15);
+    }
 
-      if (u < 0.72) {
-        const breathe = Math.sin(t * 2.2) * 0.035;
-        torso.rotation.set(-0.04 + breathe, 0.05, 0);
-        headPivot.rotation.set(lerp(-0.26, 0.08, smoothstep(u / 0.72)), lerp(-0.14, 0, smoothstep(u / 0.72)), 0);
-        browL.rotation.z = 0.04;
-        browR.rotation.z = -0.04;
-        leftArm.sh.rotation.set(-0.42, 0.12, -0.18);
-        leftArm.el.rotation.set(-0.72, 0, 0);
-        rightArm.sh.rotation.set(-0.42, -0.12, 0.18);
-        rightArm.el.rotation.set(-0.72, 0, 0);
-        activeSheet.visible = false;
-      } else {
-        const fadeIn = smoothstep((u - 0.72) / 0.28);
-        torso.rotation.set(lerp(-0.02, 0.20, fadeIn), 0, 0);
-        headPivot.rotation.set(lerp(0.08, 0.28, fadeIn), 0, 0);
-        browL.rotation.z = lerp(0.04, -0.26, fadeIn);
-        browR.rotation.z = lerp(-0.04, 0.26, fadeIn);
-        leftArm.sh.rotation.set(lerp(-0.42, -1.18, fadeIn), lerp(0.12, 0.22, fadeIn), lerp(-0.18, -0.58, fadeIn));
-        leftArm.el.rotation.set(lerp(-0.72, -1.42, fadeIn), 0, lerp(0, 0.48, fadeIn));
-        rightArm.sh.rotation.set(lerp(-0.42, -0.74, fadeIn), -0.14, 0.22);
-        rightArm.el.rotation.set(-0.62, 0, -0.06);
-        activeSheet.visible = true;
-        activeSheet.position.set(0.04, deskY + 0.036, 0.14);
-        activeSheet.scale.set(fadeIn, fadeIn, 1);
+    const breathe = Math.sin(t * 1.7) * 0.015;
+    const microNod = Math.sin(t * 1.15) * 0.025;
+    const headSway = Math.sin(t * 0.85) * 0.03;
+
+    torso.rotation.set(
+      lerp(0.14, 0.05, gazeUpMix) + breathe,
+      lerp(0.06, 0.02, gazeUpMix),
+      0
+    );
+    headPivot.rotation.set(
+      lerp(0.12, -0.18, gazeUpMix) + microNod,
+      lerp(-0.06, -0.20, gazeUpMix) + headSway * (1 - gazeUpMix * 0.5),
+      lerp(0.04, -0.03, gazeUpMix)
+    );
+    // Calm inquisitive concentration -> gentle lifted realization (zero angry frown)
+    browL.rotation.z = lerp(-0.08, 0.06, gazeUpMix);
+    browR.rotation.z = lerp(0.08, -0.06, gazeUpMix);
+
+    // Classic "Thinker" right arm (fingertips poised lightly beneath/beside chin as head tilts gently)
+    rightArm.sh.rotation.set(
+      lerp(-1.15, -1.24, gazeUpMix),
+      -0.15,
+      lerp(-0.10, -0.08, gazeUpMix)
+    );
+    rightArm.el.rotation.set(
+      lerp(-2.30, -2.18, gazeUpMix),
+      0,
+      lerp(-0.60, -0.48, gazeUpMix)
+    );
+
+    // Left arm resting serenely atop clinical folio on desk
+    leftArm.sh.rotation.set(-0.78, 0.16, -0.16);
+    leftArm.el.rotation.set(-1.14, 0, 0.16);
+
+    // Trigger clean particle illumination inside the projector screen without any floating streak/ribbon
+    if (t >= 1.85 && !impactTriggeredThisLoop) {
+      impactTriggeredThisLoop = true;
+      if (typeof window.__fndOnStarImpact === 'function') {
+        window.__fndOnStarImpact(0.75);
       }
     }
   }
 
   function loop(ts) {
     requestAnimationFrame(loop);
+    if (window.innerWidth < 1024) {
+      if (canvas.style.display !== 'none') canvas.style.display = 'none';
+      lastTs = ts;
+      return;
+    }
+    if (canvas.style.display === 'none') canvas.style.display = 'block';
     if (document.hidden || !visible) {
       lastTs = ts;
       return;

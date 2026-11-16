@@ -123,6 +123,16 @@
       run: () => scrollToId('#hero'),
     },
     {
+      id: 'sec-vision-hero',
+      category: 'Sections',
+      code: 'PAGE',
+      title: 'Vision Hero — Advancing Healthcare',
+      desc: 'Dedicated hero page with glowing breathing eye iris, ECG heartbeat pulse, and floating crosses',
+      tag: 'New Page',
+      keywords: ['vision', 'advancing healthcare', 'empowering better lives', 'iris', 'heartbeat', 'ecg'],
+      run: () => { window.location.href = 'vision-hero.html'; },
+    },
+    {
       id: 'sec-about',
       category: 'Sections',
       code: '02',
@@ -638,15 +648,31 @@
     },
   ];
 
+  const MIME_MAP = {
+    Sections: 'section/page',
+    About: 'text/overview',
+    Products: 'clinical/iol',
+    Services: '3d/atrium',
+    Brands: 'partner/profile',
+    Resources: 'application/pdf',
+    News: 'editorial/event',
+    Contact: 'desk/inquiry',
+  };
+
+  function getItemUri(item) {
+    const catSlug = (item.category || 'page').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    return `mediq://${catSlug}/${item.id || 'view'}`;
+  }
+
   const ICONS = {
-    Sections: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>',
-    About: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-    Products: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>',
-    Services: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>',
-    Brands: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>',
-    Resources: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
-    News: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/></svg>',
-    Contact: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>',
+    Sections: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>',
+    About: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+    Products: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M10 12a1 1 0 0 0-1 1v1a1 1 0 0 1-1 1 1 1 0 0 1 1 1v1a1 1 0 0 0 1 1"/><path d="M14 18a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1 1 1 0 0 1-1-1v-1a1 1 0 0 0-1-1"/></svg>',
+    Services: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>',
+    Brands: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>',
+    Resources: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+    News: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>',
+    Contact: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M10 12a1 1 0 0 0-1 1v1a1 1 0 0 1-1 1 1 1 0 0 1 1 1v1a1 1 0 0 0 1 1"/><path d="M14 18a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1 1 1 0 0 1-1-1v-1a1 1 0 0 0-1-1"/></svg>',
   };
 
   function injectStyles() {
@@ -654,6 +680,7 @@
     const style = document.createElement('style');
     style.id = 'mediq-search-styles';
     style.textContent = `
+      @keyframes mqsFadeIn { from { opacity: 0; } to { opacity: 1; } }
       #mediq-search-modal {
         position: fixed;
         inset: 0;
@@ -661,38 +688,49 @@
         display: flex;
         align-items: flex-start;
         justify-content: center;
-        padding: clamp(56px, 9vh, 108px) 16px 24px;
-        background: rgba(4, 11, 26, 0.72);
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
+        padding: clamp(32px, 8vh, 88px) 16px 24px;
+        background: rgba(3, 9, 22, 0.72);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
         opacity: 0;
         pointer-events: none;
-        transition: opacity 220ms cubic-bezier(0.16, 1, 0.3, 1);
+        font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+        transition: opacity 180ms ease-out;
       }
       #mediq-search-modal.is-open {
         opacity: 1;
         pointer-events: auto;
       }
+      /* Mirrors McpResourceList gap-3 flex-col container */
       #mediq-search-panel {
         width: 100%;
-        max-width: 720px;
-        border-radius: 20px;
-        border: 1px solid rgba(114, 197, 248, 0.28);
-        background: linear-gradient(165deg, rgba(10, 29, 64, 0.96) 0%, rgba(5, 16, 38, 0.98) 100%);
-        box-shadow: 0 36px 100px rgba(0, 0, 0, 0.85), 0 0 60px rgba(58, 160, 219, 0.14);
-        overflow: hidden;
-        transform: translateY(-10px) scale(0.98);
-        transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+        max-width: 672px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        animation: mqsFadeIn 180ms ease-out;
+        transform: translateY(-6px);
+        transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
       }
       #mediq-search-modal.is-open #mediq-search-panel {
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
       }
+      /* Mirrors McpResourceList separated compact Input bar (rounded 16px) */
       .mqs-input-row {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 14px 18px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        gap: 10px;
+        height: 40px;
+        padding: 0 12px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(7, 19, 43, 0.92);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+        transition: border-color 150ms ease, box-shadow 150ms ease;
+      }
+      .mqs-input-row:focus-within {
+        border-color: rgba(114, 197, 248, 0.55);
+        box-shadow: 0 0 0 2px rgba(114, 197, 248, 0.2), 0 10px 32px rgba(0, 0, 0, 0.5);
       }
       #mediq-search-input {
         flex: 1;
@@ -700,117 +738,163 @@
         background: transparent;
         border: 0;
         outline: none;
-        color: #f6f2ea;
-        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-        font-size: 15px;
-        font-weight: 500;
+        color: #f4f7fb;
+        font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+        font-size: 13px;
+        font-weight: 400;
       }
       #mediq-search-input::placeholder {
-        color: rgba(246, 242, 234, 0.42);
+        color: rgba(203, 213, 225, 0.48);
+      }
+      /* Mirrors McpResourceList unified surface + rounded-[20px] + divide-border */
+      .mqs-surface-card {
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(8, 21, 47, 0.94);
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65);
+        overflow: hidden;
       }
       .mqs-cats {
         display: flex;
         align-items: center;
-        gap: 6px;
-        padding: 10px 16px;
+        gap: 4px;
+        padding: 8px 14px;
         overflow-x: auto;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        background: rgba(6, 17, 40, 0.65);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(5, 14, 34, 0.7);
         scrollbar-width: none;
       }
       .mqs-cats::-webkit-scrollbar { display: none; }
       .mqs-cat-btn {
         flex-shrink: 0;
         border-radius: 9999px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(255, 255, 255, 0.04);
-        color: rgba(246, 242, 234, 0.7);
-        padding: 4px 11px;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 10.5px;
-        font-weight: 600;
-        letter-spacing: 0.06em;
+        border: 1px solid transparent;
+        background: transparent;
+        color: rgba(203, 213, 225, 0.65);
+        padding: 3px 10px;
+        font-size: 11px;
+        font-weight: 500;
         cursor: pointer;
-        transition: all 150ms ease;
+        transition: all 140ms ease;
       }
       .mqs-cat-btn:hover {
-        border-color: rgba(114, 197, 248, 0.45);
-        color: #fff;
+        color: #f8fafc;
+        background: rgba(255, 255, 255, 0.06);
       }
       .mqs-cat-btn.is-active {
-        border-color: #72c5f8;
-        background: rgba(58, 160, 219, 0.22);
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.09);
         color: #ffffff;
-        box-shadow: 0 0 16px rgba(58, 160, 219, 0.22);
+        font-weight: 600;
       }
       #mediq-search-results {
         max-height: min(410px, 56vh);
         overflow-y: auto;
-        padding: 8px;
         overscroll-behavior: contain;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(148, 163, 184, 0.25) transparent;
+      }
+      #mediq-search-results::-webkit-scrollbar { width: 5px; }
+      #mediq-search-results::-webkit-scrollbar-track { background: transparent; }
+      #mediq-search-results::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, 0.25);
+        border-radius: 9999px;
       }
       .mqs-row {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
         width: 100%;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 16px;
         text-align: left;
-        border: 1px solid transparent;
+        border: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         background: transparent;
-        border-radius: 12px;
-        padding: 10px 12px;
         cursor: pointer;
-        color: #f6f2ea;
-        transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
+        color: #f4f7fb;
+        transition: background 140ms ease;
+      }
+      .mqs-row:last-child {
+        border-bottom: 0;
+      }
+      .mqs-row:hover {
+        background: rgba(255, 255, 255, 0.045);
       }
       .mqs-row.is-selected {
-        background: rgba(58, 160, 219, 0.16);
-        border-color: rgba(114, 197, 248, 0.35);
+        background: rgba(255, 255, 255, 0.075);
       }
       .mqs-row-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 34px;
-        height: 34px;
+        display: inline-flex;
+        margin-top: 2px;
         flex-shrink: 0;
-        border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(255, 255, 255, 0.04);
+        color: rgba(148, 163, 184, 0.78);
+      }
+      .mqs-row.is-selected .mqs-row-icon {
+        color: #72c5f8;
+      }
+      .mqs-row-main {
+        min-width: 0;
+        flex: 1;
       }
       .mqs-row-title {
         font-size: 13.5px;
-        font-weight: 600;
-        line-height: 1.25;
-        color: #f6f2ea;
-      }
-      .mqs-row.is-selected .mqs-row-title {
-        color: #ffffff;
-      }
-      .mqs-row-desc {
-        margin-top: 2px;
-        font-size: 11.5px;
-        line-height: 1.35;
-        color: rgba(246, 242, 234, 0.56);
+        font-weight: 500;
+        line-height: 1.3;
+        color: #f8fafc;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
+      .mqs-row-uri {
+        margin-top: 1px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11.5px;
+        line-height: 1.35;
+        color: rgba(158, 180, 204, 0.76);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .mqs-row-desc {
+        margin-top: 4px;
+        font-size: 11.5px;
+        line-height: 1.45;
+        color: rgba(203, 213, 225, 0.56);
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
       .mqs-row-meta {
         display: flex;
-        align-items: center;
-        gap: 6px;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 3px;
         flex-shrink: 0;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 10px;
+      }
+      .mqs-mime {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 10.5px;
+        color: rgba(158, 180, 204, 0.58);
+      }
+      .mqs-size {
+        font-size: 10.5px;
+        font-variant-numeric: tabular-nums;
+        color: rgba(158, 180, 204, 0.52);
       }
       .mqs-badge {
-        border-radius: 6px;
-        padding: 2px 7px;
-        background: rgba(255, 255, 255, 0.06);
-        color: #72c5f8;
+        display: inline-flex;
+        align-items: center;
+        border-radius: 9999px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        padding: 1px 8px;
+        font-size: 10.5px;
         font-weight: 600;
+        color: rgba(226, 232, 240, 0.85);
+      }
+      .mqs-row.is-selected .mqs-badge {
+        border-color: rgba(114, 197, 248, 0.45);
+        color: #72c5f8;
       }
       .mqs-footer {
         display: flex;
@@ -820,21 +904,22 @@
         gap: 8px;
         padding: 9px 16px;
         border-top: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(4, 12, 29, 0.88);
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 10px;
-        color: rgba(246, 242, 234, 0.52);
+        background: rgba(4, 12, 29, 0.85);
+        font-size: 11px;
+        color: rgba(203, 213, 225, 0.55);
       }
       .mqs-kbd {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 1px 5px;
+        padding: 2px 6px;
         border-radius: 5px;
-        border: 1px solid rgba(255, 255, 255, 0.16);
-        background: rgba(255, 255, 255, 0.06);
-        color: rgba(246, 242, 234, 0.8);
-        font-size: 9.5px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(226, 232, 240, 0.82);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 10px;
+        line-height: 1.1;
       }
     `;
     document.head.appendChild(style);
@@ -853,20 +938,22 @@
     modal.innerHTML = `
       <div id="mediq-search-panel">
         <div class="mqs-input-row">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#72c5f8" stroke-width="2.2" style="flex-shrink:0">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(158,180,204,0.85)" stroke-width="1.8" style="flex-shrink:0">
+            <circle cx="11" cy="11" r="7.5"/><path d="m20.5 20.5-4.1-4.1" stroke-linecap="round"/>
           </svg>
           <input id="mediq-search-input" type="text" autocomplete="off" spellcheck="false"
-            placeholder="Search products, IOLs, 3D books, news, resources, or sections..." />
-          <button id="mediq-search-clear" type="button" aria-label="Clear search"
-            style="display:none;background:rgba(255,255,255,0.08);border:0;color:#f6f2ea;border-radius:8px;padding:4px 8px;font-size:11px;cursor:pointer;">Clear</button>
-          <button id="mediq-search-close" type="button" aria-label="Close search" class="mqs-kbd" style="cursor:pointer;padding:3px 7px;">ESC</button>
+            placeholder="Filter by URI or name…" />
+          <button id="mediq-search-clear" type="button" aria-label="Clear filter"
+            style="display:none;background:transparent;border:0;color:rgba(203,213,225,0.75);font-size:13px;line-height:1;padding:2px 6px;cursor:pointer;">&times;</button>
+          <button id="mediq-search-close" type="button" aria-label="Close search" class="mqs-kbd" style="cursor:pointer;">ESC</button>
         </div>
-        <div class="mqs-cats" id="mediq-search-cats"></div>
-        <div id="mediq-search-results" role="listbox"></div>
-        <div class="mqs-footer">
-          <span><span class="mqs-kbd">↑</span> <span class="mqs-kbd">↓</span> navigate &middot; <span class="mqs-kbd">↵</span> open destination</span>
-          <span id="mediq-search-count">0 results</span>
+        <div class="mqs-surface-card">
+          <div class="mqs-cats" id="mediq-search-cats"></div>
+          <div id="mediq-search-results" role="listbox"></div>
+          <div class="mqs-footer">
+            <span><span class="mqs-kbd">↑</span> <span class="mqs-kbd">↓</span> navigate &middot; <span class="mqs-kbd">↵</span> open destination</span>
+            <span id="mediq-search-count">0 destinations</span>
+          </div>
         </div>
       </div>
     `;
@@ -888,18 +975,20 @@
 
     function scoreItem(item, qTokens) {
       if (!qTokens.length) return 1;
+      const uriL = getItemUri(item).toLowerCase();
       const titleL = item.title.toLowerCase();
       const codeL = item.code.toLowerCase();
       const descL = item.desc.toLowerCase();
       const catL = item.category.toLowerCase();
       const kwL = (item.keywords || []).join(' ').toLowerCase();
-      const full = `${titleL} ${codeL} ${descL} ${catL} ${kwL}`;
+      const full = `${uriL} ${titleL} ${codeL} ${descL} ${catL} ${kwL}`;
 
       let score = 0;
       for (let i = 0; i < qTokens.length; i++) {
         const tok = qTokens[i];
         if (!full.includes(tok)) return 0;
-        if (titleL.startsWith(tok) || codeL === tok) score += 10;
+        if (uriL.includes(tok)) score += 11;
+        else if (titleL.startsWith(tok) || codeL === tok) score += 10;
         else if (titleL.includes(tok)) score += 6;
         else if (kwL.includes(tok)) score += 4;
         else score += 2;
@@ -959,21 +1048,22 @@
 
       resultsWrap.innerHTML = filtered
         .map((item, idx) => {
-          const col = CAT_COLORS[item.category] || '#72c5f8';
           const isSel = idx === selectedIdx;
+          const uri = getItemUri(item);
+          const mime = MIME_MAP[item.category] || 'application/octet-stream';
           return `
             <button type="button" role="option" aria-selected="${isSel}" data-mqs-idx="${idx}"
               class="mqs-row${isSel ? ' is-selected' : ''}">
-              <div style="display:flex;align-items:center;gap:12px;min-width:0;flex:1;">
-                <span class="mqs-row-icon" style="color:${col};">${ICONS[item.category] || ICONS.Sections}</span>
-                <div style="min-width:0;flex:1;">
-                  <div class="mqs-row-title">${escapeHtml(item.title)}</div>
-                  <div class="mqs-row-desc">${escapeHtml(item.desc)}</div>
-                </div>
+              <span class="mqs-row-icon" aria-hidden="true">${ICONS[item.category] || ICONS.Sections}</span>
+              <div class="mqs-row-main">
+                <div class="mqs-row-title">${escapeHtml(item.title)}</div>
+                <div class="mqs-row-uri" title="${escapeHtml(uri)}">${escapeHtml(uri)}</div>
+                <div class="mqs-row-desc">${escapeHtml(item.desc)}</div>
               </div>
               <div class="mqs-row-meta">
-                <span class="mqs-badge" style="color:${col};">${escapeHtml(item.code)}</span>
-                <span style="color:rgba(246,242,234,0.45);min-width:64px;text-align:right;">${escapeHtml(item.tag)}</span>
+                <span class="mqs-mime">${escapeHtml(mime)}</span>
+                <span class="mqs-size">${escapeHtml(item.code)}</span>
+                <span class="mqs-badge">${escapeHtml(item.category)}</span>
               </div>
             </button>
           `;

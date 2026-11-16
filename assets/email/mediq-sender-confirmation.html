@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MEDIQ Pharma — Inquiry Confirmation Email Template</title>
+</head>
+<body style="margin:0;padding:0;background-color:#eef3f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;color:#0f172a;-webkit-font-smoothing:antialiased;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#eef3f9;padding:28px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="580" cellspacing="0" cellpadding="0" border="0" style="max-width:580px;width:100%;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(4,16,38,0.12);border:1px solid #d9e3f0;">
+
+          <!-- Deep Navy Hero Masthead -->
+          <tr>
+            <td style="background:linear-gradient(145deg,#071c42 0%,#05122b 65%,#030a1a 100%);background-color:#05132e;padding:28px 34px 30px;">
+              <!-- Top Brand & Timestamp Bar -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:26px;">
+                <tr>
+                  <td align="left" valign="middle">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td valign="middle" style="padding-right:10px;">
+                          <span style="display:inline-block;width:9px;height:9px;border-radius:999px;background-color:#34d399;"></span>
+                        </td>
+                        <td valign="middle">
+                          <img src="../img/mediq-logo-white.png" alt="MEDIQ PHARMA" height="22" style="display:block;height:22px;width:auto;border:0;" />
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td align="right" valign="middle" style="font-size:12px;color:#93c5fd;white-space:nowrap;">
+                    {{submitted_at}}
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Confirmation Kicker & Greeting -->
+              <p style="margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#6ee7b7;">
+                CONFIRMATION RECEIPT
+              </p>
+              <h1 style="margin:0 0 6px;font-size:25px;line-height:1.25;font-weight:700;color:#ffffff;letter-spacing:-0.015em;">
+                We received your message, {{contact_name}}
+              </h1>
+              <p style="margin:0 0 22px;font-size:14.5px;line-height:1.5;color:#cbd5e1;">
+                Logged for {{organization}} &bull; MEDIQ Commercial &amp; Technical Desk
+              </p>
+
+              <!-- Topic & Reference Pills -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td valign="middle" style="padding-right:10px;">
+                    <span style="display:inline-block;padding:6px 15px;border-radius:999px;background-color:#38a3f1;color:#041022;font-size:12px;font-weight:700;line-height:1.2;">
+                      {{inquiry_topic}}
+                    </span>
+                  </td>
+                  <td valign="middle">
+                    <span style="display:inline-block;padding:5px 15px;border-radius:999px;border:1px solid rgba(110,231,183,0.45);background-color:rgba(16,185,129,0.14);color:#a7f3d0;font-size:12px;font-weight:500;line-height:1.2;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;">
+                      Ref {{reference}}
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Main Body -->
+          <tr>
+            <td style="padding:30px 34px 28px;background-color:#ffffff;">
+              <p style="margin:0 0 22px;font-size:14px;line-height:1.65;color:#334155;">
+                Thank you for contacting <strong>MEDIQ Pharma and Medical Supplies Distribution Inc.</strong> We have received your inquiry and a representative will reach out to you shortly.
+              </p>
+
+              <!-- Two-Column Summary -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0;margin-bottom:22px;">
+                <tr>
+                  <td width="50%" valign="top" style="padding:16px 12px 16px 0;">
+                    <p style="margin:0 0 5px;font-size:10.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#64748b;">
+                      ORGANIZATION
+                    </p>
+                    <p style="margin:0;font-size:14.5px;font-weight:600;color:#0a1d40;">
+                      {{organization}}
+                    </p>
+                  </td>
+                  <td width="50%" valign="top" style="padding:16px 0 16px 12px;">
+                    <p style="margin:0 0 5px;font-size:10.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#64748b;">
+                      TOPIC
+                    </p>
+                    <p style="margin:0;font-size:14.5px;font-weight:600;color:#0a1d40;">
+                      {{inquiry_topic}}
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Copy of Message Block -->
+              <p style="margin:0 0 10px;font-size:10.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#64748b;">
+                YOUR SUBMITTED MESSAGE
+              </p>
+              <div style="margin:0 0 24px;padding:18px 20px;background-color:#f0f6fc;border-left:3px solid #38a3f1;border-radius:0 10px 10px 0;font-size:14px;line-height:1.65;color:#1e293b;white-space:pre-line;">{{message}}</div>
+
+              <!-- Direct Channels Strip -->
+              <div style="padding:16px 18px;border-radius:10px;background-color:#f8fafc;border:1px solid #e2e8f0;font-size:13px;line-height:1.75;color:#334155;">
+                <strong style="color:#0a1d40;">Direct Institutional Channels</strong><br />
+                Mobile / Viber: <a href="tel:+639457954365" style="color:#0284c7;text-decoration:none;font-weight:600;">+63 945 795 4365</a><br />
+                Telegram: <a href="https://t.me/mediqpharma" style="color:#0284c7;text-decoration:none;font-weight:600;">t.me/mediqpharma</a><br />
+                Email: <a href="mailto:mediqtechsupport@gmail.com" style="color:#0284c7;text-decoration:none;font-weight:600;">mediqtechsupport@gmail.com</a>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Dark Navy Footer -->
+          <tr>
+            <td style="background-color:#061634;padding:20px 34px;font-size:12px;line-height:1.6;color:#93c5fd;">
+              <strong style="color:#ffffff;">MEDIQ Pharma Inc.</strong> &middot; Philippine National Commercial Desk<br />
+              <span style="color:#94a3b8;">Marikina &ndash; Pasig, Metro Manila &middot; Exclusive Distributor of Rayner UK</span>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

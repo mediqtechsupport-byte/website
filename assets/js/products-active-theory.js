@@ -611,7 +611,7 @@
   let vdpr = 1;
 
   function resizeCanvases() {
-    vdpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    vdpr = 1;
     vw = host.clientWidth || prodSec.clientWidth || window.innerWidth;
     vh = host.clientHeight || (prodSec.clientHeight - 128) || (window.innerHeight - 128);
     if (bgDustCanvas) {
@@ -624,47 +624,56 @@
   resizeCanvases();
   window.addEventListener('resize', resizeCanvases, { passive: true });
 
-  const DUST_COUNT = 58;
+  const DUST_COUNT = 52;
   const dustStreaks = Array.from({ length: DUST_COUNT }, () => {
-    const alpha = 0.08 + Math.random() * 0.25;
+    const alpha = 0.08 + Math.random() * 0.24;
     return {
       x: Math.random(),
       y: Math.random(),
       len: 8 + Math.random() * 20,
-      speed: 0.00045 + Math.random() * 0.00085,
+      speed: 0.025 + Math.random() * 0.048,
       alpha,
       strokeStyle: `rgba(210, 225, 255, ${alpha.toFixed(3)})`,
-      size: 0.8 + Math.random() * 1.4
+      size: 0.8 + Math.random() * 1.3
     };
   });
 
   let dustRafId = 0;
+  let lastDustTs = 0;
   function stopDust() {
     if (dustRafId) {
       cancelAnimationFrame(dustRafId);
       dustRafId = 0;
     }
+    lastDustTs = 0;
   }
   function shouldRunDust() {
     return activeSubpage > 0 && activeSubpage !== 3 && !box3dMode && !detailMode && isStageVisible && !document.hidden && !!bgCtx;
   }
-  function drawDustFrame() {
+  function drawDustFrame(now) {
     dustRafId = 0;
     if (!shouldRunDust()) return;
-    bgCtx.setTransform(vdpr, 0, 0, vdpr, 0, 0);
-    bgCtx.clearRect(0, 0, vw, vh);
-    for (let i = 0; i < DUST_COUNT; i++) {
-      const d = dustStreaks[i];
-      d.x = (d.x - d.speed + 1) % 1;
-      d.y = (d.y + d.speed * 0.65) % 1;
-      const sx = d.x * vw;
-      const sy = d.y * vh;
-      bgCtx.strokeStyle = d.strokeStyle;
-      bgCtx.lineWidth = d.size;
-      bgCtx.beginPath();
-      bgCtx.moveTo(sx, sy);
-      bgCtx.lineTo(sx - d.len * 0.6, sy + d.len * 0.4);
-      bgCtx.stroke();
+    if (!lastDustTs) lastDustTs = now;
+    const elapsedMs = now - lastDustTs;
+    // Cap ambient background dust at ~30fps so WebGL2 WarpCarousel stays locked 60/120fps over long sessions
+    if (elapsedMs >= 32) {
+      const dt = Math.min(0.06, elapsedMs / 1000);
+      lastDustTs = now;
+      bgCtx.setTransform(1, 0, 0, 1, 0, 0);
+      bgCtx.clearRect(0, 0, vw, vh);
+      for (let i = 0; i < DUST_COUNT; i++) {
+        const d = dustStreaks[i];
+        d.x = (d.x - d.speed * dt + 1) % 1;
+        d.y = (d.y + d.speed * 0.65 * dt) % 1;
+        const sx = d.x * vw;
+        const sy = d.y * vh;
+        bgCtx.strokeStyle = d.strokeStyle;
+        bgCtx.lineWidth = d.size;
+        bgCtx.beginPath();
+        bgCtx.moveTo(sx, sy);
+        bgCtx.lineTo(sx - d.len * 0.6, sy + d.len * 0.4);
+        bgCtx.stroke();
+      }
     }
     dustRafId = requestAnimationFrame(drawDustFrame);
   }
@@ -674,6 +683,7 @@
       return;
     }
     if (!dustRafId) {
+      lastDustTs = 0;
       dustRafId = requestAnimationFrame(drawDustFrame);
     }
   }
@@ -1213,10 +1223,44 @@
     }
   });
 
-  // 6. SUBPAGE HOOKS & SELF-HEALING ACTIVATION
+  // 6. SUBPAGE HOOKS, IDLE PACKSHOT PRELOAD & SELF-HEALING ACTIVATION
   // ============================================================================
+  function preloadAllCatalogPackshots() {
+    const seen = new Set();
+    [1, 2, 4].forEach((k) => {
+      const cat = CATALOG[k];
+      if (!cat || !cat.items) return;
+      cat.items.forEach((it) => {
+        if (it.packshot && !seen.has(it.packshot)) {
+          seen.add(it.packshot);
+          const pre = new Image();
+          pre.decoding = 'async';
+          pre.src = it.packshot;
+        }
+      });
+    });
+  }
+  if (typeof window.requestIdleCallback === 'function') {
+    window.requestIdleCallback(preloadAllCatalogPackshots, { timeout: 1400 });
+  } else {
+    setTimeout(preloadAllCatalogPackshots, 800);
+  }
+
   window.__activateProductsActiveTheory = function(slideIdx) {
     const idx = Number(slideIdx) || 0;
+    if (
+      idx >= 1 &&
+      idx !== 3 &&
+      idx === activeSubpage &&
+      currentFilter === 'all' &&
+      !detailMode &&
+      !box3dMode &&
+      !host.classList.contains('is-hidden')
+    ) {
+      if (warpCtrl) warpCtrl.setPaused(false);
+      kickDust();
+      return;
+    }
     activeSubpage = idx;
     if (idx >= 1 && idx !== 3 && CATALOG[idx]) {
       const cat = CATALOG[idx];

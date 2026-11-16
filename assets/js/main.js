@@ -2,6 +2,42 @@
 (() => {
   const root = document.documentElement;
 
+  // 0. Enforce Home (#hero) start on refresh / history restore (never keep old scroll/subpage)
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  const forceResetToHomeOnBoot = () => {
+    if (window.location.hash) {
+      try {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      } catch (_) {}
+    }
+    if (typeof window.__resetAllSubpagesExcept === 'function') {
+      window.__resetAllSubpagesExcept(null);
+    }
+    if (typeof window.__unlockOuterPageScroll === 'function') {
+      window.__unlockOuterPageScroll();
+    }
+    if (typeof window.grailSnapTo === 'function') {
+      window.grailSnapTo(0);
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
+  };
+  forceResetToHomeOnBoot();
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted || window.scrollY > 4) {
+      forceResetToHomeOnBoot();
+    }
+  });
+  window.addEventListener('load', () => {
+    requestAnimationFrame(() => {
+      if (typeof window.__isAnyMediqSubpageOpen !== 'function' || !window.__isAnyMediqSubpageOpen()) {
+        forceResetToHomeOnBoot();
+      }
+    });
+  }, { once: true });
+
   // 1. Trigger entrance animations once fonts/image are ready
   const ready = () => requestAnimationFrame(() => document.body.classList.add('is-ready'));
   if (document.fonts && document.fonts.ready) {
@@ -10,11 +46,11 @@
     window.addEventListener('load', ready);
   }
 
-  // 2. Mobile / tablet menu
+  // 2. Mobile / tablet menu & desktop dropdown accessibility helpers
   const toggle = document.getElementById('menu-toggle');
   const menu = document.getElementById('mobile-menu');
   const panel = document.getElementById('mobile-panel');
-  const ctaQuote = document.getElementById('cta-quote');
+  const searchTriggerBtn = document.getElementById('mediq-search-trigger');
   const lines = toggle ? toggle.querySelectorAll('.burger-line') : [];
 
   const setMenu = (open) => {
@@ -24,9 +60,9 @@
     menu.classList.toggle('opacity-0', !open);
     menu.classList.toggle('pointer-events-none', !open);
     panel.classList.toggle('-translate-y-3', !open);
-    if (ctaQuote) {
-      ctaQuote.classList.toggle('max-lg:opacity-0', open);
-      ctaQuote.classList.toggle('max-lg:pointer-events-none', open);
+    if (searchTriggerBtn) {
+      searchTriggerBtn.classList.toggle('max-lg:opacity-0', open);
+      searchTriggerBtn.classList.toggle('max-lg:pointer-events-none', open);
     }
     root.classList.toggle('overflow-hidden', open);
     if (lines.length >= 2) {
@@ -40,17 +76,63 @@
     toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
     menu.addEventListener('click', (e) => { if (e.target === menu || e.target.closest('.mobile-link')) setMenu(false); });
     window.matchMedia('(min-width: 1024px)').addEventListener('change', (e) => { if (e.matches) setMenu(false); });
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setMenu(false);
+        toggle.focus();
+      }
+    });
+  }
+  if (searchTriggerBtn) {
+    searchTriggerBtn.addEventListener('click', () => setMenu(false));
   }
 
-  // 3. Header transparent at top of hero, frosted glass on scroll
+  // Desktop dropdown accessibility: aria-expanded sync, instant close on selection & Escape support
+  document.querySelectorAll('#site-header li.group').forEach((groupLi) => {
+    const trigger = groupLi.querySelector('a[aria-haspopup="true"]');
+    const dropdown = groupLi.querySelector('.nav-dropdown-panel');
+    if (!trigger || !dropdown) return;
+    const syncExpanded = (open) => trigger.setAttribute('aria-expanded', String(open));
+    groupLi.addEventListener('mouseenter', () => { groupLi.classList.remove('is-dropdown-closed'); syncExpanded(true); });
+    groupLi.addEventListener('mouseleave', () => { groupLi.classList.remove('is-dropdown-closed'); syncExpanded(false); });
+    groupLi.addEventListener('focusin', () => syncExpanded(true));
+    groupLi.addEventListener('focusout', (e) => {
+      if (!groupLi.contains(e.relatedTarget)) {
+        groupLi.classList.remove('is-dropdown-closed');
+        syncExpanded(false);
+      }
+    });
+    groupLi.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        groupLi.classList.add('is-dropdown-closed');
+        syncExpanded(false);
+        if (document.activeElement && groupLi.contains(document.activeElement)) {
+          trigger.focus();
+        }
+      }
+    });
+    dropdown.querySelectorAll('a').forEach((subLink) => {
+      subLink.addEventListener('click', () => {
+        groupLi.classList.add('is-dropdown-closed');
+        syncExpanded(false);
+        if (document.activeElement && groupLi.contains(document.activeElement)) {
+          document.activeElement.blur();
+        }
+      });
+    });
+  });
+
+  // 3. Header translucent at top of hero, crisp high-contrast frosted navy on scroll
   const bar = document.getElementById('header-bar');
   if (bar) {
     const onScroll = () => {
       const scrolled = window.scrollY > 40;
-      bar.classList.toggle('bg-[#0a1d40]/85', scrolled);
-      bar.classList.toggle('bg-white/[0.08]', !scrolled);
-      bar.classList.toggle('border-white/20', scrolled);
+      bar.classList.toggle('bg-[#0a1d40]/92', scrolled);
+      bar.classList.toggle('bg-[#0a1d40]/45', !scrolled);
+      bar.classList.toggle('border-sky/20', scrolled);
       bar.classList.toggle('border-white/10', !scrolled);
+      bar.classList.toggle('shadow-[0_10px_36px_rgba(3,10,24,0.48)]', scrolled);
+      bar.classList.toggle('shadow-[0_4px_24px_rgba(0,0,0,0.3)]', !scrolled);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
@@ -185,10 +267,32 @@
       if (scrollMid >= cachedPageOffsets[i].top - 90) activePageId = cachedPageOffsets[i].pid;
     }
     if (activePageId !== lastActivePageId) {
+      const prevPageId = lastActivePageId;
       lastActivePageId = activePageId;
       pageDotItems.forEach((dot) => {
         dot.classList.toggle('is-active', dot.getAttribute('data-target') === '#' + activePageId);
       });
+      const siteHeaderEl = document.getElementById('site-header');
+      const pageDotsEl = document.getElementById('page-dots-nav');
+      if (siteHeaderEl) siteHeaderEl.classList.remove('is-light-page');
+      if (pageDotsEl) pageDotsEl.classList.remove('is-light-page');
+
+      // Leaving any section resets all departed sections back to their Landing Page (Slide 0)
+      if (
+        prevPageId &&
+        activePageId !== prevPageId &&
+        typeof window.__resetAllSubpagesExcept === 'function' &&
+        (!window.__isAnyMediqSubpageOpen || !window.__isAnyMediqSubpageOpen())
+      ) {
+        const pageToKey = {
+          about: 'about',
+          products: 'products',
+          brands: 'brands',
+          distribution: 'services',
+          resources: 'resources',
+        };
+        window.__resetAllSubpagesExcept(pageToKey[activePageId] || null);
+      }
     }
   };
   window.__updateActiveNavOnScroll = updateActiveNavOnScroll;
@@ -203,7 +307,7 @@
     transitionCurtain.classList.add('is-sweeping');
     curtainTimer = setTimeout(() => {
       transitionCurtain.classList.remove('is-sweeping');
-    }, 420);
+    }, 240);
   };
   window.__sweepPageTransitionCurtain = sweepTransitionCurtain;
 
@@ -283,25 +387,23 @@
 
       sweepTransitionCurtain();
 
-      // Trigger reveal animations inside target page section
+      // Trigger reveal animations inside target page section without delaying navigation
       if (targetEl.querySelectorAll) {
-        targetEl.querySelectorAll('.scroll-reveal').forEach((el) => {
-          el.classList.remove('is-visible');
+        const hiddenReveals = targetEl.querySelectorAll('.scroll-reveal:not(.is-visible)');
+        if (hiddenReveals.length) {
           requestAnimationFrame(() => {
-            requestAnimationFrame(() => el.classList.add('is-visible'));
+            hiddenReveals.forEach((el) => el.classList.add('is-visible'));
           });
-        });
+        }
       }
 
-      requestAnimationFrame(() => {
-        if (typeof window.grailScrollTo === 'function') {
-          window.grailScrollTo(isHomeHref ? 0 : targetEl);
-        } else if (isHomeHref) {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
+      if (typeof window.grailScrollTo === 'function') {
+        window.grailScrollTo(isHomeHref ? 0 : targetEl);
+      } else if (isHomeHref) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
   });
 
@@ -1106,6 +1208,7 @@
 
   // 9. Smart Inquiry Form Pre-Selection, Consent Validation & Submission Feedback
   const productSelect = document.getElementById('inq-product');
+  const subjectInput = document.getElementById('inq-subject');
   let selectedInquiryTopic = '';
   document.querySelectorAll('[data-inquire]').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -1114,6 +1217,9 @@
       if (productSelect && val) {
         productSelect.value = val;
         productSelect.dispatchEvent(new Event('change'));
+      }
+      if (subjectInput && val) {
+        subjectInput.value = val;
       }
     });
   });
@@ -1126,6 +1232,9 @@
         productSelect.value = val;
         productSelect.dispatchEvent(new Event('change'));
       }
+      if (subjectInput && val) {
+        subjectInput.value = val;
+      }
       const nameInput = document.getElementById('inq-name');
       if (nameInput) nameInput.focus();
     });
@@ -1134,30 +1243,271 @@
   const quoteForm = document.getElementById('quote-form');
   const formFeedback = document.getElementById('form-feedback');
   if (quoteForm && formFeedback) {
-    quoteForm.addEventListener('submit', (e) => {
+    const TARGET_EMAIL = 'mediqtechsupport@gmail.com';
+    // Option A (100% Free Unlimited, sends FROM "MEDIQ Pharma Inc." with inline PNG logo + auto-reply):
+    //   Paste your deployed Google Apps Script Web App URL from assets/email/google-apps-script-mailer.gs.
+    const CUSTOM_MAILER_URL = 'https://script.google.com/macros/s/AKfycbxTjRceXQDTpnc_oEbwVSMH6eHfW2N1xtLaeLEwoNBUqV38dcgbZFMqPG2X0Cp5nbYD/exec';
+    // Option B (EmailJS - matches {{contact_name}}, {{organization}}, {{email_address}}, {{inquiry_topic}}, {{reference}}, {{submitted_at}}, {{message}}):
+    const EMAILJS_CONFIG = {
+      serviceId: '',
+      publicKey: '',
+      adminTemplateId: '',
+      confirmationTemplateId: ''
+    };
+    // Option C (Formspree endpoint, e.g. 'https://formspree.io/f/your_form_id'):
+    const FORMSPREE_URL = '';
+    const topicButtons = Array.from(quoteForm.querySelectorAll('[data-contact-topic]'));
+    const subjectHiddenInput = quoteForm.querySelector('#inq-subject');
+
+    const cfmModal = document.getElementById('contact-confirmation-modal');
+    const cfmCloseBtn = document.getElementById('cfm-close-btn');
+    const hideConfirmationModal = () => {
+      if (!cfmModal) return;
+      cfmModal.classList.remove('opacity-100');
+      cfmModal.classList.add('opacity-0');
+      setTimeout(() => { cfmModal.classList.add('hidden'); }, 220);
+    };
+    const showConfirmationModal = ({ name, clinic, email, topic, message, referenceId }) => {
+      if (!cfmModal) return;
+      const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+      setTxt('cfm-ref', `Reference ${referenceId}`);
+      setTxt('cfm-name', name);
+      setTxt('cfm-clinic', clinic);
+      setTxt('cfm-email', email);
+      setTxt('cfm-topic', topic || 'General Institutional Inquiry');
+      setTxt('cfm-message', message || '(No additional message provided)');
+      cfmModal.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        cfmModal.classList.remove('opacity-0');
+        cfmModal.classList.add('opacity-100');
+      });
+    };
+    if (cfmCloseBtn) cfmCloseBtn.addEventListener('click', hideConfirmationModal);
+    if (cfmModal) {
+      cfmModal.addEventListener('click', (ev) => {
+        if (ev.target === cfmModal) hideConfirmationModal();
+      });
+      window.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Escape' && !cfmModal.classList.contains('hidden')) hideConfirmationModal();
+      });
+    }
+
+    const activateTopicPill = (btn) => {
+      if (!btn) return;
+      const val = btn.getAttribute('data-contact-topic') || '';
+      if (subjectHiddenInput) subjectHiddenInput.value = val;
+      topicButtons.forEach((b) => {
+        const isSel = b === btn;
+        b.setAttribute('aria-pressed', isSel ? 'true' : 'false');
+        b.className = isSel
+          ? 'rounded-full border border-[#72c5f8]/65 bg-[#123568]/80 px-3.5 py-1.5 text-[11.5px] font-medium text-white shadow-[0_0_16px_rgba(58,160,219,0.22)] transition-colors cursor-pointer'
+          : 'rounded-full border border-[#72c5f8]/22 bg-[#0a1d40]/60 px-3.5 py-1.5 text-[11.5px] font-medium text-[#9eb4cc] hover:border-[#72c5f8]/50 hover:text-white transition-colors cursor-pointer';
+      });
+    };
+
+    topicButtons.forEach((btn) => {
+      btn.addEventListener('click', () => activateTopicPill(btn));
+    });
+
+    const setFeedbackWithMailto = (text, colorClass, mailtoHref, linkLabel) => {
+      formFeedback.textContent = text;
+      formFeedback.className = `text-[12px] font-semibold ${colorClass}`;
+      if (mailtoHref && linkLabel) {
+        const sep = document.createTextNode(' ');
+        const a = document.createElement('a');
+        a.href = mailtoHref;
+        a.textContent = linkLabel;
+        a.className = 'underline underline-offset-2 text-white hover:text-[#72c5f8]';
+        formFeedback.appendChild(sep);
+        formFeedback.appendChild(a);
+      }
+    };
+
+    quoteForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = quoteForm.querySelector('#inq-name')?.value.trim();
       const clinic = quoteForm.querySelector('#inq-clinic')?.value.trim();
       const email = quoteForm.querySelector('#inq-email')?.value.trim();
+      const subjectVal = quoteForm.querySelector('#inq-subject')?.value.trim();
+      const messageVal = quoteForm.querySelector('#inq-message')?.value.trim() || '';
       const consent = quoteForm.querySelector('#inq-consent');
+      const submitBtn = quoteForm.querySelector('button[type="submit"]');
+
       if (!name || !clinic || !email) {
-        formFeedback.textContent = 'Please complete your Full Name, Organization/Institution, and Business Email.';
-        formFeedback.className = 'text-[10.5px] font-semibold text-ray';
+        setFeedbackWithMailto(
+          'Please complete your Full Name, Organization/Institution, and Email.',
+          'text-ray'
+        );
         return;
       }
       if (consent && !consent.checked) {
-        formFeedback.textContent = 'Please confirm the privacy and contact-consent statement before submitting.';
-        formFeedback.className = 'text-[10.5px] font-semibold text-ray';
+        setFeedbackWithMailto(
+          'Please confirm the privacy and contact-consent statement before submitting.',
+          'text-ray'
+        );
         return;
       }
-      const selected = productSelect ? productSelect.value : selectedInquiryTopic;
-      formFeedback.textContent = selected
-        ? `Thank you, ${name}. Your "${selected}" inquiry has been recorded for the MEDIQ team.`
-        : `Thank you, ${name}. Your inquiry has been recorded for the MEDIQ team.`;
-      formFeedback.className = 'text-[10.5px] font-semibold text-sky';
-      quoteForm.reset();
-      selectedInquiryTopic = '';
-      if (productSelect) productSelect.dispatchEvent(new Event('change'));
+
+      const selected = subjectVal || (productSelect ? productSelect.value : '') || selectedInquiryTopic;
+      const referenceId = 'MQ-' + String(Date.now()).slice(-6);
+      const submittedAt = new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila', dateStyle: 'medium', timeStyle: 'short' });
+      const emailSubject = selected
+        ? `[MEDIQ Inquiry] ${name} (${clinic}) — ${selected} [${referenceId}]`
+        : `[MEDIQ Inquiry] ${name} (${clinic}) [${referenceId}]`;
+      const emailBody =
+        `Reference: ${referenceId}\n` +
+        `Name: ${name}\n` +
+        `Organization / Clinic: ${clinic}\n` +
+        `Sender Email: ${email}\n` +
+        `Subject: ${selected || 'General Institutional Inquiry'}\n\n` +
+        `Message:\n${messageVal || '(No additional message provided)'}\n`;
+      const mailtoHref =
+        `mailto:${TARGET_EMAIL}?subject=${encodeURIComponent(emailSubject)}` +
+        `&body=${encodeURIComponent(emailBody)}`;
+
+      const resetFormState = () => {
+        quoteForm.reset();
+        selectedInquiryTopic = '';
+        if (topicButtons.length > 0) activateTopicPill(topicButtons[0]);
+        if (productSelect) productSelect.dispatchEvent(new Event('change'));
+      };
+
+      // In live user browsers online:
+      //   1. Prefer CUSTOM_MAILER_URL (Google Apps Script) OR EMAILJS_CONFIG (passes exact {{contact_name}}, {{organization}}, {{email_address}}, {{inquiry_topic}}, {{reference}}, {{submitted_at}}, {{message}} template variables)
+      //   2. Fall back to FormSubmit AJAX (_template: table) and always show the on-page MEDIQ Confirmation Receipt Modal.
+      if (!navigator.webdriver && navigator.onLine && typeof fetch === 'function') {
+        if (submitBtn) submitBtn.disabled = true;
+        setFeedbackWithMailto(`Sending inquiry directly to ${TARGET_EMAIL}...`, 'text-sky');
+        const templateParams = {
+          contact_name: name,
+          organization: clinic,
+          email_address: email,
+          inquiry_topic: selected || 'General Institutional Inquiry',
+          reference: referenceId,
+          submitted_at: submittedAt,
+          message: messageVal || '(No additional message provided)',
+          subject: emailSubject,
+          from_name: 'MEDIQ Pharma Inc.',
+          to_email: TARGET_EMAIL,
+          reply_to: email
+        };
+        try {
+          let ok = false;
+          if (CUSTOM_MAILER_URL) {
+            const customRes = await fetch(CUSTOM_MAILER_URL, {
+              method: 'POST',
+              redirect: 'follow',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify(templateParams)
+            });
+            try {
+              const payload = await customRes.json();
+              ok = customRes.ok && payload && payload.ok !== false;
+            } catch (_) {
+              ok = customRes.ok;
+            }
+          } else if (EMAILJS_CONFIG.serviceId && EMAILJS_CONFIG.publicKey && EMAILJS_CONFIG.adminTemplateId) {
+            const sendEjs = (tid, params) => fetch('https://api.emailjs.com/api/v1.0/email/send', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                service_id: EMAILJS_CONFIG.serviceId,
+                template_id: tid,
+                user_id: EMAILJS_CONFIG.publicKey,
+                template_params: params
+              })
+            });
+            const adminRes = await sendEjs(EMAILJS_CONFIG.adminTemplateId, templateParams);
+            ok = adminRes.ok;
+            if (ok && EMAILJS_CONFIG.confirmationTemplateId) {
+              await sendEjs(EMAILJS_CONFIG.confirmationTemplateId, {
+                ...templateParams,
+                to_email: email,
+                reply_to: TARGET_EMAIL
+              }).catch(() => {});
+            }
+          } else if (FORMSPREE_URL) {
+            const fsRes = await fetch(FORMSPREE_URL, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+              },
+              body: JSON.stringify(templateParams)
+            });
+            ok = fsRes.ok;
+          } else {
+            const autoReplyMsg =
+              `Thank you, ${name}, for contacting MEDIQ Pharma and Medical Supplies Distribution Inc. ` +
+              `We have received your ${selected || 'institutional'} inquiry (${referenceId}) for ${clinic} and our team will respond shortly. ` +
+              `Direct assistance: Mobile/Viber +63 945 795 4365 | Telegram t.me/mediqpharma | Email mediqtechsupport@gmail.com`;
+            const res = await fetch(`https://formsubmit.co/ajax/${TARGET_EMAIL}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+              },
+              body: JSON.stringify({
+                Reference: `${referenceId} (${submittedAt})`,
+                Contact_Name: name,
+                Organization: clinic,
+                Email_Address: email,
+                Inquiry_Topic: selected || 'General Institutional Inquiry',
+                Message: messageVal || '(No additional message provided)',
+                email,
+                _replyto: email,
+                _subject: emailSubject,
+                _template: 'table',
+                _autoresponse: autoReplyMsg
+              })
+            });
+            ok = res.ok;
+          }
+          if (ok) {
+            setFeedbackWithMailto(
+              `Confirmed (${referenceId})! Message received by MEDIQ Support Desk.`,
+              'text-emerald-400',
+              mailtoHref,
+              'Open Mail Copy'
+            );
+            showConfirmationModal({
+              name,
+              clinic,
+              email,
+              topic: selected || 'General Institutional Inquiry',
+              message: messageVal,
+              referenceId
+            });
+            resetFormState();
+          } else {
+            throw new Error('Mail dispatch error');
+          }
+        } catch (_) {
+          setFeedbackWithMailto(
+            `Inquiry prepared for ${TARGET_EMAIL} —`,
+            'text-sky',
+            mailtoHref,
+            'Send in Email App ->'
+          );
+          const mailTrigger = document.createElement('a');
+          mailTrigger.href = mailtoHref;
+          mailTrigger.style.display = 'none';
+          document.body.appendChild(mailTrigger);
+          mailTrigger.click();
+          mailTrigger.remove();
+          resetFormState();
+        } finally {
+          if (submitBtn) submitBtn.disabled = false;
+        }
+      } else {
+        setFeedbackWithMailto(
+          `Thank you, ${name}. Inquiry ready for ${TARGET_EMAIL} —`,
+          'text-sky',
+          mailtoHref,
+          'Send via Email App ->'
+        );
+        resetFormState();
+      }
     });
   }
 
@@ -3334,13 +3684,13 @@
           ctx.stroke();
         }
         ctx.fillStyle = '#ffffff';
-        ctx.font = '700 44px Manrope, sans-serif';
+        ctx.font = '700 44px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('GALAXY', 38, 105);
         ctx.fillStyle = '#9ec5e6';
-        ctx.font = '600 16px Manrope, sans-serif';
+        ctx.font = '600 16px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('RAYONE PRELOADED SPIRAL IOL', 38, 185);
         ctx.fillStyle = '#ffffff';
-        ctx.font = '700 22px serif';
+        ctx.font = '700 22px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('▲ Rayner', 330, 195);
       });
       const navySideMat = new THREE.MeshStandardMaterial({ color: 0x0c1c30, roughness: 0.35, metalness: 0.1 });
@@ -3358,13 +3708,13 @@
         ctx.fillStyle = '#eaedf2';
         ctx.fillRect(0, 0, w, h);
         ctx.fillStyle = '#0c1c30';
-        ctx.font = '700 38px Manrope, sans-serif';
+        ctx.font = '700 38px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('GALAXY TORIC', 36, 95);
         ctx.fillStyle = '#5c6675';
-        ctx.font = '600 15px Manrope, sans-serif';
+        ctx.font = '600 15px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('PRELOADED SPIRAL TORIC IOL', 36, 145);
         ctx.fillStyle = '#0c1c30';
-        ctx.font = '700 22px serif';
+        ctx.font = '700 22px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('▲ Rayner', 340, 200);
       });
       const whiteSideMat = new THREE.MeshStandardMaterial({ color: 0xdce1e8, roughness: 0.35 });
@@ -3391,12 +3741,12 @@
         ctx.fillStyle = '#e8562a';
         ctx.fillRect(28, 28, 456, 56);
         ctx.fillStyle = '#ffffff';
-        ctx.font = '700 34px Manrope, sans-serif';
+        ctx.font = '700 34px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('RayOne  Preloaded IOL', 44, 68);
         ctx.fillStyle = '#c4006b';
         ctx.fillRect(28, 92, 180, 26);
         ctx.fillStyle = '#ffffff';
-        ctx.font = '700 16px Manrope, sans-serif';
+        ctx.font = '700 16px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('EMV TORIC', 58, 110);
         // C-Ring graphic
         ctx.beginPath();
@@ -3405,7 +3755,7 @@
         ctx.lineWidth = 14;
         ctx.stroke();
         ctx.fillStyle = '#0a1d40';
-        ctx.font = '700 22px serif';
+        ctx.font = '700 22px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('▲ Rayner', 32, 215);
       });
       const whiteMat = new THREE.MeshStandardMaterial({ color: 0xf4f6f9, roughness: 0.3 });
@@ -3496,10 +3846,10 @@
           ctx.fillStyle = `#${cfg.color.toString(16).padStart(6, '0')}`;
           ctx.fillRect(0, 0, w, h);
           ctx.fillStyle = '#ffffff';
-          ctx.font = '700 54px Manrope, sans-serif';
+          ctx.font = '700 54px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText('AEON', w / 2, 75);
-          ctx.font = '700 26px Manrope, sans-serif';
+          ctx.font = '700 26px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
           ctx.fillText(cfg.name, w / 2, 112);
           // White teardrop icon
           ctx.beginPath();
@@ -3564,7 +3914,7 @@
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, w, 28);
         ctx.fillStyle = '#0a1d40';
-        ctx.font = '700 18px Manrope, sans-serif';
+        ctx.font = '700 18px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('RayPRO® Cloud PROMs Dashboard', 20, 20);
         const cards = [
           { x: 24, y: 52, val: '85%', col: '#3aa0db' },
@@ -3581,7 +3931,7 @@
           ctx.lineWidth = 7;
           ctx.stroke();
           ctx.fillStyle = '#0a1d40';
-          ctx.font = '700 22px Manrope, sans-serif';
+          ctx.font = '700 22px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText(c.val, c.x + 52, c.y + 80);
         });
@@ -4034,7 +4384,7 @@
       const ctx = c.getContext('2d');
       if (!ctx) return '';
 
-      const family = '"Instrument Serif", ui-serif, Georgia, serif';
+      const family = '"Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
       // Enlarged, majestic scale filling the hero container
       let fontSize = Math.round(180 * S);
       const lineHeight = Math.round(170 * S);
@@ -4299,6 +4649,7 @@ let heroAccentIx = 0;
 
 if (cycleAccWord) {
   setInterval(() => {
+    if (document.hidden || window.scrollY > (window.innerHeight || 900) * 1.15) return;
     cycleAccWord.classList.add('opacity-0', 'blur-sm', '-translate-y-2');
     setTimeout(() => {
       heroAccentIx = (heroAccentIx + 1) % HERO_ACCENTS.length;
@@ -4640,7 +4991,7 @@ void main() {
       const measuredH = bounds.height > 10 ? bounds.height : window.innerHeight;
       const rawW = Math.max(1, Math.round(measuredW * dpr));
       const rawH = Math.max(1, Math.round(measuredH * dpr));
-      const pixelScale = Math.min(1, Math.sqrt(750000 / Math.max(1, rawW * rawH)));
+      const pixelScale = Math.min(1, Math.sqrt(520000 / Math.max(1, rawW * rawH)));
       const width = Math.max(1, Math.round(rawW * pixelScale));
       const height = Math.max(1, Math.round(rawH * pixelScale));
       if (wavesShaderCanvas.width !== width || wavesShaderCanvas.height !== height) {
@@ -4687,6 +5038,10 @@ void main() {
     const renderSilkShader = (now) => {
       rafId = 0;
       if (!shouldRenderSilk()) { lastNow = null; return; }
+      if (window.__mediqFastJumping) {
+        rafId = requestAnimationFrame(renderSilkShader);
+        return;
+      }
       const dt = lastNow === null ? 0.016 : Math.min((now - lastNow) / 1000, 0.1);
       lastNow = now;
       const follow = 1 - Math.exp(-20 * dt);
@@ -5957,7 +6312,7 @@ void main() {
     const w = Math.max(10, Math.round(rect.width));
     const h = Math.max(10, Math.round(rect.height));
     const comp = window.getComputedStyle(titleEl);
-    const fontFam = comp.fontFamily || 'Inter, sans-serif';
+    const fontFam = comp.fontFamily || '"Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     const weight = comp.fontWeight || '600';
     const fontSize = parseFloat(comp.fontSize) || 48;
     const lines = Array.from(titleEl.querySelectorAll('.ih-h1-line'));
@@ -6855,6 +7210,7 @@ function initAboutDeckController() {
   }
 
   function unlockOuterPage() {
+    document.querySelectorAll('.mediq-subpage-active-host').forEach((el) => el.classList.remove('mediq-subpage-active-host'));
     document.documentElement.classList.remove('mediq-subpage-locked');
     document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
@@ -6863,6 +7219,8 @@ function initAboutDeckController() {
 
   function lockOuterPage() {
     if (window.__aboutDeckCurrentIndex > 0) {
+      document.querySelectorAll('.mediq-subpage-active-host').forEach((el) => el.classList.remove('mediq-subpage-active-host'));
+      if (aboutSec) aboutSec.classList.add('mediq-subpage-active-host');
       document.documentElement.classList.add('mediq-subpage-locked');
       document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
@@ -7396,7 +7754,7 @@ function initFoundationPartnershipStage() {
     };
     syncFndSlide();
 
-    const shouldRunFnd = () => fndVisible && fndSlideActive && fndDocVisible;
+    const shouldRunFnd = () => window.innerWidth >= 1024 && fndVisible && fndSlideActive && fndDocVisible;
     const syncFndLoop = () => {
       if (shouldRunFnd()) {
         if (!fndRafId) fndRafId = requestAnimationFrame(loop);
@@ -8009,6 +8367,8 @@ function initProductsDeckController() {
 
   // STRICT SUBPAGE ISOLATION LOCK: Completely locks outer main page scroll when inside ANY subpage
   function lockPage() {
+    document.querySelectorAll('.mediq-subpage-active-host').forEach((el) => el.classList.remove('mediq-subpage-active-host'));
+    if (prodSec) prodSec.classList.add('mediq-subpage-active-host');
     document.documentElement.classList.add('mediq-subpage-locked');
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
@@ -8016,6 +8376,7 @@ function initProductsDeckController() {
   }
 
   function unlockPage() {
+    document.querySelectorAll('.mediq-subpage-active-host').forEach((el) => el.classList.remove('mediq-subpage-active-host'));
     document.documentElement.classList.remove('mediq-subpage-locked');
     document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
@@ -8045,7 +8406,7 @@ function initProductsDeckController() {
         if (typeof window.__triggerLotticiStagger === 'function') {
           window.__triggerLotticiStagger(slide);
         }
-        if (currentIndex >= 1 && slide.firstElementChild && typeof window.__playSubpage3DEntrance === 'function') {
+        if (currentIndex === 3 && slide.firstElementChild && typeof window.__playSubpage3DEntrance === 'function') {
           const dir = (prevIdx > 0 && currentIndex < prevIdx) ? -1 : 1;
           window.__playSubpage3DEntrance(slide.firstElementChild, dir);
         }
@@ -9193,10 +9554,18 @@ if (document.readyState === 'loading') {
     requestAnimationFrame(syncSlidingMarker);
     if (reduced() || typeof window.gsap === 'undefined') return;
     const g = window.gsap;
-    g.timeline({ defaults: { ease: 'power3.out' } })
-      .fromTo([$ ('wwd-subtext'), $('wwd-header-badges')], { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, stagger: 0.06, clearProps: 'transform,opacity' }, 0.15)
-      .fromTo(listCard || tabs, { x: -12, opacity: 0 }, { x: 0, opacity: 1, duration: 0.42, clearProps: 'transform,opacity' }, '-=0.25')
-      .fromTo(card, { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.46, clearProps: 'transform,opacity' }, '-=0.32');
+    const tl = g.timeline({ defaults: { ease: 'power3.out' } });
+    const topTargets = [$('wwd-subtext'), $('wwd-header-badges')].filter(Boolean);
+    if (topTargets.length) {
+      tl.fromTo(topTargets, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, stagger: 0.06, clearProps: 'transform,opacity' }, 0.15);
+    }
+    const leftTarget = listCard || (tabs.length ? tabs : null);
+    if (leftTarget) {
+      tl.fromTo(leftTarget, { x: -12, opacity: 0 }, { x: 0, opacity: 1, duration: 0.42, clearProps: 'transform,opacity' }, topTargets.length ? '-=0.25' : 0.15);
+    }
+    if (card) {
+      tl.fromTo(card, { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.46, clearProps: 'transform,opacity' }, (topTargets.length || leftTarget) ? '-=0.32' : 0.15);
+    }
   }
 
   // ─── Canvas helpers ────────────────────────────────────────────────────────
@@ -9220,7 +9589,7 @@ if (document.readyState === 'loading') {
   }
 
   function label(text, x, y, align) {
-    ctx.font = '500 12px Manrope, ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 12px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = LABEL;
     ctx.textAlign = align || 'left';
     ctx.fillText(text, x, y);
@@ -9295,7 +9664,7 @@ if (document.readyState === 'loading') {
       ctx.fill();
       ctx.restore();
 
-      ctx.font = (reached ? '600 ' : '500 ') + '12.5px Manrope, ui-sans-serif, system-ui, sans-serif';
+      ctx.font = (reached ? '600 ' : '500 ') + '12.5px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
       ctx.fillStyle = reached ? '#ffffff' : 'rgba(184, 198, 220, 0.50)';
       ctx.textAlign = i === 0 ? 'left' : i === JOURNEY_STOPS.length - 1 ? 'right' : 'center';
       ctx.fillText(JOURNEY_STOPS[i], sx, jy + 24);
@@ -9310,7 +9679,7 @@ if (document.readyState === 'loading') {
 
     label('2–8 °C safe range', padX, wy - 10);
     ctx.save();
-    ctx.font = '500 11.5px Manrope, ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 11.5px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.58)';
     ctx.textAlign = 'right';
     ctx.fillText('8 °C', padX + w, wy - 6);
@@ -9353,7 +9722,7 @@ if (document.readyState === 'loading') {
     const normTemp = 1 - (ly - wy) / wh;
     const tempC = (2 + normTemp * 6).toFixed(1) + ' °C';
     ctx.save();
-    ctx.font = '700 13px Manrope, ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '700 13px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = DOT;
     ctx.textAlign = lx > padX + w * 0.85 ? 'right' : 'left';
     ctx.fillText(tempC, lx + (lx > padX + w * 0.85 ? -10 : 10), ly - 10);
@@ -9400,17 +9769,17 @@ if (document.readyState === 'loading') {
 
     ctx.save();
     ctx.textAlign = 'left';
-    ctx.font = '500 13px Manrope, ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 13px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.82)';
     ctx.fillText('Region ' + (regIdx + 1) + ' of ' + PH_REGIONS.length, leftX, baseCy - 48);
 
     const codeFontPx = Math.round(Math.max(40, Math.min(60, cw * 0.072)));
-    ctx.font = '800 ' + codeFontPx + 'px Manrope, ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '800 ' + codeFontPx + 'px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = DOT;
     ctx.fillText(activeReg[0], leftX, baseCy + 10);
 
     const nameFontPx = Math.round(Math.max(15, Math.min(20, cw * 0.024)));
-    ctx.font = '700 ' + nameFontPx + 'px Manrope, ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '700 ' + nameFontPx + 'px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.fillText(activeReg[1], leftX, baseCy + 40);
 
@@ -9524,7 +9893,7 @@ if (document.readyState === 'loading') {
 
         // Region code beside active marker
         ctx.save();
-        ctx.font = '700 12px Manrope, ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 12px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
         ctx.fillStyle = '#ffffff';
         ctx.textAlign = 'left';
         ctx.shadowColor = 'rgba(4, 13, 30, 0.9)';
@@ -9614,7 +9983,7 @@ if (document.readyState === 'loading') {
     // Center X/4 label
     ctx.save();
     const ringFontPx = Math.round(Math.max(24, Math.min(36, r * 0.38)));
-    ctx.font = '800 ' + ringFontPx + 'px Manrope, ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '800 ' + ringFontPx + 'px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -9669,7 +10038,7 @@ if (document.readyState === 'loading') {
 
       // Checklist label
       const tx = listX + 38;
-      ctx.font = (checked ? '700 ' : '500 ') + '16px Manrope, ui-sans-serif, system-ui, sans-serif';
+      ctx.font = (checked ? '700 ' : '500 ') + '16px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
       ctx.fillStyle = checked ? '#ffffff' : 'rgba(184, 198, 220, 0.52)';
       ctx.textAlign = 'left';
       ctx.fillText(AUDIT_CHECKS[i], tx, ry);
@@ -9724,7 +10093,7 @@ if (document.readyState === 'loading') {
     }
 
     ctx.save();
-    ctx.font = '500 12px Manrope, ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 12px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.72)';
     ctx.textAlign = 'left';
     ctx.fillText('Each dot = one fellow trained', gx - 2, gy + gh + 22);
@@ -9758,7 +10127,7 @@ if (document.readyState === 'loading') {
 
     // Cardinal 00 / 06 / 12 / 18 labels
     ctx.save();
-    ctx.font = '500 12.5px Manrope, ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 12.5px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.78)';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -9770,11 +10139,11 @@ if (document.readyState === 'loading') {
     // Center digital clock & status
     const hh = (curHour < 10 ? '0' : '') + curHour + ':00';
     const clockFontPx = Math.round(Math.max(22, Math.min(34, r * 0.30)));
-    ctx.font = '800 ' + clockFontPx + 'px Manrope, ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '800 ' + clockFontPx + 'px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.fillText(hh, cx, cy - 5);
 
-    ctx.font = '500 12.5px Manrope, ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 12.5px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.82)';
     ctx.fillText('support desk · online', cx, cy + 19);
     ctx.restore();
@@ -9822,13 +10191,13 @@ if (document.readyState === 'loading') {
 
     ctx.save();
     ctx.textAlign = 'left';
-    ctx.font = '700 ' + headPx + 'px Manrope, ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '700 ' + headPx + 'px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.fillText('Every hour.', rx, topY);
     ctx.fillStyle = BLUE;
     ctx.fillText('Every day.', rx, topY + headPx * 1.22);
 
-    ctx.font = '500 13.5px Manrope, ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 13.5px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.88)';
     ctx.fillText('Urgent cases go to the front of the queue.', rx, topY + headPx * 1.22 + 28);
 
@@ -9852,7 +10221,7 @@ if (document.readyState === 'loading') {
         ctx.arc(dx, dy, dr, 0, Math.PI * 2);
         ctx.stroke();
       }
-      ctx.font = (isToday ? '700 ' : '600 ') + '12.5px Manrope, ui-sans-serif, system-ui, sans-serif';
+      ctx.font = (isToday ? '700 ' : '600 ') + '12.5px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
       ctx.fillStyle = isToday ? '#041022' : 'rgba(220, 232, 248, 0.85)';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -10001,6 +10370,7 @@ if (document.readyState === 'loading') {
     const m = $('wwd-modal');
     if (!m || m.style.display === 'none') return;
     modalOpen = false;
+    document.body.classList.remove('mediq-subpage-modal-open');
     m.style.opacity = '0';
     setTimeout(() => { m.style.display = 'none'; }, 300);
     start();
@@ -10010,6 +10380,7 @@ if (document.readyState === 'loading') {
     const m = $('wwd-modal');
     if (!m) return;
     modalOpen = true;
+    document.body.classList.add('mediq-subpage-modal-open');
     const d = btn.dataset;
     $('wwd-modal-img').src = d.img;
     $('wwd-modal-img').alt = d.title;
@@ -10226,13 +10597,17 @@ if (document.readyState === 'loading') {
   window.submitBrandsF24Inquiry = function (inputId, inquiryType) {
     const input = document.getElementById(inputId);
     const contactSec = document.getElementById('contact');
-    const inquirySelect = document.querySelector('#contact select[name="inquiry"], #contact #contact-inquiry');
+    const inquirySelect = document.querySelector('#contact select[name="inquiry"], #contact #contact-inquiry, #contact #inq-subject');
     if (inquirySelect && inquiryType) {
-      Array.from(inquirySelect.options).forEach((opt) => {
-        if (opt.value === inquiryType || opt.text.includes(inquiryType)) {
-          inquirySelect.value = opt.value;
-        }
-      });
+      if (inquirySelect.tagName === 'SELECT') {
+        Array.from(inquirySelect.options).forEach((opt) => {
+          if (opt.value === inquiryType || opt.text.includes(inquiryType)) {
+            inquirySelect.value = opt.value;
+          }
+        });
+      } else {
+        inquirySelect.value = inquiryType;
+      }
     }
     const msgField = document.querySelector('#contact textarea[name="message"], #contact textarea');
     if (msgField && input && input.value.trim()) {
@@ -10836,6 +11211,7 @@ if (document.readyState === 'loading') {
     let visible = false;
     let docVisible = !document.hidden;
     let rafId = 0;
+    let lastDrawTs = 0;
 
     const shouldDrawDeckSmoke = () => visible && docVisible && !reducedMotionMq.matches;
     const syncDeckSmoke = () => {
@@ -10847,9 +11223,14 @@ if (document.readyState === 'loading') {
       }
     };
 
-    function draw() {
+    function draw(now) {
       rafId = 0;
       if (!visible || !docVisible) return;
+      if (window.__mediqFastJumping || (lastDrawTs && now && now - lastDrawTs < 24)) {
+        if (!reducedMotionMq.matches && visible && docVisible) rafId = requestAnimationFrame(draw);
+        return;
+      }
+      lastDrawTs = now || performance.now();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
       for (let i = 0; i < puffs.length; i++) {
@@ -11048,73 +11429,86 @@ if (document.readyState === 'loading') {
   }
 
   measureSections();
-  window.addEventListener('resize', () => {
+  const handleViewportMetricsChange = () => {
     measureSections();
+    if (window.__refreshNavSectionOffsets) window.__refreshNavSectionOffsets();
     applyGrailTransforms(window.scrollY);
+  };
+  window.addEventListener('resize', handleViewportMetricsChange, { passive: true });
+  window.addEventListener('orientationchange', () => {
+    handleViewportMetricsChange();
+    setTimeout(handleViewportMetricsChange, 160);
   }, { passive: true });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', handleViewportMetricsChange, { passive: true });
+  }
   window.addEventListener('load', () => {
-    measureSections();
-    applyGrailTransforms(window.scrollY);
+    handleViewportMetricsChange();
   });
 
-  // Apply pure GPU-composited Stacked-Card Scale, Parallax Depth & Opacity (zero filter/radius repaints)
+  // Apply Ultra-Smooth Zero-Lag Scroll Transition (keeps heavy WebGL sections & mobile touch 60/120 FPS)
   function applyGrailTransforms(scrollY) {
+    const isMobileOrTablet = window.innerWidth < 1024;
+    const contactIdx = sections.findIndex((s) => s && s.id === 'contact');
+
     for (let i = 0; i < sections.length; i++) {
       const sec = sections[i];
-      if (!sec || sec.id === 'site-footer' || sec.id === 'contact') continue;
+      if (!sec || sec.id === 'site-footer') continue;
 
-      const baseTop = sectionOffsets[i] !== undefined ? sectionOffsets[i] : (i * vh);
-      const relTop = baseTop - scrollY;
+      if (sec.style.transform || sec.style.opacity || sec.classList.contains('grail-card-transitioning')) {
+        sec.classList.remove('grail-card-transitioning');
+        sec.style.transform = '';
+        sec.style.opacity = '';
+      }
+
       const inner = innerStages[i];
+      if (!inner) continue;
 
-      // 1. Outgoing section receding underneath the rising next section
-      if (relTop < -1 && relTop > -vh * 1.05) {
-        const exitP = Math.min(1, Math.max(0, -relTop / vh));
-        const eExit = exitP * (2 - exitP);
-        const lagY = exitP * vh * 0.42;
-        const scale = 1 - eExit * 0.085;
-        const secOpacity = 1 - eExit * 0.48;
-
-        sec.classList.add('grail-card-transitioning');
-        sec.style.transform = `translate3d(0, ${lagY.toFixed(1)}px, 0) scale(${scale.toFixed(4)})`;
-        sec.style.opacity = secOpacity.toFixed(3);
-
-        if (inner) {
-          const innerY = -exitP * 32;
-          const innerScale = 1 - exitP * 0.025;
-          const innerOpacity = Math.max(0, 1 - exitP * 0.35);
-          inner.style.transform = `translate3d(0, ${innerY.toFixed(1)}px, 0) scale(${innerScale.toFixed(4)})`;
-          inner.style.opacity = innerOpacity.toFixed(3);
-        }
-      }
-      // 2. Incoming section rising cleanly over the receding section
-      else if (relTop > 1 && relTop < vh * 1.05) {
-        const enterP = Math.min(1, Math.max(0, relTop / vh));
-        const cardScale = 1 - enterP * 0.018;
-
-        sec.classList.add('grail-card-transitioning');
-        sec.style.transform = `translate3d(0, 0, 0) scale(${cardScale.toFixed(4)})`;
-        sec.style.opacity = '1';
-
-        if (inner) {
-          const innerY = enterP * 56;
-          const innerScale = 1 - enterP * 0.035;
-          const innerOpacity = Math.max(0.2, 1 - enterP * 0.55);
-          inner.style.transform = `translate3d(0, ${innerY.toFixed(1)}px, 0) scale(${innerScale.toFixed(4)})`;
-          inner.style.opacity = innerOpacity.toFixed(3);
-        }
-      }
-      // 3. Settled or off-screen -> clean state (only touch DOM if dirty)
-      else {
-        if (sec.classList.contains('grail-card-transitioning') || sec.style.transform || sec.style.opacity) {
-          sec.classList.remove('grail-card-transitioning');
-          sec.style.transform = '';
-          sec.style.opacity = '';
-        }
-        if (inner && (inner.style.transform || inner.style.opacity)) {
+      if (isMobileOrTablet) {
+        if (inner.style.transform || inner.style.opacity) {
           inner.style.transform = '';
           inner.style.opacity = '';
         }
+        continue;
+      }
+
+      const baseTop = sectionOffsets[i] !== undefined ? sectionOffsets[i] : (i * vh);
+      const nextTop = sectionOffsets[i + 1] !== undefined ? sectionOffsets[i + 1] : ((i + 1) * vh);
+      const spanOut = Math.max(1, nextTop - baseTop);
+      const prevTop = sectionOffsets[i - 1] !== undefined ? sectionOffsets[i - 1] : ((i - 1) * vh);
+      const spanIn = Math.max(1, baseTop - prevTop);
+      const relTop = baseTop - scrollY;
+
+      // Leave #contact -> #site-footer natural so footer & edge-to-edge map scroll directly
+      if (sec.id === 'contact' && relTop <= 0.5) {
+        if (inner.style.transform || inner.style.opacity) {
+          inner.style.transform = '';
+          inner.style.opacity = '';
+        }
+        continue;
+      }
+
+      if (relTop > vh * 1.15 || relTop < -spanOut * 1.15) {
+        if (inner.style.transform || inner.style.opacity) {
+          inner.style.transform = '';
+          inner.style.opacity = '';
+        }
+        continue;
+      }
+
+      if (relTop < -0.5 && relTop > -spanOut * 1.02 && (contactIdx === -1 || i < contactIdx)) {
+        const p = Math.min(1, Math.max(0, -relTop / spanOut));
+        const e = p * (2 - p);
+        inner.style.transform = 'translate3d(0, ' + (-e * 22).toFixed(1) + 'px, 0)';
+        inner.style.opacity = Math.max(0.32, 1 - e * 0.68).toFixed(3);
+      } else if (relTop > 0.5 && relTop < spanIn * 1.02 && i > 0) {
+        const enterP = Math.min(1, Math.max(0, relTop / spanIn));
+        const e = enterP * enterP;
+        inner.style.transform = 'translate3d(0, ' + (e * 22).toFixed(1) + 'px, 0)';
+        inner.style.opacity = Math.max(0.32, 1 - e * 0.68).toFixed(3);
+      } else if (inner.style.transform || inner.style.opacity) {
+        inner.style.transform = '';
+        inner.style.opacity = '';
       }
     }
   }
@@ -11142,17 +11536,13 @@ if (document.readyState === 'loading') {
     if (document.documentElement.classList.contains('mediq-subpage-locked')) return true;
     if (document.documentElement.style.overflow === 'hidden') return true;
 
-    let el = e.target;
-    while (el && el !== document.body && el !== document.documentElement) {
-      if (el.nodeType === 1) {
-        const overflowY = window.getComputedStyle(el).overflowY;
-        if ((overflowY === 'auto' || overflowY === 'scroll') && el.scrollHeight > el.clientHeight + 4) {
-          const canScrollDown = e.deltaY > 0 && (el.scrollTop + el.clientHeight < el.scrollHeight - 2);
-          const canScrollUp = e.deltaY < 0 && (el.scrollTop > 2);
-          if (canScrollDown || canScrollUp) return true;
-        }
-      }
-      el = el.parentElement;
+    const scroller = e.target && e.target.closest
+      ? e.target.closest('#about-subpage-scroll, #iol-scroll-container, .product-slide, .deck-slide:not([data-slide-index="0"]), #mediq-search-results')
+      : null;
+    if (scroller && scroller.scrollHeight > scroller.clientHeight + 4) {
+      const canScrollDown = e.deltaY > 0 && (scroller.scrollTop + scroller.clientHeight < scroller.scrollHeight - 2);
+      const canScrollUp = e.deltaY < 0 && (scroller.scrollTop > 2);
+      if (canScrollDown || canScrollUp) return true;
     }
     return false;
   }
@@ -11198,7 +11588,7 @@ if (document.readyState === 'loading') {
 
       targetY = Math.max(0, Math.min(maxScroll, bestTarget));
       startLoop();
-    }, 105);
+    }, 360);
   }
 
   function tick(now) {
@@ -11211,7 +11601,7 @@ if (document.readyState === 'loading') {
     lastTickTs = now;
     const diff = targetY - currentY;
     if (Math.abs(diff) > 0.45) {
-      currentY += diff * (1 - Math.exp(-15.5 * dt));
+      currentY += diff * (1 - Math.exp(-13.2 * dt));
       window.scrollTo(0, currentY);
       applyGrailTransforms(currentY);
       if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll(currentY);
@@ -11245,7 +11635,7 @@ if (document.readyState === 'loading') {
     }
 
     const rawDelta = e.deltaMode === 1 ? e.deltaY * 36 : e.deltaY;
-    const clampedDelta = Math.max(-420, Math.min(420, rawDelta * 1.45));
+    const clampedDelta = Math.max(-360, Math.min(360, rawDelta * 1.15));
     lastWheelDir = clampedDelta > 0 ? 1 : (clampedDelta < 0 ? -1 : lastWheelDir);
 
     targetY = Math.max(0, Math.min(maxScroll, targetY + clampedDelta));
@@ -11263,6 +11653,7 @@ if (document.readyState === 'loading') {
   }, { passive: true });
 
   // Programmatic smooth glide API for navbar links, dropdowns, and page indicator dots
+  // Multi-page jumps pre-position smoothly right before the target section so intermediate WebGL canvases stay asleep.
   window.grailScrollTo = function(targetElOrY) {
     measureSections();
     let destY = 0;
@@ -11273,8 +11664,27 @@ if (document.readyState === 'loading') {
       destY = idx !== -1 ? sectionOffsets[idx] : targetElOrY.offsetTop;
     }
     clearTimeout(snapTimer);
-    currentY = window.scrollY;
-    targetY = Math.max(0, Math.min(maxScroll, destY));
+    destY = Math.max(0, Math.min(maxScroll, destY));
+    const startY = window.scrollY;
+    const dist = destY - startY;
+    const jumpThreshold = Math.max(950, (vh || 900) * 1.15);
+
+    if (Math.abs(dist) > jumpThreshold) {
+      window.__mediqFastJumping = true;
+      const lead = Math.sign(dist) * Math.min(280, Math.round((vh || 900) * 0.32));
+      const preY = Math.max(0, Math.min(maxScroll, destY - lead));
+      window.scrollTo({ top: preY, left: 0, behavior: 'instant' });
+      currentY = preY;
+      targetY = destY;
+      requestAnimationFrame(() => {
+        window.__mediqFastJumping = false;
+      });
+      startLoop();
+      return;
+    }
+
+    currentY = startY;
+    targetY = destY;
     startLoop();
   };
 
@@ -11335,30 +11745,92 @@ if (document.readyState === 'loading') {
     el._sub3dTimer = setTimeout(cleanup, 480);
   };
 
+  let lastLockedHostEl = null;
+
+  const setActiveSubpageHost = (secEl) => {
+    document.querySelectorAll('.mediq-subpage-active-host').forEach((el) => {
+      if (el !== secEl) el.classList.remove('mediq-subpage-active-host');
+    });
+    if (secEl) {
+      secEl.classList.add('mediq-subpage-active-host');
+      lastLockedHostEl = secEl;
+    }
+  };
+
   window.__unlockOuterPageScroll = function() {
     edgeAccum = 0;
+    const hostToRestore = lastLockedHostEl;
+    lastLockedHostEl = null;
+    setActiveSubpageHost(null);
+    document.body.classList.remove('mediq-subpage-modal-open');
     document.documentElement.classList.remove('mediq-subpage-locked');
     document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
     document.documentElement.style.scrollSnapType = '';
+    if (hostToRestore && window.innerWidth < 1024) {
+      requestAnimationFrame(() => {
+        if (window.__isAnyMediqSubpageOpen && window.__isAnyMediqSubpageOpen()) return;
+        if (typeof window.grailSnapTo === 'function') {
+          window.grailSnapTo(hostToRestore);
+        } else {
+          window.scrollTo({ top: hostToRestore.offsetTop, left: 0, behavior: 'instant' });
+        }
+      });
+    }
+  };
+
+  const resetInnerScrollTops = (rootEl) => {
+    if (!rootEl) return;
+    rootEl.querySelectorAll('.about-slide, .product-slide, .deck-slide, #about-subpage-scroll, #iol-scroll-container, #product-slide-med-supplies, #brands-profiles-scroller').forEach((sc) => {
+      if (sc && sc.scrollTop > 0) sc.scrollTop = 0;
+    });
   };
 
   window.__resetAllSubpagesExcept = function(keepKey) {
     if (isResettingSubpages) return;
     isResettingSubpages = true;
     try {
-      if (keepKey !== 'about' && (window.__aboutDeckCurrentIndex || 0) > 0 && typeof window.goToAboutSlide === 'function') {
-        window.goToAboutSlide(0, { silentReset: true });
-      }
-      if (keepKey !== 'products' && (window.__productsDeckCurrentIndex || 0) > 0 && typeof window.goToProductSlide === 'function') {
-        window.goToProductSlide(0, { silentReset: true });
-      }
-      const deckKeys = ['brands', 'services', 'resources'];
-      for (let i = 0; i < deckKeys.length; i++) {
-        const dk = deckKeys[i];
-        if (keepKey !== dk && typeof window.__getDeckSlideIndex === 'function' && window.__getDeckSlideIndex(dk) > 0 && typeof window.goToDeckSlide === 'function') {
-          window.goToDeckSlide(dk, 0, false, { silentReset: true });
+      if (keepKey !== 'about') {
+        if ((window.__aboutDeckCurrentIndex || 0) > 0 && typeof window.goToAboutSlide === 'function') {
+          window.goToAboutSlide(0, { silentReset: true });
         }
+        resetInnerScrollTops(document.getElementById('about'));
+      }
+      if (keepKey !== 'products') {
+        if ((window.__productsDeckCurrentIndex || 0) > 0 && typeof window.goToProductSlide === 'function') {
+          window.goToProductSlide(0, { silentReset: true });
+        }
+        if (typeof window.__activateProductsActiveTheory === 'function') {
+          window.__activateProductsActiveTheory(0);
+        }
+        resetInnerScrollTops(document.getElementById('products'));
+      }
+      const deckPairs = [
+        ['brands', 'brands'],
+        ['services', 'distribution'],
+        ['resources', 'resources'],
+      ];
+      for (let i = 0; i < deckPairs.length; i++) {
+        const dk = deckPairs[i][0];
+        const secId = deckPairs[i][1];
+        if (keepKey !== dk) {
+          if (dk === 'services' && typeof window.__setServicesBookCarouselActive === 'function') {
+            window.__setServicesBookCarouselActive(false);
+          }
+          if (dk === 'brands' && typeof window.closeAllPrincipalPel === 'function') {
+            window.closeAllPrincipalPel();
+          }
+          if (typeof window.__getDeckSlideIndex === 'function' && window.__getDeckSlideIndex(dk) > 0 && typeof window.goToDeckSlide === 'function') {
+            window.goToDeckSlide(dk, 0, false, { silentReset: true });
+          }
+          resetInnerScrollTops(document.getElementById(secId));
+        }
+      }
+      if (keepKey !== 'news') {
+        resetInnerScrollTops(document.getElementById('activities'));
+      }
+      if (keepKey !== 'contact') {
+        resetInnerScrollTops(document.getElementById('contact'));
       }
     } finally {
       isResettingSubpages = false;
@@ -11416,7 +11888,10 @@ if (document.readyState === 'loading') {
     lastSwitchTime = performance.now();
     window.__resetAllSubpagesExcept(keepKey);
 
-    if (secEl) {
+    const isMobileOrTablet = window.innerWidth < 1024;
+    setActiveSubpageHost(secEl);
+
+    if (secEl && !isMobileOrTablet) {
       const approxDiff = Math.abs(window.scrollY - secEl.offsetTop);
       if (approxDiff > 24 && typeof window.__sweepPageTransitionCurtain === 'function') {
         window.__sweepPageTransitionCurtain();
@@ -11429,6 +11904,11 @@ if (document.readyState === 'loading') {
       } else {
         window.scrollTo({ top: secEl.offsetTop, left: 0, behavior: 'instant' });
       }
+    } else if (secEl && typeof window.__sweepPageTransitionCurtain === 'function') {
+      const rect = secEl.getBoundingClientRect();
+      if (Math.abs(rect.top) > 40) {
+        window.__sweepPageTransitionCurtain();
+      }
     }
 
     document.documentElement.classList.add('mediq-subpage-locked');
@@ -11438,7 +11918,8 @@ if (document.readyState === 'loading') {
 
     requestAnimationFrame(() => {
       if (window.__isAnyMediqSubpageOpen && window.__isAnyMediqSubpageOpen()) {
-        if (secEl && Math.abs(secEl.getBoundingClientRect().top) > 2) {
+        setActiveSubpageHost(secEl);
+        if (secEl && window.innerWidth >= 1024 && Math.abs(secEl.getBoundingClientRect().top) > 2) {
           document.documentElement.classList.remove('mediq-subpage-locked');
           if (typeof window.grailSnapTo === 'function') {
             window.grailSnapTo(secEl);

@@ -45,17 +45,76 @@
     { name: "Johannesburg, South Africa", lon: 28.04, lat: -26.20, note: "International Supply Corridor", targetHub: "mindanao" }
   ];
 
-  // 6. Philippine Regional Market Coverage (Luzon, Visayas, Mindanao)
+  // 6. Philippine Regional Market Coverage (Primary Hubs + Nationwide Archipelago Nodes)
   var PH_HUBS = [
-    { id: "luzon", name: "LUZON", sub: "Luzon Market Coverage", lon: 120.98, lat: 14.60, color: "#ffffff" },
-    { id: "visayas", name: "VISAYAS", sub: "Visayas Market Coverage", lon: 123.89, lat: 10.31, color: "#72c5f8" },
-    { id: "mindanao", name: "MINDANAO", sub: "Mindanao Market Coverage", lon: 125.61, lat: 7.07, color: "#3aa0db" }
+    { id: "luzon", name: "LUZON", sub: "Metro Manila · Primary Luzon Hub", lon: 120.98, lat: 14.60, color: "#ffffff", primary: true },
+    { id: "visayas", name: "VISAYAS", sub: "Cebu · Primary Visayas Hub", lon: 123.89, lat: 10.31, color: "#72c5f8", primary: true },
+    { id: "mindanao", name: "MINDANAO", sub: "Davao · Primary Mindanao Hub", lon: 125.61, lat: 7.07, color: "#3aa0db", primary: true },
+
+    // Spread regional points across Northern, Central, Southern Luzon & Island Provinces
+    { id: "laoag", name: "Ilocos Norte", sub: "Northern Luzon Distribution Point", lon: 120.59, lat: 18.20, color: "#9ee0ff" },
+    { id: "tuguegarao", name: "Cagayan Valley", sub: "Northeastern Luzon Distribution Point", lon: 121.73, lat: 17.61, color: "#72c5f8" },
+    { id: "baguio", name: "Cordillera", sub: "Highland Northern Luzon Hub", lon: 120.59, lat: 16.40, color: "#9ee0ff" },
+    { id: "subic", name: "Central Luzon", sub: "Subic / Pampanga Corridor", lon: 120.28, lat: 14.84, color: "#72c5f8" },
+    { id: "batangas", name: "CALABARZON", sub: "Southern Tagalog Port Link", lon: 121.06, lat: 13.76, color: "#9ee0ff" },
+    { id: "calapan", name: "Mindoro", sub: "MIMAROPA Island Point", lon: 121.18, lat: 13.41, color: "#72c5f8" },
+    { id: "naga", name: "Camarines Sur", sub: "Upper Bicol Corridor", lon: 123.18, lat: 13.62, color: "#9ee0ff" },
+    { id: "legazpi", name: "Bicol / Albay", sub: "Southeastern Luzon Gateway", lon: 123.74, lat: 13.14, color: "#72c5f8" },
+    { id: "palawan", name: "Palawan", sub: "Puerto Princesa Western Island Link", lon: 118.74, lat: 9.74, color: "#9ee0ff" },
+
+    // Spread regional points across Western, Central & Eastern Visayas
+    { id: "iloilo", name: "Panay / Iloilo", sub: "Western Visayas Hospital Network", lon: 122.56, lat: 10.72, color: "#9ee0ff" },
+    { id: "tacloban", name: "Leyte / Samar", sub: "Eastern Visayas Regional Link", lon: 125.00, lat: 11.24, color: "#72c5f8" },
+    { id: "dumaguete", name: "Negros", sub: "Southern Visayas Island Link", lon: 123.31, lat: 9.31, color: "#9ee0ff" },
+
+    // Spread regional points across Northern, Caraga, Western & Southern Mindanao + Sulu
+    { id: "butuan", name: "Caraga", sub: "Northeastern Mindanao Corridor", lon: 125.54, lat: 8.95, color: "#72c5f8" },
+    { id: "cdo", name: "Northern Mindanao", sub: "Cagayan de Oro Regional Hub", lon: 124.64, lat: 8.48, color: "#9ee0ff" },
+    { id: "zamboanga", name: "Zamboanga Peninsula", sub: "Western Mindanao Regional Link", lon: 122.08, lat: 6.92, color: "#72c5f8" },
+    { id: "cotabato", name: "Bangsamoro / Cotabato", sub: "Central-West Mindanao Point", lon: 124.25, lat: 7.22, color: "#9ee0ff" },
+    { id: "gensan", name: "SOCCSKSARGEN", sub: "General Santos Southern Mindanao Point", lon: 125.17, lat: 6.11, color: "#72c5f8" },
+    { id: "sulu", name: "Sulu Archipelago", sub: "Southwestern Island Point", lon: 121.00, lat: 6.05, color: "#9ee0ff" }
   ];
 
+  // Curved nationwide distribution corridors connecting every major region across the archipelago
   var PH_CORRIDORS = [
-    ["luzon", "visayas"],
-    ["visayas", "mindanao"],
-    ["luzon", "mindanao"]
+    // Northern & Central Luzon Fan
+    ["luzon", "subic", -0.18],
+    ["subic", "baguio", -0.22],
+    ["baguio", "laoag", -0.20],
+    ["laoag", "tuguegarao", -0.24],
+    ["tuguegarao", "baguio", 0.18],
+    ["tuguegarao", "naga", 0.28],
+    // Southern Luzon, Bicol & MIMAROPA
+    ["luzon", "batangas", 0.14],
+    ["batangas", "calapan", -0.18],
+    ["calapan", "palawan", -0.26],
+    ["luzon", "naga", 0.22],
+    ["naga", "legazpi", 0.16],
+    ["legazpi", "tacloban", 0.24],
+    // Visayas Island Mesh
+    ["calapan", "iloilo", -0.14],
+    ["palawan", "iloilo", -0.18],
+    ["iloilo", "visayas", -0.15],
+    ["visayas", "tacloban", 0.18],
+    ["visayas", "dumaguete", -0.16],
+    ["dumaguete", "zamboanga", -0.20],
+    // Spine & Inter-Island Backbone
+    ["luzon", "visayas", 0.08],
+    ["visayas", "mindanao", 0.10],
+    // Mindanao Full-Region Network
+    ["tacloban", "butuan", 0.20],
+    ["butuan", "mindanao", 0.16],
+    ["visayas", "cdo", -0.12],
+    ["cdo", "butuan", -0.16],
+    ["cdo", "mindanao", 0.12],
+    ["cdo", "cotabato", -0.16],
+    ["cotabato", "zamboanga", -0.22],
+    ["zamboanga", "sulu", -0.24],
+    ["sulu", "palawan", -0.28],
+    ["cotabato", "mindanao", 0.14],
+    ["cotabato", "gensan", 0.18],
+    ["mindanao", "gensan", 0.16]
   ];
 
   var THEME = {
@@ -154,12 +213,12 @@
       activePins = [];
       var phBox = getPHBox();
 
-      // Regional hub positions
-      var phHubCoords = {
-        luzon: projectPH(120.98, 14.60, phBox),
-        visayas: projectPH(123.89, 10.31, phBox),
-        mindanao: projectPH(125.61, 7.07, phBox)
-      };
+      // Regional & nationwide hub positions
+      var phHubCoords = {};
+      for (var h = 0; h < PH_HUBS.length; h++) {
+        var phNode = PH_HUBS[h];
+        phHubCoords[phNode.id] = projectPH(phNode.lon, phNode.lat, phBox);
+      }
 
       // =======================================================================
       // 1. EDGE-TO-EDGE WORLD MAP (All 258 Countries, Zero Margins/Crop)
@@ -341,59 +400,84 @@
         activePins.push({ p: { name: hub.name, note: hub.sub }, x: phHubCoords[hub.id].x, y: phHubCoords[hub.id].y });
       }
 
-      // Domestic Distribution Corridors
+      // Domestic Curved Distribution Corridors Across Every Region
+      ctx.lineCap = "round";
       for (var c = 0; c < PH_CORRIDORS.length; c++) {
         var corr = PH_CORRIDORS[c];
         var p1 = phHubCoords[corr[0]];
         var p2 = phHubCoords[corr[1]];
         if (!p1 || !p2) continue;
 
-        ctx.strokeStyle = "rgba(114, 197, 248, 0.45)";
-        ctx.lineWidth = 1.3;
+        var dx = p2.x - p1.x;
+        var dy = p2.y - p1.y;
+        var len = Math.hypot(dx, dy) || 1;
+        var bend = (corr[2] || 0.16) * Math.min(80, len * 0.65);
+        var cx = (p1.x + p2.x) * 0.5 - (dy / len) * bend;
+        var cy = (p1.y + p2.y) * 0.5 + (dx / len) * bend;
+
+        ctx.strokeStyle = "rgba(114, 197, 248, 0.34)";
+        ctx.lineWidth = 1.1;
         ctx.beginPath();
         ctx.moveTo(p1.x, p1.y);
-        ctx.lineTo(p2.x, p2.y);
+        ctx.quadraticCurveTo(cx, cy, p2.x, p2.y);
         ctx.stroke();
 
-        // Animated Courier Distribution Pulse
-        var pPh = (t * 1.5 + c * 0.33) % 1;
-        var pulseX = p1.x + (p2.x - p1.x) * pPh;
-        var pulseY = p1.y + (p2.y - p1.y) * pPh;
+        // Animated Courier Distribution Comet & Pulse Packet along Curved Corridor
+        var pPh = (t * 0.72 + (c * 0.137)) % 1;
+        var omt = 1 - pPh;
+        var pulseX = omt * omt * p1.x + 2 * omt * pPh * cx + pPh * pPh * p2.x;
+        var pulseY = omt * omt * p1.y + 2 * omt * pPh * cy + pPh * pPh * p2.y;
+
+        var tailPh = Math.max(0, pPh - 0.14);
+        var omtTail = 1 - tailPh;
+        var tailX = omtTail * omtTail * p1.x + 2 * omtTail * tailPh * cx + tailPh * tailPh * p2.x;
+        var tailY = omtTail * omtTail * p1.y + 2 * omtTail * tailPh * cy + tailPh * tailPh * p2.y;
+
+        ctx.strokeStyle = "rgba(158, 224, 255, 0.55)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(tailX, tailY);
+        ctx.lineTo(pulseX, pulseY);
+        ctx.stroke();
 
         ctx.fillStyle = "#ffffff";
         ctx.beginPath();
-        ctx.arc(pulseX, pulseY, 2.4, 0, Math.PI * 2);
+        ctx.arc(pulseX, pulseY, 1.9, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // Render Prominent Hub Pins with Radar Shockwave Rings & Labels
+      // Render Nationwide Regional Points & Prominent Hub Pins
       for (var p = 0; p < PH_HUBS.length; p++) {
         var hub = PH_HUBS[p];
         var pt = phHubCoords[hub.id];
+        if (!pt) continue;
+        var isPrimary = !!hub.primary;
 
-        // Animated Sonar Arrival Wave
-        var ring = (t * 2.0 + p * 0.33) % 1;
-        ctx.globalAlpha = (1 - ring) * 0.75;
+        // Animated Staggered Sonar Ring
+        var ring = (t * (isPrimary ? 1.85 : 1.15) + p * 0.19) % 1;
+        ctx.globalAlpha = (1 - ring) * (isPrimary ? 0.75 : 0.42);
         ctx.strokeStyle = hub.color;
-        ctx.lineWidth = 1.4;
+        ctx.lineWidth = isPrimary ? 1.4 : 1.0;
         ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 4 + ring * 16, 0, Math.PI * 2);
+        ctx.arc(pt.x, pt.y, (isPrimary ? 4 : 2.4) + ring * (isPrimary ? 16 : 10), 0, Math.PI * 2);
         ctx.stroke();
         ctx.globalAlpha = 1;
 
         // Glowing Pin Beacon
         ctx.fillStyle = hub.color;
         ctx.shadowColor = "#72c5f8";
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = isPrimary ? 10 : 6;
         ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
+        ctx.arc(pt.x, pt.y, isPrimary ? 4.5 : 2.7, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        // Pin Label Flag (LUZON, VISAYAS, MINDANAO)
-        ctx.font = "bold 11px system-ui, -apple-system, sans-serif";
-        ctx.fillStyle = "#ffffff";
-        ctx.fillText(hub.name, pt.x + 9, pt.y + 4);
+        // Primary Regional Label Flags (LUZON, VISAYAS, MINDANAO)
+        if (isPrimary) {
+          ctx.font = 'bold 11px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+          ctx.fillStyle = "#ffffff";
+          ctx.fillText(hub.name, pt.x + 9, pt.y + 4);
+        }
       }
 
       ctx.globalAlpha = 1;
