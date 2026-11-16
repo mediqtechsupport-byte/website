@@ -31,6 +31,8 @@ dist-cf/
 # Local tooling, auth & temporary scratch backups
 .agents/
 preview-auth/
+assets/video/about-rayner.mp4
+scratch/world-countries.geojson
 scratch/*.before-*.html
 scratch/*.html
 scratch/used_assets.json
