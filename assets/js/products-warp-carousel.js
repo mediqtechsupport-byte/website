@@ -1115,7 +1115,7 @@ void main(){
         canvas.height = H;
         restDrawn = false;
       }
-      unit = Math.min(W / 720, H / 440);
+      unit = Math.min(W / (cssW < 640 ? 450 : 720), H / 440);
       const want = Math.min(896, Math.max(256, Math.round(CW * unit * 1.18)));
       if (list.length && (want !== texW || !lastUploadedSignature)) paintAll(want);
     }

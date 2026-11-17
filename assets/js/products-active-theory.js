@@ -717,9 +717,9 @@
 
   const SUBNAV_ITEMS = [
     { label: 'OVERVIEW', slide: 0 },
-    { label: 'MEDICAL DEVICES', slide: 1 },
-    { label: 'PHARMACEUTICAL', slide: 2 },
-    { label: 'DEVICES & EQUIPMENT', slide: 3 },
+    { label: 'OPHTHALMOLOGY \u00B7 IOLS', slide: 1 },
+    { label: 'OPHTHALMIC OVDS', slide: 2 },
+    { label: 'FUTURE PORTFOLIO', slide: 3 },
     { label: 'PRODUCT CATALOGS', slide: 4 }
   ];
 

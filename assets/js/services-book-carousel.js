@@ -398,7 +398,12 @@
             <div class="bc-page-spread">
               <div class="bc-page-toprow">
                 <span class="bc-page-kicker">CORE DELIVERABLES &bull; 01 &mdash; 04</span>
-                <span class="bc-page-ref">P. ${escapeHtml(book.num)}</span>
+                <div class="bc-page-toprow-right">
+                  <span class="bc-page-ref">P. ${escapeHtml(book.num)}</span>
+                  <button type="button" class="bc-book-top-close" aria-label="Close service book">
+                    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2l10 10M12 2L2 12"/></svg>
+                  </button>
+                </div>
               </div>
               <div class="bc-paper-cards">${cardsHtml}</div>
             </div>
@@ -474,21 +479,7 @@
       introFocusIdx: 0,
     };
 
-    // Inject interactive Zoom toolbar directly above the reading view (clear of book text)
-    let zoomBar = slide.querySelector('#srv-bc-zoom-bar');
-    if (!zoomBar) {
-      zoomBar = document.createElement('div');
-      zoomBar.id = 'srv-bc-zoom-bar';
-      zoomBar.className = 'bc-zoom-bar';
-      zoomBar.setAttribute('aria-label', 'Book Zoom Controls');
-      zoomBar.innerHTML =
-        '<button type="button" data-bc-zoom="out" class="bc-zoom-btn" aria-label="Zoom out">&minus;</button>' +
-        '<button type="button" data-bc-zoom="reset" class="bc-zoom-pct" title="Reset Zoom (100%)">100%</button>' +
-        '<button type="button" data-bc-zoom="in" class="bc-zoom-btn" aria-label="Zoom in">+</button>' +
-        '<span class="bc-zoom-hint hidden sm:inline">Pinch / Scroll / Drag</span>';
-      slide.appendChild(zoomBar);
-    }
-    const zoomPctBtn = zoomBar.querySelector('[data-bc-zoom="reset"]');
+    const zoomPctBtn = null;
 
     let openW = BASE_OPEN_W;
     let gap = BASE_GAP;
@@ -649,6 +640,92 @@
       }
     }
 
+    function syncMobileReader(idx) {
+      let mobileReader = slide.querySelector('#srv-bc-mobile-reader');
+      if (!mobileReader) {
+        mobileReader = document.createElement('div');
+        mobileReader.id = 'srv-bc-mobile-reader';
+        mobileReader.className = 'bc-mobile-reader';
+        mobileReader.setAttribute('aria-label', 'Service Book Mobile Reading View');
+        slide.appendChild(mobileReader);
+      }
+      if (idx < 0 || !SERVICE_BOOKS[idx]) {
+        mobileReader.innerHTML = '';
+        mobileReader.setAttribute('aria-hidden', 'true');
+        return;
+      }
+      const book = SERVICE_BOOKS[idx];
+      const total = SERVICE_BOOKS.length;
+      const prevIdx = (idx - 1 + total) % total;
+      const nextIdx = (idx + 1) % total;
+      const cards = book.cards && book.cards.length ? book.cards : [];
+      const highlights = book.highlights && book.highlights.length ? book.highlights : [];
+      mobileReader.setAttribute('aria-hidden', 'false');
+      mobileReader.dataset.mobilePage = 'overview';
+      mobileReader.scrollTop = 0;
+      mobileReader.innerHTML = `
+        <div class="bc-mobile-sheet" data-mob-page="overview">
+          <div class="bc-mobile-header">
+            <span class="bc-spread-eyebrow">${escapeHtml(book.num)} / 06 &middot; SERVICE PILLAR</span>
+            <button type="button" class="bc-book-top-close bc-mobile-close-btn" aria-label="Close service book">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2l10 10M12 2L2 12"/></svg>
+            </button>
+          </div>
+          <div class="bc-mobile-tabs" role="tablist" aria-label="Book pages">
+            <button type="button" role="tab" aria-selected="true" data-mob-tab="overview" class="bc-mobile-tab is-active">Overview</button>
+            <button type="button" role="tab" aria-selected="false" data-mob-tab="deliverables" class="bc-mobile-tab">Deliverables (0${cards.length})</button>
+          </div>
+          <div class="bc-mobile-pane bc-mobile-pane--overview">
+            ${book.img ? `<div class="bc-mobile-banner"><img src="${escapeHtml(book.img)}" alt="${escapeHtml(book.title)}" loading="lazy" /></div>` : ''}
+            <div class="bc-mobile-hero">
+              <div class="bc-spread-heading">
+                <span class="bc-spread-volnum">${escapeHtml(book.num)}</span>
+                <h3 class="bc-mobile-title">${escapeHtml(book.title)}</h3>
+              </div>
+              <p class="bc-mobile-sub">${escapeHtml(book.subtitle)}</p>
+              <div class="bc-mobile-highlights">
+                <div class="bc-mobile-highlights__head">
+                  <span>Key Scope &amp; Standards</span>
+                  <span class="bc-mobile-badge">${escapeHtml(book.badge || 'MEDIQ SOP')}</span>
+                </div>
+                <ul class="bc-mobile-list">${highlights.map((h, i) => `<li><span class="bc-mobile-idx">0${i + 1}</span><span>${escapeHtml(h)}</span></li>`).join('')}</ul>
+              </div>
+              <div class="bc-mobile-nav">
+                <button type="button" class="bc-spread-navbtn" data-book-jump="${prevIdx}">&larr;&nbsp;${escapeHtml(SERVICE_BOOKS[prevIdx].num)}</button>
+                <button type="button" class="bc-spread-inquire" data-mob-tab="deliverables">Deliverables&nbsp;&rarr;</button>
+                <button type="button" class="bc-spread-navbtn" data-book-jump="${nextIdx}">${escapeHtml(SERVICE_BOOKS[nextIdx].num)}&nbsp;&rarr;</button>
+              </div>
+            </div>
+          </div>
+          <div class="bc-mobile-pane bc-mobile-pane--deliverables" hidden>
+            <div class="bc-mobile-paper">
+              <div class="bc-mobile-paper__top">
+                <span>Core Deliverables</span>
+                <span>Pillar ${escapeHtml(book.num)}</span>
+              </div>
+              <div class="bc-mobile-cards">
+                ${cards.map((c) => `
+                  <article class="bc-mobile-card">
+                    <div class="bc-mobile-card__meta">
+                      <span class="bc-mobile-card__code">${escapeHtml(c.code)}</span>
+                      <span class="bc-mobile-card__tag">${escapeHtml(c.tag)}</span>
+                    </div>
+                    <h4 class="bc-mobile-card__title">${escapeHtml(c.title)}</h4>
+                    <p class="bc-mobile-card__desc">${escapeHtml(c.desc)}</p>
+                  </article>
+                `).join('')}
+              </div>
+              <div class="bc-mobile-nav bc-mobile-nav--paper">
+                <button type="button" class="bc-spread-navbtn" data-mob-tab="overview">&larr;&nbsp;Overview</button>
+                <button type="button" class="bc-spread-inquire" data-book-inquiry="${escapeHtml(book.inquiry || 'Institutional Supply')}">Inquire&nbsp;&rarr;</button>
+                <button type="button" class="bc-spread-navbtn" data-book-jump="${nextIdx}">${escapeHtml(SERVICE_BOOKS[nextIdx].num)}&nbsp;&rarr;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     function openBookSpread(idx) {
       const clamped = clamp(idx);
       if (!SERVICE_BOOKS[clamped]) return;
@@ -660,6 +737,7 @@
       state.target = clamped;
       state.opened = clamped;
       setBookZoom(1.0);
+      syncMobileReader(clamped);
       slide.classList.add('is-reading-open');
       if (closeBtn) closeBtn.classList.add('visible');
       wrappers.forEach((el, k) => {
@@ -670,6 +748,7 @@
     function closeBookSpread() {
       state.opened = -1;
       setBookZoom(1.0);
+      syncMobileReader(-1);
       slide.classList.remove('is-reading-open');
       if (closeBtn) closeBtn.classList.remove('visible');
       wrappers.forEach((el) => el.classList.remove('is-book-open'));
@@ -868,6 +947,12 @@
 
     wrappers.forEach((el, i) => {
       el.addEventListener('click', (e) => {
+        const topCloseBtn = e.target.closest('.bc-book-top-close');
+        if (topCloseBtn) {
+          e.stopPropagation();
+          closeBookSpread();
+          return;
+        }
         if (state.moved) return;
 
         const inquiryBtn = e.target.closest('[data-book-inquiry]');
@@ -922,26 +1007,66 @@
       });
     }
 
-    if (zoomBar) {
-      zoomBar.addEventListener('click', (e) => {
+    slide.addEventListener('click', (e) => {
+      const mobClose = e.target.closest('.bc-mobile-close-btn');
+      if (mobClose) {
         e.stopPropagation();
-        const btn = e.target.closest('[data-bc-zoom]');
-        if (!btn) return;
-        const mode = btn.getAttribute('data-bc-zoom');
-        if (mode === 'in') {
-          setBookZoom(state.zoomTarget < 1.25 ? 1.65 : state.zoomTarget + 0.45);
-        } else if (mode === 'out') {
-          setBookZoom(state.zoomTarget - 0.45);
-        } else if (mode === 'reset') {
-          setBookZoom(1.0);
+        closeBookSpread();
+        return;
+      }
+      const mobTabBtn = e.target.closest('#srv-bc-mobile-reader [data-mob-tab]');
+      if (mobTabBtn) {
+        e.stopPropagation();
+        const targetTab = mobTabBtn.getAttribute('data-mob-tab');
+        const mobileReader = slide.querySelector('#srv-bc-mobile-reader');
+        if (mobileReader && (targetTab === 'overview' || targetTab === 'deliverables')) {
+          mobileReader.scrollTop = 0;
+          mobileReader.dataset.mobilePage = targetTab;
+          mobileReader.querySelectorAll('.bc-mobile-tab').forEach((tb) => {
+            const active = tb.getAttribute('data-mob-tab') === targetTab;
+            tb.classList.toggle('is-active', active);
+            tb.setAttribute('aria-selected', String(active));
+          });
+          const ovPane = mobileReader.querySelector('.bc-mobile-pane--overview');
+          const delPane = mobileReader.querySelector('.bc-mobile-pane--deliverables');
+          if (ovPane) ovPane.hidden = targetTab !== 'overview';
+          if (delPane) delPane.hidden = targetTab !== 'deliverables';
         }
-      });
-    }
+        return;
+      }
+      const mobJump = e.target.closest('#srv-bc-mobile-reader [data-book-jump]');
+      if (mobJump) {
+        e.stopPropagation();
+        const nextIdx = Number(mobJump.getAttribute('data-book-jump'));
+        if (!Number.isNaN(nextIdx)) openBookSpread(nextIdx);
+        return;
+      }
+      const mobInq = e.target.closest('#srv-bc-mobile-reader [data-book-inquiry]');
+      if (mobInq) {
+        e.stopPropagation();
+        const topic = mobInq.getAttribute('data-book-inquiry');
+        closeBookSpread();
+        const sel = document.getElementById('inq-product');
+        if (sel && topic) {
+          sel.value = topic;
+          sel.dispatchEvent(new Event('change'));
+        }
+        if (window.navigateToSection) {
+          window.navigateToSection('#contact');
+        } else {
+          document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
 
     if (sceneEl) {
       sceneEl.addEventListener('click', (e) => {
+        if (e.target.closest('.bc-book-top-close')) {
+          e.stopPropagation();
+          closeBookSpread();
+          return;
+        }
         if (state.opened === -1 || state.moved || state.panMoved) return;
-        if (e.target.closest('#srv-bc-zoom-bar')) return;
         if (!e.target.closest('.bc-wrapper')) {
           closeBookSpread();
         }
@@ -949,7 +1074,7 @@
 
       sceneEl.addEventListener('dblclick', (e) => {
         if (!state.active || state.opened === -1) return;
-        if (e.target.closest('button, a, #srv-bc-zoom-bar')) return;
+        if (e.target.closest('button, a')) return;
         e.preventDefault();
         if (state.zoomTarget > 1.2) {
           setBookZoom(1.0);
@@ -978,7 +1103,7 @@
 
       sceneEl.addEventListener('mousedown', (e) => {
         if (!state.active) return;
-        if (e.target.closest('button, a, #srv-bc-zoom-bar')) return;
+        if (e.target.closest('button, a')) return;
         if (state.opened !== -1 && state.zoomTarget > 1.03) {
           state.panDragging = true;
           state.panMoved = false;
@@ -1036,7 +1161,7 @@
               return;
             }
             if (e.touches.length === 1) {
-              if (!e.target.closest('button, a, #srv-bc-zoom-bar')) {
+              if (!e.target.closest('button, a')) {
                 const nowMs = Date.now();
                 if (nowMs - state.lastTapMs < 290) {
                   state.lastTapMs = 0;
@@ -1049,7 +1174,7 @@
                 }
                 state.lastTapMs = nowMs;
               }
-              if (state.zoomTarget > 1.03 && !e.target.closest('button, a, #srv-bc-zoom-bar')) {
+              if (state.zoomTarget > 1.03 && !e.target.closest('button, a')) {
                 state.panDragging = true;
                 state.panMoved = false;
                 state.panStartX = e.touches[0].clientX;

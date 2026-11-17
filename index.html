@@ -435,9 +435,18 @@
     }
 
     @media (max-width: 1023px) {
-      html {
-        scroll-snap-type: none !important;
+      html:not(.mediq-subpage-locked) {
+        scroll-snap-type: y mandatory !important;
+        scroll-padding-top: 0 !important;
         scroll-behavior: smooth;
+      }
+      html:not(.mediq-subpage-locked) .page-snap-section,
+      html:not(.mediq-subpage-locked) #site-footer {
+        scroll-snap-align: start !important;
+        scroll-snap-stop: always !important;
+      }
+      html:not(.mediq-subpage-locked) #footer-map-band {
+        scroll-snap-align: end !important;
       }
     }
 
@@ -2844,9 +2853,9 @@
       }
 
       #brands #brands-aller-silhouette-stage {
-        opacity: 0.34;
-        -webkit-mask-image: radial-gradient(circle at 75% 28%, rgba(0, 0, 0, 0.85) 0%, transparent 72%) !important;
-        mask-image: radial-gradient(circle at 75% 28%, rgba(0, 0, 0, 0.85) 0%, transparent 72%) !important;
+        opacity: 0.62;
+        -webkit-mask-image: radial-gradient(ellipse 92% 76% at 54% 46%, rgba(0, 0, 0, 0.96) 36%, rgba(0, 0, 0, 0.45) 78%, transparent 100%) !important;
+        mask-image: radial-gradient(ellipse 92% 76% at 54% 46%, rgba(0, 0, 0, 0.96) 36%, rgba(0, 0, 0, 0.45) 78%, transparent 100%) !important;
       }
 
       /* Full-screen isolated overlay for active mobile subpages (eliminates section offset shift & neighboring bleed) */
@@ -3119,12 +3128,16 @@
         padding-right: 16px !important;
       }
 
-      /* Keep Products / Resources sub-captions sleek 1-line summaries on narrow phones so all 01–04 fit cleanly */
-      #products .lottici-index-row > div > span:nth-child(2),
-      #resources .lottici-index-row > div > span:nth-child(2) {
+      /* Keep Products sub-captions sleek 1-line summaries on narrow phones */
+      #products .lottici-index-row > div > span:nth-child(2) {
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
+      }
+      #resources .lottici-index-row > div > span:nth-child(2) {
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
       }
 
       #activities #news-cf-stage {
@@ -3210,13 +3223,19 @@
 
       #footer-map-band #contact-map-wrap {
         height: 295px !important;
+        width: 100% !important;
       }
 
-      #footer-map-band #contact-map-stage > div:first-of-type {
-        left: 12px !important;
-        top: 10px !important;
-        padding: 8px 10px !important;
-        max-width: calc(100% - 24px) !important;
+      #footer-map-band #contact-maplibre-host,
+      #footer-map-band .maplibregl-map,
+      #footer-map-band .maplibregl-canvas-container,
+      #footer-map-band .maplibregl-canvas {
+        position: absolute !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        padding: 0 !important;
       }
     }
 
@@ -3716,7 +3735,12 @@
       z-index: 99999;
       pointer-events: auto;
       isolation: isolate;
-      background: var(--pl-dark);
+      background-color: #030916;
+      background-image:
+        radial-gradient(ellipse 72% 62% at 50% 42%, rgba(20, 58, 134, 0.56) 0%, rgba(10, 29, 64, 0.36) 46%, transparent 100%),
+        radial-gradient(circle at 20% 14%, rgba(58, 160, 219, 0.14) 0%, transparent 48%),
+        radial-gradient(circle at 82% 86%, rgba(37, 99, 235, 0.18) 0%, transparent 52%),
+        linear-gradient(155deg, #020814 0%, #061430 48%, #0a1d40 100%);
       will-change: opacity;
       overflow: hidden;
       user-select: none;
@@ -3761,7 +3785,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: clamp(1.1rem, 2.4vw, 1.9rem);
+      gap: clamp(1.25rem, 3vw, 2rem);
       width: 100%;
       padding: 0 1.5rem;
       display: flex;
@@ -3769,20 +3793,58 @@
       inset: 0;
     }
 
-    .pl-wordmark {
+    .pl-loader {
+      width: clamp(236px, 52vw, 380px);
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
       opacity: 0;
       will-change: opacity, transform;
-      line-height: 0;
     }
 
-    .pl-logo {
-      transform-origin: 50% 50%;
-      will-change: transform;
-      width: clamp(15rem, 46vw, 30rem);
-      height: auto;
-      display: block;
-      overflow: visible;
-      filter: drop-shadow(0 12px 36px rgba(3, 10, 24, 0.55));
+    .pl-loader-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(186, 220, 252, 0.78);
+    }
+
+    .pl-loader-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pl-loader-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #bae6fd 0%, #3aa0db 100%);
+      box-shadow: 0 0 12px rgba(114, 197, 248, 0.9);
+    }
+
+    .pl-bar-track {
+      position: relative;
+      width: 100%;
+      height: 2.5px;
+      border-radius: 9999px;
+      background: rgba(114, 197, 248, 0.14);
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(114, 197, 248, 0.08);
+    }
+
+    .pl-bar-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 1%;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, #1d4ed8 0%, #3aa0db 46%, #72c5f8 82%, #e0f2fe 100%);
+      box-shadow: 0 0 14px rgba(114, 197, 248, 0.65);
+      will-change: width;
     }
 
     .pl-count {
@@ -3790,39 +3852,46 @@
       pointer-events: none;
       opacity: 0;
       will-change: opacity, transform;
-      align-items: flex-end;
-      gap: 0.35em;
+      align-items: baseline;
+      gap: 0.24em;
       display: flex;
       position: absolute;
-      bottom: clamp(1.5rem, 4vw, 3.5rem);
-      right: clamp(1.5rem, 4vw, 3.5rem);
+      bottom: clamp(1.5rem, 4vw, 3.25rem);
+      right: clamp(1.35rem, 4vw, 3.25rem);
     }
 
     .pl-counter {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       letter-spacing: -0.04em;
-      color: var(--pl-accent);
       font-variant-numeric: tabular-nums;
       font-feature-settings: "tnum" 1;
       white-space: nowrap;
       text-align: right;
       will-change: contents;
       contain: layout style paint;
-      width: 3ch;
-      font-size: clamp(3rem, 9vw, 6.5rem);
-      line-height: 0.82;
-      font-weight: 500;
+      min-width: 3ch;
+      font-size: clamp(3rem, 9vw, 6.2rem);
+      line-height: 0.86;
+      font-weight: 600;
       display: block;
-      text-shadow: 0 0 28px rgba(56, 189, 248, 0.32);
+      background: linear-gradient(135deg, #ffffff 0%, #bae6fd 34%, #72c5f8 68%, #2563eb 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: #72c5f8;
+      filter: drop-shadow(0 0 26px rgba(56, 189, 248, 0.34));
     }
 
     .pl-count-unit {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing: 0.16em;
-      color: var(--pl-accent);
-      padding-bottom: 0.15em;
-      font-size: clamp(0.75rem, 1.6vw, 1rem);
+      letter-spacing: 0.14em;
+      padding-bottom: 0.12em;
+      font-size: clamp(0.85rem, 1.8vw, 1.15rem);
+      font-weight: 600;
       line-height: 1;
+      background: linear-gradient(135deg, #bae6fd 0%, #3aa0db 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: #72c5f8;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -3958,112 +4027,41 @@
 </head>
 
 <body class="min-h-[100svh] overflow-x-hidden bg-[#0a1d40]">
-  <!-- ============== TIB DIGITAL INSPIRED SPLASH SCREEN (MQ + TRIANGLE LOGO) ============== -->
-  <div class="pl-root" id="splash" role="dialog" aria-label="MQ Intro Preloader">
+  <!-- ============== MINIMAL GRADIENT LOADING SPLASH SCREEN (1-100 IN MEDIQ PALETTE) ============== -->
+  <div class="pl-root" id="splash" role="dialog" aria-label="MEDIQ Preloader">
     <div class="pl-glow-mount" id="pl-glow-mount" aria-hidden="true">
       <canvas class="pl-glow" id="pl-glow-canvas"></canvas>
     </div>
     <div class="pl-grain" id="pl-grain" aria-hidden="true"></div>
     <div class="pl-stage">
-      <div class="pl-wordmark" id="pl-wordmark">
-        <svg class="pl-logo" id="pl-logo-svg" viewBox="0 0 194 71" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MQ">
-          <defs>
-            <linearGradient id="pl-mark-grad" x1="146" y1="4" x2="146" y2="64" gradientUnits="userSpaceOnUse">
-              <stop offset="0" stop-color="#72c5f8"></stop>
-              <stop offset="0.55" stop-color="#38bdf8"></stop>
-              <stop offset="1" stop-color="#3aa0db"></stop>
-            </linearGradient>
-            <linearGradient id="pl-type-edge" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#fff" stop-opacity="0"></stop>
-              <stop offset="0.13" stop-color="#fff" stop-opacity="1"></stop>
-              <stop offset="1" stop-color="#fff" stop-opacity="1"></stop>
-            </linearGradient>
-            <radialGradient id="pl-head-glow">
-              <stop offset="0" stop-color="#ffffff" stop-opacity="1"></stop>
-              <stop offset="0.35" stop-color="#bae6fd" stop-opacity="0.78"></stop>
-              <stop offset="1" stop-color="#38bdf8" stop-opacity="0"></stop>
-            </radialGradient>
-            <linearGradient data-lg="sheen-grad" id="pl-sheen-grad" gradientUnits="userSpaceOnUse" gradientTransform="rotate(18 97 35)" x1="-90" y1="0" x2="-20" y2="0">
-              <stop offset="0" stop-color="#fff" stop-opacity="0"></stop>
-              <stop offset="0.5" stop-color="#fff" stop-opacity="1"></stop>
-              <stop offset="1" stop-color="#fff" stop-opacity="0"></stop>
-            </linearGradient>
-            <mask id="pl-type-mask" maskUnits="userSpaceOnUse" x="-10" y="0" width="115" height="130">
-              <rect data-lg="wipe-m" x="-4" y="61" width="52" height="58" fill="url(#pl-type-edge)"></rect>
-              <rect data-lg="wipe-q" x="50" y="61" width="49" height="58" fill="url(#pl-type-edge)"></rect>
-            </mask>
-            <mask id="pl-mark-mask" maskUnits="userSpaceOnUse" x="-30" y="-30" width="260" height="140">
-              <g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
-                <path data-lg="ink-a" d="M 109.5 63.5 L 144.2 3.5" stroke-width="12"></path>
-                <path data-lg="ink-b" d="M 153 6 L 181.5 58.4 L 124.5 58.4 L 153 6" stroke-width="12"></path>
-                <path data-lg="ink-c" d="M 157.2 52.2 L 169.8 52.2" stroke-width="9"></path>
-              </g>
-            </mask>
-            <clipPath id="pl-type-clip">
-              <path d="M 0 56.4 V 12.9 H 9.6 L 23 35.8 L 36.4 12.9 H 46 V 56.4 H 36.8 V 28.2 L 25.8 46.8 H 20.2 L 9.2 28.2 V 56.4 H 0 Z"></path>
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M 74.5 12.5 C 87.2 12.5 95.5 21.0 95.5 34.5 C 95.5 42.1 92.2 48.3 86.6 52.1 L 94.2 59.8 H 82.8 L 78.2 55.1 C 76.9 55.3 75.7 55.5 74.5 55.5 C 61.8 55.5 53.5 47.0 53.5 34.5 C 53.5 21.0 61.8 12.5 74.5 12.5 Z M 74.5 20.8 C 66.8 20.8 62.7 26.2 62.7 34.5 C 62.7 42.8 66.8 47.2 74.5 47.2 C 82.2 47.2 86.3 42.8 86.3 34.5 C 86.3 26.2 82.2 20.8 74.5 20.8 Z"></path>
-            </clipPath>
-            <clipPath id="pl-mark-clip">
-              <path d="M 106 62 L 139.5 5 H 147.8 L 114.3 62 H 106 Z"></path>
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M 153 5 L 186.5 62 H 119.5 L 153 5 Z M 153 19.5 L 132.2 54.8 H 161.2 L 158.4 49.8 H 167.2 L 170.0 54.8 H 173.8 L 153 19.5 Z"></path>
-            </clipPath>
-          </defs>
-
-          <!-- Masked White MQ Wordmark + Diagonal Sheen -->
-          <g mask="url(#pl-type-mask)">
-            <g fill="#ffffff">
-              <path d="M 0 56.4 V 12.9 H 9.6 L 23 35.8 L 36.4 12.9 H 46 V 56.4 H 36.8 V 28.2 L 25.8 46.8 H 20.2 L 9.2 28.2 V 56.4 H 0 Z"></path>
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M 74.5 12.5 C 87.2 12.5 95.5 21.0 95.5 34.5 C 95.5 42.1 92.2 48.3 86.6 52.1 L 94.2 59.8 H 82.8 L 78.2 55.1 C 76.9 55.3 75.7 55.5 74.5 55.5 C 61.8 55.5 53.5 47.0 53.5 34.5 C 53.5 21.0 61.8 12.5 74.5 12.5 Z M 74.5 20.8 C 66.8 20.8 62.7 26.2 62.7 34.5 C 62.7 42.8 66.8 47.2 74.5 47.2 C 82.2 47.2 86.3 42.8 86.3 34.5 C 86.3 26.2 82.2 20.8 74.5 20.8 Z"></path>
-            </g>
-            <g data-lg="sheen-type" clip-path="url(#pl-type-clip)" opacity="0">
-              <rect x="-60" y="-30" width="320" height="140" fill="url(#pl-sheen-grad)"></rect>
-            </g>
-          </g>
-
-          <!-- Masked Triangle Logo (Parallel Slash + Hollow Triangle with Bottom-Right Q-Notch) + Diagonal Sheen -->
-          <g mask="url(#pl-mark-mask)">
-            <g fill="url(#pl-mark-grad)">
-              <path d="M 106 62 L 139.5 5 H 147.8 L 114.3 62 H 106 Z"></path>
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M 153 5 L 186.5 62 H 119.5 L 153 5 Z M 153 19.5 L 132.2 54.8 H 161.2 L 158.4 49.8 H 167.2 L 170.0 54.8 H 173.8 L 153 19.5 Z"></path>
-            </g>
-            <g data-lg="sheen-mark" clip-path="url(#pl-mark-clip)" opacity="0">
-              <rect x="-60" y="-30" width="320" height="140" fill="url(#pl-sheen-grad)"></rect>
-            </g>
-          </g>
-
-          <!-- Technical Plotter Outlines for MQ & Laser Guide Lines for Triangle Logo -->
-          <g fill="none" stroke-linecap="round">
-            <g stroke="rgba(233, 236, 235, 0.9)" stroke-width="0.6" stroke-linejoin="round">
-              <path data-lg="plot-m" d="M 0 56.4 V 12.9 H 9.6 L 23 35.8 L 36.4 12.9 H 46 V 56.4 H 36.8 V 28.2 L 25.8 46.8 H 20.2 L 9.2 28.2 V 56.4 H 0 Z"></path>
-              <path data-lg="plot-q" d="M 74.5 12.5 C 87.2 12.5 95.5 21.0 95.5 34.5 C 95.5 42.1 92.2 48.3 86.6 52.1 L 94.2 59.8 H 82.8 L 78.2 55.1 C 76.9 55.3 75.7 55.5 74.5 55.5 C 61.8 55.5 53.5 47.0 53.5 34.5 C 53.5 21.0 61.8 12.5 74.5 12.5 Z M 74.5 20.8 C 66.8 20.8 62.7 26.2 62.7 34.5 C 62.7 42.8 66.8 47.2 74.5 47.2 C 82.2 47.2 86.3 42.8 86.3 34.5 C 86.3 26.2 82.2 20.8 74.5 20.8 Z"></path>
-            </g>
-            <g stroke="#bae6fd" stroke-width="0.95" stroke-linejoin="miter" stroke-miterlimit="6">
-              <path data-lg="guide-a" d="M 110.1 62 L 143.6 5"></path>
-              <path data-lg="guide-b" d="M 153 6 L 181.5 58.4 L 124.5 58.4 L 153 6"></path>
-              <path data-lg="guide-c" d="M 157.5 52.2 L 169.5 52.2"></path>
-            </g>
-          </g>
-
-          <!-- Glowing Laser Head Dot -->
-          <circle data-lg="head" r="3.6" cx="110.1" cy="62" fill="url(#pl-head-glow)" opacity="0"></circle>
-        </svg>
+      <div class="pl-loader" id="pl-loader" aria-hidden="true">
+        <div class="pl-loader-meta">
+          <span class="pl-loader-status">
+            <span class="pl-loader-dot"></span>
+            <span>MEDIQ PHARMA</span>
+          </span>
+          <span id="pl-loader-step">Loading</span>
+        </div>
+        <div class="pl-bar-track">
+          <div class="pl-bar-fill" id="pl-bar-fill"></div>
+        </div>
       </div>
     </div>
     <div class="pl-count" id="pl-count" role="status" aria-label="Loading">
-      <span class="pl-counter" id="pl-counter">000</span>
+      <span class="pl-counter" id="pl-counter">1</span>
       <span class="pl-count-unit" aria-hidden="true">%</span>
     </div>
   </div>
   <script>
     (function () {
       var splash = document.getElementById('splash');
-      var wordmarkEl = document.getElementById('pl-wordmark');
-      var svgEl = document.getElementById('pl-logo-svg');
+      var loaderEl = document.getElementById('pl-loader');
+      var barFillEl = document.getElementById('pl-bar-fill');
       var countEl = document.getElementById('pl-count');
       var counterEl = document.getElementById('pl-counter');
       var grainEl = document.getElementById('pl-grain');
       var glowCanvas = document.getElementById('pl-glow-canvas');
-      if (!splash || !svgEl) return;
+      if (!splash) return;
 
       var glowCtx = glowCanvas ? glowCanvas.getContext('2d') : null;
       var done = false;
@@ -4075,9 +4073,6 @@
       function clamp01(v) {
         return v < 0 ? 0 : v > 1 ? 1 : v;
       }
-      function range01(v, a, b) {
-        return clamp01((v - a) / (b - a));
-      }
       function easeOutCubic(t) {
         return 1 - Math.pow(1 - t, 3);
       }
@@ -4088,115 +4083,7 @@
         return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
       }
 
-      // Prepare SVG stroke-dasharray / stroke-dashoffset for plotter, guides, and ink masks
-      function q(name) {
-        return svgEl.querySelector('[data-lg="' + name + '"]');
-      }
-      function prepStroke(name, fallbackLen) {
-        var el = q(name);
-        if (!el) return null;
-        var len = 0;
-        try { len = el.getTotalLength(); } catch (e) { len = 0; }
-        if (!len || !isFinite(len)) len = fallbackLen || 1;
-        el.style.strokeDasharray = String(len);
-        el.style.strokeDashoffset = String(len);
-        return { el: el, len: len };
-      }
-      function setStrokeProgress(item, p) {
-        if (!item || !item.el) return;
-        item.el.style.strokeDashoffset = String(item.len * (1 - p));
-      }
-
-      var letters = ['m', 'q'].map(function (ch) {
-        return {
-          plot: prepStroke('plot-' + ch, 260),
-          ink: q('wipe-' + ch)
-        };
-      });
-      var guideA = prepStroke('guide-a', 66);
-      var guideB = prepStroke('guide-b', 180);
-      var guideC = prepStroke('guide-c', 14);
-      var inkA = prepStroke('ink-a', 69);
-      var inkB = prepStroke('ink-b', 182);
-      var inkC = prepStroke('ink-c', 15);
-      var headEl = q('head');
-      var sheenType = q('sheen-type');
-      var sheenMark = q('sheen-mark');
-      var sheenGrad = q('sheen-grad');
-
-      function setLogoProgress(e) {
-        // 1. Plotter outlines & upward wipe for M and Q (0.00 -> 0.36)
-        for (var idx = 0; idx < letters.length; idx++) {
-          var stagger = 0.08 * idx;
-          var item = letters[idx];
-          if (item.plot) {
-            setStrokeProgress(item.plot, easeOutCubic(range01(e, 0 + stagger, 0.24 + stagger)));
-            item.plot.el.style.opacity = String(1 - range01(e, 0.30 + stagger, 0.36 + stagger));
-          }
-          if (item.ink) {
-            var wipeP = easeInOutCubic(range01(e, 0.06 + stagger, 0.31 + stagger));
-            item.ink.setAttribute('y', String(4 + (1 - wipeP) * 57));
-          }
-        }
-
-        // 2. Triangle Logo laser guides + ink masks (0.30 -> 0.96)
-        var pA = easeInOutCubic(range01(e, 0.30, 0.52));
-        var pB = easeInOutCubic(range01(e, 0.52, 0.86));
-        var pC = easeOutCubic(range01(e, 0.86, 0.96));
-
-        setStrokeProgress(guideA, pA);
-        setStrokeProgress(guideB, pB);
-        setStrokeProgress(guideC, pC);
-
-        setStrokeProgress(inkA, pA);
-        setStrokeProgress(inkB, pB);
-        setStrokeProgress(inkC, pC);
-
-        if (guideA) guideA.el.style.opacity = String(1 - range01(e, 0.52, 0.58));
-        if (guideB) guideB.el.style.opacity = String(1 - range01(e, 0.86, 0.91));
-        if (guideC) guideC.el.style.opacity = String(1 - range01(e, 0.96, 1.0));
-
-        // 3. Glowing laser head tracking along active guide path
-        if (headEl) {
-          var headOp = range01(e, 0.28, 0.35) * (1 - range01(e, 0.93, 0.97));
-          headEl.style.opacity = String(headOp);
-          if (headOp > 0) {
-            var activeGuide = guideA;
-            var activeP = pA;
-            if (e >= 0.86) {
-              activeGuide = guideC;
-              activeP = pC;
-            } else if (e >= 0.52) {
-              activeGuide = guideB;
-              activeP = pB;
-            }
-            if (activeGuide && activeGuide.el) {
-              try {
-                var pt = activeGuide.el.getPointAtLength(activeGuide.len * activeP);
-                headEl.setAttribute('cx', String(pt.x));
-                headEl.setAttribute('cy', String(pt.y));
-              } catch (err) {}
-            }
-          }
-        }
-
-        // 4. Diagonal metallic sheen across MQ and Triangle Logo (0.95 -> 1.00)
-        var sheenP = range01(e, 0.95, 1.0);
-        var sheenOp = String(0.55 * Math.sin(Math.PI * sheenP));
-        if (sheenType) sheenType.style.opacity = sheenOp;
-        if (sheenMark) sheenMark.style.opacity = sheenOp;
-        if (sheenGrad && sheenP > 0 && sheenP < 1) {
-          var sx = -90 + 350 * easeInOutCubic(sheenP);
-          sheenGrad.setAttribute('x1', String(sx));
-          sheenGrad.setAttribute('x2', String(sx + 70));
-        }
-
-        svgEl.style.transform = 'scale(' + (1 + 0.018 * (1 - easeOutCubic(e))) + ')';
-      }
-
-      setLogoProgress(0);
-
-      // Ambient Aurora Glow Canvas (rises during 000->100 and swells on exit like TIB Digital)
+      // Ambient Aurora Glow Canvas (rises during 1->100 and swells softly on exit)
       var cw = window.innerWidth;
       var ch = window.innerHeight;
       function resizeGlow() {
@@ -4217,7 +4104,6 @@
         var ex = clamp01(exitP);
         var grow = ex * (0.55 + 0.45 * ex);
 
-        // Organic drift
         var driftX = Math.sin(timeMs * 0.0012) * cw * 0.035 * (1 - ex * 0.8);
         var driftY = Math.cos(timeMs * 0.0015) * ch * 0.025 * (1 - ex * 0.8);
 
@@ -4267,15 +4153,15 @@
       }
 
       window.addEventListener('keydown', onSplashKeyDown);
-      var splashSafetyTimer = setTimeout(finishSplash, 1950);
+      var splashSafetyTimer = setTimeout(finishSplash, 1050);
 
       var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (reducedMotion) {
-        setLogoProgress(1);
         if (counterEl) counterEl.textContent = '100';
+        if (barFillEl) barFillEl.style.width = '100%';
+        if (loaderEl) loaderEl.style.opacity = '1';
         if (countEl) countEl.style.opacity = '1';
-        if (wordmarkEl) wordmarkEl.style.opacity = '1';
-        setTimeout(finishSplash, 180);
+        setTimeout(finishSplash, 120);
         return;
       }
 
@@ -4286,37 +4172,35 @@
         if (done) return;
         var t = now - t0;
 
-        // Fast crisp entrance fade & lift for counter and wordmark
-        var countIn = easeOutExpo(clamp01((t - 50) / 260));
+        var countIn = easeOutExpo(clamp01(t / 110));
         if (countEl) {
           countEl.style.opacity = String(countIn);
-          countEl.style.transform = 'translateY(' + ((1 - countIn) * 14).toFixed(1) + 'px)';
+          countEl.style.transform = 'translateY(' + ((1 - countIn) * 10).toFixed(1) + 'px)';
+        }
+        if (loaderEl) {
+          loaderEl.style.opacity = String(countIn);
+          loaderEl.style.transform = 'translateY(' + ((1 - countIn) * 8).toFixed(1) + 'px)';
         }
 
-        var wordIn = easeOutExpo(clamp01((t - 50) / 180));
-        if (wordmarkEl) {
-          wordmarkEl.style.opacity = String(wordIn);
-          wordmarkEl.style.transform = 'translateY(' + ((1 - wordIn) * 10).toFixed(1) + 'px)';
-        }
-
-        // Drive SVG plotter, upward ink wipe, laser head, and diagonal sheen (~0.78s)
-        setLogoProgress(clamp01((t - 50) / 780));
-
-        // Drive 000 -> 100 counter & rising aurora glow
-        var countP = clamp01((t - 120) / 780);
+        // Fast smooth 1 -> 100 gradient counter, gradient loading bar & rising aurora glow
+        var countP = easeOutCubic(clamp01((t - 20) / 500));
         var revealVal = countP * (0.55 + 0.45 * countP) * 0.65;
         renderGlow(revealVal, 0, now);
 
-        var pct = Math.round(100 * countP);
+        var pct = Math.max(1, Math.min(100, Math.round(1 + 99 * countP)));
+        if (barFillEl) {
+          barFillEl.style.width = (1 + 99 * countP).toFixed(2) + '%';
+        }
         if (pct !== lastCount && counterEl) {
           lastCount = pct;
-          counterEl.textContent = String(pct).padStart(3, '0');
+          counterEl.textContent = String(pct);
         }
 
-        if (t < 960) {
+        if (t < 540) {
           requestAnimationFrame(tickLoad);
         } else {
           if (counterEl) counterEl.textContent = '100';
+          if (barFillEl) barFillEl.style.width = '100%';
           startExit();
         }
       }
@@ -4326,31 +4210,31 @@
         function tickExit(now) {
           if (done) return;
           var r = now - tExit0;
-          var outP = easeInOutCubic(clamp01(r / 160));
+          var outP = easeInOutCubic(clamp01(r / 90));
           var invOp = String(1 - outP);
 
-          if (wordmarkEl) {
-            wordmarkEl.style.opacity = invOp;
-            wordmarkEl.style.transform = 'translateY(' + (-14 * outP).toFixed(1) + 'px)';
+          if (loaderEl) {
+            loaderEl.style.opacity = invOp;
+            loaderEl.style.transform = 'translateY(' + (-8 * outP).toFixed(1) + 'px)';
           }
           if (countEl) {
             countEl.style.opacity = invOp;
-            countEl.style.transform = 'translateY(' + (-10 * outP).toFixed(1) + 'px)';
+            countEl.style.transform = 'translateY(' + (-8 * outP).toFixed(1) + 'px)';
           }
 
-          var swellP = clamp01(r / 320);
+          var swellP = clamp01(r / 170);
           renderGlow(0.65 + 0.35 * swellP, swellP, now);
 
-          var grainFade = 1 - clamp01((swellP - 0.45) / 0.45);
+          var grainFade = 1 - clamp01((swellP - 0.4) / 0.45);
           if (grainEl) {
             grainEl.style.opacity = String(0.32 * grainFade);
           }
 
-          // Fast smooth dissolve of the splash overlay into the homepage
-          var fadeOutP = easeInOutCubic(clamp01((r - 130) / 210));
+          // Snappy smooth dissolve of the splash overlay into the homepage
+          var fadeOutP = easeInOutCubic(clamp01((r - 50) / 120));
           splash.style.opacity = String(1 - fadeOutP);
 
-          if (r < 340) {
+          if (r < 180) {
             requestAnimationFrame(tickExit);
           } else {
             finishSplash();
@@ -4369,7 +4253,7 @@
   <!-- ============== HEADER ============== -->
   <header id="site-header" class="fixed inset-x-0 top-0 z-50 transition-all duration-500">
     <div
-      class="bg-[#0a1d40]/45 backdrop-blur-md border-b border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.3)] transition-all duration-500"
+      class="relative z-[60] bg-[#0a1d40]/45 backdrop-blur-md border-b border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.3)] transition-all duration-500"
       id="header-bar">
       <nav class="mx-auto flex h-20 max-w-[1720px] items-center justify-between gap-2 xl:gap-3 2xl:gap-5 px-4 sm:px-6 lg:px-5 xl:px-6 2xl:px-10"
         aria-label="Main navigation">
@@ -5008,197 +4892,108 @@
       </nav>
     </div>
 
-    <!-- Mobile / tablet menu (Sleek Dark-Glass Floating Card) -->
+    <!-- Mobile / tablet menu (Oceanic Cobalt Gradient Navigation Card) -->
     <div id="mobile-menu"
-      class="pointer-events-none fixed inset-0 top-20 bg-ink/70 p-3 opacity-0 backdrop-blur-md transition-opacity duration-300 sm:p-5 lg:hidden">
+      class="pointer-events-none fixed inset-0 top-20 bg-[#040914]/72 p-3 opacity-0 backdrop-blur-md transition-opacity duration-300 sm:p-5 lg:hidden">
       <div id="mobile-panel"
-        class="relative mx-auto max-w-md -translate-y-3 max-h-[85vh] overflow-y-auto rounded-2xl border border-sky/25 bg-[#0a1d40]/95 p-5 text-cream shadow-[0_28px_80px_rgba(0,0,0,0.85)] ring-1 ring-white/10 backdrop-blur-2xl transition-all duration-300">
-        <!-- Ambient top glow inside menu card -->
-        <div aria-hidden="true"
-          class="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-sky/20 blur-2xl"></div>
-        <div aria-hidden="true"
-          class="pointer-events-none absolute -bottom-12 -left-12 h-36 w-36 rounded-full bg-magenta/15 blur-2xl"></div>
+        style="background: radial-gradient(125% 85% at 8% 0%, rgba(56, 189, 248, 0.24) 0%, rgba(37, 99, 235, 0.12) 44%, transparent 74%), radial-gradient(95% 75% at 96% 100%, rgba(58, 160, 219, 0.18) 0%, transparent 65%), linear-gradient(156deg, rgba(16, 42, 88, 0.97) 0%, rgba(10, 24, 52, 0.98) 54%, rgba(6, 12, 26, 0.99) 100%);"
+        class="relative mx-auto max-w-md overflow-hidden -translate-y-2 max-h-[82vh] overflow-y-auto rounded-xl border border-[#72c5f8]/25 px-5 py-4 text-[#f4f7fb] shadow-[0_24px_64px_rgba(0,0,0,0.82)] backdrop-blur-xl transition-all duration-300">
+        <div class="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#72c5f8]/70 to-transparent" aria-hidden="true"></div>
 
-        <!-- Menu Header Eyebrow -->
-        <div class="mb-3.5 flex items-center justify-between border-b border-cream/10 pb-3">
-          <div class="flex items-center gap-2">
-            <span class="size-2 rounded-full bg-sky shadow-[0_0_8px_#3aa0db]"></span>
-            <span class="text-[10px] font-bold uppercase tracking-[0.24em] text-cream/80">MediQ Pharma · Rayner
-              UK</span>
-          </div>
-          <span class="font-mono text-[9.5px] uppercase tracking-[0.18em] text-sky">Menu</span>
+        <div class="flex items-center justify-between pb-3 border-b border-[#72c5f8]/15">
+          <span class="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-[#72c5f8]">Navigation</span>
+          <span class="font-mono text-[9.5px] uppercase tracking-[0.18em] text-[#9eb4cc]/65">01 &ndash; 08</span>
         </div>
 
-        <!-- 8 Section Navigation List matching Diagram Architecture -->
-        <ul class="space-y-1.5">
-          <!-- 01 Home -->
+        <ul class="divide-y divide-[#72c5f8]/[0.10]">
           <li>
-            <a href="#top"
-              class="mobile-link group flex items-center justify-between rounded-xl border border-white/[0.06] bg-white/[0.03] px-3.5 py-2.5 transition hover:border-sky/45 hover:bg-sky/10">
-              <div class="flex items-center gap-3">
-                <span
-                  class="flex size-7 shrink-0 items-center justify-center rounded-lg bg-sky/15 font-mono text-[10px] font-bold text-sky">01</span>
-                <div>
-                  <span class="block font-serif text-base leading-tight text-pearl">Home</span>
-                  <span class="block text-[10px] text-cream/55">AI Spiral RayOne® Galaxy Overview</span>
-                </div>
-              </div>
-              <svg
-                class="size-4 text-cream/35 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-sky"
-                viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
-                <path d="M6 3l5 5-5 5" />
-              </svg>
+            <a href="#top" class="mobile-link group flex items-center justify-between py-3 transition-colors">
+              <span class="flex items-baseline gap-3.5 min-w-0">
+                <span class="w-5 shrink-0 font-mono text-[11px] tabular-nums text-[#72c5f8]/65 group-hover:text-[#72c5f8]">01</span>
+                <span class="font-serif text-[17.5px] font-medium tracking-[-0.015em] text-[#f4f7fb] group-hover:text-white">Home</span>
+              </span>
+              <span class="text-[11px] text-[#9eb4cc]/65 group-hover:text-white/85 truncate ml-3">Overview</span>
             </a>
           </li>
-          <!-- 02 About MEDIQ -->
           <li>
-            <a href="#about"
-              class="mobile-link group flex items-center justify-between rounded-xl border border-white/[0.06] bg-white/[0.03] px-3.5 py-2.5 transition hover:border-sky/45 hover:bg-sky/10">
-              <div class="flex items-center gap-3">
-                <span
-                  class="flex size-7 shrink-0 items-center justify-center rounded-lg bg-sky/15 font-mono text-[10px] font-bold text-sky">02</span>
-                <div>
-                  <span class="block font-serif text-base leading-tight text-pearl">About MEDIQ</span>
-                  <span class="block text-[10px] text-cream/55">Overview · Mission · Management · Quality</span>
-                </div>
-              </div>
-              <svg
-                class="size-4 text-cream/35 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-sky"
-                viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
-                <path d="M6 3l5 5-5 5" />
-              </svg>
+            <a href="#about" class="mobile-link group flex items-center justify-between py-3 transition-colors">
+              <span class="flex items-baseline gap-3.5 min-w-0">
+                <span class="w-5 shrink-0 font-mono text-[11px] tabular-nums text-[#72c5f8]/65 group-hover:text-[#72c5f8]">02</span>
+                <span class="font-serif text-[17.5px] font-medium tracking-[-0.015em] text-[#f4f7fb] group-hover:text-white">About MEDIQ</span>
+              </span>
+              <span class="text-[11px] text-[#9eb4cc]/65 group-hover:text-white/85 truncate ml-3">Purpose &amp; Quality</span>
             </a>
           </li>
-          <!-- 03 Products -->
           <li>
-            <a href="#products"
-              class="mobile-link group flex items-center justify-between rounded-xl border border-white/[0.06] bg-white/[0.03] px-3.5 py-2.5 transition hover:border-sky/45 hover:bg-sky/10">
-              <div class="flex items-center gap-3">
-                <span
-                  class="flex size-7 shrink-0 items-center justify-center rounded-lg bg-sky/15 font-mono text-[10px] font-bold text-sky">03</span>
-                <div>
-                  <span class="block font-serif text-base leading-tight text-pearl">Products</span>
-                  <span class="block text-[10px] text-cream/55">Ophthalmology IOLs &middot; OVDs &amp; Solutions &middot; Future Portfolio &middot;
-                    Catalogs</span>
-                </div>
-              </div>
-              <svg
-                class="size-4 text-cream/35 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-sky"
-                viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
-                <path d="M6 3l5 5-5 5" />
-              </svg>
+            <a href="#products" class="mobile-link group flex items-center justify-between py-3 transition-colors">
+              <span class="flex items-baseline gap-3.5 min-w-0">
+                <span class="w-5 shrink-0 font-mono text-[11px] tabular-nums text-[#72c5f8]/65 group-hover:text-[#72c5f8]">03</span>
+                <span class="font-serif text-[17.5px] font-medium tracking-[-0.015em] text-[#f4f7fb] group-hover:text-white">Products</span>
+              </span>
+              <span class="text-[11px] text-[#9eb4cc]/65 group-hover:text-white/85 truncate ml-3">IOLs &amp; OVDs</span>
             </a>
           </li>
-          <!-- 04 Brands & Partners -->
           <li>
-            <a href="#brands" data-deck-target="brands:0"
-              class="mobile-link group flex items-center justify-between rounded-xl border border-white/[0.06] bg-white/[0.03] px-3.5 py-2.5 transition hover:border-sky/45 hover:bg-sky/10">
-              <div class="flex items-center gap-3">
-                <span
-                  class="flex size-7 shrink-0 items-center justify-center rounded-lg bg-sky/15 font-mono text-[10px] font-bold text-sky">04</span>
-                <div>
-                  <span class="block font-serif text-base leading-tight text-pearl">Brands &amp; Partners</span>
-                  <span class="block text-[10px] text-cream/55">Principal Brands · Profiles · Brochures</span>
-                </div>
-              </div>
-              <svg
-                class="size-4 text-cream/35 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-sky"
-                viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
-                <path d="M6 3l5 5-5 5" />
-              </svg>
+            <a href="#brands" data-deck-target="brands:0" class="mobile-link group flex items-center justify-between py-3 transition-colors">
+              <span class="flex items-baseline gap-3.5 min-w-0">
+                <span class="w-5 shrink-0 font-mono text-[11px] tabular-nums text-[#72c5f8]/65 group-hover:text-[#72c5f8]">04</span>
+                <span class="font-serif text-[17.5px] font-medium tracking-[-0.015em] text-[#f4f7fb] group-hover:text-white">Brands &amp; Partners</span>
+              </span>
+              <span class="text-[11px] text-[#9eb4cc]/65 group-hover:text-white/85 truncate ml-3">Rayner UK</span>
             </a>
           </li>
-          <!-- 05 Services -->
           <li>
-            <a href="#distribution" data-deck-target="services:0"
-              class="mobile-link group flex items-center justify-between rounded-xl border border-white/[0.06] bg-white/[0.03] px-3.5 py-2.5 transition hover:border-sky/45 hover:bg-sky/10">
-              <div class="flex items-center gap-3">
-                <span
-                  class="flex size-7 shrink-0 items-center justify-center rounded-lg bg-sky/15 font-mono text-[10px] font-bold text-sky">05</span>
-                <div>
-                  <span class="block font-serif text-base leading-tight text-pearl">Services</span>
-                  <span class="block text-[10px] text-cream/55">Distribution · Support · Training · Service</span>
-                </div>
-              </div>
-              <svg
-                class="size-4 text-cream/35 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-sky"
-                viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
-                <path d="M6 3l5 5-5 5" />
-              </svg>
+            <a href="#distribution" data-deck-target="services:0" class="mobile-link group flex items-center justify-between py-3 transition-colors">
+              <span class="flex items-baseline gap-3.5 min-w-0">
+                <span class="w-5 shrink-0 font-mono text-[11px] tabular-nums text-[#72c5f8]/65 group-hover:text-[#72c5f8]">05</span>
+                <span class="font-serif text-[17.5px] font-medium tracking-[-0.015em] text-[#f4f7fb] group-hover:text-white">Services</span>
+              </span>
+              <span class="text-[11px] text-[#9eb4cc]/65 group-hover:text-white/85 truncate ml-3">Distribution</span>
             </a>
           </li>
-          <!-- 06 Resources -->
           <li>
-            <a href="#resources" data-deck-target="resources:0"
-              class="mobile-link group flex items-center justify-between rounded-xl border border-white/[0.06] bg-white/[0.03] px-3.5 py-2.5 transition hover:border-sky/45 hover:bg-sky/10">
-              <div class="flex items-center gap-3">
-                <span
-                  class="flex size-7 shrink-0 items-center justify-center rounded-lg bg-sky/15 font-mono text-[10px] font-bold text-sky">06</span>
-                <div>
-                  <span class="block font-serif text-base leading-tight text-pearl">Resources</span>
-                  <span class="block text-[10px] text-cream/55">Literature · Education · Profile · Regulatory</span>
-                </div>
-              </div>
-              <svg
-                class="size-4 text-cream/35 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-sky"
-                viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
-                <path d="M6 3l5 5-5 5" />
-              </svg>
+            <a href="#resources" data-deck-target="resources:0" class="mobile-link group flex items-center justify-between py-3 transition-colors">
+              <span class="flex items-baseline gap-3.5 min-w-0">
+                <span class="w-5 shrink-0 font-mono text-[11px] tabular-nums text-[#72c5f8]/65 group-hover:text-[#72c5f8]">06</span>
+                <span class="font-serif text-[17.5px] font-medium tracking-[-0.015em] text-[#f4f7fb] group-hover:text-white">Resources</span>
+              </span>
+              <span class="text-[11px] text-[#9eb4cc]/65 group-hover:text-white/85 truncate ml-3">Documentation</span>
             </a>
           </li>
-          <!-- 07 News & Events -->
           <li>
-            <a href="#activities" data-deck-target="news:0"
-              class="mobile-link group flex items-center justify-between rounded-xl border border-white/[0.06] bg-white/[0.03] px-3.5 py-2.5 transition hover:border-sky/45 hover:bg-sky/10">
-              <div class="flex items-center gap-3">
-                <span
-                  class="flex size-7 shrink-0 items-center justify-center rounded-lg bg-sky/15 font-mono text-[10px] font-bold text-sky">07</span>
-                <div>
-                  <span class="block font-serif text-base leading-tight text-pearl">News &amp; Events</span>
-                  <span class="block text-[10px] text-cream/55">Launches · Education · Partnerships · News</span>
-                </div>
-              </div>
-              <svg
-                class="size-4 text-cream/35 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-sky"
-                viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
-                <path d="M6 3l5 5-5 5" />
-              </svg>
+            <a href="#activities" data-deck-target="news:0" class="mobile-link group flex items-center justify-between py-3 transition-colors">
+              <span class="flex items-baseline gap-3.5 min-w-0">
+                <span class="w-5 shrink-0 font-mono text-[11px] tabular-nums text-[#72c5f8]/65 group-hover:text-[#72c5f8]">07</span>
+                <span class="font-serif text-[17.5px] font-medium tracking-[-0.015em] text-[#f4f7fb] group-hover:text-white">News &amp; Events</span>
+              </span>
+              <span class="text-[11px] text-[#9eb4cc]/65 group-hover:text-white/85 truncate ml-3">Updates</span>
             </a>
           </li>
-          <!-- 08 Contact Us -->
           <li>
-            <a href="#contact" data-deck-target="contact:0"
-              class="mobile-link group flex items-center justify-between rounded-xl border border-white/[0.06] bg-white/[0.03] px-3.5 py-2.5 transition hover:border-sky/45 hover:bg-sky/10">
-              <div class="flex items-center gap-3">
-                <span
-                  class="flex size-7 shrink-0 items-center justify-center rounded-lg bg-sky/15 font-mono text-[10px] font-bold text-sky">08</span>
-                <div>
-                  <span class="block font-serif text-base leading-tight text-pearl">Contact Us</span>
-                  <span class="block text-[10px] text-cream/55">Supply · Marketing · Education · Partnerships</span>
-                </div>
-              </div>
-              <svg
-                class="size-4 text-cream/35 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-sky"
-                viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
-                <path d="M6 3l5 5-5 5" />
-              </svg>
+            <a href="#contact" data-deck-target="contact:0" class="mobile-link group flex items-center justify-between py-3 transition-colors">
+              <span class="flex items-baseline gap-3.5 min-w-0">
+                <span class="w-5 shrink-0 font-mono text-[11px] tabular-nums text-[#72c5f8]/65 group-hover:text-[#72c5f8]">08</span>
+                <span class="font-serif text-[17.5px] font-medium tracking-[-0.015em] text-[#f4f7fb] group-hover:text-white">Contact Us</span>
+              </span>
+              <span class="text-[11px] text-[#9eb4cc]/65 group-hover:text-white/85 truncate ml-3">Philippines HQ</span>
             </a>
           </li>
         </ul>
 
-        <!-- Bottom Action Buttons -->
-        <div class="mt-4 grid grid-cols-2 gap-2.5 border-t border-cream/10 pt-3.5">
+        <div class="mt-2 grid grid-cols-2 gap-2.5 border-t border-[#72c5f8]/15 pt-3.5">
           <a href="#contact"
-            class="mobile-link flex items-center justify-center gap-2 rounded-xl bg-sky px-3 py-3 text-[10px] font-bold uppercase tracking-[0.18em] text-ink shadow-[0_8px_24px_rgba(58,160,219,0.35)] transition hover:bg-cream">
-            Inquire Now
-            <svg class="size-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+            style="background: linear-gradient(135deg, #72c5f8 0%, #3aa0db 48%, #2563eb 100%);"
+            class="mobile-link flex items-center justify-center gap-1.5 rounded-lg border border-[#93d5ff]/45 px-3 py-2.5 text-[12px] font-semibold tracking-[0.02em] text-white shadow-[0_8px_22px_rgba(58,160,219,0.28)] transition hover:brightness-110">
+            Send Inquiry
+            <svg class="size-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
               <path d="M4 12 12 4M5 4h7v7" />
             </svg>
           </a>
           <a href="https://mediqvision.com/mobile/index.html" target="_blank" rel="noopener noreferrer"
-            class="mobile-link flex items-center justify-center gap-2 rounded-xl border border-cream/20 bg-white/5 px-3 py-3 text-[10px] font-bold uppercase tracking-[0.18em] text-cream transition hover:bg-white/10">
-            Catalog
-            <svg class="size-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+            style="background: linear-gradient(135deg, rgba(16, 39, 82, 0.88) 0%, rgba(10, 22, 48, 0.92) 100%);"
+            class="mobile-link flex items-center justify-center gap-1.5 rounded-lg border border-[#72c5f8]/25 px-3 py-2.5 text-[11.5px] font-medium tracking-[0.02em] text-[#f4f7fb] transition hover:border-[#72c5f8]/50">
+            Product Catalog
+            <svg class="size-3.5 text-[#72c5f8]/80" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
               <path d="M4 12 12 4M5 4h7v7" />
             </svg>
           </a>
@@ -8397,6 +8192,11 @@
         /* ========================================================================= */
         /* ACTIVE THEORY BOTTOM-LEFT ChatDOM ("WHAT ARE YOU LOOKING FOR?")           */
         /* ========================================================================= */
+        .at-work-stage.is-3d-box-mode .at-chat-wrapper {
+          opacity: 0 !important;
+          pointer-events: none !important;
+          visibility: hidden !important;
+        }
         .at-chat-wrapper {
           position: absolute;
           bottom: 0;
@@ -11632,57 +11432,42 @@
         /* Header / typography chrome removed */
 
         #srv-book-carousel-slide .bc-close {
-          position: fixed;
-          top: 132px;
-          right: clamp(14px, 3.5vw, 44px);
-          width: 38px;
-          height: 38px;
-          border: 1px solid rgba(114, 197, 248, 0.35);
-          border-radius: 50%;
-          background: rgba(10, 29, 64, 0.88);
-          backdrop-filter: blur(8px);
-          cursor: pointer;
-          z-index: 66;
-          opacity: 0;
-          pointer-events: none;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: opacity 0.35s ease, transform 0.35s ease, border-color 0.35s ease;
+          display: none !important;
         }
-        #srv-book-carousel-slide .bc-close:hover { transform: scale(1.08); border-color: #72c5f8; }
-        #srv-book-carousel-slide .bc-close.visible { opacity: 1; pointer-events: auto; }
-        #srv-book-carousel-slide .bc-close-wrap { position: relative; width: 14px; height: 14px; }
-        #srv-book-carousel-slide .bc-line {
-          position: absolute; top: 50%; left: 0; width: 100%; height: 1.5px;
-          background: #f4f7fb; transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        #srv-book-carousel-slide .bc-close.visible .bc-line-1 { transform: translateY(-50%) rotate(45deg); }
-        #srv-book-carousel-slide .bc-close.visible .bc-line-2 { transform: translateY(-50%) rotate(-45deg); }
 
         #srv-book-carousel-slide .bc-zoom-bar {
-          position: fixed;
-          top: 132px;
-          left: clamp(14px, 3.5vw, 44px);
-          z-index: 66;
+          display: none !important;
+        }
+        #srv-book-carousel-slide .bc-book-top-close {
+          width: calc(24px * var(--bc-page-scale, 1));
+          height: calc(24px * var(--bc-page-scale, 1));
+          border: 1px solid rgba(114, 197, 248, 0.45);
+          border-radius: 50%;
+          background: rgba(10, 29, 64, 0.92);
+          color: #f4f7fb;
           display: inline-flex;
           align-items: center;
-          gap: 6px;
-          padding: 4px 8px;
-          border-radius: 9999px;
-          border: 1px solid rgba(114, 197, 248, 0.32);
-          background: rgba(10, 29, 64, 0.88);
-          backdrop-filter: blur(10px);
-          box-shadow: 0 8px 24px rgba(2, 8, 22, 0.55);
-          opacity: 0;
-          pointer-events: none;
-          transform: translateY(-6px);
-          transition: opacity 0.3s ease, transform 0.3s ease;
+          justify-content: center;
+          padding: 0;
+          cursor: pointer;
+          box-shadow: 0 4px 12px rgba(10, 29, 64, 0.25);
+          transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+          flex-shrink: 0;
         }
-        #srv-book-carousel-slide.is-reading-open .bc-zoom-bar {
-          opacity: 1;
-          pointer-events: auto;
-          transform: translateY(0);
+        #srv-book-carousel-slide .bc-book-top-close:hover {
+          transform: scale(1.1);
+          background: #0e3a72;
+          border-color: #72c5f8;
+        }
+        #srv-book-carousel-slide .bc-book-top-close svg {
+          width: calc(10px * var(--bc-page-scale, 1));
+          height: calc(10px * var(--bc-page-scale, 1));
+          display: block;
+        }
+        #srv-book-carousel-slide .bc-page-toprow-right {
+          display: inline-flex;
+          align-items: center;
+          gap: calc(8px * var(--bc-page-scale, 1));
         }
         #srv-book-carousel-slide .bc-zoom-btn {
           width: 28px;
@@ -13795,6 +13580,19 @@
       #footer-map-band .maplibregl-ctrl-attrib a {
         color: rgba(147, 197, 253, 0.85) !important;
       }
+      @media (max-width: 639px) {
+        #footer-map-band #contact-map-place-card {
+          top: auto !important;
+          bottom: 8px !important;
+          left: 8px !important;
+          right: auto !important;
+          padding: 7px 10px !important;
+          max-width: calc(100% - 122px) !important;
+        }
+        #footer-map-band #contact-map-place-card .flex.items-center.gap-1.mt-1 {
+          display: none !important;
+        }
+      }
     </style>
     <div class="w-full">
       <div id="contact-map-wrap"
@@ -13804,7 +13602,7 @@
             aria-label="Interactive sapphire map of MediQ Pharma in Marikina and Pasig, Metro Manila"></canvas>
 
           <!-- Top-Left Floating Map Info Card -->
-          <div
+          <div id="contact-map-place-card"
             class="absolute left-5 sm:left-8 top-4 z-10 rounded-[10px] bg-[#091c3d]/92 backdrop-blur-md shadow-[0_6px_24px_rgba(3,10,24,0.45)] border border-[#72c5f8]/25 px-3.5 py-2.5 flex items-start gap-3 max-w-[300px]">
             <div class="min-w-0">
               <div class="text-[12px] font-semibold text-[#f6f2ea] leading-tight truncate">MediQ Pharma Inc.</div>
@@ -13911,6 +13709,993 @@
       <div id="brochure-dots" class="flex flex-wrap items-center gap-1.5"></div>
     </div>
   </div>
+
+  <!-- ============== MEDIQ OBSIDIAN PERIMETER + MIDNIGHT COBALT RADIAL HALO THEME (All Pages + Hero Smoke Kept Active) ============== -->
+  <style id="mediq-pure-white-theme">
+    :root,
+    .dark {
+      --mediq-halo-bg:
+        radial-gradient(ellipse 54% 50% at 54% 49%, rgba(26, 58, 148, 0.44) 0%, rgba(18, 41, 104, 0.28) 38%, rgba(13, 21, 44, 0.14) 68%, rgba(11, 12, 15, 0) 100%),
+        radial-gradient(ellipse 78% 72% at 52% 50%, rgba(15, 32, 82, 0.38) 0%, rgba(12, 16, 30, 0.24) 56%, rgba(11, 12, 15, 0.96) 100%);
+    }
+
+    html,
+    body,
+    main#top {
+      background-color: #0b0c0f !important;
+      background-image: var(--mediq-halo-bg) !important;
+      color: #f6f2ea !important;
+    }
+
+    /* ---------- Fixed Top Navigation Bar (Darker Midnight Cobalt Gradient Across All Pages Including Hero) ---------- */
+    #site-header #header-bar {
+      background-color: rgba(4, 12, 30, 0.90) !important;
+      background-image:
+        radial-gradient(56% 140% at 14% 0%, rgba(58, 160, 219, 0.14) 0%, rgba(29, 78, 216, 0.06) 54%, transparent 100%),
+        radial-gradient(46% 130% at 88% 100%, rgba(56, 189, 248, 0.09) 0%, transparent 72%),
+        linear-gradient(90deg, rgba(3, 10, 26, 0.96) 0%, rgba(7, 20, 48, 0.92) 50%, rgba(3, 10, 24, 0.96) 100%) !important;
+      backdrop-filter: blur(16px) saturate(135%) !important;
+      -webkit-backdrop-filter: blur(16px) saturate(135%) !important;
+      border-bottom: 1px solid rgba(114, 197, 248, 0.16) !important;
+      box-shadow: 0 8px 30px rgba(2, 6, 18, 0.65), inset 0 1px 0 rgba(114, 197, 248, 0.10) !important;
+    }
+    #site-header.is-light-page #header-bar {
+      background-image:
+        radial-gradient(56% 140% at 14% 0%, rgba(58, 160, 219, 0.16) 0%, rgba(29, 78, 216, 0.07) 54%, transparent 100%),
+        radial-gradient(46% 130% at 88% 100%, rgba(56, 189, 248, 0.10) 0%, transparent 72%),
+        linear-gradient(90deg, rgba(3, 10, 26, 0.98) 0%, rgba(7, 20, 48, 0.95) 50%, rgba(3, 10, 24, 0.98) 100%) !important;
+    }
+    #site-header .spotlight-pill {
+      color: rgba(244, 247, 251, 0.90) !important;
+    }
+    #site-header .spotlight-pill:hover,
+    #site-header .spotlight-pill.is-active {
+      color: #ffffff !important;
+    }
+    #site-header .transparent-blue-dropdown,
+    #site-header #mobile-menu > #mobile-panel {
+      background-color: rgba(6, 16, 38, 0.98) !important;
+      background-image:
+        radial-gradient(125% 85% at 8% 0%, rgba(56, 189, 248, 0.18) 0%, rgba(37, 99, 235, 0.09) 44%, transparent 74%),
+        radial-gradient(95% 75% at 96% 100%, rgba(58, 160, 219, 0.13) 0%, transparent 65%),
+        linear-gradient(156deg, rgba(10, 28, 66, 0.98) 0%, rgba(6, 16, 38, 0.99) 54%, rgba(3, 8, 20, 0.99) 100%) !important;
+      border: 1px solid rgba(114, 197, 248, 0.22) !important;
+      box-shadow: 0 24px 60px rgba(2, 6, 18, 0.82), inset 0 1px 0 rgba(114, 197, 248, 0.14) !important;
+      color: #f4f7fb !important;
+    }
+    #site-header #mobile-menu {
+      background: rgba(3, 8, 20, 0.78) !important;
+    }
+    #site-header #mediq-search-trigger,
+    #site-header button.rounded-2xl {
+      background: linear-gradient(135deg, rgba(10, 28, 64, 0.88) 0%, rgba(5, 14, 34, 0.94) 100%) !important;
+      border: 1px solid rgba(114, 197, 248, 0.20) !important;
+      color: #e6f0fb !important;
+      box-shadow: 0 4px 16px rgba(2, 6, 18, 0.48) !important;
+    }
+    #site-header button.rounded-2xl span {
+      color: rgba(203, 224, 245, 0.88) !important;
+    }
+    #page-dots-nav .page-dot-pill {
+      background: rgba(255, 255, 255, 0.28) !important;
+    }
+
+    /* ---------- Unified Obsidian-to-Midnight-Cobalt Halo Across ALL Pages (Including #hero) & Subpages ---------- */
+    section.page-snap-section,
+    #hero,
+    #hero #hero-interactive-stage,
+    #about,
+    #about #about-interactive-stage,
+    #about #about-subpage-scroll,
+    #about #about-sec-who-we-are,
+    #about #forge-about-sticky,
+    #about #about-slide-what-we-do,
+    #about #wwd-forge-sticky,
+    #about #about-sec-foundation,
+    #about #about-sec-values,
+    #about footer[aria-label="About MediQ Footer"],
+    #products,
+    #products .at-work-backdrop,
+    #products .at-work-detail-drawer,
+    #products #products-devices-coming-soon,
+    #galaxy-delivery,
+    #brands,
+    #brands .deck-slide,
+    #distribution,
+    #distribution .deck-slide,
+    #distribution #srv-book-carousel-slide,
+    #resources,
+    #resources .deck-slide,
+    #activities,
+    #activities .deck-slide,
+    #contact,
+    #site-footer,
+    #site-footer #footer-inner {
+      background-color: #0b0c0f !important;
+      background-image: var(--mediq-halo-bg) !important;
+    }
+
+    /* Keep #hero smoky fluid canvas active & blended smoothly with the eye photography into obsidian edges */
+    #hero canvas#hero-smoke-canvas {
+      display: block !important;
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      opacity: 0.70 !important;
+      visibility: visible !important;
+    }
+    #hero .ih-hero-copy,
+    #hero #hero-title,
+    #hero .ih-h1-line {
+      min-width: 0 !important;
+      max-width: 100% !important;
+    }
+    @media (max-width: 1023px) {
+      #hero h1.ih-h1 {
+        font-size: clamp(23px, 6.2vw, 36px) !important;
+        line-height: 1.14 !important;
+      }
+      #hero #hero-liquid-title-canvas {
+        display: none !important;
+      }
+      #hero .ih-h1-line {
+        opacity: 1 !important;
+      }
+    }
+    #hero #hero-eye-lifespan-container {
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 32%, rgba(0, 0, 0, 0.22) 48%, rgba(0, 0, 0, 0.80) 64%, rgba(0, 0, 0, 0.96) 80%) !important;
+      mask-image: linear-gradient(to right, transparent 0%, transparent 32%, rgba(0, 0, 0, 0.22) 48%, rgba(0, 0, 0, 0.80) 64%, rgba(0, 0, 0, 0.96) 80%) !important;
+    }
+    #hero #hero-eye-lifespan-container > div[style*="rgba(10,29,64"] {
+      background:
+        radial-gradient(ellipse 68% 64% at 76% 48%, transparent 38%, rgba(11, 12, 15, 0.42) 70%, rgba(11, 12, 15, 0.94) 100%) !important;
+    }
+    #hero #hero-interactive-stage > div[style*="rgba(10,29,64,0.55)"] {
+      background:
+        linear-gradient(to right, rgba(11, 12, 15, 0.48) 0%, rgba(11, 12, 15, 0.16) 36%, transparent 60%),
+        linear-gradient(to bottom, rgba(11, 12, 15, 0.42) 0%, transparent 20%, transparent 80%, rgba(11, 12, 15, 0.56) 100%) !important;
+    }
+
+    /* Inner wrappers stay transparent so the halo never stacks / darkens twice */
+    section.page-snap-section:not(#hero) > div.pointer-events-none,
+    #about #about-vision-mission-block,
+    #about #wwd-forge-services-block,
+    #products > div.pointer-events-none,
+    #products .deck-slide,
+    #brands > div.pointer-events-none,
+    #brands .pel-root,
+    #distribution > div.pointer-events-none,
+    #resources > div.pointer-events-none,
+    #contact > div.pointer-events-none,
+    section.page-snap-section:not(#hero) .bg-\[\#0a1d40\],
+    section.page-snap-section:not(#hero) .bg-\[\#07193a\],
+    section.page-snap-section:not(#hero) .bg-\[\#07193a\]\/55,
+    section.page-snap-section:not(#hero) .bg-\[\#0c0e12\],
+    section.page-snap-section:not(#hero) .bg-\[\#0c0a09\],
+    section.page-snap-section:not(#hero) .bg-\[\#000000\],
+    section.page-snap-section:not(#hero) .bg-\[\#041026\]\/35,
+    section.page-snap-section:not(#hero) .bg-\[\#041026\]\/55 {
+      background: transparent !important;
+      background-color: transparent !important;
+      background-image: none !important;
+    }
+
+    /* Keep deck slides & panels crisp over parent without letting lower sections bleed through on subpages */
+    #about #about-subpage-scroll,
+    #about .abt-subpage-panel:not(.is-hidden-subpage),
+    #products .deck-slide,
+    #brands .deck-slide,
+    #distribution .deck-slide,
+    #resources .deck-slide,
+    #activities .deck-slide,
+    #products .at-work-backdrop,
+    #products .at-work-detail-drawer,
+    #products #products-devices-coming-soon {
+      background-color: #0b0c0f !important;
+      background-image: var(--mediq-halo-bg) !important;
+    }
+
+    /* ---------- Disable Opaque Wave Shaders & Non-Hero Smoke / Haze Overlays ---------- */
+    canvas#hero-waves-shader-canvas,
+    canvas#about-waves-shader-canvas,
+    canvas#products-waves-shader-canvas,
+    canvas#brands-waves-shader-canvas,
+    canvas#distribution-waves-shader-canvas,
+    canvas#resources-waves-shader-canvas,
+    canvas#activities-waves-shader-canvas,
+    canvas#contact-waves-shader-canvas,
+    canvas#about-smoke-canvas,
+    canvas#products-smoke-canvas,
+    canvas.deck-smoke-canvas,
+    canvas#distribution-3d-atrium-canvas,
+    #srv-library-transparent-veil,
+    .bc-library-veil,
+    [data-forge-bg],
+    [data-wwd-forge-bg],
+    #about #about-vision-mission-block > div > div.pointer-events-none,
+    #about #wwd-forge-services-block > div > div.pointer-events-none,
+    #about .bg-black\/35,
+    #about-vision-mission-block [class*="rgba(0,0,0"],
+    #wwd-forge-services-block [class*="rgba(0,0,0"],
+    #about .fnd-blueprint-grid,
+    #about .cv-blueprint-grid,
+    #products .prod-grid-overlay,
+    #activities > div.pointer-events-none,
+    #site-footer .footer-aurora,
+    #footer-inner > div[aria-hidden="true"],
+    #brands div[style*="rgba(10,29,64"],
+    #brands #brands-aller-silhouette-stage > div.pointer-events-none,
+    section.page-snap-section:not(#hero) div[style*="rgba(10,29,64"],
+    section.page-snap-section:not(#hero) [class*="blur-[1"],
+    section.page-snap-section:not(#hero) [class*="blur-2xl"][class*="pointer-events-none"],
+    section.page-snap-section:not(#hero) [class*="blur-3xl"][class*="pointer-events-none"],
+    section.page-snap-section:not(#hero) .pointer-events-none[class*="bg-[radial-gradient"] {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+    }
+
+    /* Ultra-subtle structural borders */
+    section.page-snap-section:not(#hero) [class*="background-size:32px_32px"] {
+      background-image: none !important;
+    }
+    section.page-snap-section:not(#hero) .border-x[class*="border-[#72c5f8]"],
+    section.page-snap-section:not(#hero) .border-r[class*="border-[#72c5f8]"] {
+      border-color: rgba(255, 255, 255, 0.045) !important;
+    }
+
+    /* ---------- Attached Subpage Navigation Bars (Darker MEDIQ Cobalt Gradient Glass) ---------- */
+    .mediq-subnavbar,
+    .at-work-top-hud {
+      background-color: rgba(4, 13, 34, 0.92) !important;
+      background-image: linear-gradient(90deg, rgba(3, 10, 26, 0.95) 0%, rgba(7, 20, 48, 0.92) 50%, rgba(3, 10, 24, 0.95) 100%) !important;
+      backdrop-filter: blur(12px) !important;
+      border-bottom: 1px solid rgba(114, 197, 248, 0.14) !important;
+      color: #f4f7fb !important;
+    }
+    .mediq-subnavbar .is-active,
+    .mediq-subnavbar button[aria-selected="true"],
+    [data-deck-nav-btn].is-active {
+      color: #ffffff !important;
+      border-color: #3aa0db !important;
+    }
+
+    /* ---------- Glassmorphic Cards, Ledger, Modals & Form Panels (Matching Dark Obsidian UI) ---------- */
+    #about .abt-ticker-strip {
+      background: rgba(13, 16, 24, 0.85) !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.09) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09) !important;
+    }
+    #about .notched-card,
+    #about .lottici-subpage-card,
+    #about .wwd-forge-card,
+    #about #about-sec-foundation [class*="bg-[#061530]"],
+    #about #about-sec-values .cv-card,
+    #about #about-sec-values .rounded-2xl,
+    #brands .lottici-subpage-card,
+    #distribution .lottici-subpage-card,
+    #resources .lottici-subpage-card {
+      background: rgba(18, 22, 34, 0.76) !important;
+      border-color: rgba(255, 255, 255, 0.11) !important;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45) !important;
+    }
+    /* Foundation: Executive Split Editorial Redesign (balanced full-width 2-column layout without 3D/logo clutter) */
+    #about #about-sec-foundation .fnd-partner-col,
+    #about #about-sec-foundation #fnd-partner-stage {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+    }
+    #about #about-sec-foundation .fnd-grid {
+      grid-template-columns: minmax(0, 1fr) !important;
+      justify-items: center !important;
+    }
+    #about #about-sec-foundation .fnd-copy {
+      max-width: 760px !important;
+      margin-inline: auto !important;
+      padding-left: 0 !important;
+    }
+    @media (min-width: 1024px) {
+      #about #about-sec-foundation .fnd-copy {
+        max-width: 1220px !important;
+        width: 100% !important;
+        display: grid !important;
+        grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr) !important;
+        column-gap: clamp(2.5rem, 4.5vw, 4.75rem) !important;
+        row-gap: 0.7rem !important;
+        align-items: start !important;
+      }
+      #about #about-sec-foundation .fnd-copy > .ih-eyebrow {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+      }
+      #about #about-sec-foundation .fnd-copy > #fnd-heading {
+        grid-column: 1 !important;
+        grid-row: 2 !important;
+        font-size: clamp(48px, 4.5vw, 66px) !important;
+        line-height: 1.04 !important;
+        margin-top: 0.35rem !important;
+      }
+      #about #about-sec-foundation .fnd-copy > #fnd-lead {
+        grid-column: 1 !important;
+        grid-row: 3 !important;
+        font-size: 16.5px !important;
+        line-height: 1.66 !important;
+        max-width: 560px !important;
+        margin-top: 0.75rem !important;
+      }
+      #about #about-sec-foundation .fnd-copy > blockquote {
+        grid-column: 1 !important;
+        grid-row: 4 !important;
+        margin-top: 1.5rem !important;
+        padding-left: 1.25rem !important;
+        font-size: 15px !important;
+        line-height: 1.62 !important;
+        max-width: 540px !important;
+      }
+      #about #about-sec-foundation .fnd-copy > #fnd-beam-channel {
+        display: none !important;
+      }
+      #about #about-sec-foundation .fnd-copy > .grid {
+        grid-column: 2 !important;
+        grid-row: 1 / span 4 !important;
+        align-self: center !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 1.25rem !important;
+        max-width: 100% !important;
+        margin-top: 0 !important;
+      }
+      #about #about-sec-foundation .fnd-copy > .grid > div {
+        padding: 26px 28px !important;
+        border-radius: 16px !important;
+      }
+      #about #about-sec-foundation .fnd-copy > .grid > div h3 {
+        font-size: 22px !important;
+        margin-bottom: 0.5rem !important;
+      }
+      #about #about-sec-foundation .fnd-copy > .grid > div p {
+        font-size: 14.5px !important;
+        line-height: 1.58 !important;
+      }
+    }
+    /* Ensure Core Values cards never stay stuck at opacity:0 when jumping tabs */
+    #about #about-sec-values .cv-eyebrow-line,
+    #about #about-sec-values .cv-eyebrow-label,
+    #about #about-sec-values .cv-headline,
+    #about #about-sec-values .cv-intro,
+    #about #about-sec-values .cv-card-slot {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    #products .at-work-hud-pill,
+    #products .at-detail-panel,
+    #products .at-detail-spec-card,
+    #products .at-detail-spec-grid > div {
+      background: rgba(16, 20, 32, 0.82) !important;
+      border-color: rgba(255, 255, 255, 0.12) !important;
+    }
+    #products #products-devices-coming-soon .rounded-2xl {
+      background: rgba(18, 22, 34, 0.76) !important;
+      border: 1px solid rgba(255, 255, 255, 0.11) !important;
+    }
+
+    #brands .pel-root {
+      --pel-bg: transparent !important;
+      --pel-panel: rgba(18, 22, 34, 0.78) !important;
+    }
+    #brands [class*="bg-[#0a1d40]"],
+    #brands [class*="bg-[#081836]"] {
+      background: rgba(18, 22, 34, 0.76) !important;
+      border-color: rgba(255, 255, 255, 0.12) !important;
+    }
+
+    #contact #contact-panel-form {
+      background: rgba(15, 19, 30, 0.84) !important;
+      border-color: rgba(255, 255, 255, 0.12) !important;
+      box-shadow: 0 32px 90px rgba(0, 0, 0, 0.65) !important;
+    }
+    #footer-map-band,
+    #footer-map-band #contact-map-wrap {
+      background: #0b0c0f !important;
+      border-top-color: rgba(255, 255, 255, 0.08) !important;
+    }
+    #footer-map-band [class*="bg-[#091c3d]"] {
+      background: rgba(15, 19, 30, 0.90) !important;
+      border-color: rgba(255, 255, 255, 0.12) !important;
+    }
+    #site-footer [class*="bg-[#06132c]"] {
+      background: rgba(14, 17, 26, 0.92) !important;
+    }
+    #site-footer #footer-inner {
+      background-color: #0b0c0f !important;
+      background-image: var(--mediq-halo-bg) !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+
+    /* ---------- Comprehensive Mobile Polish (<= 1023px / <= 639px) ---------- */
+    #srv-book-carousel-slide .bc-mobile-reader {
+      display: none;
+    }
+    html,
+    body {
+      max-width: 100%;
+      overflow-x: clip !important;
+    }
+    #site-header #header-bar {
+      position: relative !important;
+      z-index: 60 !important;
+    }
+    #site-header #mobile-menu {
+      top: 5rem !important;
+      z-index: 50 !important;
+    }
+    #site-header #mobile-menu.opacity-0.pointer-events-none {
+      visibility: hidden !important;
+    }
+    @media (max-width: 1023px) {
+      /* Prevent rapid sub-tab switching overlap AND fix flexbox justify-center top-clipping on scrollable subpages */
+      section.page-snap-section .deck-slide.opacity-0,
+      section.page-snap-section .product-slide.opacity-0 {
+        transition-duration: 0ms !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+      }
+      #brands .deck-slide:not([data-slide-index="0"]),
+      #distribution .deck-slide:not([data-slide-index="0"]):not(#srv-book-carousel-slide),
+      #resources .deck-slide:not([data-slide-index="0"]) {
+        justify-content: flex-start !important;
+        padding-top: 16px !important;
+        padding-bottom: 36px !important;
+      }
+      #brands .deck-slide:not([data-slide-index="0"]) > div,
+      #distribution .deck-slide:not([data-slide-index="0"]):not(#srv-book-carousel-slide) > div,
+      #resources .deck-slide:not([data-slide-index="0"]) > div {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+      }
+    }
+    @media (max-width: 639px) {
+      /* Subnavbar pills: cleaner fit + gentle right edge scroll fade instead of hard text chop */
+      .mediq-subnavbar {
+        -webkit-mask-image: linear-gradient(to right, #000 0%, #000 90%, transparent 100%);
+        mask-image: linear-gradient(to right, #000 0%, #000 90%, transparent 100%);
+        padding-right: 22px !important;
+      }
+      .mediq-subnavbar__tab,
+      .mediq-subnavbar__overview {
+        font-size: 9.5px !important;
+        letter-spacing: 0.09em !important;
+        padding: 0 9px !important;
+      }
+      /* Eliminate dead voids, fit all landing slides comfortably in 1 phone screen & keep heading unclipped */
+      #products .product-slide[data-product-index="0"],
+      #brands .deck-slide[data-slide-index="0"],
+      #distribution .deck-slide[data-slide-index="0"],
+      #resources .deck-slide[data-slide-index="0"] {
+        justify-content: safe center !important;
+        padding-top: clamp(76px, 9.5svh, 88px) !important;
+        padding-bottom: clamp(18px, 2.8svh, 28px) !important;
+      }
+      #products .ih-hero,
+      #distribution .ih-hero,
+      #resources .ih-hero {
+        gap: 12px !important;
+      }
+      #resources .ih-shell,
+      #resources .ih-hero-copy,
+      #resources .deck-slide[data-slide-index="0"] .py-6,
+      #distribution .ih-shell,
+      #distribution .ih-hero-copy,
+      #distribution .deck-slide[data-slide-index="0"] .py-6,
+      #products .ih-shell,
+      #products .ih-hero-copy,
+      #products .product-slide[data-product-index="0"] .py-6 {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        overflow: visible !important;
+      }
+      #resources #resources-title {
+        line-height: 1.24 !important;
+        padding-bottom: 4px !important;
+        overflow: visible !important;
+      }
+      /* Side-by-side maximized CTA pills across Hero, Products, Services (#distribution), Resources & Brands on mobile */
+      #hero .ih-hero-ctas,
+      #products .ih-hero-ctas,
+      #distribution .ih-hero-ctas,
+      #resources .ih-hero-ctas,
+      #brands .br-cta-row {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        gap: 10px !important;
+        margin-top: 16px !important;
+        margin-bottom: 16px !important;
+      }
+      #hero .ih-hero-ctas {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+        margin-bottom: 0 !important;
+      }
+      #resources .ih-hero-ctas {
+        grid-template-columns: minmax(0, 1.09fr) minmax(0, 0.91fr) !important;
+      }
+      #hero .ih-btn-pill-primary,
+      #products .ih-btn-pill-primary,
+      #distribution .ih-btn-pill-primary,
+      #resources .ih-btn-pill-primary,
+      #brands .deck-slide[data-slide-index="0"] .br-cta-row > a,
+      #brands .deck-slide[data-slide-index="0"] .br-cta-row > button {
+        width: 100% !important;
+        min-height: 44px !important;
+        padding: 10px 10px !important;
+        font-size: clamp(11.5px, 3.05vw, 13px) !important;
+        letter-spacing: 0 !important;
+        line-height: 1.15 !important;
+        justify-content: center !important;
+        border-radius: 9999px !important;
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
+      }
+      #hero .ih-btn-pill-primary {
+        height: 44px !important;
+        max-height: 44px !important;
+        padding: 0 10px !important;
+        font-size: clamp(9.8px, 2.58vw, 11.5px) !important;
+        gap: 5px !important;
+      }
+      #hero .ih-btn-video-secondary,
+      #products .ih-btn-video-secondary,
+      #distribution .ih-btn-video-secondary,
+      #resources .ih-btn-video-secondary {
+        width: 100% !important;
+        min-height: 44px !important;
+        padding: 8px 10px !important;
+        border-radius: 9999px !important;
+        border: 1px solid rgba(114, 197, 248, 0.34) !important;
+        background: rgba(10, 29, 64, 0.56) !important;
+        font-size: clamp(11.5px, 3.05vw, 13px) !important;
+        font-weight: 500 !important;
+        letter-spacing: 0 !important;
+        gap: 6px !important;
+        justify-content: center !important;
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
+      }
+      #hero .ih-btn-video-secondary {
+        height: 44px !important;
+        max-height: 44px !important;
+        padding: 0 10px !important;
+        font-size: clamp(9.8px, 2.58vw, 11.5px) !important;
+        gap: 5px !important;
+      }
+      #products .ih-play-circle,
+      #distribution .ih-play-circle,
+      #resources .ih-play-circle {
+        width: 22px !important;
+        min-width: 22px !important;
+        height: 22px !important;
+        min-height: 22px !important;
+        flex: 0 0 22px !important;
+      }
+      #hero .ih-play-circle {
+        width: 21px !important;
+        min-width: 21px !important;
+        max-width: 21px !important;
+        height: 21px !important;
+        min-height: 21px !important;
+        max-height: 21px !important;
+        flex: 0 0 21px !important;
+        padding: 0 !important;
+        aspect-ratio: 1 / 1 !important;
+      }
+      #hero .ih-play-circle svg {
+        width: 11px !important;
+        height: 11px !important;
+        flex-shrink: 0 !important;
+      }
+      #about .about-go-next {
+        min-height: 42px !important;
+        padding: 10px 20px !important;
+        font-size: 13px !important;
+        letter-spacing: 0.01em !important;
+        line-height: 1.15 !important;
+      }
+      #resources .ih-lead,
+      #brands .br-lead {
+        margin-top: 10px !important;
+        margin-bottom: 0 !important;
+      }
+      #products .lottici-index-row,
+      #distribution .lottici-index-row,
+      #resources .lottici-index-row,
+      #brands .lottici-index-row {
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+      }
+      /* Resources Index back link stays single-line */
+      #resources button[onclick*="goToDeckSlide('resources', 0"] {
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        font-size: 9.5px !important;
+        letter-spacing: 0.1em !important;
+      }
+      /* Brands Slide 1 accordion headers: generous padding & wrap headroom */
+      #brands .pel-trigger {
+        padding-right: 12px !important;
+        gap: 10px !important;
+      }
+      #brands .pel-name {
+        font-size: clamp(18px, 5vw, 22px) !important;
+        line-height: 1.15 !important;
+        overflow-wrap: break-word !important;
+      }
+      /* News & Events CoverFlow: remove top gap, maximize tall mobile portrait card, align arrows cleanly below */
+      #activities .deck-slide[data-slide-index="0"] {
+        justify-content: center !important;
+        padding-top: clamp(78px, 10svh, 92px) !important;
+        padding-bottom: clamp(18px, 3svh, 28px) !important;
+      }
+      #activities .deck-slide[data-slide-index="0"] > div {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 10px 14px !important;
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+      }
+      #activities .deck-slide[data-slide-index="0"] > div > div:first-child {
+        flex: 0 0 100%;
+        justify-content: center;
+        margin-bottom: 4px !important;
+      }
+      #activities #news-cf-stage {
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        height: clamp(430px, 60svh, 535px) !important;
+        margin-bottom: 6px !important;
+        overflow: visible !important;
+        order: 2;
+      }
+      #activities .news-cf-card {
+        width: min(334px, calc(100vw - 44px)) !important;
+        height: clamp(415px, 58svh, 515px) !important;
+      }
+      #activities .news-cf-card .news-cf-overlay {
+        padding: 16px 16px 18px !important;
+      }
+      #activities .news-cf-card h3 {
+        font-size: clamp(1.08rem, 4.7vw, 1.38rem) !important;
+      }
+      #activities #news-cf-prev,
+      #activities #news-cf-next {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+        width: 38px !important;
+        height: 38px !important;
+        flex-shrink: 0 !important;
+      }
+      #activities #news-cf-prev { order: 3; }
+      #activities #news-cf-dots { order: 4; width: auto !important; }
+      #activities #news-cf-next { order: 5; }
+
+      /* Services Open Book Reader: clean full-bleed architectural sheet below 80px header + 48px subnavbar */
+      #srv-book-carousel-slide {
+        top: 128px !important;
+      }
+      #srv-book-carousel-slide.is-reading-open .bc-scene {
+        opacity: 0 !important;
+        pointer-events: none !important;
+        visibility: hidden !important;
+      }
+      #srv-book-carousel-slide.is-reading-open > .bc-mobile-reader {
+        display: block !important;
+        position: absolute !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        z-index: 65;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        background: #081224;
+      }
+      #srv-book-carousel-slide .bc-mobile-sheet {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        background: #081224;
+        border: 0;
+        border-radius: 0;
+        color: #f4f7fb;
+      }
+      #srv-book-carousel-slide .bc-mobile-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        border-bottom: 1px solid rgba(114, 197, 248, 0.14);
+        background: #071020;
+      }
+      #srv-book-carousel-slide .bc-mobile-header .bc-spread-eyebrow {
+        font-size: 10px !important;
+        letter-spacing: 0.16em !important;
+        color: #7ea7cf !important;
+      }
+      #srv-book-carousel-slide .bc-mobile-close-btn {
+        width: 32px !important;
+        height: 32px !important;
+        border-color: rgba(255, 255, 255, 0.16) !important;
+        background: transparent !important;
+      }
+      #srv-book-carousel-slide .bc-mobile-close-btn svg {
+        width: 13px !important;
+        height: 13px !important;
+      }
+      #srv-book-carousel-slide .bc-mobile-tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background: #071020;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      #srv-book-carousel-slide .bc-mobile-tab {
+        padding: 11px 12px;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        border-radius: 0;
+        background: transparent;
+        color: #7d96b2;
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: color 0.18s ease, border-color 0.18s ease;
+      }
+      #srv-book-carousel-slide .bc-mobile-tab.is-active {
+        border-bottom-color: #72c5f8;
+        color: #ffffff;
+        background: rgba(114, 197, 248, 0.05);
+      }
+      #srv-book-carousel-slide .bc-mobile-banner {
+        position: relative;
+        height: 128px;
+        overflow: hidden;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      #srv-book-carousel-slide .bc-mobile-banner img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      #srv-book-carousel-slide .bc-mobile-hero {
+        padding: 18px 18px 22px;
+        background: transparent;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      #srv-book-carousel-slide .bc-mobile-hero .bc-spread-heading {
+        gap: 10px !important;
+        align-items: baseline !important;
+      }
+      #srv-book-carousel-slide .bc-mobile-hero .bc-spread-volnum {
+        font-size: 18px !important;
+        color: #72c5f8 !important;
+      }
+      #srv-book-carousel-slide .bc-mobile-title {
+        margin: 0;
+        font-size: 21px;
+        line-height: 1.18;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: -0.015em;
+      }
+      #srv-book-carousel-slide .bc-mobile-sub {
+        margin: 8px 0 16px;
+        font-size: 13.5px;
+        line-height: 1.54;
+        color: #b4c8de;
+      }
+      #srv-book-carousel-slide .bc-mobile-highlights {
+        border: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 0;
+        background: transparent;
+        padding: 14px 0 0;
+      }
+      #srv-book-carousel-slide .bc-mobile-highlights__head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 10px;
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #72c5f8;
+        font-weight: 700;
+      }
+      #srv-book-carousel-slide .bc-mobile-badge {
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #8ba5c4;
+        font-size: 9.5px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+      }
+      #srv-book-carousel-slide .bc-mobile-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      #srv-book-carousel-slide .bc-mobile-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 13.5px;
+        line-height: 1.46;
+        color: #e4edf7;
+      }
+      #srv-book-carousel-slide .bc-mobile-idx {
+        font-size: 11px;
+        font-weight: 700;
+        color: #72c5f8;
+        flex-shrink: 0;
+        padding-top: 2px;
+      }
+      #srv-book-carousel-slide .bc-mobile-paper {
+        background: #f7f9fc;
+        color: #0a1d40;
+        padding: 18px 18px 22px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      #srv-book-carousel-slide .bc-mobile-paper__top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 10px;
+        margin-bottom: 4px;
+        border-bottom: 1px solid rgba(10, 29, 64, 0.18);
+        font-size: 10.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #2563a6;
+        font-weight: 700;
+      }
+      #srv-book-carousel-slide .bc-mobile-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+      #srv-book-carousel-slide .bc-mobile-card {
+        border: 0;
+        border-bottom: 1px solid rgba(10, 29, 64, 0.12);
+        background: transparent;
+        border-radius: 0;
+        padding: 13px 0;
+      }
+      #srv-book-carousel-slide .bc-mobile-card__meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 4px;
+        font-size: 10px;
+        letter-spacing: 0.1em;
+      }
+      #srv-book-carousel-slide .bc-mobile-card__code {
+        color: #2c7be5;
+        font-weight: 700;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      #srv-book-carousel-slide .bc-mobile-card__tag {
+        color: #5b779b;
+        font-weight: 600;
+        text-transform: uppercase;
+        text-align: right;
+      }
+      /* About Purpose mobile: lift foreground copy slightly above Luzon & archpelago map */
+      #about .about-slide[data-index="0"] {
+        padding-bottom: clamp(104px, 16svh, 148px) !important;
+      }
+      /* Products mobile chat bar compact so enlarged carousel has generous vertical room */
+      #products .at-chat-wrapper {
+        padding: 0.75rem 1rem !important;
+      }
+      #products .at-chat-messages {
+        max-height: 160px !important;
+        margin-bottom: 0.5rem !important;
+      }
+      #products .at-chat-line {
+        font-size: 10px !important;
+        line-height: 1.35 !important;
+        margin: 2px 0 2px 4px !important;
+      }
+      #srv-book-carousel-slide .bc-mobile-card__title {
+        margin: 0 0 4px;
+        font-size: 15.5px;
+        line-height: 1.28;
+        font-weight: 700;
+        color: #0a1d40;
+      }
+      #srv-book-carousel-slide .bc-mobile-card__desc {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.48;
+        color: #2b486d;
+      }
+      #srv-book-carousel-slide .bc-mobile-nav {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding-top: 16px;
+        margin-top: auto;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      #srv-book-carousel-slide .bc-mobile-nav--paper {
+        border-top-color: rgba(10, 29, 64, 0.14);
+        margin-top: 16px;
+      }
+      #srv-book-carousel-slide .bc-mobile-nav .bc-spread-navbtn {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 10px 12px;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        border-radius: 6px !important;
+        border: 1px solid rgba(114, 197, 248, 0.24) !important;
+        background: rgba(14, 28, 56, 0.9) !important;
+        color: #e2ecf7 !important;
+      }
+      #srv-book-carousel-slide .bc-mobile-nav--paper .bc-spread-navbtn {
+        border-color: rgba(10, 29, 64, 0.18) !important;
+        background: #ffffff !important;
+        color: #0a1d40 !important;
+      }
+      #srv-book-carousel-slide .bc-mobile-nav .bc-spread-inquire {
+        flex: 1 1 auto;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 10px 14px;
+        white-space: nowrap !important;
+        border-radius: 6px !important;
+      }
+
+      /* Footer Map: dock compact card at bottom-left cleanly without affecting #contact-maplibre-host */
+      #footer-map-band #contact-map-place-card {
+        top: auto !important;
+        bottom: 8px !important;
+        left: 8px !important;
+        padding: 7px 10px !important;
+        max-width: calc(100% - 118px) !important;
+      }
+      #footer-map-band #contact-map-place-card .flex.items-center.gap-1.mt-1 {
+        display: none !important;
+      }
+    }
+  </style>
 
   <script src="assets/js/gsap.min.js"></script>
   <script src="assets/js/ScrollTrigger.min.js"></script>

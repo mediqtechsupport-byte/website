@@ -240,7 +240,7 @@
       vignette.style.cssText = [
         'position:absolute',
         'inset:0',
-        'background:linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.68) 60%, rgba(0,0,0,0.96) 100%)',
+        'background:linear-gradient(180deg, rgba(6,8,12,0.58) 0%, rgba(6,8,12,0.28) 28%, rgba(6,8,12,0.82) 52%, rgba(6,8,12,0.97) 100%)',
         'pointer-events:none',
         'z-index:10',
       ].join(';');
@@ -267,11 +267,16 @@
       tagSpan.textContent = item.tag;
       tagSpan.style.cssText = [
         'display:inline-block',
-        'font-size:0.82rem',
+        'font-size:0.78rem',
         'font-weight:600',
         'letter-spacing:0.06em',
-        'color:rgba(255,255,255,0.9)',
-        'text-shadow:0 2px 6px rgba(0,0,0,0.8)',
+        'color:rgba(255,255,255,0.96)',
+        'background:rgba(8,12,22,0.88)',
+        'border:1px solid rgba(255,255,255,0.24)',
+        'padding:4px 10px',
+        'border-radius:9999px',
+        'box-shadow:0 4px 14px rgba(0,0,0,0.45)',
+        'text-shadow:0 1px 3px rgba(0,0,0,0.85)',
       ].join(';');
       tagRow.appendChild(tagSpan);
       overlay.appendChild(tagRow);

@@ -143,7 +143,7 @@
 
     var tooltip = document.createElement('div');
     tooltip.className = 'route-world-tooltip pointer-events-none absolute z-30 transition-opacity duration-150 opacity-0 -translate-x-1/2 -translate-y-full pb-3';
-    tooltip.innerHTML = '<div class="rounded-xl bg-[#0a1d40]/90 backdrop-blur-md px-3.5 py-2 text-xs text-white shadow-2xl border border-sky/30 text-center whitespace-nowrap"><div class="font-bold tracking-wide text-sky-100" id="wm-tip-name"></div><div class="text-[11px] text-sky-300 mt-0.5" id="wm-tip-note"></div></div>';
+    tooltip.innerHTML = '<div class="rounded-xl bg-[#0d111a]/92 backdrop-blur-md px-3.5 py-2 text-xs text-white shadow-2xl border border-white/15 text-center whitespace-nowrap"><div class="font-bold tracking-wide text-sky-100" id="wm-tip-name"></div><div class="text-[11px] text-sky-300 mt-0.5" id="wm-tip-note"></div></div>';
     container.appendChild(tooltip);
 
     var tipName = tooltip.querySelector('#wm-tip-name');
@@ -180,10 +180,10 @@
       var isMobile = W < 768;
       if (isMobile) {
         return {
-          x: W * 0.35,
-          y: H * 0.22,
-          w: W * 0.58,
-          h: H * 0.68
+          x: W * 0.45,
+          y: H * 0.635,
+          w: W * 0.43,
+          h: H * 0.30
         };
       }
       var h = Math.min(H * 0.82, 750);
@@ -322,9 +322,9 @@
       // Softens any flight lines passing behind the text to ensure 100% legibility
       // =======================================================================
       var textVignette = ctx.createRadialGradient(W * 0.22, H * 0.50, 40, W * 0.22, H * 0.50, Math.max(W * 0.44, 480));
-      textVignette.addColorStop(0, "rgba(10, 29, 64, 0.82)");
-      textVignette.addColorStop(0.55, "rgba(10, 29, 64, 0.55)");
-      textVignette.addColorStop(0.85, "rgba(10, 29, 64, 0.18)");
+      textVignette.addColorStop(0, "rgba(11, 12, 15, 0.58)");
+      textVignette.addColorStop(0.55, "rgba(11, 12, 15, 0.34)");
+      textVignette.addColorStop(0.85, "rgba(11, 12, 15, 0.12)");
       textVignette.addColorStop(1, "transparent");
       ctx.fillStyle = textVignette;
       ctx.beginPath();
@@ -472,11 +472,16 @@
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        // Primary Regional Label Flags (LUZON, VISAYAS, MINDANAO)
+        // Primary Regional Label Flags (LUZON, VISAYAS, MINDANAO) — edge-safe on mobile
         if (isPrimary) {
           ctx.font = 'bold 11px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
           ctx.fillStyle = "#ffffff";
-          ctx.fillText(hub.name, pt.x + 9, pt.y + 4);
+          var labelW = ctx.measureText(hub.name).width;
+          var labelX = pt.x + 9;
+          if (labelX + labelW > W - 14) {
+            labelX = Math.max(14, pt.x - 9 - labelW);
+          }
+          ctx.fillText(hub.name, labelX, pt.y + 4);
         }
       }
 

@@ -73,8 +73,16 @@
   };
 
   if (toggle && menu) {
-    toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
-    menu.addEventListener('click', (e) => { if (e.target === menu || e.target.closest('.mobile-link')) setMenu(false); });
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isCurrentlyOpen = toggle.getAttribute('aria-expanded') === 'true' && !menu.classList.contains('pointer-events-none');
+      setMenu(!isCurrentlyOpen);
+    });
+    menu.addEventListener('click', (e) => {
+      if (e.target === menu || e.target.closest('.mobile-link')) {
+        setMenu(false);
+      }
+    });
     window.matchMedia('(min-width: 1024px)').addEventListener('change', (e) => { if (e.matches) setMenu(false); });
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
@@ -274,8 +282,9 @@
       });
       const siteHeaderEl = document.getElementById('site-header');
       const pageDotsEl = document.getElementById('page-dots-nav');
-      if (siteHeaderEl) siteHeaderEl.classList.remove('is-light-page');
-      if (pageDotsEl) pageDotsEl.classList.remove('is-light-page');
+      const isLightPage = activePageId !== 'hero';
+      if (siteHeaderEl) siteHeaderEl.classList.toggle('is-light-page', isLightPage);
+      if (pageDotsEl) pageDotsEl.classList.toggle('is-light-page', isLightPage);
 
       // Leaving any section resets all departed sections back to their Landing Page (Slide 0)
       if (
@@ -723,8 +732,13 @@
     });
   });
 
-  // ─── 4B. 2ND PAGE (#ABOUT) TWO-LAYER SMOKE CANVAS (PUFF + TENDRIL) ──────────
+  // ─── 4B. 2ND PAGE (#ABOUT) TWO-LAYER SMOKE CANVAS (Disabled on Plain White) ────
   function initAboutSmokeCanvas() {
+    const canvas = document.getElementById('about-smoke-canvas');
+    if (canvas) canvas.style.display = 'none';
+    return;
+  }
+  function _disabledAboutSmokeCanvas() {
     const canvas = document.getElementById('about-smoke-canvas');
     if (!canvas || canvas._smokeActive) return;
     canvas._smokeActive = true;
@@ -733,11 +747,11 @@
     if (!ctx) return;
 
     const PALETTE = [
-      [20, 50, 100],
-      [40, 80, 140],
-      [74, 127, 165],
-      [15, 35, 75],
-      [90, 140, 190]
+      [218, 229, 240],
+      [230, 236, 242],
+      [206, 222, 236],
+      [238, 236, 230],
+      [194, 214, 232]
     ];
 
     const reducedMotionMq = typeof window.matchMedia === 'function'
@@ -896,7 +910,7 @@
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    const sprite = window.__getMediqSmokeSprite(18, 48, 102);
+    const sprite = window.__getMediqSmokeSprite(24, 62, 145);
     let w = 1, h = 1, dpr = 0.5;
     let t = 0;
 
@@ -921,7 +935,7 @@
       r: 220 + (i % 6) * 65,
       speed: 0.12 + (i % 5) * 0.06,
       phase: i * 1.42,
-      alpha: 0.26 + (i % 4) * 0.08
+      alpha: 0.18 + (i % 4) * 0.05
     }));
 
     let isVisible = true;
@@ -944,14 +958,13 @@
       rafId = requestAnimationFrame(renderSmoke);
     }
 
+    rafId = requestAnimationFrame(renderSmoke);
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
         entries.forEach((en) => { isVisible = en.isIntersecting; });
         if (isVisible && !rafId) rafId = requestAnimationFrame(renderSmoke);
       }, { rootMargin: '140px 0px', threshold: 0.01 });
       io.observe(canvas.parentElement || canvas);
-    } else {
-      rafId = requestAnimationFrame(renderSmoke);
     }
   }
   initHeroSmokeCanvas();
@@ -4663,9 +4676,13 @@ if (cycleAccWord) {
   }, 2200);
 }
 
-// A2. 21st.dev Silk Waves ShaderBackground Engine (waves-background-2)
+// A2. Silk Waves ShaderBackground Engine (Disabled so Obsidian-Cobalt Radial Halo & Hero Smoke canvas shine cleanly)
 function initSilkWavesShader(canvasId) {
   const wavesShaderCanvas = document.getElementById(canvasId);
+  if (wavesShaderCanvas) {
+    wavesShaderCanvas.style.display = 'none';
+  }
+  return;
   if (!wavesShaderCanvas || wavesShaderCanvas._wavesActive) return;
   wavesShaderCanvas._wavesActive = true;
 
@@ -5635,7 +5652,268 @@ function initHeroEyeLifespan() {
 
   let currentStage = 0;
   let autoTimer = null;
-  const INTERVAL = 6000;
+  const INTERVAL = 7200;
+
+  // Anatomical Orbital Blink Canvas Engine (Exact 1376x768 coordinate lock, zero nose/cheek seam, 2-3 slow blinks per slide)
+  const BLINK_STAGE_SPECS = [
+    {
+      url: 'assets/img/hero-eye-kid-blink.jpg?v=99.00',
+      leftOrb: { cx: 762, cy: 332, rx: 78, ry: 54 },
+      rightOrb: { cx: 1030, cy: 326, rx: 148, ry: 84 },
+      lidTop: 245,
+      lidBot: 412,
+      curveBow: 18
+    },
+    {
+      url: 'assets/img/hero-eye-teen-blink.jpg?v=99.00',
+      leftOrb: { cx: 735, cy: 342, rx: 82, ry: 54 },
+      rightOrb: { cx: 924, cy: 336, rx: 138, ry: 82 },
+      lidTop: 255,
+      lidBot: 420,
+      curveBow: 18
+    },
+    {
+      url: 'assets/img/hero-eye-adult-blink.jpg?v=99.00',
+      leftOrb: { cx: 730, cy: 294, rx: 92, ry: 56 },
+      rightOrb: { cx: 1002, cy: 288, rx: 152, ry: 86 },
+      lidTop: 205,
+      lidBot: 380,
+      curveBow: 18
+    },
+    {
+      url: 'assets/img/hero-eye-senior-blink.jpg?v=99.00',
+      leftOrb: { cx: 752, cy: 306, rx: 80, ry: 54 },
+      rightOrb: { cx: 1008, cy: 298, rx: 152, ry: 86 },
+      lidTop: 215,
+      lidBot: 392,
+      curveBow: 18
+    }
+  ];
+
+  const IMG_W = 1376;
+  const IMG_H = 768;
+
+  const blinkSlots = Array.from(slides).map((sl, i) => {
+    const spec = BLINK_STAGE_SPECS[i];
+    if (!spec) return null;
+
+    const canvas = document.createElement('canvas');
+    canvas.className = 'hero-eye-blink-layer absolute inset-0 size-full block pointer-events-none';
+    canvas.style.opacity = '0';
+    sl.appendChild(canvas);
+
+    // Pre-build 1376x768 soft-feathered orbital closed-eye patch (only covers eyes + soft orbital rim; cheek/nose stays 100% open photo)
+    const patch = document.createElement('canvas');
+    patch.width = IMG_W;
+    patch.height = IMG_H;
+    const pctx = patch.getContext('2d');
+
+    const img = new Image();
+    img.src = spec.url;
+    const slot = { spec, canvas, patch, img, ready: false, progress: 0, onReadyCallback: null };
+    img.onload = () => {
+      if (!pctx) return;
+      pctx.clearRect(0, 0, IMG_W, IMG_H);
+      pctx.drawImage(img, 0, 0, IMG_W, IMG_H);
+
+      // Build soft elliptical double-eye alpha mask so outer face & nose bridge stay 100% original pixels
+      const mask = document.createElement('canvas');
+      mask.width = IMG_W;
+      mask.height = IMG_H;
+      const mctx = mask.getContext('2d');
+      if (mctx) {
+        [spec.leftOrb, spec.rightOrb].forEach((orb) => {
+          mctx.save();
+          mctx.translate(orb.cx, orb.cy);
+          mctx.scale(orb.rx, orb.ry);
+          const rg = mctx.createRadialGradient(0, 0, 0.38, 0, 0, 1);
+          rg.addColorStop(0, 'rgba(0,0,0,1)');
+          rg.addColorStop(0.68, 'rgba(0,0,0,0.92)');
+          rg.addColorStop(0.86, 'rgba(0,0,0,0.38)');
+          rg.addColorStop(1, 'rgba(0,0,0,0)');
+          mctx.fillStyle = rg;
+          mctx.beginPath();
+          mctx.arc(0, 0, 1, 0, Math.PI * 2);
+          mctx.fill();
+          mctx.restore();
+        });
+        pctx.globalCompositeOperation = 'destination-in';
+        pctx.drawImage(mask, 0, 0);
+        pctx.globalCompositeOperation = 'source-over';
+      }
+      slot.ready = true;
+      if (typeof slot.onReadyCallback === 'function') {
+        const cb = slot.onReadyCallback;
+        slot.onReadyCallback = null;
+        cb();
+      }
+    };
+
+    return slot;
+  });
+
+  // Reusable 1376x768 scratch buffer for downward curved eyelid sweep compositing
+  const sweepBuf = document.createElement('canvas');
+  sweepBuf.width = IMG_W;
+  sweepBuf.height = IMG_H;
+  const sctx = sweepBuf.getContext('2d');
+
+  let blinkRaf = 0;
+  let blinkTimers = [];
+  let heroBlinkVisible = true;
+  const reducedMotionBlink = typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)')
+    : { matches: false };
+
+  function clearBlinkTimers() {
+    blinkTimers.forEach((id) => clearTimeout(id));
+    blinkTimers = [];
+  }
+
+  function resetBlinkLayers() {
+    clearBlinkTimers();
+    if (blinkRaf) {
+      cancelAnimationFrame(blinkRaf);
+      blinkRaf = 0;
+    }
+    blinkSlots.forEach((slot) => {
+      if (!slot) return;
+      slot.progress = 0;
+      slot.canvas.style.opacity = '0';
+    });
+  }
+
+  function drawOrbitalBlinkFrame(slot, closeProgress) {
+    if (!slot || !slot.ready || !sctx) return;
+    slot.progress = closeProgress;
+    const { canvas, patch, spec } = slot;
+    if (closeProgress <= 0.005) {
+      canvas.style.opacity = '0';
+      return;
+    }
+
+    const rect = canvas.getBoundingClientRect();
+    const cw = Math.max(1, Math.round(rect.width || window.innerWidth));
+    const ch = Math.max(1, Math.round(rect.height || window.innerHeight));
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const tw = Math.max(1, Math.round(cw * dpr));
+    const th = Math.max(1, Math.round(ch * dpr));
+    if (canvas.width !== tw || canvas.height !== th) {
+      canvas.width = tw;
+      canvas.height = th;
+    }
+
+    // Replicate CSS `bg-cover bg-[position:80%_48%] lg:bg-[position:82%_48%]` transform in image pixels
+    const scale = Math.max(cw / IMG_W, ch / IMG_H);
+    const drawW = IMG_W * scale;
+    const drawH = IMG_H * scale;
+    const posX = cw >= 1024 ? 0.82 : 0.80;
+    const posY = 0.48;
+    const ox = (cw - drawW) * posX;
+    const oy = (ch - drawH) * posY;
+
+    // Composite curved upper-eyelid descent wipe onto 1376x768 orbital buffer
+    const lidY = spec.lidTop + closeProgress * (spec.lidBot - spec.lidTop);
+    sctx.clearRect(0, 0, IMG_W, IMG_H);
+    sctx.globalCompositeOperation = 'source-over';
+    sctx.drawImage(patch, 0, 0);
+
+    // Feathered curved eyelid clip from top down to lidY so upper lid pulls down smoothly
+    const g = sctx.createLinearGradient(0, spec.lidTop - 16, 0, lidY + 18);
+    g.addColorStop(0, 'rgba(0,0,0,1)');
+    g.addColorStop(0.76, 'rgba(0,0,0,1)');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    sctx.globalCompositeOperation = 'destination-in';
+    sctx.fillStyle = g;
+    sctx.fillRect(0, 0, IMG_W, lidY + 20);
+    sctx.globalCompositeOperation = 'source-over';
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, cw, ch);
+    ctx.drawImage(sweepBuf, ox, oy, drawW, drawH);
+    canvas.style.opacity = String(Math.min(1, closeProgress * 2.4));
+  }
+
+  function triggerEyeBlink(onComplete) {
+    const stageAtStart = currentStage;
+    const slot = blinkSlots[stageAtStart];
+    if (!slot || reducedMotionBlink.matches || document.hidden || !heroBlinkVisible) return;
+    if (!slot.ready) {
+      slot.onReadyCallback = () => {
+        if (currentStage === stageAtStart) triggerEyeBlink(onComplete);
+      };
+      return;
+    }
+    if (blinkRaf) cancelAnimationFrame(blinkRaf);
+
+    const start = performance.now();
+    const CLOSE_MS = 260;
+    const HOLD_MS = 140;
+    const OPEN_MS = 350;
+    const TOTAL_MS = CLOSE_MS + HOLD_MS + OPEN_MS;
+
+    function tick(now) {
+      if (currentStage !== stageAtStart) {
+        blinkRaf = 0;
+        drawOrbitalBlinkFrame(slot, 0);
+        return;
+      }
+      const elapsed = now - start;
+      if (elapsed >= TOTAL_MS) {
+        blinkRaf = 0;
+        drawOrbitalBlinkFrame(slot, 0);
+        if (typeof onComplete === 'function') onComplete();
+        return;
+      }
+      let prog = 0;
+      if (elapsed < CLOSE_MS) {
+        const u = elapsed / CLOSE_MS;
+        prog = u * u * (3 - 2 * u);
+      } else if (elapsed < CLOSE_MS + HOLD_MS) {
+        prog = 1;
+      } else {
+        const u = (elapsed - CLOSE_MS - HOLD_MS) / OPEN_MS;
+        prog = 1 - u * u * (3 - 2 * u);
+      }
+      drawOrbitalBlinkFrame(slot, prog);
+      blinkRaf = requestAnimationFrame(tick);
+    }
+
+    blinkRaf = requestAnimationFrame(tick);
+  }
+
+  function scheduleStageBlinkTrain(stageIdx) {
+    clearBlinkTimers();
+    if (reducedMotionBlink.matches) return;
+    // Run 3 chained slow blinks on slides 0/2 and 2 chained slow blinks on slides 1/3 (~600ms relaxed open-eye pause between blinks)
+    const targetBlinks = (stageIdx % 2 === 0) ? 3 : 2;
+    let remaining = targetBlinks;
+
+    const runStep = () => {
+      if (currentStage !== stageIdx || remaining <= 0) return;
+      remaining -= 1;
+      triggerEyeBlink(() => {
+        if (currentStage === stageIdx && remaining > 0) {
+          const nextId = setTimeout(runStep, 600);
+          blinkTimers.push(nextId);
+        }
+      });
+    };
+
+    const startId = setTimeout(runStep, 550);
+    blinkTimers.push(startId);
+  }
+
+  const heroSectionEl = document.getElementById('hero');
+  if (heroSectionEl && 'IntersectionObserver' in window) {
+    const blinkIo = new IntersectionObserver((entries) => {
+      heroBlinkVisible = entries.some((en) => en.isIntersecting);
+      if (!heroBlinkVisible) resetBlinkLayers();
+    }, { rootMargin: '100px 0px', threshold: 0.05 });
+    blinkIo.observe(heroSectionEl);
+  }
 
   function applySlideCopy(slideData, animate) {
     if (!slideData || !titleEl) return;
@@ -5697,6 +5975,7 @@ function initHeroEyeLifespan() {
   function setStage(idx, animate = true) {
     const total = Math.min(slides.length, HERO_CAROUSEL_DATA.length);
     currentStage = (idx + total) % total;
+    resetBlinkLayers();
 
     slides.forEach((sl, i) => {
       const isCurrent = (i === currentStage);
@@ -5714,6 +5993,7 @@ function initHeroEyeLifespan() {
     });
 
     applySlideCopy(HERO_CAROUSEL_DATA[currentStage], animate);
+    scheduleStageBlinkTrain(currentStage);
   }
 
   function scheduleNext() {
@@ -5753,6 +6033,7 @@ function initHeroEyeLifespan() {
     }, { passive: true });
   }
 
+  window.__triggerHeroEyeBlink = () => triggerEyeBlink();
   setStage(0, false);
   scheduleNext();
 }
@@ -6413,6 +6694,15 @@ void main() {
   }
 
   function setupGL() {
+    canvas.style.width = '';
+    canvas.style.height = '';
+    if (window.innerWidth < 1024) {
+      field = null;
+      layout = null;
+      canvas.classList.add('opacity-0');
+      titleEl.querySelectorAll('.ih-h1-line').forEach(el => el.classList.remove('opacity-0'));
+      return;
+    }
     const res = buildTitleField();
     if (!res) return;
     field = res;
@@ -6472,7 +6762,7 @@ void main() {
       const iy = layout.height * 0.35 + layout.fontSize * 0.15 * Math.sin(sim.clock * 0.9);
       gx = sim.homeX + (ix - sim.homeX) * b;
       gy = sim.homeY + (iy - sim.homeY) * b;
-      massTarget = 0.5 * b;
+      massTarget = 0;
     }
 
     const k = 330 - 270 * visc;
@@ -7735,73 +8025,9 @@ function initFoundationPartnershipStage() {
     }
   }
 
-  const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reducedMotion) {
-    frame(7800, true);
-  } else {
-    let fndVisible = true;
-    let fndSlideActive = true;
-    let fndDocVisible = !document.hidden;
-    let fndRafId = 0;
-
-    const slideEl = sec.closest('.about-slide');
-    const syncFndSlide = () => {
-      if (!slideEl) {
-        fndSlideActive = true;
-        return;
-      }
-      fndSlideActive = !slideEl.classList.contains('opacity-0') && !slideEl.classList.contains('pointer-events-none');
-    };
-    syncFndSlide();
-
-    const shouldRunFnd = () => window.innerWidth >= 1024 && fndVisible && fndSlideActive && fndDocVisible;
-    const syncFndLoop = () => {
-      if (shouldRunFnd()) {
-        if (!fndRafId) fndRafId = requestAnimationFrame(loop);
-      } else if (fndRafId) {
-        cancelAnimationFrame(fndRafId);
-        fndRafId = 0;
-      }
-    };
-
-    const loop = (t) => {
-      fndRafId = 0;
-      if (!shouldRunFnd()) return;
-      frame(t, false);
-      if (shouldRunFnd()) fndRafId = requestAnimationFrame(loop);
-    };
-
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver((entries) => {
-        fndVisible = entries.some((en) => en.isIntersecting);
-        syncFndLoop();
-      }, { rootMargin: '120px 0px', threshold: 0.01 });
-      io.observe(sec);
-    }
-    if (slideEl && typeof MutationObserver !== 'undefined') {
-      const mo = new MutationObserver(() => {
-        syncFndSlide();
-        syncFndLoop();
-      });
-      mo.observe(slideEl, { attributes: true, attributeFilter: ['class'] });
-    }
-    document.addEventListener('visibilitychange', () => {
-      fndDocVisible = !document.hidden;
-      syncFndLoop();
-    });
-    syncFndLoop();
-  }
-
-  window.addEventListener('mousemove', (e) => {
-    if (reducedMotion || window.__aboutDeckCurrentIndex === 0) return;
-    const x = e.clientX / window.innerWidth - 0.5;
-    const y = e.clientY / window.innerHeight - 0.5;
-    stage.style.transform = `rotateY(${x * 12}deg) rotateX(${-y * 12}deg)`;
-  }, { passive: true });
-
-  document.addEventListener('mouseleave', () => {
-    stage.style.transform = '';
-  });
+  frame(7800, true);
+  parts.innerHTML = '';
+  stage.style.transform = '';
 }
 
 if (document.readyState === 'loading') {
@@ -8173,6 +8399,11 @@ window.toggleIolAcc = function (btn) {
 /* ========================================================================= */
 function initProductsSmokeCanvas() {
   const canvas = document.getElementById('products-smoke-canvas');
+  if (canvas) canvas.style.display = 'none';
+  return;
+}
+function _disabledProductsSmokeCanvas() {
+  const canvas = document.getElementById('products-smoke-canvas');
   if (!canvas || canvas._smokeActive) return;
   canvas._smokeActive = true;
 
@@ -8199,11 +8430,11 @@ function initProductsSmokeCanvas() {
   window.__resizeProductsSmoke = resize;
 
   const PALETTE = [
-    [20, 50, 100],
-    [40, 80, 140],
-    [74, 127, 165],
-    [15, 35, 75],
-    [90, 140, 190]
+    [218, 229, 240],
+    [230, 236, 242],
+    [206, 222, 236],
+    [238, 236, 230],
+    [194, 214, 232]
   ];
   const rand = (min, max) => min + Math.random() * (max - min);
   const pickColor = () => PALETTE[Math.floor(Math.random() * PALETTE.length)];
@@ -10393,12 +10624,17 @@ if (document.readyState === 'loading') {
     ul.innerHTML = '';
     (d.pts || '').split('|').forEach((txt) => {
       const li = document.createElement('li');
-      li.className = 'flex items-start gap-2';
-      const dot = document.createElement('span');
-      dot.className = 'mt-1.5 size-1.5 rounded-full bg-sky shrink-0';
+      li.className = 'flex items-center gap-3';
+      const badge = window.__createWwdBulletBadge ? window.__createWwdBulletBadge(txt) : null;
+      if (badge) {
+        li.appendChild(badge);
+      } else {
+        const dot = document.createElement('span');
+        dot.className = 'size-1.5 rounded-full bg-sky shrink-0';
+        li.appendChild(dot);
+      }
       const s = document.createElement('span');
       s.textContent = txt;
-      li.appendChild(dot);
       li.appendChild(s);
       ul.appendChild(li);
     });
@@ -10429,6 +10665,55 @@ if (document.readyState === 'loading') {
     if (e.target === m || e.target.closest('#wwd-modal-close') || e.target.closest('#wwd-modal-cta')) closeModal();
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+  // Contextual Glowing Rounded-Square Icons for "What We Do" subpages (#wwd-forge-services-block & #wwd-modal-pts)
+  function getWwdIconSvgPaths(label) {
+    const t = String(label || '').toLowerCase();
+    if (t.includes('importation') || t.includes('sourcing')) return '<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>';
+    if (t.includes('cleanroom') || t.includes('inventory')) return '<path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/>';
+    if (t.includes('cold-chain') || t.includes('gdp')) return '<path d="M2 12h20"/><path d="M12 2v20"/><path d="m20 16-4-4 4-4"/><path d="m4 8 4 4-4 4"/><path d="m16 4-4 4-4-4"/><path d="m8 20 4-4 4 4"/>';
+    if (t.includes('tracking') || t.includes('port-of-entry')) return '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>';
+    if (t.includes('brand positioning') || t.includes('market insight')) return '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>';
+    if (t.includes('launch') || t.includes('multichannel')) return '<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>';
+    if (t.includes('field sales')) return '<path d="M12 6v4"/><path d="M14 14h-4"/><path d="M14 18h-4"/><path d="M14 8h-4"/><path d="M18 12h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2"/><path d="M18 22V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v18"/>';
+    if (t.includes('performance review') || t.includes('partner feedback')) return '<path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>';
+    if (t.includes('commercial planning') || t.includes('customer insight')) return '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>';
+    if (t.includes('channel expansion') || t.includes('account development')) return '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>';
+    if (t.includes('hospital') || t.includes('procurement')) return '<rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>';
+    if (t.includes('principal collaboration') || t.includes('principal alignment')) return '<path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/>';
+    if (t.includes('regulatory') || t.includes('authorization')) return '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>';
+    if (t.includes('lot-level') || t.includes('traceability')) return '<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M8 7v10"/><path d="M12 7v10"/><path d="M16 7v10"/>';
+    if (t.includes('sop-guided') || t.includes('handling')) return '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/>';
+    if (t.includes('documentation') || t.includes('product-scoped')) return '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>';
+    if (t.includes('training')) return '<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>';
+    if (t.includes('demonstrations')) return '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>';
+    if (t.includes('educational events')) return '<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/><path d="m9 16 2 2 4-4"/>';
+    if (t.includes('technical engagement')) return '<path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/>';
+    if (t.includes('follow-up') || t.includes('customer support')) return '<path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"/><path d="M21 16v2a4 4 0 0 1-4 4h-5"/>';
+    if (t.includes('feedback coordination')) return '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>';
+    if (t.includes('escalation')) return '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/>';
+    return '<path d="M20 6 9 17l-5-5"/>';
+  }
+
+  function createWwdBulletBadge(label) {
+    const span = document.createElement('span');
+    span.className = 'grid place-items-center size-7 rounded-lg border border-[#72c5f8]/30 bg-[#72c5f8]/10 text-[#72c5f8] shrink-0 shadow-[0_0_14px_rgba(114,197,248,0.18)]';
+    span.innerHTML = `<svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${getWwdIconSvgPaths(label)}</svg>`;
+    return span;
+  }
+  window.__createWwdBulletBadge = createWwdBulletBadge;
+
+  const wwdForgeRoot = document.getElementById('wwd-forge-services-block');
+  if (wwdForgeRoot) {
+    wwdForgeRoot.querySelectorAll('[data-wwd-forge-panel] .grid > div').forEach((row) => {
+      const dot = row.querySelector('span.rounded-full');
+      const labelEl = row.querySelector('span:last-child');
+      if (!dot || !labelEl) return;
+      row.classList.remove('gap-2.5', 'text-white/75');
+      row.classList.add('gap-3', 'text-white/80');
+      dot.replaceWith(createWwdBulletBadge(labelEl.textContent));
+    });
+  }
 
   select(0, false);
   checkVisible();
@@ -11089,9 +11374,11 @@ if (document.readyState === 'loading') {
     }
   });
 
-  // Initialize lightweight GPU-blitted Rising Smoke on visible .deck-smoke-canvas elements
+  // Disable deck smoke canvases on Plain White theme
   const canvases = document.querySelectorAll('.deck-smoke-canvas');
   canvases.forEach((canvas) => {
+    canvas.style.display = 'none';
+    return;
     if (canvas._smokeActive) return;
     canvas._smokeActive = true;
     const ctx = canvas.getContext('2d');
@@ -11099,11 +11386,11 @@ if (document.readyState === 'loading') {
 
     const isBrands = canvas.id === 'brands-smoke-canvas';
     const PALETTE = [
-      [20, 50, 100],
-      [40, 80, 140],
-      [74, 127, 165],
-      [15, 35, 75],
-      [90, 140, 190]
+      [218, 229, 240],
+      [230, 236, 242],
+      [206, 222, 236],
+      [238, 236, 230],
+      [194, 214, 232]
     ];
 
     const reducedMotionMq = typeof window.matchMedia === 'function'

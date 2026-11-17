@@ -255,8 +255,9 @@
 
       var baseScale = Math.max(w / 960, h / 320);
       var scale = baseScale * state.zoom;
+      var mobileYShift = w < 640 ? -Math.round(h * 0.08) : 0;
       var cx = w * 0.52 + state.panX;
-      var cy = h * 0.50 + state.panY;
+      var cy = h * 0.50 + mobileYShift + state.panY;
 
       ctx.save();
       ctx.translate(cx, cy);
@@ -523,9 +524,16 @@
       });
     }
 
-    window.addEventListener('resize', renderFallbackCanvas, { passive: true });
+    function handleMapResize() {
+      if (state.liveMap) {
+        state.liveMap.resize();
+        return;
+      }
+      renderFallbackCanvas();
+    }
+    window.addEventListener('resize', handleMapResize, { passive: true });
     if (typeof ResizeObserver === 'function') {
-      new ResizeObserver(renderFallbackCanvas).observe(stage);
+      new ResizeObserver(handleMapResize).observe(stage);
     }
     renderFallbackCanvas();
 
@@ -535,6 +543,11 @@
       var cssLink = document.createElement('link');
       cssLink.rel = 'stylesheet';
       cssLink.href = 'https://unpkg.com/maplibre-gl@' + MAPLIBRE_VERSION + '/dist/maplibre-gl.css';
+      cssLink.onload = function () {
+        if (state.liveMap) {
+          state.liveMap.resize();
+        }
+      };
       document.head.appendChild(cssLink);
 
       var jsScript = document.createElement('script');
@@ -544,7 +557,7 @@
         if (!window.maplibregl) return;
         var glHost = document.createElement('div');
         glHost.id = 'contact-maplibre-host';
-        glHost.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:2;';
+        glHost.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;max-width:none;padding:0;margin:0;z-index:2;';
         stage.insertBefore(glHost, stage.firstChild);
 
         var mlMap = new window.maplibregl.Map({
@@ -558,6 +571,13 @@
 
         mlMap.on('load', function () {
           state.liveMap = mlMap;
+          mlMap.resize();
+          setTimeout(function () {
+            if (state.liveMap) state.liveMap.resize();
+          }, 220);
+          setTimeout(function () {
+            if (state.liveMap) state.liveMap.resize();
+          }, 750);
           canvas.style.display = 'none';
           markerOverlay.style.display = 'none';
           MARKER_LOCATIONS.forEach(function (loc) {

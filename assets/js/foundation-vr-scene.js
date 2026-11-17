@@ -20,6 +20,10 @@
   const CANVAS_ID = 'fnd-vr-bg-canvas';
   const LOOP_DURATION = 9.5;
 
+  // Static gradient mode requested: disable 3D VR scene on #about-sec-foundation
+  window.__fndOnStarImpact = window.__fndOnStarImpact || function () {};
+  return;
+
   function clamp(v, lo, hi) {
     return Math.max(lo, Math.min(hi, v));
   }
@@ -330,20 +334,7 @@
     const BACK_Z = -6.15;
     const WALL_H = CEIL_Y - FLOOR_Y;
 
-    // 1. Deep obsidian wood plank office floor
-    const floorMat = new THREE.MeshStandardMaterial({
-      map: makeWoodFloorTexture(),
-      emissive: 0x03050a,
-      emissiveIntensity: 0.4,
-      roughness: 0.58,
-      metalness: 0.12,
-    });
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(26, 18), floorMat);
-    floor.rotation.x = -Math.PI * 0.5;
-    floor.position.set(0, FLOOR_Y, -1.5);
-    env.add(floor);
-
-    // Woven charcoal-slate area rug directly beneath the doctor's office workstation
+    // 1. Minimalist dark charcoal-slate floor pad directly beneath the doctor's workstation (open background shows CSS gradient)
     const rug = new THREE.Mesh(
       new THREE.BoxGeometry(3.7, 0.012, 2.75),
       new THREE.MeshStandardMaterial({ color: 0x0b101b, roughness: 0.92, metalness: 0.04 })
@@ -358,14 +349,6 @@
     rugTrim.position.set(0.65, FLOOR_Y + 0.0065, -2.05);
     env.add(rugTrim);
 
-    // 2. Enclosed interior walls & ceiling in sleek deep obsidian-black cinema tone (zero seam behind copy, zero blue wash)
-    const wallMat = new THREE.MeshStandardMaterial({
-      color: 0x050912,
-      emissive: 0x03050b,
-      emissiveIntensity: 0.58,
-      roughness: 0.85,
-      metalness: 0.06,
-    });
     const trimDarkMat = new THREE.MeshStandardMaterial({
       color: 0x0c1322,
       emissive: 0x040710,
@@ -373,106 +356,8 @@
       roughness: 0.45,
       metalness: 0.22,
     });
-    const slatMat = new THREE.MeshStandardMaterial({
-      color: 0x101829,
-      emissive: 0x050914,
-      emissiveIntensity: 0.35,
-      roughness: 0.62,
-      metalness: 0.14,
-    });
 
-    const backWall = new THREE.Mesh(new THREE.PlaneGeometry(26, WALL_H), wallMat);
-    backWall.position.set(0, FLOOR_Y + WALL_H * 0.5, BACK_Z);
-    env.add(backWall);
-
-    const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(18, WALL_H), wallMat);
-    leftWall.rotation.y = Math.PI * 0.5;
-    leftWall.position.set(-10.8, FLOOR_Y + WALL_H * 0.5, -1.0);
-    env.add(leftWall);
-
-    const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(18, WALL_H), wallMat);
-    rightWall.rotation.y = -Math.PI * 0.5;
-    rightWall.position.set(4.85, FLOOR_Y + WALL_H * 0.5, -1.0);
-    env.add(rightWall);
-
-    // Baseboard skirting along back & side walls
-    const backBaseboard = new THREE.Mesh(new THREE.BoxGeometry(24, 0.18, 0.06), trimDarkMat);
-    backBaseboard.position.set(0, FLOOR_Y + 0.09, BACK_Z + 0.03);
-    env.add(backBaseboard);
-
-    const rightBaseboard = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.18, 16), trimDarkMat);
-    rightBaseboard.position.set(4.82, FLOOR_Y + 0.09, -1.0);
-    env.add(rightBaseboard);
-
-    // 3. Lofty Office Ceiling harmonized with obsidian wall tone (no pitch-black triangle against copy)
-    const ceilMat = new THREE.MeshStandardMaterial({
-      color: 0x04070e,
-      emissive: 0x03050b,
-      emissiveIntensity: 0.62,
-      roughness: 0.88,
-    });
-    const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(26, 18), ceilMat);
-    ceiling.rotation.x = Math.PI * 0.5;
-    ceiling.position.set(0, CEIL_Y, -1.5);
-    env.add(ceiling);
-
-    const trofferFrameMat = new THREE.MeshStandardMaterial({ color: 0x17315c, metalness: 0.5, roughness: 0.4 });
-    const trofferLightMat = new THREE.MeshBasicMaterial({ color: 0x93c5fd, transparent: true, opacity: 0.36 });
-    [-2.4, -4.4].forEach((tz) => {
-      const frame = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.05, 0.36), trofferFrameMat);
-      frame.position.set(1.25, CEIL_Y - 0.02, tz);
-      env.add(frame);
-      const panel = new THREE.Mesh(new THREE.PlaneGeometry(1.78, 0.26), trofferLightMat);
-      panel.rotation.x = Math.PI * 0.5;
-      panel.position.set(1.25, CEIL_Y - 0.048, tz);
-      env.add(panel);
-    });
-
-    // 4. Vertical Acoustic Slat Paneling behind desk (right-center only so left copy stays quiet)
-    for (let sx = -0.15; sx <= 2.35; sx += 0.14) {
-      const slat = new THREE.Mesh(new THREE.BoxGeometry(0.055, WALL_H - 0.24, 0.05), slatMat);
-      slat.position.set(sx, FLOOR_Y + WALL_H * 0.5 + 0.04, BACK_Z + 0.03);
-      env.add(slat);
-    }
-
-    // Framed Medical / Ophthalmology Plaque on back acoustic wall
-    const plaqueFrame = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.72, 0.04), trimDarkMat);
-    plaqueFrame.position.set(0.62, 0.52, BACK_Z + 0.07);
-    env.add(plaqueFrame);
-    const plaqueFace = new THREE.Mesh(
-      new THREE.PlaneGeometry(0.84, 0.64),
-      new THREE.MeshStandardMaterial({ map: makeWallPlaqueTexture(), roughness: 0.55 })
-    );
-    plaqueFace.position.set(0.62, 0.52, BACK_Z + 0.095);
-    env.add(plaqueFace);
-
-    // 5. Right Wall Sleek Venetian-Blind Clinic Window (frames foreground-right edge cleanly)
-    const winGroup = new THREE.Group();
-    winGroup.position.set(4.79, -0.05, -1.65);
-    winGroup.rotation.y = -Math.PI * 0.5;
-    env.add(winGroup);
-
-    const winSill = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.07, 0.16), trimDarkMat);
-    winSill.position.set(0, -1.0, 0.04);
-    winGroup.add(winSill);
-
-    const winOuter = new THREE.Mesh(new THREE.BoxGeometry(2.52, 2.0, 0.08), trimDarkMat);
-    winGroup.add(winOuter);
-
-    const winGlass = new THREE.Mesh(
-      new THREE.PlaneGeometry(2.36, 1.84),
-      new THREE.MeshBasicMaterial({ color: 0x04070e, transparent: true, opacity: 0.92 })
-    );
-    winGlass.position.z = 0.044;
-    winGroup.add(winGlass);
-
-    const blindMat = new THREE.MeshStandardMaterial({ color: 0x0d1424, roughness: 0.55, metalness: 0.28 });
-    for (let i = 0; i < 10; i++) {
-      const slat = new THREE.Mesh(new THREE.BoxGeometry(2.34, 0.024, 0.028), blindMat);
-      slat.position.set(0, 0.82 - i * 0.11, 0.065);
-      slat.rotation.x = 0.28;
-      winGroup.add(slat);
-    }
+    // Wall/floor/ceiling room enclosure removed so the plain obsidian-cobalt radial gradient background renders cleanly edge-to-edge behind the workstation & projector.
 
     // 6. Wall-Mounted Clinic Short-Throw Black Projector Screen (upper-right wall — MEDIQ Particles project onto this!)
     const projGroup = new THREE.Group();
@@ -1465,11 +1350,11 @@
     return;
   }
 
-  renderer.setClearColor(0x02040a, 0.94);
+  renderer.setClearColor(0x000000, 0);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x03060c, 0.032);
+  scene.fog = null;
 
   const camera = new THREE.PerspectiveCamera(42, 16 / 9, 0.2, 40);
   const BASE_CAM = new THREE.Vector3(0, 0.14, 3.85);

@@ -18,11 +18,10 @@
   const stage = document.getElementById('fnd-partner-stage');
   if (!sec || !stage) return;
 
-  stage.dataset.partnerInitialized = '1'; // main.js skips the legacy SVG loop
   const svg = stage.querySelector('svg');
-  if (svg) svg.style.visibility = 'hidden';
+  if (svg) svg.style.visibility = 'visible';
 
-  // Mirror layout cleanly on desktop (Copy LEFT, Enlarged MEDIQ Globe RIGHT) without mutating locked DOM
+  // Mirror layout cleanly on desktop (Copy LEFT, Flat Optical Emblem RIGHT) without mutating locked DOM
   if (!document.getElementById('fnd-mirror-layout-style')) {
     const mirrorStyle = document.createElement('style');
     mirrorStyle.id = 'fnd-mirror-layout-style';
@@ -38,6 +37,10 @@
     ].join('\n');
     document.head.appendChild(mirrorStyle);
   }
+
+  // Static gradient mode requested: keep __fndOnStarImpact bridge reference and omit 3D starfield canvas
+  window.__fndOnStarImpact = window.__fndOnStarImpact || function () {};
+  return;
 
   // Mount one crisp retina canvas spanning the full Foundation panel for seamless blending
   const canvas = document.createElement('canvas');
