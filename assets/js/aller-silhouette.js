@@ -106,64 +106,64 @@
   };
 
   const HAND_FINGERS_WORLD = [
-    // 0: Thumb (Full adult 2-phalanx opposable thumb wrapping gracefully up the left curve of the globe)
+    // 0: Thumb (Natural opposable radial origin cupping the left equator of the sphere)
     {
       name: 'thumb',
       nodes: [
-        { p: [-0.188, 0.456, 0.144], rx: 0.0115, ry: 0.0098, crv: 10 },
-        { p: [-0.208, 0.474, 0.158], rx: 0.0102, ry: 0.0088, crv: 12 },
-        { p: [-0.226, 0.496, 0.172], rx: 0.0088, ry: 0.0076, crv: 14 },
-        { p: [-0.236, 0.520, 0.186], rx: 0.0076, ry: 0.0066, crv: 14 },
-        { p: [-0.239, 0.538, 0.194], rx: 0.0065, ry: 0.0056, crv: 16 },
-        { p: [-0.237, 0.549, 0.198], rx: 0.0052, ry: 0.0044, crv: 16 }
+        { p: [-0.194, 0.466, 0.146], rx: 0.0112, ry: 0.0095, crv: 7 },
+        { p: [-0.216, 0.492, 0.160], rx: 0.0102, ry: 0.0087, crv: 8 },
+        { p: [-0.234, 0.522, 0.176], rx: 0.0089, ry: 0.0077, crv: 9 },
+        { p: [-0.244, 0.552, 0.192], rx: 0.0077, ry: 0.0067, crv: 10 },
+        { p: [-0.245, 0.576, 0.201], rx: 0.0066, ry: 0.0057, crv: 10 },
+        { p: [-0.241, 0.592, 0.204], rx: 0.0052, ry: 0.0044, crv: 11 }
       ]
     },
-    // 1: Index Finger (Full adult 3-phalanx reach cradling front-left equator-lower globe surface)
+    // 1: Index Finger (Cradling front-left lower curve smoothly up to equator)
     {
       name: 'index',
       nodes: [
-        { p: [-0.178, 0.464, 0.158], rx: 0.0086, ry: 0.0076, crv: 10 },
-        { p: [-0.183, 0.478, 0.184], rx: 0.0082, ry: 0.0072, crv: 12 },
-        { p: [-0.187, 0.495, 0.212], rx: 0.0078, ry: 0.0068, crv: 14 },
-        { p: [-0.188, 0.514, 0.234], rx: 0.0068, ry: 0.0060, crv: 14 },
-        { p: [-0.185, 0.530, 0.245], rx: 0.0060, ry: 0.0052, crv: 16 },
-        { p: [-0.181, 0.542, 0.249], rx: 0.0050, ry: 0.0042, crv: 16 }
+        { p: [-0.180, 0.484, 0.168], rx: 0.0086, ry: 0.0076, crv: 7 },
+        { p: [-0.188, 0.496, 0.198], rx: 0.0081, ry: 0.0071, crv: 8 },
+        { p: [-0.191, 0.517, 0.227], rx: 0.0074, ry: 0.0065, crv: 9 },
+        { p: [-0.190, 0.542, 0.247], rx: 0.0066, ry: 0.0058, crv: 10 },
+        { p: [-0.186, 0.565, 0.256], rx: 0.0058, ry: 0.0050, crv: 10 },
+        { p: [-0.182, 0.580, 0.258], rx: 0.0048, ry: 0.0041, crv: 11 }
       ]
     },
-    // 2: Middle Finger (Tallest adult finger spanning up the lower-front hemisphere of the sphere)
+    // 2: Middle Finger (Tallest finger hugging the central front curve cleanly past equator)
     {
       name: 'middle',
       nodes: [
-        { p: [-0.160, 0.463, 0.160], rx: 0.0090, ry: 0.0080, crv: 10 },
-        { p: [-0.162, 0.477, 0.188], rx: 0.0085, ry: 0.0075, crv: 12 },
-        { p: [-0.162, 0.496, 0.218], rx: 0.0080, ry: 0.0070, crv: 14 },
-        { p: [-0.162, 0.518, 0.241], rx: 0.0070, ry: 0.0062, crv: 14 },
-        { p: [-0.160, 0.538, 0.251], rx: 0.0062, ry: 0.0054, crv: 16 },
-        { p: [-0.158, 0.551, 0.254], rx: 0.0052, ry: 0.0044, crv: 16 }
+        { p: [-0.160, 0.484, 0.170], rx: 0.0090, ry: 0.0080, crv: 7 },
+        { p: [-0.162, 0.496, 0.202], rx: 0.0084, ry: 0.0074, crv: 8 },
+        { p: [-0.162, 0.519, 0.232], rx: 0.0077, ry: 0.0068, crv: 9 },
+        { p: [-0.161, 0.546, 0.252], rx: 0.0068, ry: 0.0060, crv: 10 },
+        { p: [-0.159, 0.573, 0.260], rx: 0.0060, ry: 0.0052, crv: 10 },
+        { p: [-0.157, 0.592, 0.259], rx: 0.0050, ry: 0.0043, crv: 11 }
       ]
     },
-    // 3: Ring Finger (Balanced adult support cradling the lower-front-right curve of the globe)
+    // 3: Ring Finger (Natural taper cradling lower-front-right curve of the globe)
     {
       name: 'ring',
       nodes: [
-        { p: [-0.142, 0.464, 0.158], rx: 0.0084, ry: 0.0074, crv: 10 },
-        { p: [-0.140, 0.478, 0.185], rx: 0.0079, ry: 0.0070, crv: 12 },
-        { p: [-0.137, 0.496, 0.213], rx: 0.0074, ry: 0.0065, crv: 14 },
-        { p: [-0.134, 0.515, 0.233], rx: 0.0065, ry: 0.0057, crv: 14 },
-        { p: [-0.132, 0.530, 0.242], rx: 0.0057, ry: 0.0050, crv: 16 },
-        { p: [-0.131, 0.541, 0.246], rx: 0.0048, ry: 0.0041, crv: 16 }
+        { p: [-0.141, 0.484, 0.167], rx: 0.0084, ry: 0.0074, crv: 7 },
+        { p: [-0.137, 0.496, 0.197], rx: 0.0078, ry: 0.0069, crv: 8 },
+        { p: [-0.134, 0.517, 0.226], rx: 0.0071, ry: 0.0063, crv: 9 },
+        { p: [-0.132, 0.541, 0.246], rx: 0.0063, ry: 0.0055, crv: 10 },
+        { p: [-0.130, 0.562, 0.254], rx: 0.0055, ry: 0.0048, crv: 10 },
+        { p: [-0.129, 0.577, 0.256], rx: 0.0046, ry: 0.0040, crv: 11 }
       ]
     },
-    // 4: Little Finger / Pinky (Natural adult outer support hugging lower-right sphere edge)
+    // 4: Little Finger / Pinky (Proportionally shorter outer support hugging lower-right sphere edge)
     {
       name: 'pinky',
       nodes: [
-        { p: [-0.125, 0.466, 0.152], rx: 0.0074, ry: 0.0065, crv: 10 },
-        { p: [-0.119, 0.479, 0.176], rx: 0.0069, ry: 0.0061, crv: 12 },
-        { p: [-0.113, 0.495, 0.200], rx: 0.0064, ry: 0.0056, crv: 14 },
-        { p: [-0.108, 0.511, 0.218], rx: 0.0056, ry: 0.0049, crv: 14 },
-        { p: [-0.105, 0.522, 0.226], rx: 0.0049, ry: 0.0043, crv: 16 },
-        { p: [-0.104, 0.531, 0.231], rx: 0.0042, ry: 0.0036, crv: 16 }
+        { p: [-0.122, 0.485, 0.160], rx: 0.0073, ry: 0.0064, crv: 7 },
+        { p: [-0.114, 0.497, 0.186], rx: 0.0067, ry: 0.0059, crv: 8 },
+        { p: [-0.108, 0.513, 0.212], rx: 0.0061, ry: 0.0054, crv: 9 },
+        { p: [-0.104, 0.531, 0.230], rx: 0.0054, ry: 0.0047, crv: 10 },
+        { p: [-0.102, 0.547, 0.237], rx: 0.0048, ry: 0.0041, crv: 10 },
+        { p: [-0.101, 0.558, 0.240], rx: 0.0041, ry: 0.0035, crv: 11 }
       ]
     }
   ];
@@ -368,96 +368,103 @@
       }
     }
 
-    // 1. Continuous Adult Upper-Arm -> Elbow -> Forearm -> Wrist -> Broad Tapered Palm
+    // 1. Seamless Adult Upper-Arm -> Elbow -> Slender Forearm -> Smooth Wrist -> Flattened Palm (no protruding cuff)
     addLoftedTube(
       [
-        { p: [-0.172, 0.500, -0.042], rx: 0.048, ry: 0.042, crv: 10 },
-        { p: [-0.194, 0.422, 0.012], rx: 0.040, ry: 0.035, crv: 12 },
-        { p: [-0.192, 0.422, 0.068], rx: 0.033, ry: 0.026, crv: 12 },
-        { p: [-0.180, 0.436, 0.110], rx: 0.026, ry: 0.018, crv: 12 },
-        { p: [-0.168, 0.450, 0.134], rx: 0.024, ry: 0.014, crv: 12 },
-        { p: [-0.158, 0.464, 0.162], rx: 0.034, ry: 0.011, crv: 12 },
-        { p: [-0.152, 0.474, 0.184], rx: 0.024, ry: 0.007, crv: 10 }
+        { p: [-0.172, 0.502, -0.044], rx: 0.046, ry: 0.040, crv: 6 },
+        { p: [-0.188, 0.452, -0.014], rx: 0.041, ry: 0.036, crv: 6 },
+        { p: [-0.194, 0.415, 0.020], rx: 0.036, ry: 0.031, crv: 7 },
+        { p: [-0.184, 0.418, 0.072], rx: 0.030, ry: 0.023, crv: 7 },
+        { p: [-0.166, 0.440, 0.120], rx: 0.024, ry: 0.015, crv: 7 },
+        { p: [-0.158, 0.458, 0.146], rx: 0.032, ry: 0.013, crv: 7 },
+        { p: [-0.154, 0.476, 0.166], rx: 0.037, ry: 0.0105, crv: 6 },
+        { p: [-0.152, 0.488, 0.172], rx: 0.031, ry: 0.0080, crv: 5 },
+        { p: [-0.152, 0.494, 0.170], rx: 0.018, ry: 0.0045, crv: 4 }
       ],
-      28,
+      30,
       5,
-      true,
-      0.15
+      false
     );
 
     const handPalmStartVertex = nextVert;
 
-    // 2. Broad Adult Inner Palm-to-Knuckle Plate (Fills Gap Between Finger Roots & Thumb Base)
+    // 2. Radial Wrist-to-Thenar Transition (smooth thumb web up the left side, capEnd disabled so zero bulb crease)
     addLoftedTube(
       [
-        { p: [-0.166, 0.452, 0.138], rx: 0.024, ry: 0.012, crv: 10 },
-        { p: [-0.159, 0.463, 0.160], rx: 0.032, ry: 0.010, crv: 11 },
-        { p: [-0.154, 0.472, 0.178], rx: 0.028, ry: 0.0075, crv: 10 },
-        { p: [-0.152, 0.478, 0.188], rx: 0.014, ry: 0.0045, crv: 8 }
+        { p: [-0.174, 0.444, 0.126], rx: 0.013, ry: 0.010, crv: 6 },
+        { p: [-0.186, 0.458, 0.138], rx: 0.0135, ry: 0.0105, crv: 6 },
+        { p: [-0.194, 0.468, 0.148], rx: 0.0115, ry: 0.0095, crv: 7 }
       ],
-      24,
+      16,
       4,
-      true,
-      0.12
+      false
     );
 
-    // 3. Proportional Thenar (Thumb Pad) & Hypothenar Palm Pads
+    // 3. Ulnar Wrist-to-Hypothenar Edge (smooth outer right heel into Pinky knuckle without protruding lobe)
     addLoftedTube(
       [
-        { p: [-0.174, 0.448, 0.136], rx: 0.014, ry: 0.0105, crv: 10 },
-        { p: [-0.186, 0.458, 0.148], rx: 0.014, ry: 0.0100, crv: 11 },
-        { p: [-0.194, 0.468, 0.158], rx: 0.010, ry: 0.0075, crv: 10 }
+        { p: [-0.150, 0.445, 0.126], rx: 0.012, ry: 0.009, crv: 6 },
+        { p: [-0.136, 0.464, 0.146], rx: 0.0115, ry: 0.0088, crv: 6 },
+        { p: [-0.122, 0.485, 0.160], rx: 0.0076, ry: 0.0066, crv: 7 }
       ],
       14,
       4,
-      true,
-      0.20
-    );
-    addLoftedTube(
-      [
-        { p: [-0.150, 0.450, 0.138], rx: 0.0125, ry: 0.0095, crv: 10 },
-        { p: [-0.138, 0.460, 0.152], rx: 0.0125, ry: 0.0090, crv: 11 },
-        { p: [-0.128, 0.470, 0.166], rx: 0.0085, ry: 0.0065, crv: 10 }
-      ],
-      14,
-      4,
-      true,
-      0.20
+      false
     );
 
-    // 4. Smooth Internal Metacarpal Bridges Connecting Wrist Into Scaled Adult Finger Roots
+    // 4. Smooth Internal Metacarpal Rays + Interdigital Webs Bridging Finger Roots Into Palm
     const metacarpalEnds = [
-      { root: [-0.178, 0.464, 0.158], r: 0.0086 },
-      { root: [-0.160, 0.463, 0.160], r: 0.0090 },
-      { root: [-0.142, 0.464, 0.158], r: 0.0084 },
-      { root: [-0.125, 0.466, 0.152], r: 0.0074 }
+      { root: [-0.180, 0.484, 0.168], r: 0.0086 },
+      { root: [-0.160, 0.484, 0.170], r: 0.0090 },
+      { root: [-0.141, 0.484, 0.167], r: 0.0084 },
+      { root: [-0.122, 0.485, 0.160], r: 0.0073 }
     ];
     for (let m = 0; m < metacarpalEnds.length; m++) {
       const me = metacarpalEnds[m];
       addLoftedTube(
         [
-          { p: [-0.158, 0.452, 0.132], rx: 0.0072, ry: 0.0055, crv: 10 },
+          { p: [-0.158, 0.454, 0.138], rx: 0.0078, ry: 0.0056, crv: 6 },
           {
             p: [
               (-0.158 + me.root[0]) * 0.5,
-              (0.452 + me.root[1]) * 0.5,
-              (0.132 + me.root[2]) * 0.5
+              (0.454 + me.root[1]) * 0.5,
+              (0.138 + me.root[2]) * 0.5
             ],
-            rx: 0.0074,
-            ry: 0.0055,
-            crv: 11
+            rx: 0.0082,
+            ry: 0.0058,
+            crv: 6
           },
-          { p: me.root, rx: me.r, ry: me.r * 0.88, crv: 10 }
+          { p: me.root, rx: me.r, ry: me.r * 0.88, crv: 7 }
         ],
         12,
         3,
         false
       );
     }
+    // Gentle interdigital webs between adjacent finger bases so digits never look like separated tubes
+    const webPairs = [
+      [[-0.181, 0.485, 0.171], [-0.160, 0.485, 0.173]],
+      [[-0.160, 0.485, 0.173], [-0.141, 0.485, 0.170]],
+      [[-0.141, 0.485, 0.170], [-0.122, 0.486, 0.163]]
+    ];
+    for (let w = 0; w < webPairs.length; w++) {
+      const a = webPairs[w][0];
+      const b = webPairs[w][1];
+      addLoftedTube(
+        [
+          { p: a, rx: 0.0062, ry: 0.0050, crv: 6 },
+          { p: [(a[0] + b[0]) * 0.5, (a[1] + b[1]) * 0.5 + 0.001, (a[2] + b[2]) * 0.5 + 0.002], rx: 0.0068, ry: 0.0052, crv: 6 },
+          { p: b, rx: 0.0060, ry: 0.0048, crv: 6 }
+        ],
+        10,
+        2,
+        false
+      );
+    }
 
-    // 5. Five Articulated 3-Phalanx Fingers Cupping the Lower Hemisphere of the Globe
+    // 5. Five Articulated Fingers Cradling the Lower Hemisphere & Equator of the Globe
     for (let f = 0; f < HAND_FINGERS_WORLD.length; f++) {
-      addLoftedTube(HAND_FINGERS_WORLD[f].nodes, 18, 4, true, 1.05);
+      addLoftedTube(HAND_FINGERS_WORLD[f].nodes, 18, 4, true, 1.0);
     }
 
     const totalVerts = nextVert;
