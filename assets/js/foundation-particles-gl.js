@@ -225,7 +225,7 @@
     const track1 = 1.6;
     let subSize = 35;
     while (subSize > 24) {
-      mctx.font = `700 ${subSize}px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif`;
+      mctx.font = `700 ${subSize}px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif`;
       const measured1 = mctx.measureText(line1).width + (line1.length - 1) * track1;
       if (measured1 <= maxSubW) break;
       subSize -= 1;

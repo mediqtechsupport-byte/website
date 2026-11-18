@@ -215,7 +215,7 @@
     ctx.strokeStyle = 'rgba(125, 211, 252, 0.45)';
     ctx.lineWidth = 1.5;
     ctx.fillStyle = 'rgba(125, 211, 252, 0.60)';
-    ctx.font = '600 13px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '600 13px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.textAlign = 'center';
 
     const rulerY = 890;
@@ -276,7 +276,7 @@
     ctx.stroke();
 
     // Embossed Numeral '1'
-    ctx.font = 'bold 95px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 95px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
@@ -311,7 +311,7 @@
     ctx.stroke();
     ctx.fill();
 
-    ctx.font = 'bold 78px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 78px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
@@ -431,7 +431,7 @@
     ctx.fill();
 
     // PEEL OPEN bold text
-    ctx.font = 'bold 20px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 20px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('PEEL OPEN', 0, 24);
     ctx.restore();
@@ -446,7 +446,7 @@
 
     // "Ray" in bold black sans-serif
     ctx.fillStyle = '#0f172a';
-    ctx.font = 'bold 44px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 44px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.textAlign = 'right';
     ctx.fillText('Ray', -14, 15);
 
@@ -457,7 +457,7 @@
     ctx.fill();
 
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 36px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 36px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('One', 52, 11);
 
@@ -474,7 +474,7 @@
     ctx.translate(335, 256);
     ctx.rotate(-Math.PI / 2);
     ctx.fillStyle = '#1e293b';
-    ctx.font = '600 15px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '600 15px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('Contents: One MICS Injection System', 0, -8);
     ctx.fillText('with Intraocular Lens', 0, 14);
@@ -490,7 +490,7 @@
 
     // [STERILE | R] symbol box
     ctx.strokeRect(-140, -14, 82, 26);
-    ctx.font = 'bold 12px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 12px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('STERILE | R', -99, 4);
 
@@ -498,23 +498,23 @@
     ctx.beginPath();
     ctx.arc(-35, 0, 12, 0, Math.PI * 2);
     ctx.stroke();
-    ctx.font = 'bold 14px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 14px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('②', -35, 5);
-    ctx.font = '9px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '9px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('DO NOT', -35, 18);
     ctx.fillText('RE-USE', -35, 28);
 
     // [i] Consult Instructions for Use
     ctx.strokeRect(15, -12, 24, 24);
-    ctx.font = 'bold 15px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 15px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('i', 27, 5);
-    ctx.font = '8px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '8px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('CONSULT IFU', 27, 24);
 
     // Do Not Use If Package Damaged
     ctx.strokeRect(75, -12, 26, 24);
     ctx.beginPath(); ctx.moveTo(75, -12); ctx.lineTo(101, 12); ctx.stroke();
-    ctx.font = '8px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '8px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('DO NOT USE IF', 88, 22);
     ctx.fillText('DAMAGED', 88, 32);
     ctx.restore();
@@ -534,10 +534,10 @@
     ctx.closePath();
     ctx.fill();
 
-    ctx.font = 'bold 24px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 24px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('Rayner', -60, 10);
 
-    ctx.font = '11px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '11px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#475569';
     ctx.fillText('The Rayner Innovation Centre', 40, -4);
     ctx.fillText('10 Dominion Way, Worthing,', 40, 10);
@@ -549,17 +549,17 @@
     ctx.translate(580, 256);
     ctx.rotate(-Math.PI / 2);
     ctx.fillStyle = '#0f172a';
-    ctx.font = 'bold 28px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 28px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('CE', 0, -4);
-    ctx.font = 'bold 18px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 18px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('2797', 0, 20);
     ctx.restore();
 
     // F. Part Number PP0000004 along top cyan seal band (horizontal, x ~ 620, y ~ 45)
     ctx.save();
     ctx.fillStyle = '#0f172a';
-    ctx.font = 'bold 11px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 11px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('PP0000004', 620, 42);
     ctx.restore();
 
@@ -664,19 +664,19 @@
     ctx.setLineDash([]);
 
     ctx.fillStyle = '#0f172a';
-    ctx.font = 'bold 36px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 36px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('Rayner', 38, 68);
 
     ctx.fillStyle = '#0284c7';
-    ctx.font = 'bold 18px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 18px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('RayOne® PRELOADED IOL', 170, 68);
 
     ctx.fillStyle = '#1e293b';
-    ctx.font = 'bold 22px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 22px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText(packTitle || 'STERILE BARRIER PACK', 38, 116);
 
     ctx.fillStyle = '#64748b';
-    ctx.font = '15px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '15px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText(packSubtitle || 'Single-Use Injector · Hydrophilic Acrylic', 38, 146);
 
     ctx.fillStyle = '#0284c7';
@@ -689,7 +689,7 @@
     ctx.fill();
 
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 15px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 15px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('PEEL HERE ➔', 390, 206);
 
     const tex = new THREE.CanvasTexture(c);
@@ -707,13 +707,13 @@
 
     // Embossed "RAYNER" logo along barrel
     ctx.fillStyle = '#0f2942';
-    ctx.font = '900 36px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '900 36px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('R A Y N E R', 256, 95);
 
     // Subtle 3D emboss shadow highlight
     ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
-    ctx.font = '900 36px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '900 36px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('R A Y N E R', 257, 93);
 
@@ -777,17 +777,17 @@
       ctx.stroke();
 
       if (isMajor && val !== '0.0') {
-        ctx.font = 'bold 22px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = 'bold 22px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillStyle = '#0284c7';
         ctx.fillText(val, rulerX + tickW + 8, y + 7);
       }
     }
 
     // Medical label centered on opposite quadrant
-    ctx.font = 'bold 24px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 24px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#0284c7';
     ctx.fillText('RayVisc® OVD', 35, 240);
-    ctx.font = '15px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '15px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#475569';
     ctx.fillText('1.0 mL • 1.4% NaHA', 35, 268);
 
@@ -1120,12 +1120,12 @@
 
     // GALAXY Title (Geometric Modern Typography)
     ctx.fillStyle = '#ffffff';
-    ctx.font = '900 68px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '900 68px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.letterSpacing = '4px';
     ctx.fillText('GALAXY', 85, 145);
 
     // Subtitle
-    ctx.font = 'bold 20px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 20px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.letterSpacing = '1.5px';
     ctx.fillText('RAYONE PRELOADED', 88, 305);
@@ -1139,7 +1139,7 @@
     ctx.closePath();
     ctx.fill();
 
-    ctx.font = 'bold 34px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 34px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('Rayner', 532, 340);
 
     // Electric Cyan Concentric Spiral Optic Loops
@@ -1174,7 +1174,7 @@
     ctx.arc(62, 462, 5, 0, Math.PI * 2);
     ctx.stroke();
 
-    ctx.font = 'bold 13px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 13px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#94a3b8';
     ctx.fillText('3 YEARS FREE PATIENT OUTCOMES DATA · LEARN MORE AT RAYNER.COM/RAYPRO', 86, 466);
 
@@ -1197,7 +1197,7 @@
     ctx.lineWidth = 3;
     ctx.strokeRect(3, 3, 1018, 506);
 
-    ctx.font = '500 15px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 15px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#e2e8f0';
     ctx.fillText('EN  One micro-incision injector with preloaded spiral intraocular lens', 60, 65);
     ctx.fillText('DE  Ein Mikro-Inzisions-System mit vorgeladener Intraokularlinse', 60, 100);
@@ -1213,15 +1213,15 @@
     ctx.lineTo(964, 280);
     ctx.stroke();
 
-    ctx.font = 'bold 18px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 18px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.fillText('Rayner Intraocular Lenses Ltd', 60, 315);
-    ctx.font = '500 13px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 13px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#94a3b8';
     ctx.fillText('10 Dominion Way, Worthing, West Sussex, BN14 8AQ, United Kingdom · rayner.com', 60, 345);
     ctx.fillText('EC|REP: Rayner Surgical GmbH, Freiburg, Germany', 60, 375);
 
-    ctx.font = 'bold 14px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 14px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#38bdf8';
     ctx.fillText('CE 0088   STERILE EO   15°C — 30°C   DO NOT REUSE ②   CONSULT IFU [i]', 60, 420);
     ctx.fillStyle = '#ffffff';
@@ -1246,16 +1246,16 @@
     ctx.lineWidth = 2;
     ctx.strokeRect(3, 3, 250, 506);
 
-    ctx.font = '900 34px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '900 34px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.letterSpacing = '3px';
     ctx.fillText('GALAXY', 60, 200);
 
-    ctx.font = 'bold 14px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 14px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#38bdf8';
     ctx.fillText('SPIRAL IOL', 70, 245);
 
-    ctx.font = 'bold 18px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 18px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#cbd5e1';
     ctx.fillText('▲ Rayner', 70, 305);
 
@@ -1296,30 +1296,30 @@ function createCartonGalaxyTopTexture() {
     ctx.lineTo(976, 42);
     ctx.stroke();
 
-    ctx.font = 'bold 12px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 12px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#64748b';
     ctx.fillText('CE 0088', 52, 26);
     ctx.fillText('STERILE  EO', 145, 26);
-    ctx.font = '500 12px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 12px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('15°C — 30°C', 260, 26);
     ctx.fillText('DO NOT REUSE  ②', 380, 26);
     ctx.fillText('CONSULT IFU  [i]', 540, 26);
-    ctx.font = 'bold 12px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 12px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('REF RAO800G · LOT 847291', 750, 26);
 
     // Bold GALAXY Logo (Geometric Modern Typography)
     ctx.fillStyle = '#0f172a';
-    ctx.font = '900 68px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '900 68px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.letterSpacing = '4px';
     ctx.fillText('GALAXY', 52, 135);
 
     // Subtitle
-    ctx.font = 'bold 17px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 17px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#1e293b';
     ctx.letterSpacing = '1px';
     ctx.fillText('RAYONE PRELOADED SPIRAL IOL', 54, 172);
 
-    ctx.font = '500 13px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 13px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#64748b';
     ctx.fillText('Fully Preloaded Injector System · 0% Light Loss AI Optic', 54, 196);
 
@@ -1330,10 +1330,10 @@ function createCartonGalaxyTopTexture() {
     else ctx.rect(52, 235, 185, 82);
     ctx.fill();
 
-    ctx.font = 'bold 11px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 11px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#94a3b8';
     ctx.fillText('DIOPTER / SE', 68, 258);
-    ctx.font = '900 32px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '900 32px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#38bdf8';
     ctx.fillText('+21.5 D', 68, 298);
 
@@ -1347,10 +1347,10 @@ function createCartonGalaxyTopTexture() {
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    ctx.font = 'bold 11px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 11px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#64748b';
     ctx.fillText('INCISION', 268, 258);
-    ctx.font = 'bold 24px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 24px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#0f172a';
     ctx.fillText('2.2 mm', 268, 295);
 
@@ -1364,10 +1364,10 @@ function createCartonGalaxyTopTexture() {
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    ctx.font = 'bold 11px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 11px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#64748b';
     ctx.fillText('OVERALL Ø', 444, 258);
-    ctx.font = 'bold 24px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 24px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#0f172a';
     ctx.fillText('12.5 mm', 444, 295);
 
@@ -1400,7 +1400,7 @@ function createCartonGalaxyTopTexture() {
     ctx.closePath();
     ctx.fill();
 
-    ctx.font = 'bold 28px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 28px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('Rayner', 778, 340);
 
     // Bottom origin bar
@@ -1411,7 +1411,7 @@ function createCartonGalaxyTopTexture() {
     ctx.lineTo(976, 385);
     ctx.stroke();
 
-    ctx.font = '500 11px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 11px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#94a3b8';
     ctx.fillText('Rayner Intraocular Lenses Ltd · 10 Dominion Way, Worthing, BN14 8AQ, United Kingdom · rayner.com', 52, 402);
 
@@ -1438,11 +1438,11 @@ function createCartonGalaxyTopTexture() {
 
     // Left GALAXY Branding
     ctx.fillStyle = '#0f172a';
-    ctx.font = '900 36px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '900 36px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.letterSpacing = '3px';
     ctx.fillText('GALAXY', 36, 75);
 
-    ctx.font = 'bold 11px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 11px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#64748b';
     ctx.fillText('PRELOADED SPIRAL IOL', 38, 104);
 
@@ -1456,15 +1456,15 @@ function createCartonGalaxyTopTexture() {
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    ctx.font = 'bold 13px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 13px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#0f172a';
     ctx.fillText('RayOne® Galaxy · Model RAO800G', 326, 42);
 
-    ctx.font = '500 12px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 12px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#334155';
     ctx.fillText('Power: +21.50 D  ·  SE: 21.50 D  ·  Ø 12.5 mm', 326, 64);
 
-    ctx.font = '500 11px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 11px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#64748b';
     ctx.fillText('LOT 847291  ·  EXP 2028-12-31  ·  STERILE EO', 326, 84);
 
@@ -1477,7 +1477,7 @@ function createCartonGalaxyTopTexture() {
         ctx.fillRect(barX + b, barY, 2, 24);
       }
     }
-    ctx.font = '10px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '10px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#64748b';
     ctx.fillText('(01)05055248102345', 618, 114);
 
@@ -1490,7 +1490,7 @@ function createCartonGalaxyTopTexture() {
     ctx.closePath();
     ctx.fill();
 
-    ctx.font = 'bold 24px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 24px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('Rayner', 818, 54);
 
     // Deep slate-blue pull tab with thumb notch
@@ -1507,7 +1507,7 @@ function createCartonGalaxyTopTexture() {
     ctx.arc(785, 108, 14, -Math.PI / 2, Math.PI / 2);
     ctx.stroke();
 
-    ctx.font = 'bold 13px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 13px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.fillText('PULL HERE ◄', 835, 114);
 
@@ -1530,7 +1530,7 @@ function createCartonGalaxyTopTexture() {
     ctx.lineWidth = 2;
     ctx.strokeRect(2, 2, 1020, 156);
 
-    ctx.font = '500 11px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 11px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#334155';
     ctx.fillText('EN  One micro-incision injector with preloaded spiral intraocular lens', 36, 26);
     ctx.fillText('DE  Ein Mikro-Inzisions-System mit vorgeladener Intraokularlinse', 36, 48);
@@ -1546,19 +1546,19 @@ function createCartonGalaxyTopTexture() {
     ctx.lineTo(680, 142);
     ctx.stroke();
 
-    ctx.font = 'bold 12px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 12px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#0f172a';
     ctx.fillText('Rayner Intraocular Lenses Ltd', 705, 30);
-    ctx.font = '500 10px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 10px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#64748b';
     ctx.fillText('10 Dominion Way, Worthing, BN14 8AQ, UK', 705, 52);
-    ctx.font = 'bold 11px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 11px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#0f172a';
     ctx.fillText('CE 0088  ·  STERILE EO  ·  15-30°C', 705, 78);
-    ctx.font = '500 10px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 10px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#64748b';
     ctx.fillText('EC|REP: Rayner Surgical GmbH, Freiburg, DE', 705, 102);
-    ctx.font = 'bold 9px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 9px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#0284c7';
     ctx.fillText('3 YEARS FREE PATIENT OUTCOMES DATA: RAYPRO.COM', 705, 128);
 
@@ -1581,7 +1581,7 @@ function createCartonGalaxyTopTexture() {
     ctx.fillStyle = '#0284c7';
     ctx.fillRect(0, 0, 420, 32);
 
-    ctx.font = 'bold 10px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 10px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.fillText('PEER PATIENT OUTCOMES DATA · RAYPRO.COM', 24, 21);
 
@@ -1595,20 +1595,20 @@ function createCartonGalaxyTopTexture() {
     ctx.lineWidth = 1;
     ctx.stroke();
 
-    ctx.font = 'bold 14px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 14px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#0f172a';
     ctx.fillText('RayOne® Galaxy', 22, 62);
 
-    ctx.font = '500 11px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 11px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#475569';
     ctx.fillText('REF RAO800G', 22, 82);
     ctx.fillText('LOT 847291', 22, 98);
 
-    ctx.font = 'bold 13px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 13px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#0284c7';
     ctx.fillText('SE: +21.50 D  Sph: +21.50 D', 22, 118);
 
-    ctx.font = '500 10px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 10px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#64748b';
     ctx.fillText('EXP 2028-12-31  ·  STERILE EO', 22, 138);
 
@@ -1620,7 +1620,7 @@ function createCartonGalaxyTopTexture() {
     ctx.lineTo(290, 72);
     ctx.closePath();
     ctx.fill();
-    ctx.font = 'bold 18px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 18px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('Rayner', 296, 72);
 
     // QR scan box
@@ -1633,7 +1633,7 @@ function createCartonGalaxyTopTexture() {
     ctx.lineWidth = 1;
     ctx.stroke();
 
-    ctx.font = 'bold 10px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 10px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#64748b';
     ctx.fillText('SCAN IFU', 312, 120);
 
@@ -1657,11 +1657,11 @@ function createCartonGalaxyTopTexture() {
     ctx.strokeRect(2, 2, 416, 156);
 
     ctx.fillStyle = '#0f172a';
-    ctx.font = '900 32px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '900 32px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.letterSpacing = '3px';
     ctx.fillText('GALAXY', 30, 75);
 
-    ctx.font = 'bold 11px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 11px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#64748b';
     ctx.fillText('PRELOADED SPIRAL IOL', 32, 102);
 
@@ -1672,10 +1672,10 @@ function createCartonGalaxyTopTexture() {
     ctx.lineTo(284, 68);
     ctx.closePath();
     ctx.fill();
-    ctx.font = 'bold 22px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 22px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('Rayner', 292, 68);
 
-    ctx.font = '500 10px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 10px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#64748b';
     ctx.fillText('CE 0088 · LOT 847291', 260, 100);
 

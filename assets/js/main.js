@@ -3697,13 +3697,13 @@
           ctx.stroke();
         }
         ctx.fillStyle = '#ffffff';
-        ctx.font = '700 44px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 44px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('GALAXY', 38, 105);
         ctx.fillStyle = '#9ec5e6';
-        ctx.font = '600 16px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '600 16px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('RAYONE PRELOADED SPIRAL IOL', 38, 185);
         ctx.fillStyle = '#ffffff';
-        ctx.font = '700 22px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 22px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('▲ Rayner', 330, 195);
       });
       const navySideMat = new THREE.MeshStandardMaterial({ color: 0x0c1c30, roughness: 0.35, metalness: 0.1 });
@@ -3721,13 +3721,13 @@
         ctx.fillStyle = '#eaedf2';
         ctx.fillRect(0, 0, w, h);
         ctx.fillStyle = '#0c1c30';
-        ctx.font = '700 38px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 38px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('GALAXY TORIC', 36, 95);
         ctx.fillStyle = '#5c6675';
-        ctx.font = '600 15px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '600 15px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('PRELOADED SPIRAL TORIC IOL', 36, 145);
         ctx.fillStyle = '#0c1c30';
-        ctx.font = '700 22px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 22px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('▲ Rayner', 340, 200);
       });
       const whiteSideMat = new THREE.MeshStandardMaterial({ color: 0xdce1e8, roughness: 0.35 });
@@ -3754,12 +3754,12 @@
         ctx.fillStyle = '#e8562a';
         ctx.fillRect(28, 28, 456, 56);
         ctx.fillStyle = '#ffffff';
-        ctx.font = '700 34px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 34px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('RayOne  Preloaded IOL', 44, 68);
         ctx.fillStyle = '#c4006b';
         ctx.fillRect(28, 92, 180, 26);
         ctx.fillStyle = '#ffffff';
-        ctx.font = '700 16px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 16px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('EMV TORIC', 58, 110);
         // C-Ring graphic
         ctx.beginPath();
@@ -3768,7 +3768,7 @@
         ctx.lineWidth = 14;
         ctx.stroke();
         ctx.fillStyle = '#0a1d40';
-        ctx.font = '700 22px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 22px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('▲ Rayner', 32, 215);
       });
       const whiteMat = new THREE.MeshStandardMaterial({ color: 0xf4f6f9, roughness: 0.3 });
@@ -3859,10 +3859,10 @@
           ctx.fillStyle = `#${cfg.color.toString(16).padStart(6, '0')}`;
           ctx.fillRect(0, 0, w, h);
           ctx.fillStyle = '#ffffff';
-          ctx.font = '700 54px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+          ctx.font = '700 54px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText('AEON', w / 2, 75);
-          ctx.font = '700 26px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+          ctx.font = '700 26px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
           ctx.fillText(cfg.name, w / 2, 112);
           // White teardrop icon
           ctx.beginPath();
@@ -3927,7 +3927,7 @@
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, w, 28);
         ctx.fillStyle = '#0a1d40';
-        ctx.font = '700 18px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 18px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('RayPRO® Cloud PROMs Dashboard', 20, 20);
         const cards = [
           { x: 24, y: 52, val: '85%', col: '#3aa0db' },
@@ -3944,7 +3944,7 @@
           ctx.lineWidth = 7;
           ctx.stroke();
           ctx.fillStyle = '#0a1d40';
-          ctx.font = '700 22px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+          ctx.font = '700 22px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText(c.val, c.x + 52, c.y + 80);
         });
@@ -4397,7 +4397,7 @@
       const ctx = c.getContext('2d');
       if (!ctx) return '';
 
-      const family = '"Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+      const family = '"IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
       // Enlarged, majestic scale filling the hero container
       let fontSize = Math.round(180 * S);
       const lineHeight = Math.round(170 * S);
@@ -6593,7 +6593,7 @@ void main() {
     const w = Math.max(10, Math.round(rect.width));
     const h = Math.max(10, Math.round(rect.height));
     const comp = window.getComputedStyle(titleEl);
-    const fontFam = comp.fontFamily || '"Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    const fontFam = comp.fontFamily || '"IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     const weight = comp.fontWeight || '600';
     const fontSize = parseFloat(comp.fontSize) || 48;
     const lines = Array.from(titleEl.querySelectorAll('.ih-h1-line'));
@@ -9820,7 +9820,7 @@ if (document.readyState === 'loading') {
   }
 
   function label(text, x, y, align) {
-    ctx.font = '500 12px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 12px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = LABEL;
     ctx.textAlign = align || 'left';
     ctx.fillText(text, x, y);
@@ -9895,7 +9895,7 @@ if (document.readyState === 'loading') {
       ctx.fill();
       ctx.restore();
 
-      ctx.font = (reached ? '600 ' : '500 ') + '12.5px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+      ctx.font = (reached ? '600 ' : '500 ') + '12.5px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
       ctx.fillStyle = reached ? '#ffffff' : 'rgba(184, 198, 220, 0.50)';
       ctx.textAlign = i === 0 ? 'left' : i === JOURNEY_STOPS.length - 1 ? 'right' : 'center';
       ctx.fillText(JOURNEY_STOPS[i], sx, jy + 24);
@@ -9910,7 +9910,7 @@ if (document.readyState === 'loading') {
 
     label('2–8 °C safe range', padX, wy - 10);
     ctx.save();
-    ctx.font = '500 11.5px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 11.5px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.58)';
     ctx.textAlign = 'right';
     ctx.fillText('8 °C', padX + w, wy - 6);
@@ -9953,7 +9953,7 @@ if (document.readyState === 'loading') {
     const normTemp = 1 - (ly - wy) / wh;
     const tempC = (2 + normTemp * 6).toFixed(1) + ' °C';
     ctx.save();
-    ctx.font = '700 13px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '700 13px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = DOT;
     ctx.textAlign = lx > padX + w * 0.85 ? 'right' : 'left';
     ctx.fillText(tempC, lx + (lx > padX + w * 0.85 ? -10 : 10), ly - 10);
@@ -10000,17 +10000,17 @@ if (document.readyState === 'loading') {
 
     ctx.save();
     ctx.textAlign = 'left';
-    ctx.font = '500 13px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 13px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.82)';
     ctx.fillText('Region ' + (regIdx + 1) + ' of ' + PH_REGIONS.length, leftX, baseCy - 48);
 
     const codeFontPx = Math.round(Math.max(40, Math.min(60, cw * 0.072)));
-    ctx.font = '800 ' + codeFontPx + 'px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '800 ' + codeFontPx + 'px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = DOT;
     ctx.fillText(activeReg[0], leftX, baseCy + 10);
 
     const nameFontPx = Math.round(Math.max(15, Math.min(20, cw * 0.024)));
-    ctx.font = '700 ' + nameFontPx + 'px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '700 ' + nameFontPx + 'px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.fillText(activeReg[1], leftX, baseCy + 40);
 
@@ -10124,7 +10124,7 @@ if (document.readyState === 'loading') {
 
         // Region code beside active marker
         ctx.save();
-        ctx.font = '700 12px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 12px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillStyle = '#ffffff';
         ctx.textAlign = 'left';
         ctx.shadowColor = 'rgba(4, 13, 30, 0.9)';
@@ -10214,7 +10214,7 @@ if (document.readyState === 'loading') {
     // Center X/4 label
     ctx.save();
     const ringFontPx = Math.round(Math.max(24, Math.min(36, r * 0.38)));
-    ctx.font = '800 ' + ringFontPx + 'px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '800 ' + ringFontPx + 'px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -10269,7 +10269,7 @@ if (document.readyState === 'loading') {
 
       // Checklist label
       const tx = listX + 38;
-      ctx.font = (checked ? '700 ' : '500 ') + '16px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+      ctx.font = (checked ? '700 ' : '500 ') + '16px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
       ctx.fillStyle = checked ? '#ffffff' : 'rgba(184, 198, 220, 0.52)';
       ctx.textAlign = 'left';
       ctx.fillText(AUDIT_CHECKS[i], tx, ry);
@@ -10324,7 +10324,7 @@ if (document.readyState === 'loading') {
     }
 
     ctx.save();
-    ctx.font = '500 12px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 12px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.72)';
     ctx.textAlign = 'left';
     ctx.fillText('Each dot = one fellow trained', gx - 2, gy + gh + 22);
@@ -10358,7 +10358,7 @@ if (document.readyState === 'loading') {
 
     // Cardinal 00 / 06 / 12 / 18 labels
     ctx.save();
-    ctx.font = '500 12.5px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 12.5px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.78)';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -10370,11 +10370,11 @@ if (document.readyState === 'loading') {
     // Center digital clock & status
     const hh = (curHour < 10 ? '0' : '') + curHour + ':00';
     const clockFontPx = Math.round(Math.max(22, Math.min(34, r * 0.30)));
-    ctx.font = '800 ' + clockFontPx + 'px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '800 ' + clockFontPx + 'px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.fillText(hh, cx, cy - 5);
 
-    ctx.font = '500 12.5px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 12.5px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.82)';
     ctx.fillText('support desk · online', cx, cy + 19);
     ctx.restore();
@@ -10422,13 +10422,13 @@ if (document.readyState === 'loading') {
 
     ctx.save();
     ctx.textAlign = 'left';
-    ctx.font = '700 ' + headPx + 'px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '700 ' + headPx + 'px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.fillText('Every hour.', rx, topY);
     ctx.fillStyle = BLUE;
     ctx.fillText('Every day.', rx, topY + headPx * 1.22);
 
-    ctx.font = '500 13.5px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 13.5px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.88)';
     ctx.fillText('Urgent cases go to the front of the queue.', rx, topY + headPx * 1.22 + 28);
 
@@ -10452,7 +10452,7 @@ if (document.readyState === 'loading') {
         ctx.arc(dx, dy, dr, 0, Math.PI * 2);
         ctx.stroke();
       }
-      ctx.font = (isToday ? '700 ' : '600 ') + '12.5px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+      ctx.font = (isToday ? '700 ' : '600 ') + '12.5px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
       ctx.fillStyle = isToday ? '#041022' : 'rgba(220, 232, 248, 0.85)';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -11313,11 +11313,191 @@ if (document.readyState === 'loading') {
       if (inst) instances.push(inst);
     });
 
+    // Floating Cursor Image Reveal Preview for #brands (Slide 1 & Slide 2)
+    (function initBrandsFloatingImageReveal() {
+      if (typeof window === 'undefined' || !roots.length) return;
+      const mq = window.matchMedia ? window.matchMedia('(min-width: 768px)') : { matches: true };
+
+      const preview = document.createElement('div');
+      preview.id = 'pel-floating-preview';
+      preview.setAttribute('aria-hidden', 'true');
+      preview.dataset.visible = 'false';
+      preview.innerHTML =
+        '<div class="pel-float-card">' +
+          '<img class="pel-float-img" alt="" decoding="async" />' +
+          '<div class="pel-float-scrim"></div>' +
+          '<div class="pel-float-caption">' +
+            '<span class="pel-float-title"></span>' +
+            '<span class="pel-float-sub"></span>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(preview);
+
+      const imgEl = preview.querySelector('.pel-float-img');
+      const titleEl = preview.querySelector('.pel-float-title');
+      const subEl = preview.querySelector('.pel-float-sub');
+
+      let activeRow = null;
+      let revealTimer = 0;
+      let hideTimer = 0;
+      let rafId = 0;
+      let targetX = 0;
+      let targetY = 0;
+      let curX = 0;
+      let curY = 0;
+      let hasPos = false;
+      let preloaded = false;
+
+      function preloadAll() {
+        if (preloaded) return;
+        preloaded = true;
+        document.querySelectorAll('#brands .pel-row[data-hover-img]').forEach((li) => {
+          const src = li.getAttribute('data-hover-img');
+          if (src) {
+            const im = new Image();
+            im.decoding = 'async';
+            im.src = src;
+          }
+        });
+      }
+
+      function clampViewportCoords(x, y) {
+        const vw = window.innerWidth || 1280;
+        const vh = window.innerHeight || 800;
+        return [
+          Math.max(155, Math.min(vw - 155, x)),
+          Math.max(185, Math.min(vh - 190, y))
+        ];
+      }
+
+      function tickFollow() {
+        rafId = 0;
+        if (!hasPos) return;
+        const dx = targetX - curX;
+        const dy = targetY - curY;
+        const easeAmount = 0.2;
+        curX += dx * easeAmount;
+        curY += dy * easeAmount;
+        preview.style.left = curX.toFixed(1) + 'px';
+        preview.style.top = curY.toFixed(1) + 'px';
+        if (Math.abs(dx) > 0.35 || Math.abs(dy) > 0.35) {
+          rafId = requestAnimationFrame(tickFollow);
+        }
+      }
+
+      function kickFollow() {
+        if (!rafId) rafId = requestAnimationFrame(tickFollow);
+      }
+
+      function hidePreview() {
+        activeRow = null;
+        if (revealTimer) { clearTimeout(revealTimer); revealTimer = 0; }
+        preview.dataset.visible = 'false';
+        if (hideTimer) clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => {
+          hideTimer = 0;
+          if (preview.dataset.visible !== 'true') {
+            preview.classList.remove('is-mounted');
+            hasPos = false;
+          }
+        }, 300);
+      }
+
+      function showRowPreview(li, e) {
+        if (!mq.matches || (e && e.pointerType === 'touch')) return;
+        const src = li.getAttribute('data-hover-img');
+        if (!src) return;
+        preloadAll();
+        if (hideTimer) { clearTimeout(hideTimer); hideTimer = 0; }
+
+        const fit = li.getAttribute('data-hover-fit') || 'cover';
+        const sub = li.getAttribute('data-hover-sub') || '';
+        const nameNode = li.querySelector('.pel-name');
+        const titleText = nameNode ? nameNode.textContent.replace(/\*$/, '').trim() : '';
+
+        if (imgEl.getAttribute('src') !== src) {
+          imgEl.src = src;
+          imgEl.alt = titleText || sub;
+        }
+        preview.dataset.fit = fit;
+        if (titleEl) titleEl.textContent = titleText;
+        if (subEl) subEl.textContent = sub;
+
+        const [cx, cy] = clampViewportCoords(e.clientX, e.clientY);
+        targetX = cx;
+        targetY = cy;
+        if (!hasPos) {
+          curX = cx;
+          curY = cy;
+          preview.style.left = curX.toFixed(1) + 'px';
+          preview.style.top = curY.toFixed(1) + 'px';
+          hasPos = true;
+        }
+        preview.classList.add('is-mounted');
+        if (activeRow !== li) {
+          activeRow = li;
+          if (revealTimer) clearTimeout(revealTimer);
+          revealTimer = setTimeout(() => {
+            revealTimer = 0;
+            if (activeRow === li) preview.dataset.visible = 'true';
+          }, 45);
+        } else {
+          preview.dataset.visible = 'true';
+        }
+        kickFollow();
+      }
+
+      roots.forEach((root) => {
+        const listEl = root.querySelector('.pel-list');
+        if (listEl) {
+          listEl.addEventListener('pointerleave', hidePreview);
+        }
+        root.querySelectorAll('.pel-row[data-hover-img]').forEach((li) => {
+          const trigger = li.querySelector('.pel-trigger');
+          if (!trigger) return;
+          trigger.addEventListener('pointerenter', (e) => showRowPreview(li, e));
+          trigger.addEventListener('pointermove', (e) => {
+            if (!mq.matches || e.pointerType === 'touch') return;
+            if (activeRow !== li) {
+              showRowPreview(li, e);
+              return;
+            }
+            const [cx, cy] = clampViewportCoords(e.clientX, e.clientY);
+            targetX = cx;
+            targetY = cy;
+            kickFollow();
+          });
+          trigger.addEventListener('pointerleave', () => {
+            if (activeRow === li) hidePreview();
+          });
+        });
+      });
+
+      const brandsSec = document.getElementById('brands');
+      if (brandsSec) {
+        brandsSec.querySelectorAll('.deck-slide').forEach((sc) => {
+          sc.addEventListener('scroll', hidePreview, { passive: true });
+        });
+        if ('IntersectionObserver' in window) {
+          const io = new IntersectionObserver((ents) => {
+            if (!ents.some((en) => en.isIntersecting)) hidePreview();
+          }, { threshold: 0.05 });
+          io.observe(brandsSec);
+        }
+      }
+      window.addEventListener('blur', hidePreview);
+      if (mq.addEventListener) {
+        mq.addEventListener('change', () => { if (!mq.matches) hidePreview(); });
+      }
+      window.__hideBrandsHoverPreview = hidePreview;
+    })();
+
     window.refreshPrincipalPel = () => {
       instances.forEach((inst) => inst.refresh());
     };
     window.closeAllPrincipalPel = () => {
       instances.forEach((inst) => inst.closeAll());
+      if (window.__hideBrandsHoverPreview) window.__hideBrandsHoverPreview();
     };
     window.openPrincipalPelRow = (i) => {
       const p1 = instances.find((inst) => inst.id === 'principal-pigment-ledger');

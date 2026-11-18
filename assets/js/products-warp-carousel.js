@@ -10,7 +10,7 @@
   'use strict';
 
   const DEFAULT_FONT =
-    '"Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif';
+    '"IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif';
 
   // Signature 6x7 B-spline mesh generator + box-matched presets
   function hexToRgbTuple(hex) {
@@ -136,53 +136,14 @@
   };
 
   function poseAt(q0) {
-    let q = q0;
-    if (Math.abs(q) < 1) q -= G.kB * Math.pow(Math.sin(Math.PI * q), 2);
-    const s = q < 0 ? -1 : 1;
-    const a = Math.abs(q);
-    const half = CW / 2;
-    if (a <= G.qA) {
-      const t = a / G.qA;
-      const xl = -half + (G.XLA + half) * Math.pow(t, G.a1);
-      const zl = G.zA * Math.pow(t, 4);
-      const psi = G.psiA * Math.pow(t, G.a2);
-      return [s * (xl + half * Math.cos(psi)), zl + half * Math.sin(psi), s * psi];
-    }
-    const dXL = ((G.XLA + half) * G.a1) / G.qA;
-    const dZL = (G.zA * 4) / G.qA;
-    const dps = (G.psiA * G.a2) / G.qA;
-    let Hx, Hz;
-    if (a <= G.qB) {
-      const L = G.qB - G.qA;
-      const t = (a - G.qA) / L;
-      const hx = G.XLA + CW * Math.cos(G.psiA);
-      const hz = G.zA + CW * Math.sin(G.psiA);
-      const dhx = dXL - CW * Math.sin(G.psiA) * dps;
-      const dhz = dZL + CW * Math.cos(G.psiA) * dps;
-      const t2 = t * t;
-      const t3 = t2 * t;
-      const h00 = 2 * t3 - 3 * t2 + 1;
-      const h10 = t3 - 2 * t2 + t;
-      const h01 = -2 * t3 + 3 * t2;
-      const h11 = t3 - t2;
-      Hx = h00 * hx + h10 * L * dhx * G.bB + h01 * G.XB + h11 * L * G.vC * G.bE;
-      Hz = h00 * hz + h10 * L * dhz * G.bB + h01 * G.ZB;
-    } else {
-      const d = a - G.qB;
-      Hx = G.XB + G.vC * d + G.aC * d * d;
-      Hz = G.ZB;
-    }
-    const qP = s < 0 ? G.qPL : G.qPR;
-    const bP = s < 0 ? G.bPL : G.bP;
-    const LP = qP - G.qA;
-    const tp = Math.min(1, (a - G.qA) / LP);
-    const tp2 = tp * tp;
-    const tp3 = tp2 * tp;
-    const psi =
-      (2 * tp3 - 3 * tp2 + 1) * G.psiA +
-      (tp3 - 2 * tp2 + tp) * LP * dps * bP +
-      (-2 * tp3 + 3 * tp2) * Math.PI;
-    return [s * (Hx - half * Math.cos(psi)), Hz - half * Math.sin(psi), s * psi];
+    const s = q0 < 0 ? -1 : 1;
+    const a = Math.abs(q0);
+    // Generous breathing gap between center and neighbor whole boxes while staying
+    // cleanly front-facing (psi < 26 deg, never backwards) inside the desktop stage
+    const x = 326 * a - 36 * a * (a - 1);
+    const z = 195 * Math.pow(a, 1.2);
+    const psi = 0.44 * (1 - Math.exp(-1.9 * a));
+    return [s * x, z, s * psi];
   }
 
   /* Spin curve over 110 reference frames (30 fps) */
@@ -702,11 +663,29 @@ vec4 shadeCard(vec4 pose, vec2 ps, float fx, float fy, out float depth){
   vec2 n = q.x > q.y ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
   if (q.x > 0.0 && q.y > 0.0) n = normalize(q);
   float fp = length(vec2(fs * n.x, fyc * n.y)) + 1e-4;
-  if (d > fp) return vec4(0.0);
-  float cov = clamp(0.5 - d / fp, 0.0, 1.0);
+  float sideBlur = uWarp <= 0.0 ? smoothstep(45.0, 260.0, abs(pose.x)) : 0.0;
+  float edgeFp = fp * (1.0 + 3.0 * sideBlur);
+  if (d > edgeFp) return vec4(0.0);
+  float fade = uWarp <= 0.0 ? (1.0 - smoothstep(365.0, 525.0, abs(pose.x))) : 1.0;
+  float cov = clamp(0.5 - d / edgeFp, 0.0, 1.0) * fade;
   if (cov <= 0.0) return vec4(0.0);
   vec2 uv = vec2(s / CW + 0.5, 0.5 - y / CH);
-  vec4 tex = textureGrad(uTex, vec3(uv, pose.w), vec2(fs / CW, 0.0), vec2(0.0, fyc / CH));
+  vec2 gx = vec2(fs / CW, 0.0) * (1.0 + 5.0 * sideBlur);
+  vec2 gy = vec2(0.0, fyc / CH) * (1.0 + 5.0 * sideBlur);
+  vec4 tex = textureGrad(uTex, vec3(uv, pose.w), gx, gy);
+  if (sideBlur > 0.005) {
+    vec2 br = vec2(0.021, 0.0168) * sideBlur;
+    vec4 bAcc = tex * 0.20;
+    bAcc += 0.10 * textureGrad(uTex, vec3(clamp(uv + vec2( br.x,     0.0), 0.012, 0.988), pose.w), gx, gy);
+    bAcc += 0.10 * textureGrad(uTex, vec3(clamp(uv + vec2(-br.x,     0.0), 0.012, 0.988), pose.w), gx, gy);
+    bAcc += 0.10 * textureGrad(uTex, vec3(clamp(uv + vec2(   0.0,  br.y), 0.012, 0.988), pose.w), gx, gy);
+    bAcc += 0.10 * textureGrad(uTex, vec3(clamp(uv + vec2(   0.0, -br.y), 0.012, 0.988), pose.w), gx, gy);
+    bAcc += 0.10 * textureGrad(uTex, vec3(clamp(uv + vec2( br.x,  br.y) * 0.7071, 0.012, 0.988), pose.w), gx, gy);
+    bAcc += 0.10 * textureGrad(uTex, vec3(clamp(uv + vec2(-br.x,  br.y) * 0.7071, 0.012, 0.988), pose.w), gx, gy);
+    bAcc += 0.10 * textureGrad(uTex, vec3(clamp(uv + vec2( br.x, -br.y) * 0.7071, 0.012, 0.988), pose.w), gx, gy);
+    bAcc += 0.10 * textureGrad(uTex, vec3(clamp(uv + vec2(-br.x, -br.y) * 0.7071, 0.012, 0.988), pose.w), gx, gy);
+    tex = vec4(bAcc.rgb * mix(1.0, 0.86, sideBlur), bAcc.a);
+  }
   depth = t;
   return vec4(tex.rgb, 1.0) * cov;
 }
@@ -994,7 +973,7 @@ void main(){
 
     const gap = options.interval || 4.0;
     const stepN = options.step || 1;
-    const warp = options.warp !== undefined ? options.warp : 1.0;
+    const warp = options.warp !== undefined ? options.warp : 0;
     const font = options.font || DEFAULT_FONT;
     const rmq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
 
@@ -1358,10 +1337,12 @@ void main(){
 
     container.addEventListener('pointermove', (e) => {
       const r = container.getBoundingClientRect();
-      const unitCss = Math.min((r.width || 1) / 720, (r.height || 1) / 440);
+      const stageW = r.width < 640 ? 450 : 720;
+      const unitCss = Math.min((r.width || 1) / stageW, (r.height || 1) / 440);
       if (L.mode !== 'drag') {
         const uHover = (e.clientX - r.left - r.width / 2) / Math.max(0.01, unitCss);
-        container.style.cursor = Math.abs(uHover) <= 148 ? 'pointer' : 'grab';
+        const onSide = Math.abs(uHover) >= 165 && Math.abs(uHover) <= 345;
+        container.style.cursor = (Math.abs(uHover) <= 130 || onSide) ? 'pointer' : 'grab';
         return;
       }
       const now = performance.now() / 1000;
@@ -1383,7 +1364,8 @@ void main(){
       if (!L.moved) {
         L.mode = 'rest';
         const r = container.getBoundingClientRect();
-        const unitCss = Math.min((r.width || 1) / 720, (r.height || 1) / 440);
+        const stageW = r.width < 640 ? 450 : 720;
+        const unitCss = Math.min((r.width || 1) / stageW, (r.height || 1) / 440);
         const u = (e.clientX - r.left - r.width / 2) / Math.max(0.01, unitCss);
         if (u > 148) {
           goToIndex(L.index + 1, false);

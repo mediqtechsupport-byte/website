@@ -326,7 +326,7 @@
       desc.textContent = item.desc;
       desc.style.cssText = [
         'font-size:0.88rem',
-        'font-style:italic',
+        'font-style:normal',
         'color:rgba(255,255,255,0.9)',
         'max-width:310px',
         'margin:0 0 12px',

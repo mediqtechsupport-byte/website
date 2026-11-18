@@ -474,7 +474,7 @@
 
         // Primary Regional Label Flags (LUZON, VISAYAS, MINDANAO) — edge-safe on mobile
         if (isPrimary) {
-          ctx.font = 'bold 11px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+          ctx.font = 'bold 11px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
           ctx.fillStyle = "#ffffff";
           var labelW = ctx.measureText(hub.name).width;
           var labelX = pt.x + 9;

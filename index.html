@@ -12,12 +12,12 @@
   <meta property="og:description" content="Exclusive distributor of Rayner premium ophthalmic solutions." />
   <meta property="og:image" content="assets/img/hero-products.jpg" />
 
-  <!-- Fonts: Unified Site-Wide Futura (with Jost Geometric Futura Webfont) -->
+  <!-- Fonts: Corporate Medical Sans Typography (IBM Plex Sans Display + Inter UI + IBM Plex Mono) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
     rel="stylesheet" />
 
   <!-- Preload hero image for fast LCP -->
@@ -44,9 +44,9 @@
     twTheme.setAttribute('type', 'text/tailwindcss');
     twTheme.textContent = `
       @theme {
-        --font-serif: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
-        --font-sans: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
-        --font-mono: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
+        --font-serif: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        --font-sans: "Inter", "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         --color-ink: #0a1d40;
         --color-navy: #0a1d40;
         --color-navy-2: #0a1d40;
@@ -145,12 +145,12 @@
       --hover-text-color-1: #0a1d40;
       --hover-text-color-2: #ffffff;
       --hover-text-color-3: #ffffff;
-      --font-futura: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
-      --font-sans: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
-      --font-serif: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
-      --font-mono: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
-      --font-family: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
-      --rtl-font-family: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
+      --font-futura: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-sans: "Inter", "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-serif: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --font-family: "Inter", "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      --rtl-font-family: "Inter", "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
       --pattern-color1: rgba(58, 160, 219, 0.055);
       --pattern-color2: rgba(246, 242, 234, 0.035);
     }
@@ -172,27 +172,47 @@
 
     body {
       background-color: #0a1d40;
-      font-family: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif;
+      font-family: "Inter", "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
       color: #f6f2ea;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Unified Site-Wide Futura Typography (All Sections, Controls, Modals & SVG Text) */
+    /* Unified Site-Wide Corporate Typography (Inter UI/Body + IBM Plex Sans Headings — Strictly Upright) */
     html,
     html body,
     html body *,
     html body *::before,
-    html body *::after,
-    html body #hero *,
-    html body #about *,
+    html body *::after {
+      font-family: "Inter", "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+    }
+
+    html body h1,
+    html body h1 *,
+    html body h2,
+    html body h2 *,
+    html body h3,
+    html body h3 *,
+    html body h4,
+    html body h4 *,
+    html body #hero .ih-h1,
+    html body #hero .ih-h1 *,
     html body #about .abt-serif,
+    html body #about .abt-serif *,
     html body #products .prod-serif,
+    html body #products .prod-serif *,
     html body #brands .br-serif,
+    html body #brands .br-serif *,
+    html body #brands .pel-title,
     html body #distribution .srv-serif,
+    html body #distribution .srv-serif *,
     html body #resources .res-serif,
+    html body #resources .res-serif *,
     html body #activities .news-serif,
+    html body #activities .news-serif *,
     html body #contact .cnt-serif,
+    html body #contact .cnt-serif *,
+    html body #contact .cnt-heading,
     html body .abt-serif,
     html body .prod-serif,
     html body .br-serif,
@@ -201,9 +221,10 @@
     html body .news-serif,
     html body .cnt-serif,
     html body .font-serif,
+    html body .font-serif *,
     html body .med-tab-label,
     html body .med-ghost-word {
-      font-family: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+      font-family: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
     }
 
     html body #hero .abt-serif,
@@ -225,6 +246,14 @@
       letter-spacing: -0.02em;
     }
 
+    html body,
+    html body *,
+    html body *::before,
+    html body *::after,
+    html body em,
+    html body .italic,
+    html body #hero em,
+    html body #about em,
     html body #about .abt-serif em,
     html body #products .prod-serif em,
     html body #brands .br-serif em,
@@ -245,7 +274,34 @@
     }
 
     html body .font-mono {
-      font-family: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+      font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+    }
+
+    @media (min-width: 1024px) and (max-width: 1535px) {
+      #site-header nav {
+        gap: 0.5rem !important;
+        padding-left: 1.25rem !important;
+        padding-right: 1.25rem !important;
+      }
+      #site-header nav > ul {
+        gap: 0.125rem !important;
+      }
+      #site-header nav .spotlight-pill {
+        padding: 0.45rem 0.42rem !important;
+        font-size: 11.5px !important;
+        gap: 0.3rem !important;
+        letter-spacing: 0.01em !important;
+      }
+      #site-header nav .spotlight-pill svg.text-sky {
+        width: 13px !important;
+        height: 13px !important;
+      }
+      #mediq-search-trigger {
+        padding-left: 0.65rem !important;
+        padding-right: 0.65rem !important;
+        font-size: 11.5px !important;
+        gap: 0.4rem !important;
+      }
     }
 
     /* Hide bottom ticker marquee banners across #about slides without altering locked #about HTML */
@@ -545,7 +601,7 @@
           --pel-ink: #f4f7fb;
           --pel-muted: rgba(184, 204, 226, 0.78);
           --pel-line: rgba(114, 197, 248, 0.2);
-          --pel-display: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif;
+          --pel-display: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
         }
         #brands .pel-wrap { width: 100%; max-width: 100%; margin: 0 auto; }
         #brands .pel-head {
@@ -560,7 +616,7 @@
         }
         #brands .pel-title {
           margin: 0;
-          font-family: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif;
+          font-family: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
           font-size: clamp(1.85rem, 3.4vw, 3.1rem);
           font-weight: 400;
           letter-spacing: -0.025em;
@@ -598,6 +654,7 @@
         }
         #brands .pel-h { margin: 0; font: inherit; position: relative; z-index: 1; }
         #brands .pel-trigger {
+          position: relative;
           -webkit-appearance: none;
           appearance: none;
           background: none;
@@ -616,12 +673,111 @@
           column-gap: 1.5rem;
           -webkit-tap-highlight-color: transparent;
         }
+        #brands .pel-trigger::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          height: 2px;
+          width: 0;
+          background: linear-gradient(90deg, rgba(114, 197, 248, 0.35), #72c5f8, #ffffff);
+          transition: width 300ms linear;
+          pointer-events: none;
+        }
+        #brands .pel-row[data-lit='true'] .pel-trigger::after,
+        #brands .pel-trigger:hover::after {
+          width: 100%;
+        }
+
+        /* Floating Cursor Image Reveal Preview (#brands Slide 1 & Slide 2) */
+        #pel-floating-preview {
+          position: fixed;
+          left: 0;
+          top: 0;
+          width: 280px;
+          height: 350px;
+          pointer-events: none;
+          z-index: 80;
+          transform: translate(-50%, -50%);
+          will-change: left, top;
+          display: none;
+        }
+        #pel-floating-preview.is-mounted {
+          display: block;
+        }
+        #pel-floating-preview .pel-float-card {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          border-radius: 14px;
+          overflow: hidden;
+          background: radial-gradient(circle at 50% 35%, rgba(58, 160, 219, 0.24), rgba(7, 19, 44, 0.96) 72%);
+          border: 1px solid rgba(114, 197, 248, 0.42);
+          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 28px rgba(58, 160, 219, 0.22);
+          opacity: 0;
+          transform: scale(0.5);
+          transition: opacity 240ms ease, transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+          will-change: opacity, transform;
+        }
+        #pel-floating-preview[data-visible='true'] .pel-float-card {
+          opacity: 1;
+          transform: scale(1);
+        }
+        #pel-floating-preview .pel-float-img {
+          width: 100%;
+          height: 100%;
+          display: block;
+          object-fit: cover;
+        }
+        #pel-floating-preview[data-fit='contain'] .pel-float-img {
+          object-fit: contain;
+          padding: 20px 20px 64px;
+          box-sizing: border-box;
+        }
+        #pel-floating-preview .pel-float-scrim {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(6, 16, 38, 0.05) 45%, rgba(5, 13, 32, 0.88) 100%);
+          pointer-events: none;
+        }
+        #pel-floating-preview .pel-float-caption {
+          position: absolute;
+          left: 14px;
+          right: 14px;
+          bottom: 14px;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          pointer-events: none;
+        }
+        #pel-floating-preview .pel-float-title {
+          font-family: "IBM Plex Sans", "Inter", sans-serif;
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          color: #ffffff;
+          line-height: 1.2;
+        }
+        #pel-floating-preview .pel-float-sub {
+          font-family: "IBM Plex Mono", monospace;
+          font-size: 10px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #72c5f8;
+          line-height: 1.3;
+        }
+        @media (max-width: 767px), (pointer: coarse) {
+          #pel-floating-preview {
+            display: none !important;
+          }
+        }
         #brands .pel-trigger:focus-visible { outline: 2px solid #72c5f8; outline-offset: -2px; border-radius: 4px; }
         #brands .pel-when {
           display: flex;
           align-items: center;
           gap: 0.85rem;
-          font-style: italic;
+          font-style: normal;
           font-size: clamp(0.84rem, 1.1vw, 0.98rem);
           letter-spacing: -0.01em;
           color: var(--pel-muted);
@@ -1301,7 +1457,7 @@
       display: flex;
       align-items: center;
       gap: .85rem;
-      font-style: italic;
+      font-style: normal;
       font-size: clamp(.92rem, 1.2vw, 1.05rem);
       letter-spacing: -.01em;
       color: var(--pel-muted);
@@ -7430,18 +7586,10 @@
           pointer-events: auto;
         }
 
-        /* Lightweight GPU-friendly CRT screen-door hairline scanlines over the spiral stage */
+        /* Clean ambient gradient backdrop (small background lines disabled) */
         .at-work-stage::after {
           content: "";
-          position: absolute;
-          inset: 0;
-          z-index: 40;
-          pointer-events: none;
-          background-image:
-            repeating-linear-gradient(0deg, rgba(150, 170, 255, 0.045) 0px, rgba(150, 170, 255, 0.045) 1px, transparent 1px, transparent 3px),
-            repeating-linear-gradient(90deg, rgba(150, 170, 255, 0.032) 0px, rgba(150, 170, 255, 0.032) 1px, transparent 1px, transparent 3px);
-          opacity: 0.34;
-          transform: translateZ(0);
+          display: none;
         }
 
         @keyframes atStageGrain {
@@ -10619,7 +10767,7 @@
 
       <style id="brands-editorial-scoped-styles">
         #brands .br-serif {
-          font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+          font-family: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
         }
 
         @keyframes brIolSlowSpin {
@@ -10937,7 +11085,7 @@
               </header>
 
               <ol class="pel-list">
-              <li class="pel-row" data-pel-row="0" data-open="false" data-lit="false" data-colors="#3aa0db,#0284c7,#72c5f8">
+              <li class="pel-row" data-pel-row="0" data-open="false" data-lit="false" data-colors="#3aa0db,#0284c7,#72c5f8" data-hover-img="assets/img/hero-products.jpg" data-hover-fit="cover" data-hover-sub="Exclusive Philippine IOL Distribution">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-btn-0" class="pel-trigger" aria-expanded="false" aria-controls="pel-panel-0">
@@ -10960,7 +11108,7 @@
                   </div>
                 </div>
               </li>
-              <li class="pel-row br-cat-col" data-br-col="lenses" data-pel-row="1" data-open="false" data-lit="false" data-colors="#72c5f8,#0ea5e9,#1d4ed8">
+              <li class="pel-row br-cat-col" data-br-col="lenses" data-pel-row="1" data-open="false" data-lit="false" data-colors="#72c5f8,#0ea5e9,#1d4ed8" data-hover-img="assets/img/news-spiral-optic-showcase.jpg" data-hover-fit="cover" data-hover-sub="RayOne &amp; Sulcoflex Intraocular Lenses">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-btn-1" class="pel-trigger" aria-expanded="false" aria-controls="pel-panel-1">
@@ -10991,7 +11139,7 @@
                   </div>
                 </div>
               </li>
-              <li class="pel-row br-cat-col" data-br-col="viscoelastics" data-pel-row="2" data-open="false" data-lit="false" data-colors="#2dd4bf,#0284c7,#72c5f8">
+              <li class="pel-row br-cat-col" data-br-col="viscoelastics" data-pel-row="2" data-open="false" data-lit="false" data-colors="#2dd4bf,#0284c7,#72c5f8" data-hover-img="assets/img/packshots/ophteis_cohesive_clean.png" data-hover-fit="contain" data-hover-sub="Ophteis OVDs &amp; AEON Ocular Surface">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-btn-2" class="pel-trigger" aria-expanded="false" aria-controls="pel-panel-2">
@@ -11022,7 +11170,7 @@
                   </div>
                 </div>
               </li>
-              <li class="pel-row br-cat-col" data-br-col="systems" data-pel-row="3" data-open="false" data-lit="false" data-colors="#60a5fa,#0ea5e9,#a5f3fc">
+              <li class="pel-row br-cat-col" data-br-col="systems" data-pel-row="3" data-open="false" data-lit="false" data-colors="#60a5fa,#0ea5e9,#a5f3fc" data-hover-img="assets/img/packshots/emv_stage.png" data-hover-fit="contain" data-hover-sub="Preloaded Injector &amp; Digital Planning">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-btn-3" class="pel-trigger" aria-expanded="false" aria-controls="pel-panel-3">
@@ -11053,7 +11201,7 @@
                   </div>
                 </div>
               </li>
-              <li class="pel-row" data-pel-row="4" data-open="false" data-lit="false" data-colors="#3aa0db,#1e40af,#72c5f8">
+              <li class="pel-row" data-pel-row="4" data-open="false" data-lit="false" data-colors="#3aa0db,#1e40af,#72c5f8" data-hover-img="assets/img/pillars/p1_cleanroom_inspect.jpg" data-hover-fit="cover" data-hover-sub="Scoped Authorization &amp; Cleanroom QA">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-btn-4" class="pel-trigger" aria-expanded="false" aria-controls="pel-panel-4">
@@ -11097,7 +11245,7 @@
               </header>
 
               <ol class="pel-list">
-              <li class="pel-row" data-pel-row="0" data-open="false" data-lit="false" data-colors="#3aa0db,#0284c7,#72c5f8">
+              <li class="pel-row" data-pel-row="0" data-open="false" data-lit="false" data-colors="#3aa0db,#0284c7,#72c5f8" data-hover-img="assets/activities/mediq1.jpg" data-hover-fit="cover" data-hover-sub="01 · Philippine Healthcare Landscape">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-p2-btn-0" class="pel-trigger" aria-expanded="false" aria-controls="pel-p2-panel-0">
@@ -11120,7 +11268,7 @@
                   </div>
                 </div>
               </li>
-              <li class="pel-row" data-pel-row="1" data-open="false" data-lit="false" data-colors="#72c5f8,#0ea5e9,#1d4ed8">
+              <li class="pel-row" data-pel-row="1" data-open="false" data-lit="false" data-colors="#72c5f8,#0ea5e9,#1d4ed8" data-hover-img="assets/img/rayone-emv-brochure.jpg" data-hover-fit="contain" data-hover-sub="02 · Evidence-Based Positioning">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-p2-btn-1" class="pel-trigger" aria-expanded="false" aria-controls="pel-p2-panel-1">
@@ -11143,7 +11291,7 @@
                   </div>
                 </div>
               </li>
-              <li class="pel-row" data-pel-row="2" data-open="false" data-lit="false" data-colors="#2dd4bf,#0284c7,#72c5f8">
+              <li class="pel-row" data-pel-row="2" data-open="false" data-lit="false" data-colors="#2dd4bf,#0284c7,#72c5f8" data-hover-img="assets/img/pillars/p4_market_expansion.jpg" data-hover-fit="cover" data-hover-sub="03 · Clinical &amp; Institutional Engagement">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-p2-btn-2" class="pel-trigger" aria-expanded="false" aria-controls="pel-p2-panel-2">
@@ -11166,7 +11314,7 @@
                   </div>
                 </div>
               </li>
-              <li class="pel-row" data-pel-row="3" data-open="false" data-lit="false" data-colors="#60a5fa,#0ea5e9,#a5f3fc">
+              <li class="pel-row" data-pel-row="3" data-open="false" data-lit="false" data-colors="#60a5fa,#0ea5e9,#a5f3fc" data-hover-img="assets/img/pillars/p6_quality_metrology.jpg" data-hover-fit="cover" data-hover-sub="04 · Quality Assurance &amp; Traceability">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-p2-btn-3" class="pel-trigger" aria-expanded="false" aria-controls="pel-p2-panel-3">
@@ -11189,7 +11337,7 @@
                   </div>
                 </div>
               </li>
-              <li class="pel-row" data-pel-row="4" data-open="false" data-lit="false" data-colors="#3aa0db,#1e40af,#72c5f8">
+              <li class="pel-row" data-pel-row="4" data-open="false" data-lit="false" data-colors="#3aa0db,#1e40af,#72c5f8" data-hover-img="assets/activities/5.jpg" data-hover-fit="cover" data-hover-sub="Medical Devices · Pharma · Diagnostics">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-p2-btn-4" class="pel-trigger" aria-expanded="false" aria-controls="pel-p2-panel-4">
@@ -11225,7 +11373,7 @@
 
       <style id="services-editorial-scoped-styles">
         #distribution .srv-serif {
-          font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+          font-family: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
         }
 
         /* Full-page edge-to-edge fill for all Services subpages (Slides 1–6) */
@@ -13059,7 +13207,7 @@
       class="page-snap-section page-transition-section relative isolate w-full min-h-[100svh] lg:h-[100svh] overflow-hidden bg-[#0a1d40] text-[#f6f2ea] scroll-mt-0">
       <style id="contact-editorial-scoped-styles">
         #contact .cnt-heading {
-          font-family: "Futura", "Futura PT", "Futura Medium", "Futura Bk BT", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif;
+          font-family: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
           letter-spacing: -0.02em;
           -webkit-font-smoothing: antialiased;
         }
@@ -14216,7 +14364,7 @@
         margin-bottom: 16px !important;
       }
       #hero .ih-hero-ctas {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        grid-template-columns: minmax(0, 1.07fr) minmax(0, 0.93fr) !important;
         gap: 8px !important;
         margin-bottom: 0 !important;
       }
@@ -14243,9 +14391,14 @@
       #hero .ih-btn-pill-primary {
         height: 44px !important;
         max-height: 44px !important;
-        padding: 0 10px !important;
-        font-size: clamp(9.8px, 2.58vw, 11.5px) !important;
-        gap: 5px !important;
+        padding: 0 7px !important;
+        font-size: clamp(9.2px, 2.38vw, 10.6px) !important;
+        gap: 4px !important;
+      }
+      #hero .ih-btn-pill-primary svg {
+        width: 12px !important;
+        height: 12px !important;
+        flex-shrink: 0 !important;
       }
       #hero .ih-btn-video-secondary,
       #products .ih-btn-video-secondary,
@@ -14268,9 +14421,9 @@
       #hero .ih-btn-video-secondary {
         height: 44px !important;
         max-height: 44px !important;
-        padding: 0 10px !important;
-        font-size: clamp(9.8px, 2.58vw, 11.5px) !important;
-        gap: 5px !important;
+        padding: 0 7px !important;
+        font-size: clamp(9.2px, 2.38vw, 10.6px) !important;
+        gap: 4px !important;
       }
       #products .ih-play-circle,
       #distribution .ih-play-circle,
@@ -14282,19 +14435,19 @@
         flex: 0 0 22px !important;
       }
       #hero .ih-play-circle {
-        width: 21px !important;
-        min-width: 21px !important;
-        max-width: 21px !important;
-        height: 21px !important;
-        min-height: 21px !important;
-        max-height: 21px !important;
-        flex: 0 0 21px !important;
+        width: 18px !important;
+        min-width: 18px !important;
+        max-width: 18px !important;
+        height: 18px !important;
+        min-height: 18px !important;
+        max-height: 18px !important;
+        flex: 0 0 18px !important;
         padding: 0 !important;
         aspect-ratio: 1 / 1 !important;
       }
       #hero .ih-play-circle svg {
-        width: 11px !important;
-        height: 11px !important;
+        width: 10px !important;
+        height: 10px !important;
         flex-shrink: 0 !important;
       }
       #about .about-go-next {

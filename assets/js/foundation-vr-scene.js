@@ -174,7 +174,7 @@
     ctx.fillStyle = '#0f3366';
     ctx.fillRect(0, 0, 256, 22);
     ctx.fillStyle = '#72c5f8';
-    ctx.font = 'bold 9px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 9px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('MEDIQ EMR  |  CLINIC WORKQUEUE', 10, 14);
     ctx.fillStyle = '#f87171';
     ctx.beginPath();
@@ -237,14 +237,14 @@
     ctx.lineWidth = 4;
     ctx.strokeRect(8, 8, 176, 128);
     ctx.fillStyle = '#0f2954';
-    ctx.font = 'bold 14px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 14px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('OPHTHALMOLOGY', 96, 36);
-    ctx.font = 'bold 20px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 20px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('E', 96, 62);
-    ctx.font = 'bold 13px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 13px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('F P', 96, 80);
-    ctx.font = 'bold 10px "Futura", "Futura PT", "Futura Medium", "Jost", "Century Gothic", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = 'bold 10px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillText('T O Z', 96, 95);
     ctx.fillStyle = '#c59d43';
     ctx.beginPath();

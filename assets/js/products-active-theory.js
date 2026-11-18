@@ -648,43 +648,20 @@
     lastDustTs = 0;
   }
   function shouldRunDust() {
-    return activeSubpage > 0 && activeSubpage !== 3 && !box3dMode && !detailMode && isStageVisible && !document.hidden && !!bgCtx;
+    return false;
+  }
+  if (bgCtx) {
+    bgCtx.setTransform(1, 0, 0, 1, 0, 0);
+    bgCtx.clearRect(0, 0, vw, vh);
   }
   function drawDustFrame(now) {
     dustRafId = 0;
-    if (!shouldRunDust()) return;
-    if (!lastDustTs) lastDustTs = now;
-    const elapsedMs = now - lastDustTs;
-    // Cap ambient background dust at ~30fps so WebGL2 WarpCarousel stays locked 60/120fps over long sessions
-    if (elapsedMs >= 32) {
-      const dt = Math.min(0.06, elapsedMs / 1000);
-      lastDustTs = now;
-      bgCtx.setTransform(1, 0, 0, 1, 0, 0);
-      bgCtx.clearRect(0, 0, vw, vh);
-      for (let i = 0; i < DUST_COUNT; i++) {
-        const d = dustStreaks[i];
-        d.x = (d.x - d.speed * dt + 1) % 1;
-        d.y = (d.y + d.speed * 0.65 * dt) % 1;
-        const sx = d.x * vw;
-        const sy = d.y * vh;
-        bgCtx.strokeStyle = d.strokeStyle;
-        bgCtx.lineWidth = d.size;
-        bgCtx.beginPath();
-        bgCtx.moveTo(sx, sy);
-        bgCtx.lineTo(sx - d.len * 0.6, sy + d.len * 0.4);
-        bgCtx.stroke();
-      }
-    }
-    dustRafId = requestAnimationFrame(drawDustFrame);
   }
   function kickDust() {
-    if (!shouldRunDust()) {
-      stopDust();
-      return;
-    }
-    if (!dustRafId) {
-      lastDustTs = 0;
-      dustRafId = requestAnimationFrame(drawDustFrame);
+    stopDust();
+    if (bgCtx) {
+      bgCtx.setTransform(1, 0, 0, 1, 0, 0);
+      bgCtx.clearRect(0, 0, vw, vh);
     }
   }
 
@@ -983,7 +960,7 @@
       container: warpMountEl,
       interval: 4.2,
       step: 1,
-      warp: 1.0,
+      warp: 0,
       onIndexChange(frontIdx, card) {
         if (counterCurEl) {
           counterCurEl.textContent = String((frontIdx || 0) + 1).padStart(2, '0');
