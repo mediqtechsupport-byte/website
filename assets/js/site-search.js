@@ -694,7 +694,7 @@
         -webkit-backdrop-filter: blur(18px);
         opacity: 0;
         pointer-events: none;
-        font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+        font-family: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
         transition: opacity 180ms ease-out;
       }
       #mediq-search-modal.is-open {
@@ -739,7 +739,7 @@
         border: 0;
         outline: none;
         color: #f4f7fb;
-        font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+        font-family: "Inter", "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
         font-size: 13px;
         font-weight: 400;
       }
@@ -847,7 +847,7 @@
       }
       .mqs-row-uri {
         margin-top: 1px;
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
         font-size: 11.5px;
         line-height: 1.35;
         color: rgba(158, 180, 204, 0.76);
@@ -873,7 +873,7 @@
         flex-shrink: 0;
       }
       .mqs-mime {
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
         font-size: 10.5px;
         color: rgba(158, 180, 204, 0.58);
       }
@@ -917,7 +917,7 @@
         border: 1px solid rgba(255, 255, 255, 0.14);
         background: rgba(255, 255, 255, 0.05);
         color: rgba(226, 232, 240, 0.82);
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
         font-size: 10px;
         line-height: 1.1;
       }

@@ -263,9 +263,47 @@ void main(){
     start();
   }
 
+  // Lazy-boot LiquidChrome WebGL context only when Services Slide 7 actually opens
+  function scheduleBoot() {
+    const bookSlide = document.getElementById('srv-book-carousel-slide');
+    if (!bookSlide) return;
+    let pendingArgs = null;
+    let booted = false;
+
+    const triggerBoot = () => {
+      if (booted) return;
+      booted = true;
+      boot();
+      if (pendingArgs && typeof window.__updateServices3dBackdrop === 'function') {
+        window.__updateServices3dBackdrop(pendingArgs[0], pendingArgs[1]);
+        pendingArgs = null;
+      }
+    };
+
+    window.__updateServices3dBackdrop = function (currentBookIdx, openSpreadAlpha) {
+      pendingArgs = [currentBookIdx, openSpreadAlpha];
+      triggerBoot();
+    };
+
+    if (bookSlide.classList.contains('opacity-100')) {
+      triggerBoot();
+      return;
+    }
+
+    if (typeof MutationObserver !== 'undefined') {
+      const lazyMo = new MutationObserver(() => {
+        if (bookSlide.classList.contains('opacity-100')) {
+          lazyMo.disconnect();
+          triggerBoot();
+        }
+      });
+      lazyMo.observe(bookSlide, { attributes: true, attributeFilter: ['class'] });
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
+    document.addEventListener('DOMContentLoaded', scheduleBoot);
   } else {
-    boot();
+    scheduleBoot();
   }
 })();

@@ -10,7 +10,7 @@
   'use strict';
 
   const DEFAULT_FONT =
-    '"IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif';
+    '"Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif';
 
   // Signature 6x7 B-spline mesh generator + box-matched presets
   function hexToRgbTuple(hex) {
@@ -365,15 +365,15 @@
     ctx.stroke();
 
     // Top-left 2-line title + footer
-    const small = sizeForCap(ctx, 300, family, 7.9, 'H');
-    ctx.font = fontStr(300, small, family);
+    const small = sizeForCap(ctx, 400, family, 7.9, 'H');
+    ctx.font = fontStr(400, small, family);
     ctx.fillStyle = rgba(white, 0.92);
     const lines = (card.title || '').split('\n');
     lines.slice(0, 2).forEach((ln, i) => ctx.fillText(ln, 17, 37 + i * 14));
 
     if (card.codeTag) {
       ctx.save();
-      ctx.font = fontStr(500, 7.2, family);
+      ctx.font = fontStr(500, 7.2, '"IBM Plex Mono", ui-monospace, SFMono-Regular, monospace');
       ctx.fillStyle = rgba(white, 0.56);
       ctx.textAlign = 'right';
       ctx.fillText(card.codeTag, CW - 16, 35);
@@ -381,7 +381,7 @@
     }
 
     if (card.footer) {
-      ctx.font = fontStr(300, small, family);
+      ctx.font = fontStr(400, small, family);
       ctx.fillStyle = rgba(white, 0.88);
       ctx.fillText(card.footer, 17, 295);
     }
@@ -417,12 +417,12 @@
     }
 
     // Fallback when no image is provided: numeral + unit + detail graphic
-    const big = sizeForCap(ctx, 300, family, 50);
+    const big = sizeForCap(ctx, 400, family, 50);
     const unitPx = big * 0.31;
-    ctx.font = fontStr(300, big, family);
+    ctx.font = fontStr(400, big, family);
     const value = card.value || '';
     const vw = ctx.measureText(value).width;
-    ctx.font = fontStr(300, unitPx, family);
+    ctx.font = fontStr(400, unitPx, family);
     const uw = card.unit ? ctx.measureText(card.unit).width + 4 : 0;
     const detail = card.detail || 'none';
     const centre = detail === 'wave' ? 112 : detail === 'cross' ? 106 : 127;
@@ -508,7 +508,7 @@
       ctx.fillRect(105.5, 66, 0.8, 182);
       ctx.fillRect(12, 156.5, 186, 0.8);
       const lab = card.labels || [];
-      ctx.font = fontStr(300, big * 0.72, family);
+      ctx.font = fontStr(400, big * 0.72, family);
       ctx.fillStyle = rgba(white, 0.07);
       ctx.textAlign = 'center';
       ctx.fillText(value, 106, 122);
@@ -543,11 +543,11 @@
     ctx.save();
     ctx.shadowColor = rgba(n1, 0.35);
     ctx.shadowBlur = 10 * k;
-    ctx.font = fontStr(300, big, family);
+    ctx.font = fontStr(400, big, family);
     ctx.fillStyle = grad;
     ctx.fillText(value, x0, 186);
     if (card.unit) {
-      ctx.font = fontStr(300, unitPx, family);
+      ctx.font = fontStr(400, unitPx, family);
       ctx.fillStyle = rgba(n1, 1);
       ctx.fillText(card.unit, x0 + vw + 4, 186 - 50 + unitPx * 0.72);
     }

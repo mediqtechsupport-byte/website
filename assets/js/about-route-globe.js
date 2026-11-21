@@ -156,6 +156,11 @@
     var t0 = performance.now();
     var mouse = { x: -999, y: -999, active: false };
     var activePins = [];
+    var copyBottomPx = 0;
+
+    function isPortraitMobile() {
+      return W < 768 || (W < 1024 && H > W);
+    }
 
     function resize() {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -163,10 +168,34 @@
       H = container.clientHeight || 700;
       canvas.width = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
+
+      // Measure actual mobile copy/CTA bottom so Philippines map sits cleanly below with zero overlap
+      copyBottomPx = 0;
+      if (isPortraitMobile()) {
+        var hostSlide = container.closest('.about-slide');
+        var copyEl = hostSlide ? hostSlide.querySelector('.ih-hero-copy') : null;
+        if (copyEl) {
+          var contRect = container.getBoundingClientRect();
+          var copyRect = copyEl.getBoundingClientRect();
+          if (copyRect.height > 40) {
+            copyBottomPx = Math.max(0, copyRect.bottom - contRect.top);
+          }
+        }
+      }
     }
 
-    // Full-Bleed Edge-to-Edge World Coordinate Projection
+    // Full-Bleed Edge-to-Edge World Coordinate Projection (aspect-safe Asia-Pacific crop on portrait mobile!)
     function projectWorld(lon, lat) {
+      if (isPortraitMobile()) {
+        var lonSpan = 105;
+        var latSpan = 118;
+        var nxMob = (lon - (115 - lonSpan * 0.5)) / lonSpan;
+        var nyMob = (58 - lat) / latSpan;
+        return {
+          x: nxMob * W,
+          y: nyMob * H
+        };
+      }
       var nx = (lon + 180) / 360;
       var ny = (76 - lat) / 138;
       return {
@@ -175,15 +204,21 @@
       };
     }
 
-    // Centered Philippines Bounding Box (Shifted away from the far right edge to the center of the right half)
+    // Centered Philippines Bounding Box
+    // - Portrait mobile/tablet: full-height atmospheric background framing the vertically centered typography
+    // - Desktop: centered in the right-side zone between text and right border
     function getPHBox() {
-      var isMobile = W < 768;
-      if (isMobile) {
+      if (isPortraitMobile()) {
+        var wMob = Math.min(W * 1.08, H * 0.62);
+        var hMob = Math.min(H * 0.86, wMob / 0.68);
+        wMob = hMob * 0.68;
+        var xMob = (W - wMob) * 0.5 - W * 0.03;
+        var yMob = (H - hMob) * 0.52;
         return {
-          x: W * 0.45,
-          y: H * 0.635,
-          w: W * 0.43,
-          h: H * 0.30
+          x: xMob,
+          y: yMob,
+          w: wMob,
+          h: hMob
         };
       }
       var h = Math.min(H * 0.82, 750);
@@ -221,27 +256,38 @@
       }
 
       // =======================================================================
-      // 1. EDGE-TO-EDGE WORLD MAP (All 258 Countries, Zero Margins/Crop)
+      // 1. EDGE-TO-EDGE WORLD MAP (All 258 Countries, Aspect-Safe on Mobile)
       // =======================================================================
-      var dotSize = Math.max(1.15, Math.min(1.85, W / 950));
+      var mobMode = isPortraitMobile();
+      var dotSize = mobMode ? 1.15 : Math.max(1.15, Math.min(1.85, W / 950));
 
-      ctx.fillStyle = THEME.worldDot;
+      ctx.fillStyle = mobMode ? "rgba(114, 197, 248, 0.14)" : THEME.worldDot;
       ctx.beginPath();
       for (var i = 0; i < WORLD_DOTS.length; i++) {
         var dot = WORLD_DOTS[i];
-        var px = dot[0] * W;
-        var py = dot[1] * H;
+        var px, py;
+        if (mobMode) {
+          var lonD = dot[0] * 360 - 180;
+          var latD = 76 - dot[1] * 138;
+          var wp = projectWorld(lonD, latD);
+          if (wp.x < -8 || wp.x > W + 8 || wp.y < -8 || wp.y > H + 8) continue;
+          px = wp.x;
+          py = wp.y;
+        } else {
+          px = dot[0] * W;
+          py = dot[1] * H;
+        }
 
         // Skip dots inside hover spotlight for tactile reaction
-        if (mouse.active && Math.hypot(px - mouse.x, py - mouse.y) < 65) continue;
+        if (!mobMode && mouse.active && Math.hypot(px - mouse.x, py - mouse.y) < 65) continue;
 
         ctx.moveTo(px + dotSize, py);
         ctx.arc(px, py, dotSize, 0, Math.PI * 2);
       }
       ctx.fill();
 
-      // Interactive Cursor Proximity Highlight
-      if (mouse.active) {
+      // Interactive Cursor Proximity Highlight (Desktop)
+      if (!mobMode && mouse.active) {
         ctx.fillStyle = THEME.dotHighlight;
         ctx.beginPath();
         for (var i = 0; i < WORLD_DOTS.length; i++) {
@@ -265,18 +311,22 @@
       for (var j = 0; j < GLOBAL_HUBS.length; j++) {
         var hub = GLOBAL_HUBS[j];
         var hp = projectWorld(hub.lon, hub.lat);
+        // On portrait mobile, keep subtle regional arcs sweeping cleanly into Philippines from canvas edges
+        if (mobMode && (j % 2 === 1)) continue;
         var targetCoord = phHubCoords[hub.targetHub || 'luzon'] || phHubCoords.luzon;
         activePins.push({ p: hub, x: hp.x, y: hp.y });
 
-        // World Hub Node
-        ctx.fillStyle = "rgba(114, 197, 248, 0.65)";
-        ctx.beginPath();
-        ctx.arc(hp.x, hp.y, 2.5, 0, Math.PI * 2);
-        ctx.fill();
+        // World Hub Node (only when inside visible canvas)
+        if (hp.x >= 4 && hp.x <= W - 4 && hp.y >= 4 && hp.y <= H - 4) {
+          ctx.fillStyle = "rgba(114, 197, 248, 0.55)";
+          ctx.beginPath();
+          ctx.arc(hp.x, hp.y, 2.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
 
         // Parabolic trajectory swooping from World Origin to Philippines target
         var distH = Math.hypot(targetCoord.x - hp.x, targetCoord.y - hp.y);
-        var liftH = Math.min(105, Math.max(30, distH * 0.18));
+        var liftH = mobMode ? Math.min(58, Math.max(18, distH * 0.12)) : Math.min(105, Math.max(30, distH * 0.18));
         var stepsH = 40;
         var arcPts = [];
 
@@ -290,8 +340,8 @@
         }
 
         // Draw Translucent Arc Path (subtle, non-distracting)
-        ctx.strokeStyle = THEME.arc;
-        ctx.lineWidth = 1.2;
+        ctx.strokeStyle = mobMode ? "rgba(114, 197, 248, 0.14)" : THEME.arc;
+        ctx.lineWidth = mobMode ? 1.0 : 1.2;
         ctx.beginPath();
         ctx.moveTo(arcPts[0].x, arcPts[0].y);
         for (var k = 1; k <= stepsH; k++) ctx.lineTo(arcPts[k].x, arcPts[k].y);
@@ -306,9 +356,9 @@
 
         for (var k = Math.max(0, head - 7); k < head; k++) {
           var a = arcPts[k], b = arcPts[k + 1];
-          ctx.globalAlpha = (1 - (head - k) / 7) * 0.32;
+          ctx.globalAlpha = (1 - (head - k) / 7) * (mobMode ? 0.22 : 0.32);
           ctx.strokeStyle = THEME.comet;
-          ctx.lineWidth = 1.6;
+          ctx.lineWidth = 1.5;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
@@ -321,15 +371,25 @@
       // 3. SOFT BACKDROP VIGNETTE UNDER TYPOGRAPHY
       // Softens any flight lines passing behind the text to ensure 100% legibility
       // =======================================================================
-      var textVignette = ctx.createRadialGradient(W * 0.22, H * 0.50, 40, W * 0.22, H * 0.50, Math.max(W * 0.44, 480));
-      textVignette.addColorStop(0, "rgba(11, 12, 15, 0.58)");
-      textVignette.addColorStop(0.55, "rgba(11, 12, 15, 0.34)");
-      textVignette.addColorStop(0.85, "rgba(11, 12, 15, 0.12)");
-      textVignette.addColorStop(1, "transparent");
-      ctx.fillStyle = textVignette;
-      ctx.beginPath();
-      ctx.arc(W * 0.22, H * 0.50, Math.max(W * 0.44, 480), 0, Math.PI * 2);
-      ctx.fill();
+      if (mobMode) {
+        // Gentle radial readability halo behind centered mobile typography while keeping atmospheric map alive
+        var mobScrim = ctx.createRadialGradient(W * 0.44, H * 0.48, 20, W * 0.44, H * 0.48, Math.max(W * 0.85, H * 0.42));
+        mobScrim.addColorStop(0, "rgba(11, 12, 15, 0.56)");
+        mobScrim.addColorStop(0.55, "rgba(11, 12, 15, 0.30)");
+        mobScrim.addColorStop(1, "rgba(11, 12, 15, 0)");
+        ctx.fillStyle = mobScrim;
+        ctx.fillRect(0, 0, W, H);
+      } else {
+        var textVignette = ctx.createRadialGradient(W * 0.22, H * 0.50, 40, W * 0.22, H * 0.50, Math.max(W * 0.44, 480));
+        textVignette.addColorStop(0, "rgba(11, 12, 15, 0.58)");
+        textVignette.addColorStop(0.55, "rgba(11, 12, 15, 0.34)");
+        textVignette.addColorStop(0.85, "rgba(11, 12, 15, 0.12)");
+        textVignette.addColorStop(1, "transparent");
+        ctx.fillStyle = textVignette;
+        ctx.beginPath();
+        ctx.arc(W * 0.22, H * 0.50, Math.max(W * 0.44, 480), 0, Math.PI * 2);
+        ctx.fill();
+      }
 
       // =======================================================================
       // 4. PROMINENT PHILIPPINES ARCHIPELAGO MAP (Centered in Right Zone)
@@ -472,31 +532,55 @@
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        // Primary Regional Label Flags (LUZON, VISAYAS, MINDANAO) — edge-safe on mobile
-        if (isPrimary) {
-          ctx.font = 'bold 11px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
-          ctx.fillStyle = "#ffffff";
+        // Primary Regional Label Flags (LUZON, VISAYAS, MINDANAO) — desktop only so mobile background never clashes with foreground text
+        if (isPrimary && !mobMode) {
+          ctx.font = 'bold 11px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
           var labelW = ctx.measureText(hub.name).width;
-          var labelX = pt.x + 9;
-          if (labelX + labelW > W - 14) {
-            labelX = Math.max(14, pt.x - 9 - labelW);
+          var labelX = pt.x + 10;
+          var labelY = pt.y + 4;
+          if (labelX + labelW > W - 16) {
+            labelX = Math.max(16, pt.x - 10 - labelW);
           }
-          ctx.fillText(hub.name, labelX, pt.y + 4);
+          ctx.save();
+          ctx.lineJoin = "round";
+          ctx.lineWidth = 3.2;
+          ctx.strokeStyle = "rgba(8, 14, 28, 0.88)";
+          ctx.strokeText(hub.name, labelX, labelY);
+          ctx.fillStyle = "#ffffff";
+          ctx.fillText(hub.name, labelX, labelY);
+          ctx.restore();
         }
       }
 
       ctx.globalAlpha = 1;
     }
 
+    var sectionInView = false;
+
+    function shouldTick() {
+      return alive && visible && sectionInView && !document.hidden;
+    }
+
     function tick(now) {
       raf = 0;
-      if (!alive || !visible || document.hidden) return;
-      draw(now);
+      if (!shouldTick()) return;
+      if (!window.__mediqFastJumping) {
+        draw(now);
+      }
       raf = requestAnimationFrame(tick);
     }
 
     function start() {
-      if (!raf && alive) raf = requestAnimationFrame(tick);
+      if (!raf && shouldTick()) raf = requestAnimationFrame(tick);
+    }
+
+    function syncRun() {
+      if (shouldTick()) {
+        start();
+      } else if (raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
     }
 
     // Interactive Hover Tooltips
@@ -541,9 +625,24 @@
 
     var ro = new ResizeObserver(function () {
       resize();
-      draw(performance.now());
+      if (shouldTick()) draw(performance.now());
     });
     ro.observe(container);
+
+    var aboutSec = document.getElementById('about') || container;
+    if ('IntersectionObserver' in window && aboutSec) {
+      var io = new IntersectionObserver(function (entries) {
+        sectionInView = entries.some(function (en) { return en.isIntersecting; });
+        if (sectionInView) {
+          resize();
+          draw(performance.now());
+        }
+        syncRun();
+      }, { rootMargin: '220px 0px', threshold: 0.01 });
+      io.observe(aboutSec);
+    } else {
+      sectionInView = true;
+    }
 
     var slideEl = container.closest('.about-slide');
     if (slideEl) {
@@ -551,23 +650,21 @@
         var isVis = !slideEl.classList.contains('opacity-0') && slideEl.classList.contains('opacity-100');
         if (isVis !== visible) {
           visible = isVis;
-          if (visible) start();
-          else if (raf) { cancelAnimationFrame(raf); raf = 0; }
+          syncRun();
         }
       });
       obs.observe(slideEl, { attributes: true, attributeFilter: ['class'] });
     }
 
-    document.addEventListener('visibilitychange', function () {
-      if (document.hidden) {
-        if (raf) { cancelAnimationFrame(raf); raf = 0; }
-      } else if (visible) {
-        start();
-      }
-    });
+    document.addEventListener('visibilitychange', syncRun);
 
+    var r0 = aboutSec ? aboutSec.getBoundingClientRect() : null;
+    sectionInView = !!(r0 && r0.bottom > -220 && r0.top < (window.innerHeight || 900) + 220);
     resize();
-    start();
+    if (shouldTick()) {
+      draw(performance.now());
+      start();
+    }
   }
 
   if (document.readyState === 'loading') {

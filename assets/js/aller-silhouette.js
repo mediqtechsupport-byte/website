@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Aller Studio 3D Humanoid Bust + Particle Dispersion + ASCII Face Matrix
  * Ported directly from https://www.allerstudio.com/ (createSilhouette + parseMesh + ASCII cursor matrix)
  * Integrated into MediQ Brands & Partners Main Landing Page (#brands Slide 0)
@@ -95,78 +95,223 @@
       const axis = i % 3;
       pos[i] = min[axis] + (quantPos[i] / 65535) * (max[axis] - min[axis]);
     }
-    return appendSculptedHandMesh({ pos, nrm, crv, idx }, CFG.baseYaw);
+    return HOLO_MODE ? { pos, nrm, crv, idx } : appendSculptedHandMesh({ pos, nrm, crv, idx }, CFG.baseYaw);
   }
 
-  // 3D World-Space Anchor (at CFG.baseYaw) for the Globe & the 5 Articulated Fingers Cupping Its Base
+  // 3D World-Space Anchor (at CFG.baseYaw) for the globe, held by a parametric anatomical hand rig
+  // #brands visual mode: true = free-floating holographic globe on a projector pedestal (no humanoid)
+  const HOLO_MODE = true;
+  const SHOW_HOLO_PEDESTAL = false;
   const HAND_GLOBE_WORLD = {
-    center: [-0.156, 0.580, 0.168],
-    radius: 0.090,
-    palmCenter: [-0.156, 0.466, 0.172]
+    center: HOLO_MODE ? (SHOW_HOLO_PEDESTAL ? [-0.030, 0.672, 0.0] : [-0.030, 0.635, 0.0]) : [-0.156, 0.584, 0.166],
+    radius: HOLO_MODE ? (SHOW_HOLO_PEDESTAL ? 0.172 : 0.192) : 0.084,
+    palmCenter: [0, 0, 0]
   };
 
-  const HAND_FINGERS_WORLD = [
-    // 0: Thumb (Natural opposable radial origin cupping the left equator of the sphere)
-    {
-      name: 'thumb',
-      nodes: [
-        { p: [-0.194, 0.466, 0.146], rx: 0.0112, ry: 0.0095, crv: 7 },
-        { p: [-0.216, 0.492, 0.160], rx: 0.0102, ry: 0.0087, crv: 8 },
-        { p: [-0.234, 0.522, 0.176], rx: 0.0089, ry: 0.0077, crv: 9 },
-        { p: [-0.244, 0.552, 0.192], rx: 0.0077, ry: 0.0067, crv: 10 },
-        { p: [-0.245, 0.576, 0.201], rx: 0.0066, ry: 0.0057, crv: 10 },
-        { p: [-0.241, 0.592, 0.204], rx: 0.0052, ry: 0.0044, crv: 11 }
-      ]
-    },
-    // 1: Index Finger (Cradling front-left lower curve smoothly up to equator)
-    {
-      name: 'index',
-      nodes: [
-        { p: [-0.180, 0.484, 0.168], rx: 0.0086, ry: 0.0076, crv: 7 },
-        { p: [-0.188, 0.496, 0.198], rx: 0.0081, ry: 0.0071, crv: 8 },
-        { p: [-0.191, 0.517, 0.227], rx: 0.0074, ry: 0.0065, crv: 9 },
-        { p: [-0.190, 0.542, 0.247], rx: 0.0066, ry: 0.0058, crv: 10 },
-        { p: [-0.186, 0.565, 0.256], rx: 0.0058, ry: 0.0050, crv: 10 },
-        { p: [-0.182, 0.580, 0.258], rx: 0.0048, ry: 0.0041, crv: 11 }
-      ]
-    },
-    // 2: Middle Finger (Tallest finger hugging the central front curve cleanly past equator)
-    {
-      name: 'middle',
-      nodes: [
-        { p: [-0.160, 0.484, 0.170], rx: 0.0090, ry: 0.0080, crv: 7 },
-        { p: [-0.162, 0.496, 0.202], rx: 0.0084, ry: 0.0074, crv: 8 },
-        { p: [-0.162, 0.519, 0.232], rx: 0.0077, ry: 0.0068, crv: 9 },
-        { p: [-0.161, 0.546, 0.252], rx: 0.0068, ry: 0.0060, crv: 10 },
-        { p: [-0.159, 0.573, 0.260], rx: 0.0060, ry: 0.0052, crv: 10 },
-        { p: [-0.157, 0.592, 0.259], rx: 0.0050, ry: 0.0043, crv: 11 }
-      ]
-    },
-    // 3: Ring Finger (Natural taper cradling lower-front-right curve of the globe)
-    {
-      name: 'ring',
-      nodes: [
-        { p: [-0.141, 0.484, 0.167], rx: 0.0084, ry: 0.0074, crv: 7 },
-        { p: [-0.137, 0.496, 0.197], rx: 0.0078, ry: 0.0069, crv: 8 },
-        { p: [-0.134, 0.517, 0.226], rx: 0.0071, ry: 0.0063, crv: 9 },
-        { p: [-0.132, 0.541, 0.246], rx: 0.0063, ry: 0.0055, crv: 10 },
-        { p: [-0.130, 0.562, 0.254], rx: 0.0055, ry: 0.0048, crv: 10 },
-        { p: [-0.129, 0.577, 0.256], rx: 0.0046, ry: 0.0040, crv: 11 }
-      ]
-    },
-    // 4: Little Finger / Pinky (Proportionally shorter outer support hugging lower-right sphere edge)
-    {
-      name: 'pinky',
-      nodes: [
-        { p: [-0.122, 0.485, 0.160], rx: 0.0073, ry: 0.0064, crv: 7 },
-        { p: [-0.114, 0.497, 0.186], rx: 0.0067, ry: 0.0059, crv: 8 },
-        { p: [-0.108, 0.513, 0.212], rx: 0.0061, ry: 0.0054, crv: 9 },
-        { p: [-0.104, 0.531, 0.230], rx: 0.0054, ry: 0.0047, crv: 10 },
-        { p: [-0.102, 0.547, 0.237], rx: 0.0048, ry: 0.0041, crv: 10 },
-        { p: [-0.101, 0.558, 0.240], rx: 0.0041, ry: 0.0035, crv: 11 }
-      ]
+  /**
+   * Parametric hand rig. Everything is derived from one hand frame (u = wrist->fingers, n = palm normal,
+   * v = lateral toward the thumb) so the pose can be re-tuned by changing a few numbers.
+   * - palm: flattened block with thenar / hypothenar mounds
+   * - fingers: 3 bones each (proximal / middle / distal) with knuckle bulges, flexion solved so the fingertip pads
+   *   rest on the globe surface and no joint penetrates it
+   * - thumb: metacarpal + 2 phalanges rooted on the radial side of the wrist
+   * Tube nodes carry `nh` (palmar-side direction) so cross-sections rotate with each bone.
+   */
+  const HAND_RIG = (function () {
+    const D2R = Math.PI / 180;
+    const C = HAND_GLOBE_WORLD.center;
+    const R = HAND_GLOBE_WORLD.radius;
+    const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+    const addS = (a, b, s) => [a[0] + b[0] * s, a[1] + b[1] * s, a[2] + b[2] * s];
+    const mul = (a, s) => [a[0] * s, a[1] * s, a[2] * s];
+    const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+    const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+    const len = (a) => Math.hypot(a[0], a[1], a[2]);
+    const norm = (a) => { const l = len(a) || 1; return [a[0] / l, a[1] / l, a[2] / l]; };
+    const lerp3 = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+    const rotAbout = (v, axis, ang) => {
+      const c = Math.cos(ang), sn = Math.sin(ang);
+      const k = cross(axis, v);
+      const d = dot(axis, v) * (1 - c);
+      return [v[0] * c + k[0] * sn + axis[0] * d, v[1] * c + k[1] * sn + axis[1] * d, v[2] * c + k[2] * sn + axis[2] * d];
+    };
+
+    // ---- hand frame --------------------------------------------------------------------------
+    // Pose: open palm facing up, the globe resting on the distal palm, fingers together and cradling up the
+    // far side, thumb along the near side, forearm rising from the lower-left (elbow sits in the faded zone).
+    const HS = 1.08;
+    const h = (x) => x * HS;
+    const HAND_YAW = 58 * D2R;                                // 0 = fingers to the viewer's right, 90 = toward the camera
+    const u = norm([Math.cos(HAND_YAW), 0.10, Math.sin(HAND_YAW)]);   // wrist -> fingertips
+    const nRaw = [0.0, 1.0, 0.18];
+    const n = norm(addS(nRaw, u, -dot(u, nRaw)));             // palm normal (up)
+    const v = norm(cross(u, n));                              // + = thumb side (right hand)
+    const spreadAxis = norm(cross(u, v));                     // +angle about this axis turns a finger toward the thumb
+    const palmHalfT = h(0.0125);
+    const palmHalfLen = h(0.054);
+    const B = addS(C, n, -(R + h(0.010)));                    // globe hovers just above the open palm
+    const P = addS(addS(B, u, -0.6 * palmHalfLen), n, -palmHalfT);   // palm centre
+    HAND_GLOBE_WORLD.palmCenter = P;
+    const W = addS(P, u, -palmHalfLen);                       // wrist centre
+    const Wh = addS(W, n, h(0.008));                          // heel of the hand rises a little (cupped palm)
+
+    const withNh = (list, nh) => list.map((nd) => Object.assign({ nh: nh, crv: 6 }, nd));
+
+    // ---- digits: each joint rests on the globe surface (natural cradling grip) -------------------
+    function sphereWalk(root, dirF, L, rr) {
+      const rc = sub(C, root);
+      const up = norm(addS(rc, dirF, -dot(rc, dirF)));       // in-plane direction toward the globe centre
+      const cx = dot(rc, dirF), cy = dot(rc, up);
+      const to3 = (x, y) => addS(addS(root, dirF, x), up, y);
+      const pts = [root];
+      let px = 0, py = 0, hx = 1, hy = 0;
+      for (let i = 0; i < 3; i++) {
+        const rho = R + rr[i + 1] * 1.04;
+        const dx = cx - px, dy = cy - py, d = Math.hypot(dx, dy);
+        let qx, qy;
+        if (d > 1e-6 && d <= L[i] + rho && d >= Math.abs(L[i] - rho)) {
+          const a = (L[i] * L[i] - rho * rho + d * d) / (2 * d);
+          const hh = Math.sqrt(Math.max(L[i] * L[i] - a * a, 0));
+          const mx = px + (a * dx) / d, my = py + (a * dy) / d;
+          const s1 = [mx + (hh * dy) / d, my - (hh * dx) / d];
+          const s2 = [mx - (hh * dy) / d, my + (hh * dx) / d];
+          const th = (q) => Math.atan2(q[0] - cx, -(q[1] - cy));
+          const q = th(s1) > th(s2) ? s1 : s2;
+          qx = q[0]; qy = q[1];
+        } else {
+          const tc = Math.atan2(dy, dx), hc = Math.atan2(hy, hx);
+          let dA = tc - hc;
+          while (dA > Math.PI) dA -= 2 * Math.PI;
+          while (dA < -Math.PI) dA += 2 * Math.PI;
+          const na = hc + Math.max(-0.21, Math.min(0.21, dA));
+          qx = px + Math.cos(na) * L[i];
+          qy = py + Math.sin(na) * L[i];
+        }
+        const ln = Math.hypot(qx - px, qy - py) || 1;
+        hx = (qx - px) / ln; hy = (qy - py) / ln;
+        px = qx; py = qy;
+        pts.push(to3(px, py));
+      }
+      const nhs = [];
+      for (let i = 0; i < 3; i++) {
+        const bd = norm(sub(pts[i + 1], pts[i]));
+        const tc = sub(C, lerp3(pts[i], pts[i + 1], 0.5));
+        nhs.push(norm(addS(tc, bd, -dot(tc, bd))));
+      }
+      return { pts: pts, nhs: nhs };
     }
-  ];
+
+    function planeChain(root, dir0, flexDir, L, flexDeg) {
+      const pts = [root], nhs = [];
+      let p = root, th = 0;
+      for (let i = 0; i < 3; i++) {
+        th += flexDeg[i] * D2R;
+        const d = addS(mul(dir0, Math.cos(th)), flexDir, Math.sin(th));
+        p = addS(p, d, L[i]);
+        pts.push(p);
+        nhs.push(norm(addS(mul(flexDir, Math.cos(th)), dir0, -Math.sin(th))));
+      }
+      return { pts: pts, nhs: nhs };
+    }
+
+    function boneTube(ch, rr, dirBack) {
+      const J = ch.pts, N = ch.nhs;
+      const avg = (a, b) => norm([a[0] + b[0], a[1] + b[1], a[2] + b[2]]);
+      const mk = (p, r, nh, crv) => ({ p: p, rx: r, ry: r * 0.9, nh: nh, crv: crv });
+      return [
+        mk(addS(J[0], dirBack, h(0.014)), rr[0] * 1.06, N[0], 6),
+        mk(J[0], rr[0] * 1.10, N[0], 7),                                         // knuckle (MCP)
+        mk(lerp3(J[0], J[1], 0.5), (rr[0] + rr[1]) * 0.5 * 0.95, N[0], 8),
+        mk(J[1], rr[1] * 1.07, avg(N[0], N[1]), 8),                              // PIP joint
+        mk(lerp3(J[1], J[2], 0.5), (rr[1] + rr[2]) * 0.5 * 0.94, N[1], 9),
+        mk(J[2], rr[2] * 1.05, avg(N[1], N[2]), 9),                              // DIP joint
+        mk(lerp3(J[2], J[3], 0.5), (rr[2] + rr[3]) * 0.5 * 0.96, N[2], 10),
+        mk(J[3], rr[3], N[2], 11)                                                // fingertip
+      ];
+    }
+
+    // ---- fingers: together, slight fan, cradling up the far side of the globe --------------------
+    const fingerSpecs = [
+      { name: 'index',  lat:  0.0340, du:  0.000, L: [0.043, 0.026, 0.021], r: [0.0106, 0.0094, 0.0085, 0.0073], spread:  1, curl: [10, 20, 14] },
+      { name: 'middle', lat:  0.0114, du:  0.004, L: [0.047, 0.028, 0.022], r: [0.0110, 0.0097, 0.0087, 0.0075], spread:  0, curl: [11, 22, 15] },
+      { name: 'ring',   lat: -0.0114, du:  0.000, L: [0.044, 0.026, 0.021], r: [0.0104, 0.0092, 0.0083, 0.0071], spread: -1, curl: [12, 24, 16] },
+      { name: 'pinky',  lat: -0.0330, du: -0.010, L: [0.035, 0.020, 0.018], r: [0.0093, 0.0082, 0.0073, 0.0063], spread: -3, curl: [14, 26, 17] }
+    ];
+    const knuckles = [];
+    const fingers = fingerSpecs.map(function (sp) {
+      const root = addS(addS(addS(P, u, palmHalfLen + h(0.002 + sp.du)), v, h(sp.lat)), n, h(0.001));
+      knuckles.push(root);
+      const ui = rotAbout(u, spreadAxis, sp.spread * D2R);
+      const L = sp.L.map(h), rr = sp.r.map(h);
+      return { name: sp.name, nodes: boneTube(planeChain(root, ui, n, L, sp.curl), rr, mul(ui, -1)) };
+    });
+
+    // ---- thumb: relaxed, lying along the index side, tip curling gently in over the palm ---------
+    const thumbRoot = addS(addS(addS(P, u, -h(0.030)), v, h(0.032)), n, h(0.004));
+    const tDir = norm(addS(addS(mul(u, 0.86), v, 0.36), n, 0.24));
+    let tFlex = norm(addS(mul(n, 0.55), v, -0.85));
+    tFlex = norm(addS(tFlex, tDir, -dot(tFlex, tDir)));
+    const thumbL = [0.040, 0.030, 0.024].map(h);
+    const thumbR = [0.0135, 0.0118, 0.0104, 0.0090].map(h);
+    const thumb = boneTube(planeChain(thumbRoot, tDir, tFlex, thumbL, [6, 14, 12]), thumbR, mul(tDir, -1));
+    thumb[0].rx = h(0.0170); thumb[0].ry = h(0.0150);
+
+    // ---- palm (slightly cupped), mounds, webs ------------------------------------------------
+    const palm = withNh([
+      { p: addS(Wh, u, -h(0.016)), rx: h(0.0275), ry: h(0.0180) },
+      { p: addS(addS(P, u, -h(0.026)), n, h(0.005)), rx: h(0.043), ry: h(0.0170) },
+      { p: addS(P, n, h(0.0015)), rx: h(0.048), ry: h(0.0150) },
+      { p: addS(P, u, h(0.034)), rx: h(0.049), ry: h(0.0136) },
+      { p: addS(P, u, h(0.058)), rx: h(0.047), ry: h(0.0122) }
+    ], n);
+    const thenar = withNh([
+      { p: addS(addS(addS(P, u, -h(0.040)), v, h(0.012)), n, h(0.006)), rx: h(0.013), ry: h(0.0115) },
+      { p: addS(addS(addS(P, u, -h(0.028)), v, h(0.028)), n, h(0.006)), rx: h(0.0185), ry: h(0.0150) },
+      { p: thumbRoot, rx: h(0.0165), ry: h(0.0140) }
+    ], n);
+    const hypothenar = withNh([
+      { p: addS(addS(addS(P, u, -h(0.036)), v, -h(0.014)), n, h(0.004)), rx: h(0.012), ry: h(0.0110) },
+      { p: addS(addS(addS(P, u, -h(0.008)), v, -h(0.038)), n, h(0.002)), rx: h(0.0160), ry: h(0.0132) },
+      { p: addS(addS(P, u, h(0.048)), v, -h(0.040)), rx: h(0.0122), ry: h(0.0108) }
+    ], n);
+    const webs = [];
+    for (let i = 0; i < knuckles.length - 1; i++) {
+      const a = addS(knuckles[i], u, -h(0.006));
+      const b = addS(knuckles[i + 1], u, -h(0.006));
+      webs.push(withNh([
+        { p: a, rx: h(0.0100), ry: h(0.0090) },
+        { p: addS(lerp3(a, b, 0.5), n, h(0.002)), rx: h(0.0107), ry: h(0.0094) },
+        { p: b, rx: h(0.0098), ry: h(0.0088) }
+      ], n));
+    }
+
+    // ---- arm attached to the bust's shoulder: 2-bone IK, the elbow hangs low (faded zone) --------
+    const SHOULDER = [-0.135, 0.545, -0.110];                // joint centre, buried inside the deltoid
+    const LA = 0.275, LF = 0.235;                             // upper arm / forearm lengths
+    function solveElbow(S, Wp) {
+      const dv = sub(Wp, S);
+      const d = Math.min(len(dv), LA + LF - 1e-4);
+      const ax = norm(dv);
+      const a0 = (LA * LA - LF * LF + d * d) / (2 * d);
+      const r = Math.sqrt(Math.max(LA * LA - a0 * a0, 0));
+      const c0 = addS(S, ax, a0);
+      const down = norm(addS([0, -1, 0], ax, -dot([0, -1, 0], ax)));
+      const out = norm(addS([-1, 0, 0], ax, -dot([-1, 0, 0], ax)));
+      return addS(c0, norm(addS(down, out, 0.9)), r);
+    }
+    const elbow = solveElbow(SHOULDER, Wh);
+    const arm = withNh([
+      { p: SHOULDER, rx: 0.044, ry: 0.040 },
+      { p: lerp3(SHOULDER, elbow, 0.5), rx: 0.041, ry: 0.037 },
+      { p: elbow, rx: 0.037, ry: 0.034 },
+      { p: lerp3(elbow, Wh, 0.40), rx: 0.035, ry: 0.030 },
+      { p: lerp3(elbow, Wh, 0.75), rx: 0.031, ry: 0.0255 },
+      { p: Wh, rx: h(0.0285), ry: h(0.0185) },
+      { p: addS(addS(P, u, -h(0.040)), n, h(0.006)), rx: h(0.0255), ry: h(0.0165) }
+    ], n);
+
+    return { arm: arm, palm: palm, thenar: thenar, hypothenar: hypothenar, webs: webs, fingers: fingers, thumb: thumb, debug: { elbow: elbow, wrist: Wh, u: u, shoulder: SHOULDER } };
+  })();
 
   function appendSculptedHandMesh(baseMesh, baseYaw) {
     const cosB = Math.cos(baseYaw);
@@ -230,7 +375,8 @@
             ],
             rx: n1.rx + (n2.rx - n1.rx) * t,
             ry: n1.ry + (n2.ry - n1.ry) * t,
-            crv: n1.crv + (n2.crv - n1.crv) * t
+            crv: n1.crv + (n2.crv - n1.crv) * t,
+            nh: n1.nh && n2.nh ? [n1.nh[0] + (n2.nh[0] - n1.nh[0]) * t, n1.nh[1] + (n2.nh[1] - n1.nh[1]) * t, n1.nh[2] + (n2.nh[2] - n1.nh[2]) * t] : null
           });
         }
       }
@@ -239,7 +385,8 @@
         p: [last.p[0], last.p[1], last.p[2]],
         rx: last.rx,
         ry: last.ry,
-        crv: last.crv
+        crv: last.crv,
+        nh: last.nh || null
       });
 
       const rings = [];
@@ -254,23 +401,40 @@
         ty /= tLen;
         tz /= tLen;
 
-        // Reference up/side vector to build orthogonal cross-section frame (B1 = medio-lateral, B2 = dorso-palmar)
-        let ux = 1,
-          uy = 0,
-          uz = 0;
-        if (Math.abs(tx) > 0.85) {
-          ux = 0;
-          uy = 1;
-          uz = 0;
+        // Cross-section frame: B2 = palmar-side direction (per-node hint `nh` projected off the tangent), B1 = medio-lateral
+        let b2x = 0, b2y = 0, b2z = 0;
+        let hinted = false;
+        const hint = samples[s].nh;
+        if (hint) {
+          const dn = hint[0] * tx + hint[1] * ty + hint[2] * tz;
+          b2x = hint[0] - tx * dn;
+          b2y = hint[1] - ty * dn;
+          b2z = hint[2] - tz * dn;
+          const hl = Math.hypot(b2x, b2y, b2z);
+          if (hl > 1e-4) {
+            b2x /= hl;
+            b2y /= hl;
+            b2z /= hl;
+            hinted = true;
+          }
         }
-        // B2 = normalize(cross(T, U))
-        let b2x = ty * uz - tz * uy;
-        let b2y = tz * ux - tx * uz;
-        let b2z = tx * uy - ty * ux;
-        const b2Len = Math.hypot(b2x, b2y, b2z) || 1;
-        b2x /= b2Len;
-        b2y /= b2Len;
-        b2z /= b2Len;
+        if (!hinted) {
+          let ux = 1,
+            uy = 0,
+            uz = 0;
+          if (Math.abs(tx) > 0.85) {
+            ux = 0;
+            uy = 1;
+            uz = 0;
+          }
+          b2x = ty * uz - tz * uy;
+          b2y = tz * ux - tx * uz;
+          b2z = tx * uy - ty * ux;
+          const b2Len = Math.hypot(b2x, b2y, b2z) || 1;
+          b2x /= b2Len;
+          b2y /= b2Len;
+          b2z /= b2Len;
+        }
 
         // B1 = cross(B2, T)
         const b1x = b2y * tz - b2z * ty;
@@ -368,104 +532,26 @@
       }
     }
 
-    // 1. Seamless Adult Upper-Arm -> Elbow -> Slender Forearm -> Smooth Wrist -> Flattened Palm (no protruding cuff)
-    addLoftedTube(
-      [
-        { p: [-0.172, 0.502, -0.044], rx: 0.046, ry: 0.040, crv: 6 },
-        { p: [-0.188, 0.452, -0.014], rx: 0.041, ry: 0.036, crv: 6 },
-        { p: [-0.194, 0.415, 0.020], rx: 0.036, ry: 0.031, crv: 7 },
-        { p: [-0.184, 0.418, 0.072], rx: 0.030, ry: 0.023, crv: 7 },
-        { p: [-0.166, 0.440, 0.120], rx: 0.024, ry: 0.015, crv: 7 },
-        { p: [-0.158, 0.458, 0.146], rx: 0.032, ry: 0.013, crv: 7 },
-        { p: [-0.154, 0.476, 0.166], rx: 0.037, ry: 0.0105, crv: 6 },
-        { p: [-0.152, 0.488, 0.172], rx: 0.031, ry: 0.0080, crv: 5 },
-        { p: [-0.152, 0.494, 0.170], rx: 0.018, ry: 0.0045, crv: 4 }
-      ],
-      30,
-      5,
-      false
-    );
+    // 1. Upper arm -> elbow -> forearm -> wrist (vertices up to handPalmStartVertex are treated as "arm" stardust)
+    addLoftedTube(HAND_RIG.arm, 28, 5, false);
 
     const handPalmStartVertex = nextVert;
 
-    // 2. Radial Wrist-to-Thenar Transition (smooth thumb web up the left side, capEnd disabled so zero bulb crease)
-    addLoftedTube(
-      [
-        { p: [-0.174, 0.444, 0.126], rx: 0.013, ry: 0.010, crv: 6 },
-        { p: [-0.186, 0.458, 0.138], rx: 0.0135, ry: 0.0105, crv: 6 },
-        { p: [-0.194, 0.468, 0.148], rx: 0.0115, ry: 0.0095, crv: 7 }
-      ],
-      16,
-      4,
-      false
-    );
+    // 2. Palm block (closed at the knuckle line) with thenar / hypothenar mounds
+    addLoftedTube(HAND_RIG.palm, 28, 5, true, 0.6);
+    addLoftedTube(HAND_RIG.thenar, 16, 4, true, 0.9);
+    addLoftedTube(HAND_RIG.hypothenar, 16, 4, true, 0.9);
 
-    // 3. Ulnar Wrist-to-Hypothenar Edge (smooth outer right heel into Pinky knuckle without protruding lobe)
-    addLoftedTube(
-      [
-        { p: [-0.150, 0.445, 0.126], rx: 0.012, ry: 0.009, crv: 6 },
-        { p: [-0.136, 0.464, 0.146], rx: 0.0115, ry: 0.0088, crv: 6 },
-        { p: [-0.122, 0.485, 0.160], rx: 0.0076, ry: 0.0066, crv: 7 }
-      ],
-      14,
-      4,
-      false
-    );
-
-    // 4. Smooth Internal Metacarpal Rays + Interdigital Webs Bridging Finger Roots Into Palm
-    const metacarpalEnds = [
-      { root: [-0.180, 0.484, 0.168], r: 0.0086 },
-      { root: [-0.160, 0.484, 0.170], r: 0.0090 },
-      { root: [-0.141, 0.484, 0.167], r: 0.0084 },
-      { root: [-0.122, 0.485, 0.160], r: 0.0073 }
-    ];
-    for (let m = 0; m < metacarpalEnds.length; m++) {
-      const me = metacarpalEnds[m];
-      addLoftedTube(
-        [
-          { p: [-0.158, 0.454, 0.138], rx: 0.0078, ry: 0.0056, crv: 6 },
-          {
-            p: [
-              (-0.158 + me.root[0]) * 0.5,
-              (0.454 + me.root[1]) * 0.5,
-              (0.138 + me.root[2]) * 0.5
-            ],
-            rx: 0.0082,
-            ry: 0.0058,
-            crv: 6
-          },
-          { p: me.root, rx: me.r, ry: me.r * 0.88, crv: 7 }
-        ],
-        12,
-        3,
-        false
-      );
-    }
-    // Gentle interdigital webs between adjacent finger bases so digits never look like separated tubes
-    const webPairs = [
-      [[-0.181, 0.485, 0.171], [-0.160, 0.485, 0.173]],
-      [[-0.160, 0.485, 0.173], [-0.141, 0.485, 0.170]],
-      [[-0.141, 0.485, 0.170], [-0.122, 0.486, 0.163]]
-    ];
-    for (let w = 0; w < webPairs.length; w++) {
-      const a = webPairs[w][0];
-      const b = webPairs[w][1];
-      addLoftedTube(
-        [
-          { p: a, rx: 0.0062, ry: 0.0050, crv: 6 },
-          { p: [(a[0] + b[0]) * 0.5, (a[1] + b[1]) * 0.5 + 0.001, (a[2] + b[2]) * 0.5 + 0.002], rx: 0.0068, ry: 0.0052, crv: 6 },
-          { p: b, rx: 0.0060, ry: 0.0048, crv: 6 }
-        ],
-        10,
-        2,
-        false
-      );
+    // 3. Interdigital webs bridging the finger roots
+    for (let w = 0; w < HAND_RIG.webs.length; w++) {
+      addLoftedTube(HAND_RIG.webs[w], 12, 2, true, 0.9);
     }
 
-    // 5. Five Articulated Fingers Cradling the Lower Hemisphere & Equator of the Globe
-    for (let f = 0; f < HAND_FINGERS_WORLD.length; f++) {
-      addLoftedTube(HAND_FINGERS_WORLD[f].nodes, 18, 4, true, 1.0);
+    // 4. Four three-bone fingers + thumb, fingertips resting on the globe
+    for (let f = 0; f < HAND_RIG.fingers.length; f++) {
+      addLoftedTube(HAND_RIG.fingers[f].nodes, 16, 4, true, 1.0);
     }
+    addLoftedTube(HAND_RIG.thumb, 16, 4, true, 1.0);
 
     const totalVerts = nextVert;
     const mergedPos = new Float32Array(3 * totalVerts);
@@ -599,6 +685,7 @@ vec3 headNormal(vec3 n, float w){ return rotY(rotX(n, uPitch * w), uYaw * w); }`
       sinBaseGlobe * HAND_GLOBE_WORLD.center[0] + cosBaseGlobe * HAND_GLOBE_WORLD.center[2]
     );
 
+    if (!HOLO_MODE) {
     const { pos, nrm, crv, idx } = meshData;
     const isHandAttr = meshData.isHand || new Float32Array(pos.length / 3);
     const vertexCount = pos.length / 3;
@@ -722,9 +809,9 @@ void main(){
     col = mix(col, sc * b, 0.94 * la);
   }
   col += (uLime * pow(fres, 2.5) * (key * 0.16 + globeLight * 0.24) + vec3(0.45, 0.77, 0.97) * pow(fres, 2.7) * 0.18) * uLightA;
-  float bottomFade = smoothstep(0.320, 0.435, vObj.y);
+  float bottomFade = smoothstep(0.320, 0.412, vObj.y);
   float rightShoulderFade = 1.0 - smoothstep(0.180, 0.275, vObj.x);
-  float edgeAlpha = clamp(bottomFade * rightShoulderFade, 0.0, 1.0) * mix(1.0, 0.76, vIsHand);
+  float edgeAlpha = clamp(bottomFade * rightShoulderFade, 0.0, 1.0) * mix(1.0, 0.96, vIsHand);
   if (edgeAlpha < 0.015) discard;
   gl_FragColor = vec4(col, edgeAlpha);
 }`
@@ -732,7 +819,7 @@ void main(){
 
     const bodyMesh = new THREE.Mesh(geometry, bodyMaterial);
     bodyMesh.frustumCulled = false;
-    rootGroup.add(bodyMesh);
+    if (!HOLO_MODE) rootGroup.add(bodyMesh);
 
     const particleVertShader =
       headDeformGLSL +
@@ -771,6 +858,7 @@ void main(){
     const limeVec = new THREE.Vector3(CFG.lime[0], CFG.lime[1], CFG.lime[2]);
 
     function createParticleLayer(count, generator, layerOpts) {
+      if (HOLO_MODE) return null;
       const n = Math.round(count * particleDensity);
       const pArr = new Float32Array(3 * n);
       const dArr = new Float32Array(3 * n);
@@ -1050,12 +1138,16 @@ void main(){
     const fingerCount = Math.max(1, vertexCount - handPalmStart);
     if (handStart > 0 && armSpan > 10) {
       createParticleLayer(
-        9600,
+        15000,
         (i, pArr, dArr, sArr, szArr) => {
-          const onArm = i % 3 === 0;
-          const vIdx = onArm
-            ? handStart + Math.floor(Math.random() * armSpan)
-            : handPalmStart + Math.floor(Math.random() * fingerCount);
+          const onArm = i % 2 === 0;
+          let vIdx = 0;
+          for (let tries = 0; tries < 16; tries++) {
+            vIdx = onArm
+              ? handStart + Math.floor(Math.random() * armSpan)
+              : handPalmStart + Math.floor(Math.random() * fingerCount);
+            if (pos[3 * vIdx + 1] > 0.345) break;
+          }
           copyPos(pArr, i, vIdx, i % 10 === 0 ? 0.0022 : 0.0005);
           const ang = onArm
             ? ((25 + (Math.random() - 0.5) * 85) * Math.PI) / 180
@@ -1074,6 +1166,7 @@ void main(){
         { repel: 0.70 * CFG.mouseRepel, limeShare: 0.08, flakes: 1, allFlakes: 0 }
       );
     }
+    } // end if (!HOLO_MODE)
 
     // 2D ASCII Matrix Overlay Context (Aller Studio module 57916 — MEDIQ Blue Palette)
     const asciiCtx = asciiCanvas ? asciiCanvas.getContext('2d') : null;
@@ -1229,7 +1322,7 @@ void main(){
           if (!landFeatures || !Array.isArray(landFeatures.features)) return;
           const rings = [];
           const newDots = [];
-          const stepSize = 16 * 0.14; // Optimized high-density halftone spacing
+          const stepSize = HOLO_MODE ? 1.8 : 16 * 0.14; // Optimized high-density halftone spacing
 
           landFeatures.features.forEach((feature) => {
             const geom = feature.geometry;
@@ -1350,14 +1443,26 @@ void main(){
       viewHalfH = camDist * tanFov;
       viewHalfW = viewHalfH * aspect;
 
-      // Anchor the 3D humanoid bust & spinning globe cleanly on mobile & desktop without clipping the hand or globe
-      const rightScreenFrac = cssW >= 1024 ? 0.775 : 0.52;
-      const ndcShiftX = (rightScreenFrac - 0.5) * 2;
-      camTarget.x = frame.target[0] - ndcShiftX * viewHalfW;
-      camTarget.y = cssW < 768 ? frame.target[1] - 0.045 : frame.target[1];
-      camera.position.set(camTarget.x, camTarget.y, camDist);
-      camera.lookAt(camTarget);
-      camera.updateProjectionMatrix();
+      // Anchor the 3D scene cleanly on mobile & desktop:
+      // In HOLO_MODE, keep camera optically centered on the globe/pedestal axis (Δx = 0) and shift
+      // via setViewOffset so circular discs & rings stay 100% horizontally level with zero off-axis slant.
+      if (HOLO_MODE) {
+        const holoScreenFrac = cssW >= 1024 ? 0.745 : 0.50;
+        camTarget.x = HAND_GLOBE_WORLD.center[0];
+        camTarget.y = cssW < 768 ? frame.target[1] - 0.045 : frame.target[1];
+        camera.position.set(camTarget.x, camTarget.y, camDist);
+        camera.lookAt(camTarget);
+        camera.setViewOffset(cssW, cssH, -(holoScreenFrac - 0.5) * cssW, 0, cssW, cssH);
+      } else {
+        const rightScreenFrac = cssW >= 1024 ? 0.775 : 0.52;
+        const ndcShiftX = (rightScreenFrac - 0.5) * 2;
+        camTarget.x = frame.target[0] - ndcShiftX * viewHalfW;
+        camTarget.y = cssW < 768 ? frame.target[1] - 0.045 : frame.target[1];
+        camera.position.set(camTarget.x, camTarget.y, camDist);
+        camera.lookAt(camTarget);
+        camera.clearViewOffset();
+        camera.updateProjectionMatrix();
+      }
 
       sharedUniforms.uScale.value = (cssH * dpr) / (2 * tanFov);
       sharedUniforms.uCellFreq.value = sharedUniforms.uScale.value / camDist / CFG.grainPx;
@@ -1477,6 +1582,7 @@ void main(){
       if (!asciiCtx || !asciiCanvas) return;
       asciiCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
       asciiCtx.clearRect(0, 0, cssW, cssH);
+      if (HOLO_MODE) return;
 
       // Project 3D head center and bounds into 2D canvas coordinates
       const pivotX = 0.0,
@@ -1652,10 +1758,10 @@ void main(){
       out[2] = r * cp * Math.cos(lam);
     }
 
-    // 1. Soft Volumetric Sapphire-Cyan Palm Cradle Halo Billboard Behind Globe
+    // 1. Soft Volumetric Sapphire-Cyan Halo Billboard Behind Globe
     const globeHaloGeo = new THREE.PlaneGeometry(GLOBE_R * 3.1, GLOBE_R * 3.1);
     const globeHaloMat = new THREE.ShaderMaterial({
-      uniforms: { uTime: sharedUniforms.uTime },
+      uniforms: { uTime: sharedUniforms.uTime, uHolo: { value: HOLO_MODE ? 1.0 : 0.0 } },
       vertexShader: `
 varying vec2 vUv;
 void main() {
@@ -1667,12 +1773,14 @@ void main() {
 }`,
       fragmentShader: `
 uniform float uTime;
+uniform float uHolo;
 varying vec2 vUv;
 void main() {
   float d = length(vUv - 0.5) * 2.0;
   if (d > 1.0) discard;
-  float glow = exp(-d * d * 4.4) * (0.28 + 0.04 * sin(uTime * 1.8));
-  vec3 col = mix(vec3(0.07, 0.25, 0.56), vec3(0.28, 0.75, 0.98), smoothstep(0.9, 0.15, d));
+  float glow = exp(-d * d * 4.0) * mix(0.28, 0.34, uHolo) * (1.0 + 0.04 * sin(uTime * 1.8));
+  vec3 centerCol = mix(vec3(0.28, 0.75, 0.98), vec3(0.24, 0.80, 1.0), uHolo);
+  vec3 col = mix(vec3(0.07, 0.25, 0.56), centerCol, smoothstep(0.9, 0.15, d));
   gl_FragColor = vec4(col, glow);
 }`,
       transparent: true,
@@ -1684,10 +1792,15 @@ void main() {
     globeHaloMesh.renderOrder = 0;
     globeGroup.add(globeHaloMesh);
 
-    // 2. Holographic Ocean Sphere with Smooth Fresnel Atmospheric Falloff (Zero Hard Rim)
+    // 2. Holographic Ocean Sphere with Smooth Fresnel Atmospheric Falloff + Specular Glint
     const oceanGeo = new THREE.SphereGeometry(GLOBE_R * 0.992, 64, 48);
     const oceanMat = new THREE.ShaderMaterial({
-      uniforms: { uTime: sharedUniforms.uTime, uGlobeR: globeUniforms.uGlobeR },
+      uniforms: {
+        uTime: sharedUniforms.uTime,
+        uGlobeR: globeUniforms.uGlobeR,
+        uHolo: { value: HOLO_MODE ? 1.0 : 0.0 },
+        uPedestal: { value: HOLO_MODE && SHOW_HOLO_PEDESTAL ? 1.0 : 0.0 }
+      },
       vertexShader: `
 varying vec3 vViewN;
 varying vec3 vViewDir;
@@ -1702,6 +1815,8 @@ void main() {
       fragmentShader: `
 uniform float uTime;
 uniform float uGlobeR;
+uniform float uHolo;
+uniform float uPedestal;
 varying vec3 vViewN;
 varying vec3 vViewDir;
 varying vec3 vLocalPos;
@@ -1709,15 +1824,29 @@ void main() {
   vec3 N = normalize(vViewN);
   vec3 V = normalize(vViewDir);
   float front = clamp(dot(N, V), 0.0, 1.0);
-  float rim = pow(1.0 - front, 2.3);
+  float rim = pow(1.0 - front, mix(2.3, 2.2, uHolo));
   float edgeFeather = smoothstep(0.0, 0.14, front);
-  float palmFade = 0.72 + 0.28 * smoothstep(-uGlobeR * 0.98, -uGlobeR * 0.55, vLocalPos.y);
+  float palmFade = mix(0.72 + 0.28 * smoothstep(-uGlobeR * 0.98, -uGlobeR * 0.55, vLocalPos.y), 1.0, uHolo);
 
-  vec3 coreCol = mix(vec3(0.032, 0.098, 0.230), vec3(0.095, 0.295, 0.595), rim);
-  vec3 atmoCol = vec3(0.45, 0.77, 0.97);
-  vec3 col = coreCol + atmoCol * pow(1.0 - front, 3.0) * 0.52;
+  vec3 innerBase = mix(vec3(0.032, 0.098, 0.230), vec3(0.024, 0.095, 0.265), uHolo);
+  vec3 outerRimBase = mix(vec3(0.095, 0.295, 0.595), vec3(0.14, 0.56, 0.92), uHolo);
+  vec3 coreCol = mix(innerBase, outerRimBase, rim);
 
-  float baseAlpha = mix(0.44, 0.68, rim) * edgeFeather * (0.45 + 0.55 * palmFade);
+  vec3 atmoCol = mix(vec3(0.45, 0.77, 0.97), vec3(0.55, 0.93, 1.0), uHolo);
+  vec3 col = coreCol + atmoCol * pow(1.0 - front, mix(3.0, 3.4, uHolo)) * mix(0.52, 1.05, uHolo);
+
+  // Upper-left crystal/glass specular glint
+  vec3 L = normalize(vec3(-0.56, 0.60, 0.57));
+  vec3 H = normalize(L + V);
+  float spec = pow(max(dot(N, H), 0.0), 20.0) * 0.34 * uHolo;
+  col += vec3(0.76, 0.96, 1.0) * spec;
+
+  // Subtle calm ambient reflection at south pole over optical glass stage (only when pedestal is visible)
+  float southGlow = exp(-pow((vLocalPos.y + uGlobeR) / (uGlobeR * 0.44), 2.0)) * 0.24 * uPedestal;
+  col += vec3(0.45, 0.84, 1.0) * southGlow;
+
+  float baseAlpha = mix(0.44, mix(0.68, 0.78, uHolo), rim) * edgeFeather * (0.45 + 0.55 * palmFade);
+  baseAlpha = clamp(baseAlpha + (spec * 0.35 + southGlow * 0.22) * edgeFeather, 0.0, 0.96);
   gl_FragColor = vec4(col, baseAlpha);
 }`,
       transparent: true,
@@ -1725,8 +1854,41 @@ void main() {
       depthTest: true
     });
     const oceanMesh = new THREE.Mesh(oceanGeo, oceanMat);
-    oceanMesh.renderOrder = 1;
+    oceanMesh.renderOrder = HOLO_MODE ? 2 : 1;
     globeGroup.add(oceanMesh);
+
+    // 2b. Outer Cyan Atmospheric Rim Shell (HOLO_MODE)
+    if (HOLO_MODE) {
+      const atmoGeo = new THREE.SphereGeometry(GLOBE_R * 1.045, 64, 48);
+      const atmoMat = new THREE.ShaderMaterial({
+        vertexShader: `
+varying vec3 vViewN;
+varying vec3 vViewDir;
+void main() {
+  vViewN = normalize(normalMatrix * normal);
+  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  vViewDir = normalize(-mv.xyz);
+  gl_Position = projectionMatrix * mv;
+}`,
+        fragmentShader: `
+varying vec3 vViewN;
+varying vec3 vViewDir;
+void main() {
+  vec3 N = normalize(vViewN);
+  vec3 V = normalize(vViewDir);
+  float front = clamp(dot(N, V), 0.0, 1.0);
+  float halo = pow(1.0 - front, 3.6) * smoothstep(0.0, 0.26, front);
+  gl_FragColor = vec4(vec3(0.42, 0.90, 1.0), halo * 0.62);
+}`,
+        transparent: true,
+        depthWrite: false,
+        depthTest: true,
+        blending: THREE.AdditiveBlending
+      });
+      const atmoMesh = new THREE.Mesh(atmoGeo, atmoMat);
+      atmoMesh.renderOrder = 3;
+      globeGroup.add(atmoMesh);
+    }
 
     // 3. 3D Graticule Wireframe (15-deg Meridians & Parallels)
     const gratPositions = [];
@@ -1782,24 +1944,35 @@ void main() {
 
     const graticuleLines = new THREE.LineSegments(
       gratGeo,
-      createSphereLineMat(0x72c5f8, 0.21, 0.03)
+      createSphereLineMat(HOLO_MODE ? 0x68d8ff : 0x72c5f8, HOLO_MODE ? 0.24 : 0.21, HOLO_MODE ? 0.035 : 0.03)
     );
-    graticuleLines.renderOrder = 2;
+    graticuleLines.renderOrder = HOLO_MODE ? 3 : 2;
     spinGroup.add(graticuleLines);
 
     // 4. Dynamic 3D Continent Coastlines + Halftone Land Dots (Syncs with Natural Earth / Offline Data)
     let coastLinesMesh = null;
     let landDotsPoints = null;
-    const coastMat = createSphereLineMat(0xbae6fd, 0.56, 0.05);
+    const coastMat = createSphereLineMat(
+      HOLO_MODE ? 0x7ef4ff : 0xbae6fd,
+      HOLO_MODE ? 0.88 : 0.56,
+      HOLO_MODE ? 0.07 : 0.05
+    );
+    if (HOLO_MODE) {
+      coastMat.blending = THREE.AdditiveBlending;
+    }
     const dotsMat = new THREE.ShaderMaterial({
       uniforms: {
+        uTime: sharedUniforms.uTime,
         uScale: globeUniforms.uScale,
-        uZoom: globeUniforms.uZoom
+        uZoom: globeUniforms.uZoom,
+        uDotScale: { value: HOLO_MODE ? 1.65 : 1.0 },
+        uHolo: { value: HOLO_MODE ? 1.0 : 0.0 }
       },
       vertexShader: `
 attribute float aHighlight;
 uniform float uScale;
 uniform float uZoom;
+uniform float uDotScale;
 varying float vFront;
 varying float vHighlight;
 void main() {
@@ -1808,19 +1981,25 @@ void main() {
   vec4 mv = modelViewMatrix * vec4(position, 1.0);
   vFront = dot(vn, normalize(-mv.xyz));
   float basePt = aHighlight > 1.5 ? 0.00245 : (aHighlight > 0.5 ? 0.00215 : 0.00165);
-  gl_PointSize = max((basePt * uZoom * uScale) / (-mv.z), 1.4);
+  gl_PointSize = max((basePt * uDotScale * uZoom * uScale) / (-mv.z), 1.4);
   gl_Position = projectionMatrix * mv;
 }`,
       fragmentShader: `
+uniform float uTime;
+uniform float uHolo;
 varying float vFront;
 varying float vHighlight;
 void main() {
   float r = length(gl_PointCoord - 0.5);
-  float mask = smoothstep(0.50, 0.22, r);
+  float mask = smoothstep(0.50, 0.18, r);
   if (mask < 0.02) discard;
   float hemi = smoothstep(-0.14, 0.24, vFront);
-  vec3 col = vHighlight > 0.5 ? vec3(0.220, 0.741, 0.973) : vec3(0.557, 0.729, 0.886);
-  float frontA = vHighlight > 0.5 ? 0.96 : 0.76;
+  vec3 legacyCol = vHighlight > 0.5 ? vec3(0.220, 0.741, 0.973) : vec3(0.557, 0.729, 0.886);
+  vec3 holoReg = mix(vec3(0.36, 0.86, 1.0), vec3(0.88, 0.98, 1.0), pow(hemi, 1.3));
+  vec3 holoHi = vec3(0.74, 0.96, 1.0);
+  vec3 holoCol = vHighlight > 0.5 ? holoHi : holoReg;
+  vec3 col = mix(legacyCol, holoCol, uHolo);
+  float frontA = mix(vHighlight > 0.5 ? 0.96 : 0.76, vHighlight > 0.5 ? 0.98 : 0.92, uHolo);
   float alpha = mask * mix(0.06, frontA, hemi);
   gl_FragColor = vec4(col, alpha);
 }`,
@@ -1859,7 +2038,7 @@ void main() {
         cGeo.setAttribute('position', new THREE.Float32BufferAttribute(cPos, 3));
         cGeo.setAttribute('normal', new THREE.Float32BufferAttribute(cNrm, 3));
         coastLinesMesh = new THREE.LineSegments(cGeo, coastMat);
-        coastLinesMesh.renderOrder = 3;
+        coastLinesMesh.renderOrder = HOLO_MODE ? 4 : 3;
         spinGroup.add(coastLinesMesh);
       }
 
@@ -1885,11 +2064,212 @@ void main() {
         dGeo.setAttribute('normal', new THREE.BufferAttribute(dNrm, 3));
         dGeo.setAttribute('aHighlight', new THREE.BufferAttribute(dHi, 1));
         landDotsPoints = new THREE.Points(dGeo, dotsMat);
-        landDotsPoints.renderOrder = 4;
+        landDotsPoints.renderOrder = HOLO_MODE ? 5 : 4;
         spinGroup.add(landDotsPoints);
       }
     }
     rebuildGlobe3DData();
+
+    // 4b. Twinkling Global Star-Sparkle Nodes + Arched Great-Circle Network Links (HOLO_MODE)
+    const arcPulseMeta = [];
+    let arcPulsePosAttr = null;
+    let arcPulseNrmAttr = null;
+    if (HOLO_MODE) {
+      // Deterministic PRNG for clean repeatable constellation placement
+      let seed = 13379;
+      const rand = () => {
+        seed = (seed * 1664525 + 1013904223) >>> 0;
+        return seed / 4294967296;
+      };
+
+      const SPARKLE_COUNT = 130;
+      const sPos = new Float32Array(SPARKLE_COUNT * 3);
+      const sNrm = new Float32Array(SPARKLE_COUNT * 3);
+      const sPhase = new Float32Array(SPARKLE_COUNT);
+      const sSize = new Float32Array(SPARKLE_COUNT);
+      const hubCenters = [
+        [121.0, 14.6], [-0.13, 51.5], [139.7, 35.7], [103.8, 1.35],
+        [151.2, -33.8], [8.5, 47.4], [55.3, 25.2], [-74.0, 40.7],
+        [-122.4, 37.8], [-46.6, -23.5], [28.0, -26.2], [77.2, 28.6]
+      ];
+      for (let i = 0; i < SPARKLE_COUNT; i++) {
+        let lng, lat;
+        if (i < 48) {
+          const hub = hubCenters[i % hubCenters.length];
+          lng = hub[0] + (rand() - 0.5) * 32;
+          lat = Math.max(-55, Math.min(68, hub[1] + (rand() - 0.5) * 24));
+        } else {
+          lng = rand() * 360 - 180;
+          lat = -55 + (rand() * 0.65 + rand() * 0.35) * 123;
+        }
+        lngLatToSphereVec(lng, lat, GLOBE_R * 1.005, tmpA);
+        sPos[i * 3] = tmpA[0];
+        sPos[i * 3 + 1] = tmpA[1];
+        sPos[i * 3 + 2] = tmpA[2];
+        const lenA = Math.hypot(tmpA[0], tmpA[1], tmpA[2]) || 1;
+        sNrm[i * 3] = tmpA[0] / lenA;
+        sNrm[i * 3 + 1] = tmpA[1] / lenA;
+        sNrm[i * 3 + 2] = tmpA[2] / lenA;
+        sPhase[i] = rand() * Math.PI * 2;
+        sSize[i] = 0.0046 + rand() * 0.0040;
+      }
+      const sGeo = new THREE.BufferGeometry();
+      sGeo.setAttribute('position', new THREE.BufferAttribute(sPos, 3));
+      sGeo.setAttribute('normal', new THREE.BufferAttribute(sNrm, 3));
+      sGeo.setAttribute('aPhase', new THREE.BufferAttribute(sPhase, 1));
+      sGeo.setAttribute('aSize', new THREE.BufferAttribute(sSize, 1));
+      const sparkleMat = new THREE.ShaderMaterial({
+        uniforms: {
+          uTime: sharedUniforms.uTime,
+          uScale: globeUniforms.uScale,
+          uZoom: globeUniforms.uZoom
+        },
+        vertexShader: `
+attribute float aPhase;
+attribute float aSize;
+uniform float uScale;
+uniform float uZoom;
+varying float vFront;
+varying float vPhase;
+void main() {
+  vPhase = aPhase;
+  vec3 vn = normalize(normalMatrix * normal);
+  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  vFront = dot(vn, normalize(-mv.xyz));
+  gl_PointSize = max((aSize * uZoom * uScale) / (-mv.z), 3.0);
+  gl_Position = projectionMatrix * mv;
+}`,
+        fragmentShader: `
+uniform float uTime;
+varying float vFront;
+varying float vPhase;
+void main() {
+  float hemi = smoothstep(-0.08, 0.22, vFront);
+  if (hemi < 0.01) discard;
+  vec2 p = gl_PointCoord - 0.5;
+  float r = length(p) * 2.0;
+  if (r > 1.0) discard;
+  float twinkle = 0.55 + 0.45 * sin(uTime * 2.6 + vPhase);
+  float star = exp(-r * r * 14.0)
+    + exp(-abs(p.x) * 22.0 - abs(p.y) * 5.0) * 0.45
+    + exp(-abs(p.y) * 22.0 - abs(p.x) * 5.0) * 0.45;
+  float intensity = clamp(star * 0.85, 0.0, 1.2) * twinkle * hemi;
+  vec3 col = mix(vec3(0.32, 0.86, 1.0), vec3(0.92, 0.99, 1.0), smoothstep(0.35, 0.0, r));
+  gl_FragColor = vec4(col, clamp(intensity, 0.0, 1.0));
+}`,
+        transparent: true,
+        depthWrite: false,
+        depthTest: true,
+        blending: THREE.AdditiveBlending
+      });
+      const sparklePoints = new THREE.Points(sGeo, sparkleMat);
+      sparklePoints.renderOrder = 5;
+      spinGroup.add(sparklePoints);
+
+      // 7 Arched Great-Circle Network Links connecting global medical hubs
+      const ARC_LINKS = [
+        [[121.0, 14.6], [-0.13, 51.5]],   // Philippines <-> UK (Rayner)
+        [[121.0, 14.6], [139.7, 35.7]],   // Philippines <-> Japan
+        [[121.0, 14.6], [103.8, 1.35]],   // Philippines <-> Singapore
+        [[121.0, 14.6], [151.2, -33.8]],  // Philippines <-> Australia
+        [[121.0, 14.6], [8.5, 47.4]],     // Philippines <-> Europe
+        [[121.0, 14.6], [55.3, 25.2]],    // Philippines <-> Dubai
+        [[-0.13, 51.5], [-74.0, 40.7]]    // UK <-> New York
+      ];
+      const ARC_SEGS = 32;
+      const arcPos = [];
+      const arcNrm = [];
+      const uA = [0, 0, 0];
+      const uB = [0, 0, 0];
+      const slerpSpherePoint = (va, vb, omega, sinOmega, t, rad, out) => {
+        const w0 = Math.sin((1 - t) * omega) / sinOmega;
+        const w1 = Math.sin(t * omega) / sinOmega;
+        const x = w0 * va[0] + w1 * vb[0];
+        const y = w0 * va[1] + w1 * vb[1];
+        const z = w0 * va[2] + w1 * vb[2];
+        const l = Math.hypot(x, y, z) || 1;
+        out[0] = (x / l) * rad;
+        out[1] = (y / l) * rad;
+        out[2] = (z / l) * rad;
+      };
+
+      for (let i = 0; i < ARC_LINKS.length; i++) {
+        const pair = ARC_LINKS[i];
+        lngLatToSphereVec(pair[0][0], pair[0][1], 1.0, uA);
+        lngLatToSphereVec(pair[1][0], pair[1][1], 1.0, uB);
+        const dotAB = Math.max(-0.9999, Math.min(0.9999, uA[0] * uB[0] + uA[1] * uB[1] + uA[2] * uB[2]));
+        const omega = Math.acos(dotAB);
+        const sinOmega = Math.sin(omega) || 1e-4;
+        const va = [uA[0], uA[1], uA[2]];
+        const vb = [uB[0], uB[1], uB[2]];
+        arcPulseMeta.push({
+          va,
+          vb,
+          omega,
+          sinOmega,
+          speed: 0.24 + (i % 3) * 0.07,
+          phase: i * 0.19
+        });
+        for (let s = 0; s < ARC_SEGS; s++) {
+          const t0 = s / ARC_SEGS;
+          const t1 = (s + 1) / ARC_SEGS;
+          const r0 = GLOBE_R * (1.006 + 0.055 * Math.sin(t0 * Math.PI));
+          const r1 = GLOBE_R * (1.006 + 0.055 * Math.sin(t1 * Math.PI));
+          slerpSpherePoint(va, vb, omega, sinOmega, t0, r0, tmpA);
+          slerpSpherePoint(va, vb, omega, sinOmega, t1, r1, tmpB);
+          pushSegOnSphere(arcPos, arcNrm, tmpA, tmpB);
+        }
+      }
+
+      const arcGeo = new THREE.BufferGeometry();
+      arcGeo.setAttribute('position', new THREE.Float32BufferAttribute(arcPos, 3));
+      arcGeo.setAttribute('normal', new THREE.Float32BufferAttribute(arcNrm, 3));
+      const arcMat = createSphereLineMat(0x7ef4ff, 0.44, 0.05);
+      arcMat.blending = THREE.AdditiveBlending;
+      const arcLines = new THREE.LineSegments(arcGeo, arcMat);
+      arcLines.renderOrder = 5;
+      spinGroup.add(arcLines);
+
+      // 7 traveling pulse beads along each great-circle arc
+      const pPos = new Float32Array(arcPulseMeta.length * 3);
+      const pNrm = new Float32Array(arcPulseMeta.length * 3);
+      const pGeo = new THREE.BufferGeometry();
+      arcPulsePosAttr = new THREE.BufferAttribute(pPos, 3);
+      arcPulseNrmAttr = new THREE.BufferAttribute(pNrm, 3);
+      pGeo.setAttribute('position', arcPulsePosAttr);
+      pGeo.setAttribute('normal', arcPulseNrmAttr);
+      const pMat = new THREE.ShaderMaterial({
+        uniforms: { uScale: globeUniforms.uScale, uZoom: globeUniforms.uZoom },
+        vertexShader: `
+uniform float uScale;
+uniform float uZoom;
+varying float vFront;
+void main() {
+  vec3 vn = normalize(normalMatrix * normal);
+  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  vFront = dot(vn, normalize(-mv.xyz));
+  gl_PointSize = max((0.0062 * uZoom * uScale) / (-mv.z), 3.5);
+  gl_Position = projectionMatrix * mv;
+}`,
+        fragmentShader: `
+varying float vFront;
+void main() {
+  float hemi = smoothstep(-0.10, 0.25, vFront);
+  if (hemi < 0.02) discard;
+  float r = length(gl_PointCoord - 0.5) * 2.0;
+  if (r > 1.0) discard;
+  float core = exp(-r * r * 6.5);
+  gl_FragColor = vec4(mix(vec3(0.42, 0.90, 1.0), vec3(0.95, 1.0, 1.0), core), core * hemi);
+}`,
+        transparent: true,
+        depthWrite: false,
+        depthTest: true,
+        blending: THREE.AdditiveBlending
+      });
+      const arcPulsePoints = new THREE.Points(pGeo, pMat);
+      arcPulsePoints.renderOrder = 6;
+      spinGroup.add(arcPulsePoints);
+    }
 
     // 5. Pulsing PH & UK Beacons on the 3D Surface
     const beaconPos = new Float32Array(6);
@@ -1952,7 +2332,7 @@ void main() {
       depthTest: true
     });
     const beaconPoints = new THREE.Points(beaconGeo, beaconMat);
-    beaconPoints.renderOrder = 5;
+    beaconPoints.renderOrder = 6;
     spinGroup.add(beaconPoints);
 
     // 6. Tilted 3D Orbital Halo Ring & Orbiting Energy Motes (Passing In Front & Behind in 3D Depth)
@@ -2031,6 +2411,245 @@ void main() {
     orbitMotes.renderOrder = 5;
     orbitGroup.add(orbitMotes);
 
+    // 7. Formal clinical architectural pedestal (HOLO_MODE): solid brushed surgical-titanium plinth,
+    //    flush smoked optical sapphire glass stage, understated recessed seam lighting, studio contact shadow
+    if (HOLO_MODE && SHOW_HOLO_PEDESTAL) {
+      const GR = GLOBE_R;
+      const cbH = Math.cos(CFG.baseYaw), sbH = Math.sin(CFG.baseYaw);
+      const pedTopY = HAND_GLOBE_WORLD.center[1] - GR * 1.15;
+      const pw = [HAND_GLOBE_WORLD.center[0], pedTopY, HAND_GLOBE_WORLD.center[2]];
+      const holoOuter = new THREE.Group();
+      holoOuter.position.set(cbH * pw[0] - sbH * pw[2], pw[1], sbH * pw[0] + cbH * pw[2]);
+      holoOuter.rotation.y = -CFG.baseYaw;            // cancel root yaw: camera-aligned world axes
+      rootGroup.add(holoOuter);
+      const holo = new THREE.Group();
+      holo.rotation.x = 0.0;                           // 100% level and parallel to horizon
+      holoOuter.add(holo);
+
+      // Part A: Solid precision-machined brushed titanium architectural plinth
+      // IMPORTANT: Three.js LatheGeometry requires BOTTOM -> TOP point ordering for outward-facing normals
+      const lathePts = [
+        // Bottom cap & grounded wide base foot
+        new THREE.Vector2(0.0,        -GR * 0.186),
+        new THREE.Vector2(GR * 1.028, -GR * 0.186),
+        new THREE.Vector2(GR * 1.046, -GR * 0.176),
+        new THREE.Vector2(GR * 1.048, -GR * 0.172),
+        // Lower weighted plinth fascia
+        new THREE.Vector2(GR * 1.036, -GR * 0.128),
+        new THREE.Vector2(GR * 1.024, -GR * 0.119),
+        // Crisp step inward into precision architectural shadow-gap groove
+        new THREE.Vector2(GR * 1.016, -GR * 0.117),
+        new THREE.Vector2(GR * 0.960, -GR * 0.115),
+        new THREE.Vector2(GR * 0.958, -GR * 0.097),
+        // Upper machined titanium bezel overhang & vertical fascia
+        new THREE.Vector2(GR * 1.008, -GR * 0.093),
+        new THREE.Vector2(GR * 1.016, -GR * 0.088),
+        new THREE.Vector2(GR * 1.020, -GR * 0.022),
+        // Crisp 45-deg precision chamfer into flat top bezel shoulder
+        new THREE.Vector2(GR * 1.016, -GR * 0.016),
+        new THREE.Vector2(GR * 0.992, -GR * 0.001),
+        new THREE.Vector2(GR * 0.985,  0.0),
+        new THREE.Vector2(GR * 0.916,  0.0),
+        // Inner optical glass bezel chamfer down to recessed stage seat
+        new THREE.Vector2(GR * 0.910, -GR * 0.001),
+        new THREE.Vector2(GR * 0.896, -GR * 0.009),
+        new THREE.Vector2(GR * 0.880, -GR * 0.009)
+      ];
+      const pedGeo = new THREE.LatheGeometry(lathePts, 160);
+      pedGeo.computeVertexNormals();
+
+      const pedMat = new THREE.ShaderMaterial({
+        uniforms: { uGR: { value: GR } },
+        vertexShader: `
+varying vec3 vPos;
+varying vec3 vLocalN;
+varying vec3 vViewN;
+varying vec3 vViewDir;
+void main() {
+  vPos = position;
+  vLocalN = normalize(normal);
+  vViewN = normalize(normalMatrix * normal);
+  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  vViewDir = normalize(-mv.xyz);
+  gl_Position = projectionMatrix * mv;
+}`,
+        fragmentShader: `
+uniform float uGR;
+varying vec3 vPos;
+varying vec3 vLocalN;
+varying vec3 vViewN;
+varying vec3 vViewDir;
+
+void main() {
+  vec3 N = normalize(vViewN);
+  vec3 V = normalize(vViewDir);
+  float NdotV = clamp(dot(N, V), 0.0, 1.0);
+  float fres = pow(1.0 - NdotV, 3.0);
+
+  float yNorm = -vPos.y / uGR; // 0.0 at top rim, 0.186 at base foot
+  float ang = atan(vPos.x, vPos.z); // 0 directly facing camera
+
+  // Calm executive clinical studio softbox lighting (left-front softbox + subtle right silver fill)
+  vec3 Lkey = normalize(vec3(-0.56, 0.52, 0.65));
+  vec3 Lfill = normalize(vec3(0.72, 0.34, 0.60));
+  vec3 Ltop = normalize(vec3(0.0, 1.0, 0.15));
+  vec3 Hkey = normalize(Lkey + V);
+  vec3 Hfill = normalize(Lfill + V);
+
+  float diffKey = max(dot(N, Lkey), 0.0);
+  float diffFill = max(dot(N, Lfill), 0.0);
+  float diffTop = max(dot(N, Ltop), 0.0);
+
+  // Subtle horizontal CNC brushed anodized surgical titanium-steel texture
+  float fineBrush = 0.97 + 0.03 * sin(vPos.y * 3400.0 + sin(ang * 2.0) * 1.2);
+  // Broad softbox metallic band sweeping cleanly across the front fascia
+  float softboxLeft = exp(-pow((ang + 0.58) / 0.42, 2.0));
+  float softboxRight = exp(-pow((ang - 0.88) / 0.34, 2.0)) * 0.55;
+  float bandSheen = softboxLeft * 0.48 + softboxRight * 0.36;
+
+  // Tonal architecture: cool brushed slate-titanium upper collar, deeper grounded titanium lower plinth
+  float isLower = smoothstep(0.114, 0.126, yNorm);
+  vec3 baseShadow = mix(vec3(0.068, 0.114, 0.185), vec3(0.045, 0.082, 0.142), isLower);
+  vec3 baseLit    = mix(vec3(0.195, 0.285, 0.405), vec3(0.140, 0.215, 0.320), isLower);
+  vec3 steelSpec  = vec3(0.76, 0.85, 0.94);
+
+  float specKey  = pow(max(dot(N, Hkey), 0.0), 28.0) * 0.46;
+  float specFill = pow(max(dot(N, Hfill), 0.0), 22.0) * 0.22;
+
+  vec3 col = (baseShadow + baseLit * (0.62 * diffKey + 0.34 * diffFill + 0.28 * diffTop + bandSheen * 0.55)) * fineBrush;
+  col += steelSpec * (specKey + specFill);
+  col += vec3(0.46, 0.66, 0.86) * fres * 0.26;
+
+  // Clean machined silver catchlights on the precision bevel rims
+  float topBevel   = smoothstep(0.015, 0.0, abs(yNorm - 0.008)) * (0.28 + 0.32 * diffKey + 0.20 * softboxLeft);
+  float lowerBevel = smoothstep(0.012, 0.0, abs(yNorm - 0.121)) * (0.20 + 0.24 * diffKey + 0.15 * softboxLeft);
+  col += vec3(0.78, 0.87, 0.96) * (topBevel + lowerBevel);
+
+  // Subtle top ambient bounce from the floating blue globe onto the top titanium collar
+  float topCollar = smoothstep(0.55, 0.92, vLocalN.y);
+  col += vec3(0.32, 0.62, 0.88) * topCollar * 0.18;
+
+  // Deep architectural shadow inside the recessed precision reveal groove
+  float grooveMask = smoothstep(0.091, 0.098, yNorm) * smoothstep(0.120, 0.113, yNorm);
+  col = mix(col, vec3(0.018, 0.036, 0.068), grooveMask * 0.88);
+
+  // Gentle vertical ambient occlusion near the studio floor contact edge
+  col *= mix(1.0, 0.68, smoothstep(0.165, 0.186, yNorm));
+
+  gl_FragColor = vec4(col, 1.0);
+}`,
+        side: THREE.FrontSide
+      });
+
+      const pedMesh = new THREE.Mesh(pedGeo, pedMat);
+      pedMesh.renderOrder = 1;
+      holo.add(pedMesh);
+
+      // Part B: Flush smoked optical sapphire glass stage seated inside the upper titanium bezel
+      const glassGeo = new THREE.CircleGeometry(GR * 0.902, 128);
+      glassGeo.rotateX(-Math.PI / 2);
+      const glassMat = new THREE.ShaderMaterial({
+        uniforms: { uTime: sharedUniforms.uTime, uR: { value: GR * 0.902 } },
+        vertexShader: `
+varying vec3 vPos;
+varying vec3 vViewN;
+varying vec3 vViewDir;
+void main() {
+  vPos = position;
+  vViewN = normalize(normalMatrix * normal);
+  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  vViewDir = normalize(-mv.xyz);
+  gl_Position = projectionMatrix * mv;
+}`,
+        fragmentShader: `
+uniform float uTime;
+uniform float uR;
+varying vec3 vPos;
+varying vec3 vViewN;
+varying vec3 vViewDir;
+void main() {
+  vec3 N = normalize(vViewN);
+  vec3 V = normalize(vViewDir);
+  float r = length(vPos.xz) / uR;
+  float fres = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 3.0);
+
+  // Deep polished smoked optical sapphire glass
+  vec3 glassBase = vec3(0.022, 0.048, 0.096);
+  // Calm mirror-like radial reflection of the floating globe above
+  float reflCore = exp(-r * r * 3.4) * (0.44 + 0.025 * sin(uTime * 1.4));
+  float reflWide = exp(-r * r * 1.15) * 0.18;
+  // Subtle executive studio sheen across the polished glass plane
+  float sheen = smoothstep(-0.85, 0.65, -vPos.x / uR + vPos.z / uR * 0.35) * 0.08;
+  vec3 col = glassBase
+           + vec3(0.26, 0.64, 0.92) * reflWide
+           + vec3(0.56, 0.86, 1.0) * reflCore * 0.72
+           + vec3(0.74, 0.86, 0.96) * (fres * 0.22 + sheen);
+  gl_FragColor = vec4(col, 1.0);
+}`,
+        side: THREE.FrontSide
+      });
+      const glassMesh = new THREE.Mesh(glassGeo, glassMat);
+      glassMesh.position.y = -GR * 0.007;
+      glassMesh.renderOrder = 1;
+      holo.add(glassMesh);
+
+      // Part C: Understated recessed architectural indirect-light seam tucked cleanly inside the shadow gap
+      const seamGeo = new THREE.CylinderGeometry(GR * 0.962, GR * 0.962, GR * 0.0075, 160, 1, true);
+      const seamMat = new THREE.ShaderMaterial({
+        vertexShader: `
+varying vec3 vViewN;
+varying vec3 vViewDir;
+void main() {
+  vViewN = normalize(normalMatrix * normal);
+  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  vViewDir = normalize(-mv.xyz);
+  gl_Position = projectionMatrix * mv;
+}`,
+        fragmentShader: `
+varying vec3 vViewN;
+varying vec3 vViewDir;
+void main() {
+  float facing = pow(clamp(dot(normalize(vViewN), normalize(vViewDir)), 0.0, 1.0), 0.55);
+  // Restrained clinical pale-ice architectural accent line (no neon RGB glare)
+  gl_FragColor = vec4(vec3(0.66, 0.86, 0.98), 0.72 * facing);
+}`,
+        transparent: true,
+        depthWrite: false,
+        side: THREE.FrontSide
+      });
+      const seamMesh = new THREE.Mesh(seamGeo, seamMat);
+      seamMesh.position.y = -GR * 0.106;
+      seamMesh.renderOrder = 2;
+      holo.add(seamMesh);
+
+      // Part D: Clean grounding studio contact shadow & subtle surface reflection (zero sci-fi floor rings)
+      const floorY = -GR * 0.188;
+      const floorMesh = new THREE.Mesh(new THREE.PlaneGeometry(GR * 3.1, GR * 3.1), new THREE.ShaderMaterial({
+        vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+        fragmentShader: `
+varying vec2 vUv;
+void main() {
+  vec2 q = vUv - 0.5;
+  float d = length(q) * 2.0; // d ≈ 0.67 corresponds to outer foot (1.04 * GR / 1.55 * GR)
+  float outerFade = smoothstep(0.98, 0.74, d);
+  // Crisp grounding studio contact shadow right beneath the weighted titanium foot
+  float shadow = smoothstep(0.76, 0.55, d) * 0.78;
+  // Very subtle architectural surface reflection around the base perimeter
+  float sheen = exp(-pow((d - 0.68) / 0.22, 2.0)) * 0.10 * outerFade;
+  vec3 col = mix(vec3(0.005, 0.012, 0.028), vec3(0.24, 0.52, 0.78), clamp(sheen / max(shadow + sheen, 1e-4), 0.0, 1.0));
+  float alpha = clamp(shadow + sheen, 0.0, 0.80) * smoothstep(1.0, 0.88, d);
+  if (alpha < 0.005) discard;
+  gl_FragColor = vec4(col, alpha);
+}`,
+        transparent: true,
+        depthWrite: false
+      }));
+      floorMesh.rotation.x = -Math.PI / 2;
+      floorMesh.position.y = floorY;
+      floorMesh.renderOrder = 0;
+      holo.add(floorMesh);
+    }
+
     function syncGlobe3DAndHitArea(dt, bodyYawVal) {
       if (globeCtx && globeCanvas) {
         globeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -2042,7 +2661,7 @@ void main() {
         if (globeState.rotLng > 180) globeState.rotLng -= 360;
       }
 
-      const bobLocalY = reduced ? 0 : Math.sin(elapsed * 1.65) * 0.0022;
+      const bobLocalY = reduced ? 0 : Math.sin(elapsed * 1.65) * (HOLO_MODE ? 0.0045 : 0.0022);
       globeGroup.position.set(globeLocalPos.x, globeLocalPos.y + bobLocalY, globeLocalPos.z);
       globeGroup.scale.setScalar(globeState.zoomScale);
       globeUniforms.uZoom.value = globeState.zoomScale;
@@ -2058,6 +2677,31 @@ void main() {
         motePositions[i * 3 + 2] = Math.sin(ang) * rr;
       }
       motePosAttr.needsUpdate = true;
+
+      if (arcPulsePosAttr && arcPulseNrmAttr && arcPulseMeta.length > 0) {
+        const pArr = arcPulsePosAttr.array;
+        const nArr = arcPulseNrmAttr.array;
+        for (let i = 0; i < arcPulseMeta.length; i++) {
+          const m = arcPulseMeta[i];
+          const t = (elapsed * m.speed + m.phase) % 1.0;
+          const w0 = Math.sin((1 - t) * m.omega) / m.sinOmega;
+          const w1 = Math.sin(t * m.omega) / m.sinOmega;
+          const nx = w0 * m.va[0] + w1 * m.vb[0];
+          const ny = w0 * m.va[1] + w1 * m.vb[1];
+          const nz = w0 * m.va[2] + w1 * m.vb[2];
+          const l = Math.hypot(nx, ny, nz) || 1;
+          const ux = nx / l, uy = ny / l, uz = nz / l;
+          const rad = GLOBE_R * (1.006 + 0.055 * Math.sin(t * Math.PI));
+          pArr[i * 3] = ux * rad;
+          pArr[i * 3 + 1] = uy * rad;
+          pArr[i * 3 + 2] = uz * rad;
+          nArr[i * 3] = ux;
+          nArr[i * 3 + 1] = uy;
+          nArr[i * 3 + 2] = uz;
+        }
+        arcPulsePosAttr.needsUpdate = true;
+        arcPulseNrmAttr.needsUpdate = true;
+      }
 
       // Update projected 2D hit-test center & radius so pointer drag/zoom stay locked onto the 3D globe
       const deltaYaw = bodyYawVal - CFG.baseYaw;
@@ -2113,6 +2757,7 @@ void main() {
       curPitch += (targetPitch - curPitch) * headLerp;
       bodyYaw += (CFG.baseYaw + CFG.bodyFollow * (targetYaw - CFG.baseYaw) - bodyYaw) * bodyLerp;
 
+      if (HOLO_MODE) bodyYaw = CFG.baseYaw;
       rootGroup.rotation.y = bodyYaw;
       const headYawRel = clamp(curYaw - bodyYaw, -CFG.headMaxYaw, CFG.headMaxYaw);
       sharedUniforms.uYaw.value = headYawRel;
@@ -2123,8 +2768,10 @@ void main() {
       sharedUniforms.uMouse.value.set(pointer.x * viewHalfW, pointer.y * viewHalfH);
 
       syncGlobe3DAndHitArea(dt, bodyYaw);
-      renderer.render(scene, camera);
-      renderAsciiMatrix(dt, headYawRel, curPitch, bodyYaw, isPointerFresh);
+      if (!window.__mediqFastJumping) {
+        renderer.render(scene, camera);
+        renderAsciiMatrix(dt, headYawRel, curPitch, bodyYaw, isPointerFresh);
+      }
 
       rafId = requestAnimationFrame(animate);
     }
@@ -2170,8 +2817,9 @@ void main() {
     if (!stage || !webglCanvas || !window.THREE) return;
 
     try {
-      const buffer = await loadSilhouetteBuffer();
-      const meshData = parseMesh(buffer);
+      const meshData = HOLO_MODE
+        ? { pos: new Float32Array(0), nrm: new Int8Array(0), crv: new Int8Array(0), idx: new Uint16Array(0) }
+        : parseMesh(await loadSilhouetteBuffer());
       const isCoarse = window.matchMedia('(max-width: 767px), (pointer: coarse)').matches;
       const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -2189,7 +2837,7 @@ void main() {
 
       webglCanvas.classList.remove('opacity-0');
       webglCanvas.classList.add('opacity-100');
-      if (asciiCanvas) {
+      if (asciiCanvas && !HOLO_MODE) {
         asciiCanvas.classList.remove('opacity-0');
         asciiCanvas.classList.add('opacity-100');
       }
@@ -2198,7 +2846,8 @@ void main() {
         globeCanvas.classList.add('opacity-100');
       }
 
-      let inView = true;
+      const r0 = stage.getBoundingClientRect();
+      let inView = r0.width > 0 && r0.height > 0 && r0.bottom > -120 && r0.top < (window.innerHeight || 900) + 120;
       const updateRunState = () => {
         controller.setRunning(inView && !document.hidden);
       };
@@ -2208,7 +2857,7 @@ void main() {
           inView = entry.isIntersecting;
           updateRunState();
         },
-        { threshold: 0.05 }
+        { rootMargin: '120px 0px', threshold: 0.01 }
       );
       io.observe(stage);
       document.addEventListener('visibilitychange', updateRunState);
@@ -2218,10 +2867,41 @@ void main() {
     }
   }
 
+  // Lazy-boot WebGL hologram when user approaches #brands (zero startup shader stall on Home page open)
+  function scheduleBrandsAllerInit() {
+    const brandsSec = document.getElementById('brands') || document.getElementById('brands-aller-silhouette-stage');
+    if (!brandsSec) return;
+    let booted = false;
+    const launch = () => {
+      if (booted) return;
+      booted = true;
+      initBrandsAllerSilhouette();
+    };
+    const rect = brandsSec.getBoundingClientRect();
+    if (rect.bottom > -650 && rect.top < (window.innerHeight || 900) + 650) {
+      launch();
+      return;
+    }
+    if ('IntersectionObserver' in window) {
+      const bootIo = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            bootIo.disconnect();
+            launch();
+          }
+        },
+        { rootMargin: '650px 0px', threshold: 0.01 }
+      );
+      bootIo.observe(brandsSec);
+    } else {
+      launch();
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initBrandsAllerSilhouette);
+    document.addEventListener('DOMContentLoaded', scheduleBrandsAllerInit);
   } else {
-    initBrandsAllerSilhouette();
+    scheduleBrandsAllerInit();
   }
 })();
 

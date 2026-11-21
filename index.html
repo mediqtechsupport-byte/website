@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 
 <head>
@@ -12,16 +12,17 @@
   <meta property="og:description" content="Exclusive distributor of Rayner premium ophthalmic solutions." />
   <meta property="og:image" content="assets/img/hero-products.jpg" />
 
-  <!-- Fonts: Corporate Medical Sans Typography (IBM Plex Sans Display + Inter UI + IBM Plex Mono) -->
+  <!-- Fonts: Clinical Ophthalmology & Medical Precision Sans (Instrument Sans Display + Inter Clinical UI + IBM Plex Mono — Strictly Upright) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet" />
 
-  <!-- Preload hero image for fast LCP -->
+  <!-- Preload hero image & brand wordmark for fast LCP & instant splash clarity -->
   <link rel="preload" as="image" href="assets/img/hero-products.jpg?v=3" />
+  <link rel="preload" as="image" href="assets/img/mediq-wordmark-only.png?v=105.00" />
   <link rel="icon"
     href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%230a1d40%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%228%22 fill=%22none%22 stroke=%22%233aa0db%22 stroke-width=%222.5%22/%3E%3C/svg%3E" />
 
@@ -44,8 +45,8 @@
     twTheme.setAttribute('type', 'text/tailwindcss');
     twTheme.textContent = `
       @theme {
-        --font-serif: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-        --font-sans: "Inter", "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        --font-serif: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        --font-sans: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
         --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         --color-ink: #0a1d40;
         --color-navy: #0a1d40;
@@ -68,15 +69,8 @@
   <!-- Tailwind CSS v4 (browser build – for local development) -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-  <!-- Three.js WebGL 3D Engine for Real-Time 3D Product Modelling -->
-  <script src="assets/js/three.min.js"></script>
-  <script>
-    if (typeof THREE === 'undefined') {
-      const s = document.createElement('script');
-      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-      document.head.appendChild(s);
-    }
-  </script>
+  <!-- Three.js WebGL 3D Engine for Real-Time 3D Product Modelling (deferred so Hero paints immediately) -->
+  <script src="assets/js/three.min.js" defer></script>
 
   <style>
     @keyframes kenburns {
@@ -145,12 +139,12 @@
       --hover-text-color-1: #0a1d40;
       --hover-text-color-2: #ffffff;
       --hover-text-color-3: #ffffff;
-      --font-futura: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-      --font-sans: "Inter", "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-      --font-serif: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-futura: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-sans: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-serif: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
       --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      --font-family: "Inter", "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-      --rtl-font-family: "Inter", "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-family: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      --rtl-font-family: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
       --pattern-color1: rgba(58, 160, 219, 0.055);
       --pattern-color2: rgba(246, 242, 234, 0.035);
     }
@@ -172,19 +166,21 @@
 
     body {
       background-color: #0a1d40;
-      font-family: "Inter", "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-family: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
       color: #f6f2ea;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Unified Site-Wide Corporate Typography (Inter UI/Body + IBM Plex Sans Headings — Strictly Upright) */
+    /* Unified Site-Wide Clinical Doctor Typography (Instrument Sans Headings + Inter Clinical UI + IBM Plex Mono Metrics — Strictly Upright) */
     html,
     html body,
     html body *,
     html body *::before,
     html body *::after {
-      font-family: "Inter", "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+      font-family: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     }
 
     html body h1,
@@ -204,6 +200,9 @@
     html body #brands .br-serif,
     html body #brands .br-serif *,
     html body #brands .pel-title,
+    html body #brands .pel-title *,
+    html body #brands .pel-name,
+    html body #brands .pel-cta,
     html body #distribution .srv-serif,
     html body #distribution .srv-serif *,
     html body #resources .res-serif,
@@ -223,8 +222,14 @@
     html body .font-serif,
     html body .font-serif *,
     html body .med-tab-label,
-    html body .med-ghost-word {
-      font-family: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+    html body .med-ghost-word,
+    html body .bc-spread-title,
+    html body .bc-cover-title,
+    html body .bc-paper-card__title,
+    html body .sv-box3d__spine-code,
+    html body .sv-box3d__spine-name {
+      font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+      font-feature-settings: "ss01";
     }
 
     html body #hero .abt-serif,
@@ -243,7 +248,7 @@
     html body .news-serif,
     html body .cnt-serif,
     html body .font-serif {
-      letter-spacing: -0.02em;
+      letter-spacing: -0.022em;
     }
 
     html body,
@@ -251,6 +256,7 @@
     html body *::before,
     html body *::after,
     html body em,
+    html body i,
     html body .italic,
     html body #hero em,
     html body #about em,
@@ -273,8 +279,30 @@
       font-style: normal !important;
     }
 
-    html body .font-mono {
+    html body code,
+    html body pre,
+    html body kbd,
+    html body .font-mono,
+    html body .mqs-mono,
+    html body #brands .pel-when,
+    html body #brands .pel-role,
+    html body #brands .pel-status,
+    html body .med-tab-num,
+    html body .bc-spread-volnum,
+    html body .bc-spread-highlights__kicker,
+    html body .bc-spread-badge,
+    html body .bc-spread-navbtn,
+    html body .bc-spread-inquire,
+    html body .bc-page-kicker,
+    html body .bc-page-ref,
+    html body .bc-paper-card__code,
+    html body .bc-paper-card__tag,
+    html body .bc-cover-num,
+    html body .bc-cover-cta,
+    html body .bc-zoom-pct,
+    html body .bc-zoom-hint {
       font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+      font-variant-numeric: tabular-nums;
     }
 
     @media (min-width: 1024px) and (max-width: 1535px) {
@@ -534,55 +562,53 @@
       justify-content: safe center;
     }
 
-    /* Clean 3D "Window Reveal" subpage transition (Dwell-inspired, fast & restrained) */
+    /* Pure GPU-composited subpage entrance (transform + opacity only — zero clip-path raster repaints) */
     @keyframes mediqSubpage3DEnterNext {
       0% {
         opacity: 0;
-        transform: perspective(1200px) translate3d(0, 46px, -110px) rotateX(4.5deg) scale(0.968);
-        clip-path: inset(5% 3.5% 0% 3.5% round 24px);
-      }
-      55% {
-        opacity: 1;
+        transform: translate3d(0, 24px, 0) scale(0.986);
       }
       100% {
         opacity: 1;
-        transform: perspective(1200px) translate3d(0, 0, 0) rotateX(0deg) scale(1);
-        clip-path: inset(0% 0% 0% 0% round 0px);
+        transform: translate3d(0, 0, 0) scale(1);
       }
     }
 
     @keyframes mediqSubpage3DEnterPrev {
       0% {
         opacity: 0;
-        transform: perspective(1200px) translate3d(0, -46px, -110px) rotateX(-4.5deg) scale(0.968);
-        clip-path: inset(0% 3.5% 5% 3.5% round 24px);
-      }
-      55% {
-        opacity: 1;
+        transform: translate3d(0, -24px, 0) scale(0.986);
       }
       100% {
         opacity: 1;
-        transform: perspective(1200px) translate3d(0, 0, 0) rotateX(0deg) scale(1);
-        clip-path: inset(0% 0% 0% 0% round 0px);
+        transform: translate3d(0, 0, 0) scale(1);
       }
     }
 
     .mediq-subpage-3d-next {
-      animation: mediqSubpage3DEnterNext 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
-      transform-origin: center 30%;
-      will-change: transform, opacity, clip-path;
+      animation: mediqSubpage3DEnterNext 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+      will-change: transform, opacity;
     }
 
     .mediq-subpage-3d-prev {
-      animation: mediqSubpage3DEnterPrev 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
-      transform-origin: center 70%;
-      will-change: transform, opacity, clip-path;
+      animation: mediqSubpage3DEnterPrev 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+      will-change: transform, opacity;
     }
 
-    /* Faster slide container cross-fade so the 3D reveal feels instant */
+    /* Compositor-only slide transitions & layout isolation for offscreen slides */
+    .about-slide,
     .product-slide,
     .deck-slide {
-      transition-duration: 280ms !important;
+      transition-property: opacity, transform !important;
+      transition-duration: 300ms !important;
+      transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1) !important;
+      backface-visibility: hidden;
+    }
+
+    .about-slide.opacity-0.pointer-events-none,
+    .product-slide.opacity-0.pointer-events-none,
+    .deck-slide.opacity-0.pointer-events-none {
+      contain: layout style;
     }
 
     
@@ -601,7 +627,7 @@
           --pel-ink: #f4f7fb;
           --pel-muted: rgba(184, 204, 226, 0.78);
           --pel-line: rgba(114, 197, 248, 0.2);
-          --pel-display: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+          --pel-display: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
         }
         #brands .pel-wrap { width: 100%; max-width: 100%; margin: 0 auto; }
         #brands .pel-head {
@@ -616,7 +642,7 @@
         }
         #brands .pel-title {
           margin: 0;
-          font-family: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+          font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
           font-size: clamp(1.85rem, 3.4vw, 3.1rem);
           font-weight: 400;
           letter-spacing: -0.025em;
@@ -751,7 +777,7 @@
           pointer-events: none;
         }
         #pel-floating-preview .pel-float-title {
-          font-family: "IBM Plex Sans", "Inter", sans-serif;
+          font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
           font-size: 13px;
           font-weight: 700;
           letter-spacing: 0.04em;
@@ -840,7 +866,7 @@
           align-items: center;
           gap: 0.55rem;
           margin-top: 0.42rem;
-          font-family: "JetBrains Mono", monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: 0.68rem;
           font-weight: 600;
           letter-spacing: 0.14em;
@@ -969,7 +995,7 @@
         #brands .pel-cta:hover::after { transform: scaleY(2); }
         #brands .pel-copy .pel-prod { padding: 0 0 0.85rem; margin: 0 0 0.85rem; border-bottom: 1px solid rgba(114,197,248,0.14); }
         #brands .pel-copy .pel-prod:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
-        #brands .pel-status { display: inline-block; margin-bottom: 0.35rem; font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #b8cce2; }
+        #brands .pel-status { display: inline-block; margin-bottom: 0.35rem; font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #b8cce2; }
         #brands .pel-status.is-hi { color: #72c5f8; font-weight: 700; }
         #brands .pel-prod-title { font-weight: 700; color: #ffffff; font-size: 0.95rem; margin-bottom: 0.2rem; }
         #brands .pel-prod p { margin: 0; font-size: 0.86rem; color: #9eb4cc; }
@@ -1072,7 +1098,7 @@
       justify-content: center;
       height: 100%;
       padding: 0 clamp(0.75rem, 1.15vw, 1.35rem);
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
       font-size: 11px;
       font-weight: 500;
       letter-spacing: 0.18em;
@@ -1096,7 +1122,7 @@
       justify-content: center;
       height: 100%;
       padding: 0 clamp(0.7rem, 1.05vw, 1.25rem);
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
       font-size: 11px;
       font-weight: 500;
       letter-spacing: 0.13em;
@@ -1368,7 +1394,7 @@
       --pel-ink: #f6f2ea;
       --pel-muted: rgba(246, 242, 234, 0.7);
       --pel-line: rgba(58, 160, 219, 0.22);
-      --pel-display: "Neue Haas Grotesk Display Pro", "Helvetica Neue", "Inter Display", Inter, -apple-system, sans-serif;
+      --pel-display: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
       --pel-ease: cubic-bezier(.23, 1, .32, 1);
       --pel-pad: clamp(.5rem, 1.1vw, .9rem);
     }
@@ -2175,7 +2201,7 @@
       justify-content: space-between;
       padding: 14px 16px 12px 18px;
       color: #0f172a;
-      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      font-family: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
     }
 
     /* BACK FACE */
@@ -2191,7 +2217,7 @@
       justify-content: space-between;
       padding: 22px 26px;
       color: #475569;
-      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      font-family: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
     }
 
     /* RIGHT SPINE (SIDE) */
@@ -2210,9 +2236,9 @@
     .sv-box3d__spine-code {
       writing-mode: vertical-rl;
       transform: rotate(180deg);
-      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      font-family: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
       font-size: clamp(36px, 2.6vw, 44px);
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: 0.04em;
       color: rgba(255, 255, 255, 0.95);
       line-height: 1;
@@ -2235,9 +2261,9 @@
     .sv-box3d__spine-name {
       writing-mode: vertical-rl;
       transform: rotate(180deg);
-      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      font-family: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
       font-size: clamp(20px, 1.45vw, 24px);
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: 0.02em;
       color: #1e293b;
       line-height: 1;
@@ -2309,7 +2335,7 @@
       background: var(--box-accent, #c4006b);
       color: #ffffff;
       font-size: 8.5px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       text-align: right;
@@ -2371,7 +2397,7 @@
 
     .sv-box-rayner-brand {
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 700;
       color: #1e293b;
       letter-spacing: -0.02em;
       display: flex;
@@ -2414,7 +2440,7 @@
       writing-mode: vertical-rl;
       transform: rotate(180deg);
       font-size: 5.2px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: 0.05em;
       line-height: 1.15;
       color: #16a34a;
@@ -2454,7 +2480,7 @@
       background: rgba(255, 255, 255, 0.10);
       backdrop-filter: blur(12px);
       color: #ffffff;
-      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      font-family: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
       font-size: 15.5px;
       font-weight: 600;
       padding: 10px 27px;
@@ -2507,7 +2533,7 @@
       font-size: clamp(48px, 4.8vw, 72px);
       line-height: 1.04;
       letter-spacing: -0.03em;
-      font-weight: 800;
+      font-weight: 700;
       color: #ffffff;
       text-wrap: balance;
     }
@@ -2864,6 +2890,18 @@
         justify-content: center !important;
       }
 
+      /* About Slide 0 (Our Purpose) Mobile: Full-bleed Philippines map as atmospheric background behind vertically centered copy (matching Home & Brands) */
+      html:not(.mediq-subpage-locked) #about #about-interactive-stage .route-world-canvas {
+        opacity: 0.55 !important;
+        pointer-events: none !important;
+        -webkit-mask-image: radial-gradient(ellipse 96% 88% at 52% 52%, rgba(0, 0, 0, 0.96) 42%, rgba(0, 0, 0, 0.50) 80%, transparent 100%) !important;
+        mask-image: radial-gradient(ellipse 96% 88% at 52% 52%, rgba(0, 0, 0, 0.96) 42%, rgba(0, 0, 0, 0.50) 80%, transparent 100%) !important;
+      }
+
+      html:not(.mediq-subpage-locked) #about #about-interactive-stage .route-world-tooltip {
+        display: none !important;
+      }
+
       /* Prevent double 100svh stacking inside Hero / About / Landing containers */
       html:not(.mediq-subpage-locked) section.page-snap-section .ih-root,
       html:not(.mediq-subpage-locked) section.page-snap-section .ih-hero {
@@ -2925,8 +2963,8 @@
       }
 
       html:not(.mediq-subpage-locked) #brands .deck-slide[data-slide-index="0"] {
-        padding-left: var(--mob-pad-x) !important;
-        padding-right: var(--mob-pad-x) !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
       }
 
       html:not(.mediq-subpage-locked) #activities .deck-slide[data-slide-index="0"] {
@@ -3505,7 +3543,7 @@
       box-sizing: border-box;
       background-color: #0a1d40;
       color: #f6f2ea;
-      font-family: "Plus Jakarta Sans", "Manrope", system-ui, sans-serif;
+      font-family: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -3711,10 +3749,8 @@
 
   <!-- Cinematic Motion Footer Theme Styles -->
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
-
     .cinematic-footer-wrapper {
-      font-family: 'Plus Jakarta Sans', "Manrope", sans-serif;
+      font-family: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
       -webkit-font-smoothing: antialiased;
       --pill-bg-1: rgba(10, 29, 64, 0.70);
       --pill-bg-2: rgba(10, 29, 64, 0.90);
@@ -3823,7 +3859,7 @@
     .footer-giant-bg-text {
       font-size: 28vw;
       line-height: 0.75;
-      font-weight: 900;
+      font-weight: 700;
       letter-spacing: -0.05em;
       color: transparent;
       -webkit-text-stroke: 1.5px rgba(58, 160, 219, 0.12);
@@ -3877,10 +3913,10 @@
       box-shadow: 6px 6px 0 0 #0a1d40;
     }
 
-    /* ============== TIB DIGITAL INSPIRED SPLASH SCREEN (MQ + TRIANGLE LOGO IN MEDIQ PALETTE) ============== */
+    /* ============== MEDIQ BESPOKE OPTICAL DIOPTER CALIBRATION & SPIRAL IOL APERTURE SPLASH ============== */
     :root {
-      --pl-dark: #061024;
-      --pl-accent: #38bdf8;
+      --pl-dark: #020611;
+      --pl-accent: #3aa0db;
       --pl-accent-2: #72c5f8;
       --pl-ink: #f4f7fb;
     }
@@ -3891,21 +3927,39 @@
       z-index: 99999;
       pointer-events: auto;
       isolation: isolate;
-      background-color: #030916;
+      background-color: #0b0c0f;
       background-image:
-        radial-gradient(ellipse 72% 62% at 50% 42%, rgba(20, 58, 134, 0.56) 0%, rgba(10, 29, 64, 0.36) 46%, transparent 100%),
-        radial-gradient(circle at 20% 14%, rgba(58, 160, 219, 0.14) 0%, transparent 48%),
-        radial-gradient(circle at 82% 86%, rgba(37, 99, 235, 0.18) 0%, transparent 52%),
-        linear-gradient(155deg, #020814 0%, #061430 48%, #0a1d40 100%);
+        radial-gradient(ellipse 54% 50% at 50% 50%, rgba(26, 58, 148, 0.44) 0%, rgba(18, 41, 104, 0.28) 38%, rgba(13, 21, 44, 0.14) 68%, rgba(11, 12, 15, 0) 100%),
+        radial-gradient(ellipse 78% 72% at 50% 50%, rgba(15, 32, 82, 0.38) 0%, rgba(12, 16, 30, 0.24) 56%, rgba(11, 12, 15, 0.96) 100%);
+      opacity: 1;
       will-change: opacity;
       overflow: hidden;
       user-select: none;
+      transition: opacity 0.64s cubic-bezier(0.37, 0, 0.63, 1);
+    }
+
+    #splash.pl-root.pl-exit-veil {
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    #splash.pl-root.pl-exit-fast {
+      transition: opacity 0.30s cubic-bezier(0.37, 0, 0.63, 1);
     }
 
     .pl-glow-mount {
       pointer-events: none;
       position: absolute;
       inset: 0;
+      z-index: 1;
+    }
+
+    #splash.pl-root.pl-exit-fg .pl-reticle-wrap {
+      opacity: 0 !important;
+      transform: translate3d(0, 0, 0) scale(1.045) !important;
+      transition:
+        opacity 0.48s cubic-bezier(0.37, 0, 0.63, 1),
+        transform 0.52s cubic-bezier(0.37, 0, 0.63, 1);
     }
 
     .pl-glow {
@@ -3917,141 +3971,95 @@
       inset: 0;
     }
 
-    .pl-grain {
-      pointer-events: none;
-      opacity: 0.32;
-      mix-blend-mode: soft-light;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
-      animation: 0.7s steps(3, end) infinite pl-grain-drift;
-      position: absolute;
-      inset: -50%;
-    }
-
-    @keyframes pl-grain-drift {
-      0% { transform: translate(0, 0); }
-      33% { transform: translate(-2%, 1%); }
-      66% { transform: translate(1%, -2%); }
-      to { transform: translate(0, 0); }
-    }
-
     .pl-stage {
       z-index: 2;
       pointer-events: none;
-      text-align: center;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: clamp(1.25rem, 3vw, 2rem);
-      width: 100%;
-      padding: 0 1.5rem;
-      display: flex;
       position: absolute;
       inset: 0;
-    }
-
-    .pl-loader {
-      width: clamp(236px, 52vw, 380px);
       display: flex;
       flex-direction: column;
-      gap: 11px;
-      opacity: 0;
-      will-change: opacity, transform;
-    }
-
-    .pl-loader-meta {
-      display: flex;
       align-items: center;
-      justify-content: space-between;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
-      color: rgba(186, 220, 252, 0.78);
+      justify-content: center;
+      padding: 1.5rem;
     }
 
-    .pl-loader-status {
+    .pl-reticle-wrap {
+      position: relative;
+      width: clamp(336px, min(82vw, 68vh), 570px);
+      height: clamp(336px, min(82vw, 68vh), 570px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    .pl-logo-core {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      text-align: center;
+    }
+
+    .pl-logo-wrap {
+      position: relative;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-    }
-
-    .pl-loader-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 9999px;
-      background: linear-gradient(135deg, #bae6fd 0%, #3aa0db 100%);
-      box-shadow: 0 0 12px rgba(114, 197, 248, 0.9);
-    }
-
-    .pl-bar-track {
-      position: relative;
-      width: 100%;
-      height: 2.5px;
-      border-radius: 9999px;
-      background: rgba(114, 197, 248, 0.14);
-      overflow: hidden;
-      box-shadow: inset 0 0 0 1px rgba(114, 197, 248, 0.08);
-    }
-
-    .pl-bar-fill {
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 1%;
-      border-radius: 9999px;
-      background: linear-gradient(90deg, #1d4ed8 0%, #3aa0db 46%, #72c5f8 82%, #e0f2fe 100%);
-      box-shadow: 0 0 14px rgba(114, 197, 248, 0.65);
-      will-change: width;
-    }
-
-    .pl-count {
-      z-index: 2;
-      pointer-events: none;
+      justify-content: center;
+      overflow: visible;
+      padding: 0;
       opacity: 0;
-      will-change: opacity, transform;
-      align-items: baseline;
-      gap: 0.24em;
-      display: flex;
-      position: absolute;
-      bottom: clamp(1.5rem, 4vw, 3.25rem);
-      right: clamp(1.35rem, 4vw, 3.25rem);
+      will-change: transform, opacity;
     }
 
-    .pl-counter {
-      letter-spacing: -0.04em;
-      font-variant-numeric: tabular-nums;
-      font-feature-settings: "tnum" 1;
-      white-space: nowrap;
-      text-align: right;
-      will-change: contents;
-      contain: layout style paint;
-      min-width: 3ch;
-      font-size: clamp(3rem, 9vw, 6.2rem);
-      line-height: 0.86;
-      font-weight: 600;
+    .pl-logo-img {
+      width: clamp(172px, min(44vw, 33vh), 278px);
+      height: auto;
       display: block;
-      background: linear-gradient(135deg, #ffffff 0%, #bae6fd 34%, #72c5f8 68%, #2563eb 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: #72c5f8;
-      filter: drop-shadow(0 0 26px rgba(56, 189, 248, 0.34));
+      object-fit: contain;
+      filter: drop-shadow(0 0 18px rgba(114, 197, 248, 0.22));
     }
 
-    .pl-count-unit {
-      letter-spacing: 0.14em;
-      padding-bottom: 0.12em;
-      font-size: clamp(0.85rem, 1.8vw, 1.15rem);
-      font-weight: 600;
-      line-height: 1;
-      background: linear-gradient(135deg, #bae6fd 0%, #3aa0db 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: #72c5f8;
+    .pl-logo-sheen-mask {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      -webkit-mask-image: url("assets/img/mediq-wordmark-only.png?v=105.00");
+      mask-image: url("assets/img/mediq-wordmark-only.png?v=105.00");
+      -webkit-mask-size: contain;
+      mask-size: contain;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+      mask-position: center;
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .pl-grain { animation: none; }
+    .pl-logo-sheen {
+      position: absolute;
+      inset: -12% 0;
+      width: 44%;
+      background: linear-gradient(90deg, transparent 0%, rgba(224, 242, 254, 0.72) 50%, transparent 100%);
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .pl-tag {
+      font-family: var(--font-mono);
+      font-size: clamp(9.5px, 1.15vw, 12px);
+      font-weight: 500;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: rgba(186, 230, 253, 0.78);
+      opacity: 0;
+      white-space: nowrap;
+      will-change: transform, opacity;
     }
 
     /* ============== LORENZO LOTTICI INSPIRED SUBPAGE ANIMATIONS ("ORDER IN CHAOS" · MEDIQ PALETTE) ============== */
@@ -4183,225 +4191,29 @@
 </head>
 
 <body class="min-h-[100svh] overflow-x-hidden bg-[#0a1d40]">
-  <!-- ============== MINIMAL GRADIENT LOADING SPLASH SCREEN (1-100 IN MEDIQ PALETTE) ============== -->
-  <div class="pl-root" id="splash" role="dialog" aria-label="MEDIQ Preloader">
+  <!-- ============== MEDIQ OPTICAL DIOPTER CALIBRATION & SPIRAL IOL APERTURE SPLASH ============== -->
+  <div class="pl-root" id="splash" role="dialog" aria-label="MEDIQ Optical Intro">
     <div class="pl-glow-mount" id="pl-glow-mount" aria-hidden="true">
       <canvas class="pl-glow" id="pl-glow-canvas"></canvas>
     </div>
-    <div class="pl-grain" id="pl-grain" aria-hidden="true"></div>
-    <div class="pl-stage">
-      <div class="pl-loader" id="pl-loader" aria-hidden="true">
-        <div class="pl-loader-meta">
-          <span class="pl-loader-status">
-            <span class="pl-loader-dot"></span>
-            <span>MEDIQ PHARMA</span>
-          </span>
-          <span id="pl-loader-step">Loading</span>
-        </div>
-        <div class="pl-bar-track">
-          <div class="pl-bar-fill" id="pl-bar-fill"></div>
+
+    <div class="pl-stage" id="pl-stage">
+      <div class="pl-reticle-wrap" id="pl-reticle-wrap">
+        <div class="pl-logo-core">
+          <div class="pl-logo-wrap" id="pl-logo-wrap">
+            <img src="assets/img/mediq-wordmark-only.png?v=105.00"
+              alt="MEDIQ Pharma and Medical Supplies Distribution"
+              class="pl-logo-img" />
+            <span class="pl-logo-sheen-mask" aria-hidden="true">
+              <span class="pl-logo-sheen" id="pl-logo-sheen"></span>
+            </span>
+          </div>
+          <span class="pl-tag" id="pl-tag">OPHTHALMIC INNOVATIONS</span>
         </div>
       </div>
     </div>
-    <div class="pl-count" id="pl-count" role="status" aria-label="Loading">
-      <span class="pl-counter" id="pl-counter">1</span>
-      <span class="pl-count-unit" aria-hidden="true">%</span>
-    </div>
   </div>
-  <script>
-    (function () {
-      var splash = document.getElementById('splash');
-      var loaderEl = document.getElementById('pl-loader');
-      var barFillEl = document.getElementById('pl-bar-fill');
-      var countEl = document.getElementById('pl-count');
-      var counterEl = document.getElementById('pl-counter');
-      var grainEl = document.getElementById('pl-grain');
-      var glowCanvas = document.getElementById('pl-glow-canvas');
-      if (!splash) return;
-
-      var glowCtx = glowCanvas ? glowCanvas.getContext('2d') : null;
-      var done = false;
-
-      // Lock scroll during preloader
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
-
-      function clamp01(v) {
-        return v < 0 ? 0 : v > 1 ? 1 : v;
-      }
-      function easeOutCubic(t) {
-        return 1 - Math.pow(1 - t, 3);
-      }
-      function easeInOutCubic(t) {
-        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-      }
-      function easeOutExpo(t) {
-        return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-      }
-
-      // Ambient Aurora Glow Canvas (rises during 1->100 and swells softly on exit)
-      var cw = window.innerWidth;
-      var ch = window.innerHeight;
-      function resizeGlow() {
-        if (!glowCanvas || !glowCtx) return;
-        cw = window.innerWidth;
-        ch = window.innerHeight;
-        glowCanvas.width = cw;
-        glowCanvas.height = ch;
-      }
-      window.addEventListener('resize', resizeGlow);
-      resizeGlow();
-
-      function renderGlow(revealP, exitP, timeMs) {
-        if (!glowCtx || !glowCanvas) return;
-        glowCtx.clearRect(0, 0, cw, ch);
-
-        var rv = clamp01(revealP);
-        var ex = clamp01(exitP);
-        var grow = ex * (0.55 + 0.45 * ex);
-
-        var driftX = Math.sin(timeMs * 0.0012) * cw * 0.035 * (1 - ex * 0.8);
-        var driftY = Math.cos(timeMs * 0.0015) * ch * 0.025 * (1 - ex * 0.8);
-
-        var cx = cw * 0.5 + driftX;
-        var baseCy = ch * (1.18 - rv * 0.42);
-        var cy = baseCy + (ch * 0.52 - baseCy) * grow + driftY;
-
-        var rx = cw * (0.52 + grow * 0.95);
-        var ry = ch * (0.42 + grow * 0.52);
-
-        glowCtx.save();
-        glowCtx.translate(cx, cy);
-        glowCtx.scale(1, ry / Math.max(1, rx));
-
-        var grad = glowCtx.createRadialGradient(0, 0, 0, 0, 0, rx);
-        var coreAlpha = (0.28 + rv * 0.34 + grow * 0.22) * (1 - clamp01((ex - 0.65) / 0.35));
-        grad.addColorStop(0, 'rgba(56, 189, 248, ' + coreAlpha.toFixed(3) + ')');
-        grad.addColorStop(0.42, 'rgba(58, 160, 219, ' + (coreAlpha * 0.58).toFixed(3) + ')');
-        grad.addColorStop(0.75, 'rgba(18, 56, 118, ' + (coreAlpha * 0.25).toFixed(3) + ')');
-        grad.addColorStop(1, 'rgba(6, 16, 36, 0)');
-
-        glowCtx.fillStyle = grad;
-        glowCtx.beginPath();
-        glowCtx.arc(0, 0, rx, 0, Math.PI * 2);
-        glowCtx.fill();
-        glowCtx.restore();
-      }
-
-      function onSplashKeyDown(e) {
-        if (e.key === 'Escape') finishSplash();
-      }
-
-      function finishSplash() {
-        if (done) return;
-        done = true;
-        clearTimeout(splashSafetyTimer);
-        window.removeEventListener('resize', resizeGlow);
-        window.removeEventListener('keydown', onSplashKeyDown);
-        splash.style.opacity = '0';
-        splash.style.visibility = 'hidden';
-        splash.style.pointerEvents = 'none';
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-        if (splash.parentNode) {
-          splash.parentNode.removeChild(splash);
-        }
-      }
-
-      window.addEventListener('keydown', onSplashKeyDown);
-      var splashSafetyTimer = setTimeout(finishSplash, 1050);
-
-      var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reducedMotion) {
-        if (counterEl) counterEl.textContent = '100';
-        if (barFillEl) barFillEl.style.width = '100%';
-        if (loaderEl) loaderEl.style.opacity = '1';
-        if (countEl) countEl.style.opacity = '1';
-        setTimeout(finishSplash, 120);
-        return;
-      }
-
-      var lastCount = -1;
-      var t0 = performance.now();
-
-      function tickLoad(now) {
-        if (done) return;
-        var t = now - t0;
-
-        var countIn = easeOutExpo(clamp01(t / 110));
-        if (countEl) {
-          countEl.style.opacity = String(countIn);
-          countEl.style.transform = 'translateY(' + ((1 - countIn) * 10).toFixed(1) + 'px)';
-        }
-        if (loaderEl) {
-          loaderEl.style.opacity = String(countIn);
-          loaderEl.style.transform = 'translateY(' + ((1 - countIn) * 8).toFixed(1) + 'px)';
-        }
-
-        // Fast smooth 1 -> 100 gradient counter, gradient loading bar & rising aurora glow
-        var countP = easeOutCubic(clamp01((t - 20) / 500));
-        var revealVal = countP * (0.55 + 0.45 * countP) * 0.65;
-        renderGlow(revealVal, 0, now);
-
-        var pct = Math.max(1, Math.min(100, Math.round(1 + 99 * countP)));
-        if (barFillEl) {
-          barFillEl.style.width = (1 + 99 * countP).toFixed(2) + '%';
-        }
-        if (pct !== lastCount && counterEl) {
-          lastCount = pct;
-          counterEl.textContent = String(pct);
-        }
-
-        if (t < 540) {
-          requestAnimationFrame(tickLoad);
-        } else {
-          if (counterEl) counterEl.textContent = '100';
-          if (barFillEl) barFillEl.style.width = '100%';
-          startExit();
-        }
-      }
-
-      function startExit() {
-        var tExit0 = performance.now();
-        function tickExit(now) {
-          if (done) return;
-          var r = now - tExit0;
-          var outP = easeInOutCubic(clamp01(r / 90));
-          var invOp = String(1 - outP);
-
-          if (loaderEl) {
-            loaderEl.style.opacity = invOp;
-            loaderEl.style.transform = 'translateY(' + (-8 * outP).toFixed(1) + 'px)';
-          }
-          if (countEl) {
-            countEl.style.opacity = invOp;
-            countEl.style.transform = 'translateY(' + (-8 * outP).toFixed(1) + 'px)';
-          }
-
-          var swellP = clamp01(r / 170);
-          renderGlow(0.65 + 0.35 * swellP, swellP, now);
-
-          var grainFade = 1 - clamp01((swellP - 0.4) / 0.45);
-          if (grainEl) {
-            grainEl.style.opacity = String(0.32 * grainFade);
-          }
-
-          // Snappy smooth dissolve of the splash overlay into the homepage
-          var fadeOutP = easeInOutCubic(clamp01((r - 50) / 120));
-          splash.style.opacity = String(1 - fadeOutP);
-
-          if (r < 180) {
-            requestAnimationFrame(tickExit);
-          } else {
-            finishSplash();
-          }
-        }
-        requestAnimationFrame(tickExit);
-      }
-
-      requestAnimationFrame(tickLoad);
-    })();
-  </script>
+  <script src="assets/js/mediq-splash.js?v=4.21"></script>
 
   <!-- Page transition optical curtain -->
   <div id="page-transition-curtain" aria-hidden="true"></div>
@@ -7176,18 +6988,33 @@
       </div>
 
     </section>
-
+    <script>
+      /* Defer off-screen #about HD videos (~40MB) on initial boot without altering locked #about HTML */
+      (function () {
+        var aboutEl = document.getElementById('about');
+        if (!aboutEl) return;
+        aboutEl.querySelectorAll('video').forEach(function (v) {
+          var s = v.getAttribute('src');
+          if (s) {
+            v.setAttribute('data-lazy-src', s);
+            v.removeAttribute('src');
+          }
+          v.preload = 'none';
+          try { v.pause(); v.load(); } catch (_) {}
+        });
+      })();
+    </script>
 
     <section id="products" aria-labelledby="products-title"
       class="page-snap-section page-transition-section relative isolate w-full h-[100svh] min-h-[100svh] max-h-[100svh] overflow-hidden bg-[#0a1d40] scroll-mt-0">
 
       <style id="products-editorial-scoped-styles">
         #products .prod-serif {
-          font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+          font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
         }
 
         #products .prod-eyebrow {
-          font-family: var(--font-sans, "Manrope", sans-serif);
+          font-family: var(--font-sans, "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
           font-size: 11.5px;
           font-weight: 600;
           letter-spacing: 0.24em;
@@ -7250,7 +7077,7 @@
 
         .med-tab-label {
           display: block;
-          font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+          font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
           font-size: clamp(24px, 3vw, 40px);
           font-weight: 600;
           letter-spacing: -0.015em;
@@ -7268,7 +7095,7 @@
         }
 
         .med-ghost-word {
-          font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+          font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
           font-size: clamp(90px, 16vw, 235px);
           font-weight: 700;
           letter-spacing: -0.03em;
@@ -7851,7 +7678,7 @@
 
         .at-card-scene-tag {
           position: absolute;
-          font-family: var(--font-sans, "Manrope", sans-serif);
+          font-family: var(--font-sans, "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
           font-size: 9.5px;
           font-weight: 500;
           letter-spacing: 0.03em;
@@ -7925,7 +7752,7 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          font-family: var(--font-sans, "Manrope", sans-serif);
+          font-family: var(--font-sans, "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
           font-size: clamp(32px, 3.6vw, 52px);
           font-weight: 700;
           letter-spacing: 0.04em;
@@ -7976,7 +7803,7 @@
           flex-direction: column;
           align-items: center;
           gap: 5px;
-          font-family: var(--font-sans, "Manrope", sans-serif);
+          font-family: var(--font-sans, "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
           font-size: 12.5px;
           font-weight: 600;
           letter-spacing: 0.12em;
@@ -7990,7 +7817,7 @@
         }
 
         .at-card-brand-emblem {
-          font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: 14px;
           font-weight: 500;
           letter-spacing: 0.16em;
@@ -8013,7 +7840,7 @@
         }
 
         .at-card-title-main {
-          font-family: var(--font-sans, "Manrope", sans-serif);
+          font-family: var(--font-sans, "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
           font-size: clamp(26px, 2.6vw, 38px);
           font-weight: 500;
           letter-spacing: 0.045em;
@@ -8052,7 +7879,7 @@
         .at-card-title-glitch {
           position: absolute;
           inset: 0;
-          font-family: var(--font-sans, "Manrope", sans-serif);
+          font-family: var(--font-sans, "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
           font-size: clamp(26px, 2.6vw, 38px);
           font-weight: 500;
           letter-spacing: 0.045em;
@@ -8231,9 +8058,9 @@
           align-items: center;
           justify-content: center;
           gap: 18px 34px;
-          font-family: var(--font-sans, "Manrope", sans-serif);
+          font-family: var(--font-sans, "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
           font-size: clamp(68px, 9vw, 130px);
-          font-weight: 900;
+          font-weight: 700;
           line-height: 0.92;
           letter-spacing: 0.08em;
           text-transform: uppercase;
@@ -8274,9 +8101,9 @@
         }
 
         .at-detail-giant-title {
-          font-family: var(--font-sans, "Manrope", sans-serif);
+          font-family: var(--font-sans, "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
           font-size: clamp(28px, 3.8vw, 52px);
-          font-weight: 800;
+          font-weight: 700;
           letter-spacing: 0.06em;
           line-height: 1.05;
           text-transform: uppercase;
@@ -8286,7 +8113,7 @@
         }
 
         .at-detail-sub-question {
-          font-family: var(--font-sans, "Manrope", sans-serif);
+          font-family: var(--font-sans, "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
           font-size: 13.5px;
           color: rgba(226, 236, 248, 0.78);
           line-height: 1.45;
@@ -8303,9 +8130,9 @@
           border-radius: 999px;
           background: var(--at-stage-accent, #e11d48);
           color: #05060b;
-          font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: 11.5px;
-          font-weight: 800;
+          font-weight: 700;
           letter-spacing: 0.16em;
           text-transform: uppercase;
           text-decoration: none;
@@ -8330,7 +8157,7 @@
           gap: 12px;
           padding-top: 12px;
           border-top: 1px solid rgba(255, 255, 255, 0.08);
-          font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: 9.5px;
           letter-spacing: 0.14em;
           text-transform: uppercase;
@@ -8374,7 +8201,7 @@
         }
 
         .at-chat-line {
-          font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: 11.5px;
           letter-spacing: 0.06em;
           line-height: 1.52;
@@ -8456,7 +8283,7 @@
           border-radius: 50px;
           padding: 8px 18px;
           width: 195px;
-          font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: 11px;
           letter-spacing: 0.08em;
           text-transform: uppercase;
@@ -8497,7 +8324,7 @@
           border: 1px solid rgba(255, 255, 255, 0.22);
           background: rgba(6, 8, 16, 0.68);
           backdrop-filter: blur(10px);
-          font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: 10px;
           font-weight: 600;
           letter-spacing: 0.14em;
@@ -8519,7 +8346,7 @@
           background: rgba(6, 10, 22, 0.88);
           backdrop-filter: blur(12px);
           color: #ffffff;
-          font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: 10.5px;
           font-weight: 700;
           letter-spacing: 0.14em;
@@ -8586,42 +8413,44 @@
       <div class="relative w-full h-full overflow-hidden">
 
         <!-- ========================================================================= -->
-        <!-- SLIDE 0: PRODUCTS LANDING PAGE (Editorial Two-Column & 01–04 Menu)        -->
+        <!-- SLIDE 0: PRODUCTS LANDING PAGE (Executive Centered Clinical Showcase)     -->
         <!-- ========================================================================= -->
         <div
           class="product-slide absolute inset-x-0 top-20 bottom-0 w-full flex items-center justify-center overflow-y-auto lg:overflow-hidden transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10"
           data-product-index="0">
-          <div class="ih-shell !max-w-[1320px] !px-6 sm:!px-10 lg:!px-14 relative z-10 w-full my-auto py-6">
-            <div class="ih-hero !min-h-0 lg:!grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:!gap-14 xl:!gap-20 items-center">
+          <div class="ih-shell relative z-10 w-full">
+            <div class="ih-hero !min-h-0 !grid-cols-1 items-center justify-items-center">
 
-              <!-- Left Copy Column (Spacious 2-Line Headline + Corporate Copy + CTAs) -->
-              <div class="ih-hero-copy w-full max-w-[780px] relative z-20 !py-6">
-                <p class="ih-eyebrow">
+              <!-- Executive Centered Hero Column (Commanding Display Scale + Symmetrical CTAs + Clinical Scope Bar) -->
+              <div class="ih-hero-copy pointer-events-auto w-full max-w-5xl mx-auto relative z-20 !py-0 items-center text-center">
+                <p class="ih-eyebrow justify-center !gap-3.5 !text-[11.5px] sm:!text-[12.5px] !tracking-[0.22em]">
+                  <span class="hidden sm:inline-block h-px bg-gradient-to-r from-transparent to-sky/60 w-12"></span>
                   <span>OPHTHALMIC INNOVATIONS &nbsp;&bull;&nbsp; PRODUCT PORTFOLIO</span>
-                  <span class="inline-block h-0.5 bg-sky/50 w-12 ml-1"></span>
+                  <span class="hidden sm:inline-block h-px bg-gradient-to-l from-transparent to-sky/60 w-12"></span>
                 </p>
 
                 <h2 id="products-title"
-                  class="prod-serif text-[36px] sm:text-[46px] lg:text-[52px] xl:text-[58px] font-bold text-[#f4f7fb] tracking-[-0.022em] leading-[1.15] mt-5">
+                  class="ih-h1 prod-serif text-center !mt-5 !text-[38px] sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] !leading-[1.08] !tracking-[-0.03em] !font-bold">
                   Pioneering Optical &amp; <br class="hidden sm:inline" />Surgical <span class="text-[#72c5f8]">Solutions.</span>
                 </h2>
 
-                <p class="ih-lead mt-6 max-w-[620px] text-[15.5px] sm:text-[17px] leading-[1.65] text-[#c7d6e6]">
+                <p class="ih-lede ih-lead mx-auto text-center !mt-6 !max-w-[680px] !text-[15.5px] sm:!text-[17.5px] lg:!text-[18.5px] !leading-[1.68] !text-[#c8d8e8]">
                   Established expertise in ophthalmic technologies. Exploring complementary medical devices, hospital
                   supplies, pharmaceutical and diagnostic opportunities, subject to applicable authorizations.
                 </p>
 
-                <div class="ih-hero-ctas mt-8">
+                <div class="ih-hero-ctas justify-center !mt-9 !gap-4 sm:!gap-5">
                   <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(1);}"
-                    class="ih-btn-pill-primary">
+                    class="ih-btn-pill-primary !min-w-[216px] !h-12 !px-7">
                     <span>Explore Portfolio</span>
                     <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M5 12h14" />
                       <path d="m13 6 6 6-6 6" />
                     </svg>
                   </button>
-                  <a href="#contact" data-select-inquiry="Product Information" class="ih-btn-video-secondary group">
-                    <span class="ih-play-circle">
+                  <a href="#contact" data-select-inquiry="Product Information"
+                    class="ih-btn-video-secondary group !min-w-[216px] !h-12 !px-6 !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
+                    <span class="ih-play-circle !size-7 !border-[#72c5f8]/45">
                       <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M7 17L17 7" />
                         <path d="M8 7h9v9" />
@@ -8630,117 +8459,33 @@
                     <span>Request Product Info</span>
                   </a>
                 </div>
-              </div>
 
-              <!-- Right Column: Established Ophthalmology vs Future Portfolio Development -->
-              <div class="w-full max-w-[560px] lg:ml-auto py-6 relative z-20">
-
-                <!-- SECTION A: ESTABLISHED OPHTHALMOLOGY PORTFOLIO -->
-                <div class="mb-6">
-                  <div class="flex items-center justify-between pb-2.5 border-b border-[#72c5f8]/20">
-                    <span class="font-mono text-[10.5px] font-bold uppercase tracking-[0.2em] text-sky">
-                      Established Ophthalmology Portfolio
-                    </span>
-                    <span class="font-mono text-[10px] uppercase tracking-[0.14em] text-[#8ba5c4]/75">
-                      Verified Offerings
-                    </span>
+                <!-- Quiet Architectural Clinical Scope Strip (Non-button Executive Anchor for Wide Screens) -->
+                <div class="hidden sm:grid grid-cols-3 w-full max-w-4xl mx-auto mt-14 pt-8 border-t border-[#72c5f8]/15 divide-x divide-[#72c5f8]/15 text-center">
+                  <div class="px-5">
+                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
+                      Established Specialty
+                    </p>
+                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
+                      Rayner IOLs &amp; Ophthalmic OVDs
+                    </p>
                   </div>
-
-                  <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(1);}"
-                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <div>
-                      <span
-                        class="prod-serif block text-[19px] sm:text-[22px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Rayner
-                        Intraocular Lenses (IOLs)</span>
-                      <span class="block text-[12px] text-[#8ba5c4]/80 mt-0.5">Ophthalmic Medical Devices &bull; EMV,
-                        Trifocal, Toric, Aspheric &amp; Sulcoflex&reg;</span>
-                    </div>
-                    <span
-                      class="inline-flex items-center gap-2 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors shrink-0 ml-4">
-                      <span>01</span>
-                      <svg
-                        class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                  </button>
-
-                  <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(2);}"
-                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <div>
-                      <span
-                        class="prod-serif block text-[19px] sm:text-[22px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Ophthalmic
-                        Solutions &amp; Verified OVDs</span>
-                      <span class="block text-[12px] text-[#8ba5c4]/80 mt-0.5">Ophteis&reg; Viscoelastic Devices &amp;
-                        AEON&reg; Ocular Surface Solutions</span>
-                    </div>
-                    <span
-                      class="inline-flex items-center gap-2 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors shrink-0 ml-4">
-                      <span>02</span>
-                      <svg
-                        class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                  </button>
-                </div>
-
-                <!-- SECTION B: CLEARLY SEPARATE FUTURE PORTFOLIO DEVELOPMENT & DOCUMENTATION -->
-                <div>
-                  <div class="flex items-center justify-between pb-2.5 border-b border-[#72c5f8]/20">
-                    <span class="font-mono text-[10.5px] font-bold uppercase tracking-[0.2em] text-[#8ba5c4]">
-                      Future Portfolio Development &amp; Reference
-                    </span>
-                    <span class="font-mono text-[10px] uppercase tracking-[0.14em] text-[#8ba5c4]/70">
-                      Strategic Possibilities
-                    </span>
+                  <div class="px-5">
+                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
+                      Clinical Assurance
+                    </p>
+                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
+                      Authorized Sourcing &amp; Compendia
+                    </p>
                   </div>
-
-                  <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(3);}"
-                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <div>
-                      <span
-                        class="prod-serif block text-[19px] sm:text-[22px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Future
-                        Portfolio Development</span>
-                      <span class="block text-[12px] text-[#8ba5c4]/80 mt-0.5">Pharmaceuticals, Diagnostics, Medical
-                        Devices &amp; Equipment (Subject to Authorizations)</span>
-                    </div>
-                    <span
-                      class="inline-flex items-center gap-2 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors shrink-0 ml-4">
-                      <span>03</span>
-                      <svg
-                        class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                  </button>
-
-                  <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(4);}"
-                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <div>
-                      <span
-                        class="prod-serif block text-[19px] sm:text-[22px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Product
-                        Catalogs</span>
-                      <span class="block text-[12px] text-[#8ba5c4]/80 mt-0.5">Approved Ophthalmic Compendia &amp;
-                        Clinical Specifications</span>
-                    </div>
-                    <span
-                      class="inline-flex items-center gap-2 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors shrink-0 ml-4">
-                      <span>04</span>
-                      <svg
-                        class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                  </button>
+                  <div class="px-5">
+                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
+                      Future Pipeline
+                    </p>
+                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
+                      Devices, Hospital &amp; Diagnostics
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -10767,7 +10512,7 @@
 
       <style id="brands-editorial-scoped-styles">
         #brands .br-serif {
-          font-family: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+          font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
         }
 
         @keyframes brIolSlowSpin {
@@ -10964,7 +10709,7 @@
         <!-- SLIDE 0: BRANDS & PARTNERS MAIN LANDING PAGE                              -->
         <!-- ========================================================================= -->
         <div
-          class="deck-slide absolute inset-x-0 top-20 bottom-0 w-full flex items-center justify-center px-6 sm:px-12 lg:px-20 py-8 transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10 overflow-y-auto lg:overflow-hidden"
+          class="deck-slide absolute inset-x-0 top-20 bottom-0 w-full flex items-center justify-center transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10 overflow-y-auto lg:overflow-hidden"
           data-deck="brands" data-slide-index="0">
 
           <!-- 3. Full-Bleed Right-Anchored 3D Humanoid + Spinning Globe Stage (Seamless Multi-Canvas 3D Blend) -->
@@ -10987,7 +10732,7 @@
 
             <!-- 2D Transparent Hit-Layer & Micro-HUD Canvas Synced to the 3D Hand-Held Globe -->
             <canvas id="brands-wireframe-globe-canvas"
-              aria-label="Interactive wireframe dotted globe held and spun by the 3D humanoid hand"
+              aria-label="Interactive holographic globe spinning above a projector pedestal"
               class="absolute inset-0 z-30 block w-full h-full transition-opacity duration-700 ease-out opacity-0"></canvas>
 
             <!-- Gentle Peripheral Falloff Only at Extreme Edges (Zero Bottom/Left Crop Cutoff) -->
@@ -11001,70 +10746,69 @@
             style="background: linear-gradient(to right, rgba(10,29,64,0.52) 0%, rgba(10,29,64,0.24) 34%, transparent 54%);">
           </div>
 
-          <div
-            class="relative z-20 w-full max-w-[1340px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center pointer-events-none">
+          <div class="ih-shell relative z-20 w-full pointer-events-none">
+            <div class="ih-hero !min-h-0 items-center">
 
-            <!-- Left Copy Column: Eyebrow, 3-Line Headline, Narrative & Action Buttons -->
-            <div class="lg:col-span-7 flex flex-col items-start text-left pointer-events-auto">
-              <p class="br-eyebrow inline-flex items-center gap-2.5 text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.22em] text-[#72c5f8] mb-4 sm:mb-5">
-                <span>GLOBAL HEALTHCARE PARTNERSHIPS &nbsp;&bull;&nbsp; OPHTHALMIC FOUNDATION</span>
-                <span class="lg:hidden inline-block h-0.5 bg-sky/50 w-7 shrink-0"></span>
-              </p>
+              <!-- Left Copy Column: Exact Home & About Left Edge + Vertical Center Below Navbar -->
+              <div class="ih-hero-copy pointer-events-auto max-w-2xl relative z-20 !py-0">
+                <p class="ih-eyebrow br-eyebrow">
+                  <span>GLOBAL HEALTHCARE PARTNERSHIPS &nbsp;&bull;&nbsp; OPHTHALMIC FOUNDATION</span>
+                  <span class="inline-block h-0.5 bg-sky/50 w-12 ml-1"></span>
+                </p>
 
-              <h2 id="brands-title"
-                class="br-serif text-[38px] sm:text-[52px] xl:text-[62px] font-bold text-[#f4f7fb] tracking-[-0.025em] leading-[1.08] mb-6 sm:mb-7">
-                <span class="block">Bringing global</span>
-                <span class="block">medical technologies to</span>
-                <span class="block">Philippine <span class="text-[#72c5f8]">institutions.</span></span>
-              </h2>
+                <h2 id="brands-title" class="ih-h1 br-serif">
+                  <span class="ih-h1-line">Bringing global</span>
+                  <span class="ih-h1-line">medical technologies to</span>
+                  <span class="ih-h1-line">Philippine <span class="text-[#72c5f8]">institutions.</span></span>
+                </h2>
 
-              <p
-                class="br-lead text-[15.5px] sm:text-[17px] text-[#9eb4cc] leading-[1.72] max-w-[610px] mb-8 sm:mb-10 font-normal">
-                Beyond distribution, MEDIQ develops healthcare partnerships, builds product awareness and connects
-                international medical technologies with Philippine institutions &mdash; anchored by our established
-                specialty foundation in ophthalmology across importation and distribution, product marketing, sales and
-                commercialization, market development, education, and quality and customer support.
-              </p>
+                <p class="ih-lede br-lead">
+                  Beyond distribution, MEDIQ develops healthcare partnerships, builds product awareness and connects
+                  international medical technologies with Philippine institutions &mdash; anchored by our established
+                  specialty foundation in ophthalmology across importation and distribution, product marketing, sales and
+                  commercialization, market development, education, and quality and customer support.
+                </p>
 
-              <div class="br-cta-row flex flex-wrap items-center gap-4">
-                <!-- Explore More -> Goes to Slide 1 (Principal Brands Portfolio) -->
-                <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 1);}"
-                  class="inline-flex items-center justify-center h-12 px-8 rounded-md bg-[#3aa0db] hover:bg-[#72c5f8] text-[#0a1d40] text-[14.5px] font-bold tracking-[0.01em] shadow-[0_10px_28px_rgba(58,160,219,0.35)] border border-[#72c5f8]/50 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer lg:order-2">
-                  Explore More
-                </button>
+                <div class="ih-hero-ctas br-cta-row">
+                  <!-- Explore More -> Goes to Slide 1 (Principal Brands Portfolio) -->
+                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 1);}"
+                    class="inline-flex items-center justify-center h-12 px-8 rounded-md bg-[#3aa0db] hover:bg-[#72c5f8] text-[#0a1d40] text-[14.5px] font-bold tracking-[0.01em] shadow-[0_10px_28px_rgba(58,160,219,0.35)] border border-[#72c5f8]/50 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer lg:order-2">
+                    Explore More
+                  </button>
 
-                <!-- Partner with us -> Goes directly to Contact Info (#contact) -->
-                <a href="#contact"
-                  class="inline-flex items-center justify-center h-12 px-8 rounded-md border border-[#72c5f8]/35 bg-[#0a1d40]/80 hover:bg-[#72c5f8]/12 hover:border-[#72c5f8]/70 text-[#f4f7fb] text-[14.5px] font-semibold tracking-[0.01em] transition-all duration-200 hover:-translate-y-0.5 cursor-pointer lg:order-1">
-                  Partner with us
-                </a>
+                  <!-- Partner with us -> Goes directly to Contact Info (#contact) -->
+                  <a href="#contact"
+                    class="inline-flex items-center justify-center h-12 px-8 rounded-md border border-[#72c5f8]/35 bg-[#0a1d40]/80 hover:bg-[#72c5f8]/12 hover:border-[#72c5f8]/70 text-[#f4f7fb] text-[14.5px] font-semibold tracking-[0.01em] transition-all duration-200 hover:-translate-y-0.5 cursor-pointer lg:order-1">
+                    Partner with us
+                  </a>
+                </div>
               </div>
-            </div>
 
-            <!-- Mobile / Tablet Only Services-Style Hairline Index Rows (Desktop keeps open globe stage) -->
-            <div class="lg:hidden w-full pointer-events-auto relative z-20">
-              <div class="border-t border-[#72c5f8]/15">
-                <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 1);}"
-                  class="lottici-index-row w-full py-3 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                  <span class="br-serif min-w-0 flex-1 pr-1 text-[17px] font-semibold text-[#dce7f5] group-hover:text-white transition-colors">Principal Brands</span>
-                  <span class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">01</span>
-                </button>
-                <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 2);}"
-                  class="lottici-index-row w-full py-3 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                  <span class="br-serif min-w-0 flex-1 pr-1 text-[17px] font-semibold text-[#dce7f5] group-hover:text-white transition-colors">Brand Profiles &amp; Authorizations</span>
-                  <span class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">02</span>
-                </button>
-                <a href="assets/brochure/RayOne-EMV-Platform-Brochure-2024_2.2.pdf" download="RayOne EMV Platform Brochure 2024_2.2.pdf"
-                  class="lottici-index-row w-full py-3 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                  <span class="br-serif min-w-0 flex-1 pr-1 text-[17px] font-semibold text-[#dce7f5] group-hover:text-white transition-colors">Downloadable Brochures</span>
-                  <span class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">03</span>
-                </a>
+              <!-- Mobile / Tablet Only Services-Style Hairline Index Rows (Desktop keeps open globe stage) -->
+              <div class="lg:hidden w-full pointer-events-auto relative z-20">
+                <div class="border-t border-[#72c5f8]/15">
+                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 1);}"
+                    class="lottici-index-row w-full py-3 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
+                    <span class="br-serif min-w-0 flex-1 pr-1 text-[17px] font-semibold text-[#dce7f5] group-hover:text-white transition-colors">Principal Brands</span>
+                    <span class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">01</span>
+                  </button>
+                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 2);}"
+                    class="lottici-index-row w-full py-3 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
+                    <span class="br-serif min-w-0 flex-1 pr-1 text-[17px] font-semibold text-[#dce7f5] group-hover:text-white transition-colors">Brand Profiles &amp; Authorizations</span>
+                    <span class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">02</span>
+                  </button>
+                  <a href="assets/brochure/RayOne-EMV-Platform-Brochure-2024_2.2.pdf" download="RayOne EMV Platform Brochure 2024_2.2.pdf"
+                    class="lottici-index-row w-full py-3 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
+                    <span class="br-serif min-w-0 flex-1 pr-1 text-[17px] font-semibold text-[#dce7f5] group-hover:text-white transition-colors">Downloadable Brochures</span>
+                    <span class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">03</span>
+                  </a>
+                </div>
               </div>
+
+              <!-- Right Column Spacer (Matches Home #hero & About Slide 0) -->
+              <div class="hidden lg:block pointer-events-none"></div>
+
             </div>
-
-            <!-- Right Column Spacer (Matches .ih-art-lens-stage in Home Page #hero) -->
-            <div class="hidden lg:block lg:col-span-5 pointer-events-none"></div>
-
           </div>
         </div>
         <!-- ========================================================================= -->
@@ -11080,7 +10824,7 @@
                 <div class="flex w-full items-center justify-between gap-4">
                   <span class="block font-mono text-[10.5px] uppercase tracking-[0.2em] text-[#72c5f8]">Brands &amp; Partners &middot; Principal Brands Portfolio</span>
                 </div>
-                <h3 id="pel-heading-principal" class="pel-title">Our Established Foundation <span class="text-[#72c5f8] italic">in Ophthalmic Distribution.</span></h3>
+                <h3 id="pel-heading-principal" class="pel-title">Our Established Foundation <span class="text-[#72c5f8]">in Ophthalmic Distribution.</span></h3>
                 <p class="pel-intro">Our Established Foundation: <strong class="font-semibold text-white">MEDIQ</strong> has established expertise in ophthalmology, including its exclusive Philippine distribution relationship for <strong class="font-semibold text-white">Rayner</strong> intraocular lenses from the United Kingdom.</p>
               </header>
 
@@ -11240,7 +10984,7 @@
             <div class="pel-wrap">
               <header class="pel-head">
                 <span class="block font-mono text-[10.5px] uppercase tracking-[0.2em] text-[#72c5f8]">Brands &amp; Partners &middot; Manufacturer &amp; Partnership Inquiry</span>
-                <h3 id="pel-heading-profiles" class="pel-title">Partner with MEDIQ <span class="text-[#72c5f8] italic">in Philippine Healthcare.</span></h3>
+                <h3 id="pel-heading-profiles" class="pel-title">Partner with MEDIQ <span class="text-[#72c5f8]">in Philippine Healthcare.</span></h3>
                 <p class="pel-intro">Partner with MEDIQ: responsible product marketing, institutional market development and dependable distribution for healthcare innovations in the Philippines &mdash; welcoming complementary medical devices, hospital supplies, pharmaceutical, and diagnostic principals subject to regulatory licensing and formal authorization.</p>
               </header>
 
@@ -11373,7 +11117,7 @@
 
       <style id="services-editorial-scoped-styles">
         #distribution .srv-serif {
-          font-family: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+          font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
         }
 
         /* Full-page edge-to-edge fill for all Services subpages (Slides 1–6) */
@@ -11563,7 +11307,7 @@
         }
 
         #distribution .srv-eyebrow {
-          font-family: var(--font-sans, "Manrope", sans-serif);
+          font-family: var(--font-sans, "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
           font-size: 11.5px;
           font-weight: 600;
           letter-spacing: 0.24em;
@@ -11645,14 +11389,14 @@
           border: none;
           background: transparent;
           color: #72c5f8;
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: 11px;
           font-weight: 700;
           letter-spacing: 0.06em;
           cursor: pointer;
         }
         #srv-book-carousel-slide .bc-zoom-hint {
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: 10px;
           letter-spacing: 0.08em;
           color: rgba(203, 213, 225, 0.72);
@@ -11831,7 +11575,7 @@
           margin-bottom: calc(8px * var(--bc-page-scale, 1));
         }
         #srv-book-carousel-slide .bc-spread-eyebrow {
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: calc(8.2px * var(--bc-page-scale, 1));
           letter-spacing: 0.16em;
           text-transform: uppercase;
@@ -11883,7 +11627,7 @@
           position: absolute;
           left: calc(8px * var(--bc-page-scale, 1));
           bottom: calc(6px * var(--bc-page-scale, 1));
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: calc(8px * var(--bc-page-scale, 1));
           letter-spacing: 0.16em;
           color: #e2f1ff;
@@ -11897,7 +11641,7 @@
           gap: calc(8px * var(--bc-page-scale, 1));
         }
         #srv-book-carousel-slide .bc-spread-volnum {
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: calc(18px * var(--bc-page-scale, 1));
           font-weight: 700;
           line-height: 1;
@@ -11905,9 +11649,9 @@
           flex-shrink: 0;
         }
         #srv-book-carousel-slide .bc-spread-title {
-          font-family: "Plus Jakarta Sans", sans-serif;
+          font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
           font-size: calc(15px * var(--bc-page-scale, 1));
-          font-weight: 800;
+          font-weight: 700;
           line-height: 1.18;
           letter-spacing: -0.02em;
           color: #0a1d40;
@@ -11943,14 +11687,14 @@
           border-bottom: 1px solid rgba(10, 29, 64, 0.09);
         }
         #srv-book-carousel-slide .bc-spread-highlights__kicker {
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: calc(7.4px * var(--bc-page-scale, 1));
           font-weight: 700;
           letter-spacing: 0.12em;
           color: #2563a6;
         }
         #srv-book-carousel-slide .bc-spread-badge {
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: calc(6.6px * var(--bc-page-scale, 1));
           letter-spacing: 0.07em;
           color: #0e3a72;
@@ -11999,7 +11743,7 @@
           border: 1px solid rgba(10, 29, 64, 0.18);
           background: #ffffff;
           color: #0a1d40;
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: calc(8.6px * var(--bc-page-scale, 1));
           font-weight: 700;
           cursor: pointer;
@@ -12016,7 +11760,7 @@
           border: 1px solid #0e3a72;
           background: #0a1d40;
           color: #f4f7fb;
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: calc(8.2px * var(--bc-page-scale, 1));
           font-weight: 700;
           letter-spacing: 0.08em;
@@ -12050,14 +11794,14 @@
           border-bottom: 1px solid rgba(10, 29, 64, 0.12);
         }
         #srv-book-carousel-slide .bc-page-kicker {
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: calc(8.2px * var(--bc-page-scale, 1));
           letter-spacing: 0.15em;
           color: #2563a6;
           font-weight: 700;
         }
         #srv-book-carousel-slide .bc-page-ref {
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: calc(8.2px * var(--bc-page-scale, 1));
           letter-spacing: 0.12em;
           color: #6b85a8;
@@ -12087,14 +11831,14 @@
           margin-bottom: calc(2px * var(--bc-page-scale, 1));
         }
         #srv-book-carousel-slide .bc-paper-card__code {
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: calc(7.8px * var(--bc-page-scale, 1));
           letter-spacing: 0.12em;
           color: #2c7be5;
           font-weight: 700;
         }
         #srv-book-carousel-slide .bc-paper-card__tag {
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: calc(7px * var(--bc-page-scale, 1));
           letter-spacing: 0.08em;
           color: #355075;
@@ -12103,7 +11847,7 @@
           border-radius: 3px;
         }
         #srv-book-carousel-slide .bc-paper-card__title {
-          font-family: "Plus Jakarta Sans", sans-serif;
+          font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
           font-size: calc(11.4px * var(--bc-page-scale, 1));
           font-weight: 700;
           line-height: 1.2;
@@ -12133,18 +11877,18 @@
           padding: var(--bc-cover-pad, 28px 24px); display: flex; flex-direction: column; justify-content: space-between; text-align: left;
         }
         #srv-book-carousel-slide .bc-cover-num {
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: calc(28px * var(--bc-font-scale, 1.15)); font-weight: 700; color: #72c5f8; letter-spacing: 0.04em;
         }
         #srv-book-carousel-slide .bc-cover-divider {
           width: calc(32px * var(--bc-font-scale, 1.15)); height: 2px; background: rgba(114, 197, 248, 0.65); margin-top: 8px; margin-bottom: auto;
         }
         #srv-book-carousel-slide .bc-cover-title {
-          font-family: "Plus Jakarta Sans", sans-serif;
+          font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
           font-size: calc(18px * var(--bc-font-scale, 1.15)); font-weight: 700; line-height: 1.25; color: #f4f7fb; letter-spacing: -0.01em;
         }
         #srv-book-carousel-slide .bc-cover-cta {
-          margin-top: 14px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          margin-top: 14px; font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: calc(10.5px * var(--bc-font-scale, 1.15)); letter-spacing: 0.16em; text-transform: uppercase; color: #72c5f8;
         }
         #srv-book-carousel-slide .bc-back { width: var(--bc-open-w, 284px); height: 100%; top: 0; left: 0; }
@@ -12155,7 +11899,7 @@
         }
         #srv-book-carousel-slide .bc-spine-text {
           writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);
-          font-family: "Plus Jakarta Sans", sans-serif; font-size: calc(11px * var(--bc-font-scale, 1.15)); font-weight: 700;
+          font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; font-size: calc(11px * var(--bc-font-scale, 1.15)); font-weight: 700;
           letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap;
           padding: 18px 0; width: 100%; text-align: center;
           display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -12265,42 +12009,44 @@
       <div class="relative w-full h-full overflow-hidden">
 
         <!-- ========================================================================= -->
-        <!-- SLIDE 0: SERVICES LANDING PAGE (Editorial Two-Column & 01–06 Menu)        -->
+        <!-- SLIDE 0: SERVICES LANDING PAGE (Executive Centered Clinical Showcase)     -->
         <!-- ========================================================================= -->
         <div
           class="deck-slide absolute inset-x-0 top-20 bottom-0 w-full flex items-center justify-center overflow-y-auto lg:overflow-hidden transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10"
           data-deck="services" data-slide-index="0">
-          <div class="ih-shell !max-w-[1320px] !px-6 sm:!px-10 lg:!px-14 relative z-10 w-full my-auto py-6">
-            <div class="ih-hero !min-h-0 lg:!grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)] lg:!gap-14 xl:!gap-20 items-center">
+          <div class="ih-shell relative z-10 w-full">
+            <div class="ih-hero !min-h-0 !grid-cols-1 items-center justify-items-center">
 
-              <!-- Left Copy Column (Spacious Editorial Headline + Corporate Copy + CTAs) -->
-              <div class="ih-hero-copy w-full max-w-[780px] relative z-20 !py-6">
-                <p class="ih-eyebrow">
+              <!-- Executive Centered Hero Column (Commanding Display Scale + Symmetrical CTAs + Clinical Scope Bar) -->
+              <div class="ih-hero-copy pointer-events-auto w-full max-w-5xl mx-auto relative z-20 !py-0 items-center text-center">
+                <p class="ih-eyebrow justify-center !gap-3.5 !text-[11.5px] sm:!text-[12.5px] !tracking-[0.22em]">
+                  <span class="hidden sm:inline-block h-px bg-gradient-to-r from-transparent to-sky/60 w-12"></span>
                   <span>CLINICAL &amp; COMMERCIAL STEWARDSHIP &nbsp;&bull;&nbsp; SERVICES</span>
-                  <span class="inline-block h-0.5 bg-sky/50 w-12 ml-1"></span>
+                  <span class="hidden sm:inline-block h-px bg-gradient-to-l from-transparent to-sky/60 w-12"></span>
                 </p>
 
                 <h2 id="distribution-title"
-                  class="srv-serif text-[36px] sm:text-[46px] lg:text-[52px] xl:text-[58px] font-bold text-[#f4f7fb] tracking-[-0.022em] leading-[1.15] mt-5">
+                  class="ih-h1 srv-serif text-center !mt-5 !text-[38px] sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] !leading-[1.08] !tracking-[-0.03em] !font-bold">
                   Precision Support for <br class="hidden sm:inline" />Every Operating <span class="text-[#72c5f8]">Theatre.</span>
                 </h2>
 
-                <p class="ih-lead mt-6 max-w-[620px] text-[15.5px] sm:text-[17px] leading-[1.65] text-[#c7d6e6]">
+                <p class="ih-lede ih-lead mx-auto text-center !mt-6 !max-w-[680px] !text-[15.5px] sm:!text-[17.5px] lg:!text-[18.5px] !leading-[1.68] !text-[#c8d8e8]">
                   From sourcing and distribution to strategic product marketing, institutional sales, professional
                   education and responsive customer support.
                 </p>
 
-                <div class="ih-hero-ctas mt-8">
+                <div class="ih-hero-ctas justify-center !mt-9 !gap-4 sm:!gap-5">
                   <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 7);}"
-                    class="ih-btn-pill-primary">
+                    class="ih-btn-pill-primary !min-w-[216px] !h-12 !px-7">
                     <span>Explore Services</span>
                     <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M5 12h14" />
                       <path d="m13 6 6 6-6 6" />
                     </svg>
                   </button>
-                  <a href="#contact" data-select-inquiry="Institutional Supply" class="ih-btn-video-secondary group">
-                    <span class="ih-play-circle">
+                  <a href="#contact" data-select-inquiry="Institutional Supply"
+                    class="ih-btn-video-secondary group !min-w-[216px] !h-12 !px-6 !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
+                    <span class="ih-play-circle !size-7 !border-[#72c5f8]/45">
                       <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M7 17L17 7" />
                         <path d="M8 7h9v9" />
@@ -12309,112 +12055,33 @@
                     <span>Institutional Inquiry</span>
                   </a>
                 </div>
-              </div>
 
-              <!-- Right Column: 01–06 Linked Service Pillars -->
-              <div class="w-full max-w-[550px] lg:ml-auto py-6 relative z-20">
-                <div class="border-t border-[#72c5f8]/15">
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 1);}"
-                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <span
-                      class="srv-serif min-w-0 flex-1 pr-1 text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Strategic
-                      Importation &amp; Distribution</span>
-                    <span
-                      class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
-                      <span>01</span>
-                      <svg
-                        class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                  </button>
-
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 2);}"
-                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <span
-                      class="srv-serif min-w-0 flex-1 pr-1 text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Product
-                      Marketing &amp; Brand Development</span>
-                    <span
-                      class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
-                      <span>02</span>
-                      <svg
-                        class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                  </button>
-
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 3);}"
-                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <span
-                      class="srv-serif min-w-0 flex-1 pr-1 text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Sales,
-                      Promotion &amp; Commercialization</span>
-                    <span
-                      class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
-                      <span>03</span>
-                      <svg
-                        class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                  </button>
-
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 4);}"
-                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <span
-                      class="srv-serif min-w-0 flex-1 pr-1 text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Market
-                      Development</span>
-                    <span
-                      class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
-                      <span>04</span>
-                      <svg
-                        class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                  </button>
-
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 5);}"
-                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <span
-                      class="srv-serif min-w-0 flex-1 pr-1 text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Professional
-                      Education</span>
-                    <span
-                      class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
-                      <span>05</span>
-                      <svg
-                        class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                  </button>
-
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 6);}"
-                    class="lottici-index-row w-full py-4 sm:py-4.5 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <span
-                      class="srv-serif min-w-0 flex-1 pr-1 text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Quality
-                      &amp; Customer Support</span>
-                    <span
-                      class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">
-                      <span>06</span>
-                      <svg
-                        class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                  </button>
+                <!-- Quiet Architectural Service Pillars Strip (Non-button Executive Anchor for Wide Screens) -->
+                <div class="hidden sm:grid grid-cols-3 w-full max-w-4xl mx-auto mt-14 pt-8 border-t border-[#72c5f8]/15 divide-x divide-[#72c5f8]/15 text-center">
+                  <div class="px-5">
+                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
+                      Supply &amp; Logistics
+                    </p>
+                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
+                      Importation &amp; National Supply
+                    </p>
+                  </div>
+                  <div class="px-5">
+                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
+                      Commercialization
+                    </p>
+                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
+                      Marketing, Sales &amp; Market Growth
+                    </p>
+                  </div>
+                  <div class="px-5">
+                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
+                      Clinical Continuity
+                    </p>
+                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
+                      Education &amp; Quality Support
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -12467,11 +12134,11 @@
       class="page-snap-section page-transition-section relative isolate w-full h-[100svh] min-h-[100svh] max-h-[100svh] overflow-hidden bg-[#0a1d40] scroll-mt-0">
       <style id="resources-editorial-scoped-styles">
         #resources .res-serif {
-          font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+          font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
         }
 
         #resources .res-eyebrow {
-          font-family: var(--font-sans, "Plus Jakarta Sans", sans-serif);
+          font-family: var(--font-sans, "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
           font-size: 11.5px;
           font-weight: 600;
           letter-spacing: 0.24em;
@@ -12529,39 +12196,40 @@
       <div class="relative w-full h-full overflow-hidden">
 
         <!-- ========================================================================= -->
-        <!-- SLIDE 0: RESOURCES LANDING PAGE (Responsible Information Hub)             -->
+        <!-- SLIDE 0: RESOURCES LANDING PAGE (Executive Centered Information Hub)      -->
         <!-- ========================================================================= -->
         <div
           class="deck-slide absolute inset-x-0 top-20 bottom-0 w-full flex items-center justify-center overflow-y-auto lg:overflow-hidden transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10"
           data-deck="resources" data-slide-index="0">
-          <div class="ih-shell !max-w-[1320px] !px-6 sm:!px-10 lg:!px-14 relative z-10 w-full my-auto py-6">
-            <div class="ih-hero !min-h-0 lg:!grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:!gap-14 xl:!gap-20 items-center">
+          <div class="ih-shell relative z-10 w-full">
+            <div class="ih-hero !min-h-0 !grid-cols-1 items-center justify-items-center">
 
-              <!-- Left Copy Column (Headline + Exact Replacement Copy Together on Left Side) -->
-              <div class="ih-hero-copy w-full max-w-[780px] relative z-20 !py-6">
-                <p class="ih-eyebrow">
+              <!-- Executive Centered Hero Column (Commanding Display Scale + Symmetrical CTAs + Resource Scope Bar) -->
+              <div class="ih-hero-copy pointer-events-auto w-full max-w-5xl mx-auto relative z-20 !py-0 items-center text-center">
+                <p class="ih-eyebrow justify-center !gap-3.5 !text-[11.5px] sm:!text-[12.5px] !tracking-[0.22em]">
+                  <span class="hidden sm:inline-block h-px bg-gradient-to-r from-transparent to-sky/60 w-12"></span>
                   <span>RESPONSIBLE INFORMATION HUB &nbsp;&bull;&nbsp; RESOURCES</span>
-                  <span class="inline-block h-0.5 bg-sky/50 w-12 ml-1"></span>
+                  <span class="hidden sm:inline-block h-px bg-gradient-to-l from-transparent to-sky/60 w-12"></span>
                 </p>
 
                 <h2 id="resources-title"
-                  class="res-serif text-[36px] sm:text-[46px] lg:text-[52px] xl:text-[58px] font-bold text-[#f4f7fb] tracking-[-0.022em] leading-[1.15] mt-5">
+                  class="ih-h1 res-serif text-center !mt-5 !text-[38px] sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] !leading-[1.08] !tracking-[-0.03em] !font-bold">
                   Corporate Literature &amp; <br class="hidden sm:inline" />Professional <span class="text-[#72c5f8]">Resources.</span>
                 </h2>
 
-                <p class="ih-lead mt-6 max-w-[640px] text-[15.5px] sm:text-[17px] leading-[1.65] text-[#c7d6e6]">
+                <p class="ih-lede ih-lead mx-auto text-center !mt-6 !max-w-[680px] !text-[15.5px] sm:!text-[17.5px] lg:!text-[18.5px] !leading-[1.68] !text-[#c8d8e8]">
                   MEDIQ Resources: corporate profile, approved product materials, professional educational information
                   and official regulatory reference links.
                 </p>
 
-                <p class="mt-3.5 text-[12px] leading-[1.55] font-mono tracking-wide text-[#7ea3c8] max-w-[640px]">
+                <p class="mt-3.5 mx-auto text-center text-[12px] leading-[1.55] font-mono tracking-wide text-[#7ea3c8] max-w-[660px]">
                   Informational reference only &bull; MEDIQ does not issue binding medical or statutory FDA advice.
                   Refer to original authorized authorities and product manufacturers.
                 </p>
 
-                <div class="ih-hero-ctas mt-7">
+                <div class="ih-hero-ctas justify-center !mt-8 !gap-4 sm:!gap-5">
                   <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 3);}"
-                    class="ih-btn-pill-primary">
+                    class="ih-btn-pill-primary !min-w-[232px] !h-12 !px-7">
                     <span>2026 Corporate Profile</span>
                     <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M5 12h14" />
@@ -12569,8 +12237,8 @@
                     </svg>
                   </button>
                   <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 1);}"
-                    class="ih-btn-video-secondary group">
-                    <span class="ih-play-circle">
+                    class="ih-btn-video-secondary group !min-w-[232px] !h-12 !px-6 !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
+                    <span class="ih-play-circle !size-7 !border-[#72c5f8]/45">
                       <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M7 17L17 7" />
                         <path d="M8 7h9v9" />
@@ -12579,98 +12247,33 @@
                     <span>Approved Materials</span>
                   </button>
                 </div>
-              </div>
 
-              <!-- Right Column: 01–04 Hairline Menu (2026 Corporate Profile Featured as Primary Resource) -->
-              <div class="w-full max-w-[560px] lg:ml-auto py-6 relative z-20">
-                <div class="border-t border-[#72c5f8]/15">
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 3);}"
-                    class="lottici-index-row w-full py-5 sm:py-6 border-b border-[#72c5f8]/15 flex items-center justify-between text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <div>
-                      <span
-                        class="block res-serif text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">2026
-                        Corporate Profile</span>
-                      <span
-                        class="block text-[11px] font-mono tracking-wider text-[#6e92b8] mt-1 group-hover:translate-x-2 transition-transform duration-300">Primary
-                        Resource &bull; Official Vision, Mission, Values &amp; Commercial Approach (Ver. 2026.1)</span>
-                    </div>
-                    <span
-                      class="inline-flex items-center gap-2 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors shrink-0">
-                      <span>01</span>
-                      <svg
-                        class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                  </button>
-
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 1);}"
-                    class="lottici-index-row w-full py-5 sm:py-6 border-b border-[#72c5f8]/15 flex items-center justify-between text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <div>
-                      <span
-                        class="block res-serif text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Approved
-                        Product Materials</span>
-                      <span
-                        class="block text-[11px] font-mono tracking-wider text-[#6e92b8] mt-1 group-hover:translate-x-2 transition-transform duration-300">Product
-                        Documents &amp; IFUs &bull; Manufacturer-Attributed &amp; Version-Controlled</span>
-                    </div>
-                    <span
-                      class="inline-flex items-center gap-2 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors shrink-0">
-                      <span>02</span>
-                      <svg
-                        class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                  </button>
-
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 2);}"
-                    class="lottici-index-row w-full py-5 sm:py-6 border-b border-[#72c5f8]/15 flex items-center justify-between text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <div>
-                      <span
-                        class="block res-serif text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Professional
-                        Education &amp; FAQs</span>
-                      <span
-                        class="block text-[11px] font-mono tracking-wider text-[#6e92b8] mt-1 group-hover:translate-x-2 transition-transform duration-300">Educational
-                        Library &amp; Non-Clinical FAQs &bull; Source-Attributed (Ver. 2026.1)</span>
-                    </div>
-                    <span
-                      class="inline-flex items-center gap-2 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors shrink-0">
-                      <span>03</span>
-                      <svg
-                        class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                  </button>
-
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 4);}"
-                    class="lottici-index-row w-full py-5 sm:py-6 border-b border-[#72c5f8]/15 flex items-center justify-between text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <div>
-                      <span
-                        class="block res-serif text-[20px] sm:text-[23px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">Official
-                        Regulatory Reference Links</span>
-                      <span
-                        class="block text-[11px] font-mono tracking-wider text-[#6e92b8] mt-1 group-hover:translate-x-2 transition-transform duration-300">Original
-                        Authorized Authorities (FDA PH, DOH) &amp; Principal Product Sources</span>
-                    </div>
-                    <span
-                      class="inline-flex items-center gap-2 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors shrink-0">
-                      <span>04</span>
-                      <svg
-                        class="size-3.5 opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-sky"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                  </button>
+                <!-- Quiet Architectural Resource Scope Strip (Non-button Executive Anchor for Wide Screens) -->
+                <div class="hidden sm:grid grid-cols-3 w-full max-w-4xl mx-auto mt-12 pt-8 border-t border-[#72c5f8]/15 divide-x divide-[#72c5f8]/15 text-center">
+                  <div class="px-5">
+                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
+                      Corporate Profile
+                    </p>
+                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
+                      2026 Vision, Mission &amp; Approach
+                    </p>
+                  </div>
+                  <div class="px-5">
+                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
+                      Clinical Documents
+                    </p>
+                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
+                      Approved IFUs &amp; Product Materials
+                    </p>
+                  </div>
+                  <div class="px-5">
+                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
+                      Regulatory Reference
+                    </p>
+                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
+                      FDA PH, DOH &amp; Source Links
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -13154,7 +12757,7 @@
 
       <!-- Full-Bleed Dynamic Ambient Photo & Charcoal Vignette -->
       <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-[#0c0a09]">
-        <img id="news-cf-ambience-img" src="assets/img/rayone-emv-brochure.jpg" alt="" aria-hidden="true"
+        <img id="news-cf-ambience-img" src="assets/img/news-card-1-rayner-portfolio.jpg" alt="" aria-hidden="true"
           style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.22) blur(16px);transform:translateZ(0) scale(1.1);transition:opacity 550ms ease;will-change:opacity;" />
         <div class="absolute inset-0"
           style="background:radial-gradient(circle at center, rgba(12,10,9,0.3) 0%, rgba(12,10,9,0.92) 100%);">
@@ -13207,7 +12810,7 @@
       class="page-snap-section page-transition-section relative isolate w-full min-h-[100svh] lg:h-[100svh] overflow-hidden bg-[#0a1d40] text-[#f6f2ea] scroll-mt-0">
       <style id="contact-editorial-scoped-styles">
         #contact .cnt-heading {
-          font-family: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+          font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
           letter-spacing: -0.02em;
           -webkit-font-smoothing: antialiased;
         }
@@ -13713,33 +13316,10 @@
       #footer-map-band #contact-map-wrap.is-map-expanded #contact-map-close-expand {
         display: inline-flex;
       }
+      #footer-map-band .maplibregl-ctrl-attrib,
+      #footer-map-band .maplibregl-ctrl-bottom-left,
       #footer-map-band .maplibregl-ctrl-bottom-right {
-        left: 20px;
-        right: auto;
-        bottom: 10px;
-      }
-      #footer-map-band .maplibregl-ctrl-attrib {
-        background: rgba(9, 10, 14, 0.72) !important;
-        color: rgba(161, 161, 170, 0.85) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 6px !important;
-        font-size: 9.5px !important;
-      }
-      #footer-map-band .maplibregl-ctrl-attrib a {
-        color: rgba(147, 197, 253, 0.85) !important;
-      }
-      @media (max-width: 639px) {
-        #footer-map-band #contact-map-place-card {
-          top: auto !important;
-          bottom: 8px !important;
-          left: 8px !important;
-          right: auto !important;
-          padding: 7px 10px !important;
-          max-width: calc(100% - 122px) !important;
-        }
-        #footer-map-band #contact-map-place-card .flex.items-center.gap-1.mt-1 {
-          display: none !important;
-        }
+        display: none !important;
       }
     </style>
     <div class="w-full">
@@ -13748,36 +13328,6 @@
         <div id="contact-map-stage" class="relative w-full h-full cursor-grab active:cursor-grabbing select-none">
           <canvas id="contact-map-canvas" class="block w-full h-full"
             aria-label="Interactive sapphire map of MediQ Pharma in Marikina and Pasig, Metro Manila"></canvas>
-
-          <!-- Top-Left Floating Map Info Card -->
-          <div id="contact-map-place-card"
-            class="absolute left-5 sm:left-8 top-4 z-10 rounded-[10px] bg-[#091c3d]/92 backdrop-blur-md shadow-[0_6px_24px_rgba(3,10,24,0.45)] border border-[#72c5f8]/25 px-3.5 py-2.5 flex items-start gap-3 max-w-[300px]">
-            <div class="min-w-0">
-              <div class="text-[12px] font-semibold text-[#f6f2ea] leading-tight truncate">MediQ Pharma Inc.</div>
-              <div class="text-[10px] text-[#9ec5e6] leading-snug mt-0.5">Marikina &ndash; Pasig, Metro Manila &middot; NCR</div>
-              <div class="flex items-center gap-1 mt-1 text-[10px] text-[#b6d4ee]">
-                <span class="font-semibold text-[#f6f2ea]">5.0</span>
-                <span class="text-[#72c5f8] tracking-[-0.04em]">&starf;&starf;&starf;&starf;&starf;</span>
-                <span class="text-[#9ec5e6]">Rayner UK Partner</span>
-              </div>
-              <button type="button" id="contact-map-zoom-toggle"
-                class="mt-1 text-[10px] font-medium text-[#72c5f8] hover:text-white hover:underline cursor-pointer">
-                View larger map
-              </button>
-            </div>
-
-            <a href="https://www.google.com/maps/search/?api=1&query=Marikina+Pasig+Metro+Manila+Philippines" target="_blank"
-              rel="noopener noreferrer"
-              class="flex flex-col items-center justify-center shrink-0 pl-2.5 border-l border-[#72c5f8]/20 text-[#72c5f8] hover:text-white transition-colors">
-              <span class="flex size-6 items-center justify-center rounded-full bg-[#3aa0db]/20">
-                <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                  <path d="M9 18v-6a3 3 0 0 1 3-3h6" />
-                  <path d="m14 5 4 4-4 4" />
-                </svg>
-              </span>
-              <span class="text-[9.5px] font-medium mt-0.5">Directions</span>
-            </a>
-          </div>
 
           <!-- Expanded Modal Close Pill -->
           <button type="button" id="contact-map-close-expand"
@@ -14205,6 +13755,224 @@
       #about #about-sec-foundation .fnd-copy > .grid > div p {
         font-size: 14.5px !important;
         line-height: 1.58 !important;
+      }
+    }
+
+    /* Foundation 01 & 02 Cards: Bespoke Optical Orbital Border Beam, Glass Shimmer, Cursor Spotlight & 3D Micro-Tilt */
+    @property --fnd-beam-angle {
+      syntax: "<angle>";
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    @keyframes fndBorderOrbit {
+      0% { --fnd-beam-angle: 0deg; }
+      100% { --fnd-beam-angle: 360deg; }
+    }
+
+    @keyframes fndTopBarGlide {
+      0%, 100% {
+        transform: translate3d(0, 0, 0) scaleX(1);
+        opacity: 0.78;
+        box-shadow: 0 0 10px rgba(94, 178, 246, 0.55);
+      }
+      50% {
+        transform: translate3d(26px, 0, 0) scaleX(1.65);
+        opacity: 1;
+        box-shadow: 0 0 18px rgba(186, 230, 253, 0.92), 0 0 6px rgba(58, 160, 219, 0.85);
+      }
+    }
+
+    @keyframes fndAmbientShimmer {
+      0%, 62% {
+        background-position: -140% 0%;
+        opacity: 0;
+      }
+      74% {
+        opacity: 0.9;
+      }
+      92%, 100% {
+        background-position: 240% 0%;
+        opacity: 0;
+      }
+    }
+
+    @keyframes fndNumPulse {
+      0%, 100% {
+        color: #5eb2f6;
+        text-shadow: 0 0 8px rgba(94, 178, 246, 0.25);
+      }
+      50% {
+        color: #bae6fd;
+        text-shadow: 0 0 16px rgba(114, 197, 248, 0.75);
+      }
+    }
+
+    @keyframes fndCardEntrance {
+      0% {
+        opacity: 0;
+        transform: perspective(900px) translate3d(0, 22px, 0) scale(0.975);
+      }
+      100% {
+        opacity: 1;
+        transform: perspective(900px) translate3d(0, 0, 0) scale(1);
+      }
+    }
+
+    #about #about-sec-foundation .fnd-copy > .grid > div {
+      --fnd-mx: 50%;
+      --fnd-my: 50%;
+      --fnd-spot: 0;
+      --fnd-rx: 0deg;
+      --fnd-ry: 0deg;
+      position: relative !important;
+      overflow: hidden !important;
+      isolation: isolate;
+      background:
+        radial-gradient(360px circle at var(--fnd-mx) var(--fnd-my), rgba(114, 197, 248, calc(0.15 * var(--fnd-spot))), transparent 64%),
+        linear-gradient(155deg, rgba(16, 26, 46, 0.82) 0%, rgba(12, 17, 30, 0.88) 100%) !important;
+      border-color: rgba(114, 197, 248, 0.16) !important;
+      transform: perspective(950px) rotateX(var(--fnd-rx)) rotateY(var(--fnd-ry)) translate3d(0, 0, 0);
+      transition:
+        transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.35s ease,
+        box-shadow 0.42s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      will-change: transform;
+    }
+
+    #about #about-sec-foundation .fnd-copy > .grid > div.is-fnd-entering {
+      animation: fndCardEntrance 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    #about #about-sec-foundation .fnd-copy > .grid > div:nth-child(2).is-fnd-entering {
+      animation-delay: 140ms;
+    }
+
+    /* Orbital luminous cyan optical beam tracing the 1.5px rounded perimeter */
+    #about #about-sec-foundation .fnd-copy > .grid > div::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1.5px;
+      background: conic-gradient(
+        from var(--fnd-beam-angle),
+        transparent 0deg,
+        transparent 255deg,
+        rgba(58, 160, 219, 0.35) 288deg,
+        rgba(186, 230, 253, 0.92) 324deg,
+        rgba(255, 255, 255, 0.96) 338deg,
+        rgba(58, 160, 219, 0.40) 352deg,
+        transparent 360deg
+      );
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      opacity: 0.72;
+      pointer-events: none;
+      z-index: 2;
+      animation: fndBorderOrbit 6.4s linear infinite;
+      transition: opacity 0.35s ease;
+    }
+
+    #about #about-sec-foundation .fnd-copy > .grid > div:nth-child(2)::before {
+      animation-delay: -3.2s;
+    }
+
+    /* Ambient diagonal optical glass shimmer sweeping softly across each card */
+    #about #about-sec-foundation .fnd-copy > .grid > div::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 1;
+      background: linear-gradient(
+        112deg,
+        transparent 28%,
+        rgba(114, 197, 248, 0.05) 42%,
+        rgba(224, 242, 254, 0.11) 50%,
+        rgba(114, 197, 248, 0.05) 58%,
+        transparent 72%
+      );
+      background-size: 220% 100%;
+      background-repeat: no-repeat;
+      animation: fndAmbientShimmer 7.2s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+    }
+
+    #about #about-sec-foundation .fnd-copy > .grid > div:nth-child(2)::after {
+      animation-delay: -3.6s;
+    }
+
+    /* Top cyan optical accent filament gliding & breathing smoothly */
+    #about #about-sec-foundation .fnd-copy > .grid > div > span:first-child {
+      top: 0 !important;
+      height: 2px !important;
+      background: linear-gradient(90deg, rgba(58, 160, 219, 0.25) 0%, #72c5f8 48%, #e0f2fe 100%) !important;
+      transform-origin: left center;
+      animation: fndTopBarGlide 4.8s ease-in-out infinite;
+      transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+      z-index: 3;
+    }
+
+    #about #about-sec-foundation .fnd-copy > .grid > div:nth-child(2) > span:first-child {
+      animation-delay: -2.4s;
+    }
+
+    /* Subtle breathing glow on 01 & 02 monospace labels */
+    #about #about-sec-foundation .fnd-copy > .grid > div > .font-mono {
+      position: relative;
+      z-index: 3;
+      animation: fndNumPulse 4.8s ease-in-out infinite;
+    }
+
+    #about #about-sec-foundation .fnd-copy > .grid > div:nth-child(2) > .font-mono {
+      animation-delay: -2.4s;
+    }
+
+    #about #about-sec-foundation .fnd-copy > .grid > div h3,
+    #about #about-sec-foundation .fnd-copy > .grid > div p {
+      position: relative;
+      z-index: 3;
+      transition: color 0.3s ease;
+    }
+
+    /* Elevated crystal glass hover state */
+    #about #about-sec-foundation .fnd-copy > .grid > div:hover {
+      border-color: rgba(114, 197, 248, 0.42) !important;
+      box-shadow:
+        0 26px 58px rgba(0, 0, 0, 0.56),
+        0 0 34px rgba(58, 160, 219, 0.16),
+        inset 0 1px 0 rgba(224, 242, 254, 0.16) !important;
+      transform: perspective(950px) rotateX(var(--fnd-rx)) rotateY(var(--fnd-ry)) translate3d(0, -4px, 0);
+    }
+
+    #about #about-sec-foundation .fnd-copy > .grid > div:hover::before {
+      opacity: 1;
+      animation-duration: 3.2s;
+    }
+
+    #about #about-sec-foundation .fnd-copy > .grid > div:hover > span:first-child {
+      width: 5.5rem !important;
+      opacity: 1 !important;
+    }
+
+    #about #about-sec-foundation .fnd-copy > .grid > div:hover h3 {
+      color: #ffffff !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #about #about-sec-foundation .fnd-copy > .grid > div::before,
+      #about #about-sec-foundation .fnd-copy > .grid > div::after,
+      #about #about-sec-foundation .fnd-copy > .grid > div > span:first-child,
+      #about #about-sec-foundation .fnd-copy > .grid > div > .font-mono,
+      #about #about-sec-foundation .fnd-copy > .grid > div.is-fnd-entering {
+        animation: none !important;
       }
     }
     /* Ensure Core Values cards never stay stuck at opacity:0 when jumping tabs */
@@ -14835,23 +14603,11 @@
         white-space: nowrap !important;
         border-radius: 6px !important;
       }
-
-      /* Footer Map: dock compact card at bottom-left cleanly without affecting #contact-maplibre-host */
-      #footer-map-band #contact-map-place-card {
-        top: auto !important;
-        bottom: 8px !important;
-        left: 8px !important;
-        padding: 7px 10px !important;
-        max-width: calc(100% - 118px) !important;
-      }
-      #footer-map-band #contact-map-place-card .flex.items-center.gap-1.mt-1 {
-        display: none !important;
-      }
     }
   </style>
 
-  <script src="assets/js/gsap.min.js"></script>
-  <script src="assets/js/ScrollTrigger.min.js"></script>
+  <script src="assets/js/gsap.min.js" defer></script>
+  <script src="assets/js/ScrollTrigger.min.js" defer></script>
     <script src="assets/js/GLTFLoader.js?v=3.00" defer></script>
   <script src="assets/js/foundation-logo-data.js?v=1.00" defer></script>
   <script src="assets/js/foundation-particles-gl.js?v=4.64" defer></script>
@@ -14859,7 +14615,7 @@
   <script src="assets/js/main.js?v=388.40" defer></script>
   <script src="assets/js/galaxy-delivery-3d.js?v=14.41" defer></script>
   <script src="assets/js/about-route-globe.js?v=9.01" defer></script>
-  <script src="assets/js/aller-silhouette.js?v=9.00" defer></script>
+  <script src="assets/js/aller-silhouette.js?v=11.60" defer></script>
   <script src="assets/js/core-values-monument.js?v=16.00" defer></script>
   <script src="assets/js/products-warp-carousel.js?v=1.04" defer></script>
   <script src="assets/js/products-active-theory.js?v=11.07" defer></script>

@@ -863,9 +863,17 @@
     const tendrils = Array.from({ length: 14 }, () => new Tendril(true));
     let isVisible = false;
     let rafId = 0;
+    let docVisible = !document.hidden;
+    let lastDrawTs = 0;
 
-    function renderFrame() {
-      if (!isVisible) { rafId = 0; return; }
+    function renderFrame(now) {
+      rafId = 0;
+      if (!isVisible || !docVisible) return;
+      if (window.__mediqFastJumping || (lastDrawTs && now && now - lastDrawTs < 24)) {
+        if (!reducedMotionMq.matches) rafId = requestAnimationFrame(renderFrame);
+        return;
+      }
+      lastDrawTs = now || performance.now();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
       for (let i = 0; i < puffs.length; i++) {
@@ -877,24 +885,35 @@
         tendrils[i].draw(ctx, t);
       }
       ctx.globalAlpha = 1;
-      if (!reducedMotionMq.matches) {
+      if (!reducedMotionMq.matches && isVisible && docVisible) {
         t += 1;
         rafId = requestAnimationFrame(renderFrame);
-      } else {
-        rafId = 0;
       }
     }
+
+    const syncAboutSmoke = () => {
+      if (isVisible && docVisible) {
+        if (!rafId) rafId = requestAnimationFrame(renderFrame);
+      } else if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    };
 
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
         entries.forEach((en) => { isVisible = en.isIntersecting; });
-        if (isVisible && !rafId) rafId = requestAnimationFrame(renderFrame);
+        syncAboutSmoke();
       }, { rootMargin: '140px 0px', threshold: 0.01 });
       io.observe(canvas.parentElement || canvas);
     } else {
       isVisible = true;
-      rafId = requestAnimationFrame(renderFrame);
+      syncAboutSmoke();
     }
+    document.addEventListener('visibilitychange', () => {
+      docVisible = !document.hidden;
+      syncAboutSmoke();
+    });
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initAboutSmokeCanvas);
@@ -939,11 +958,19 @@
     }));
 
     let isVisible = true;
+    let docVisible = !document.hidden;
     let rafId = 0;
+    let lastDrawTs = 0;
 
-    function renderSmoke() {
-      if (!isVisible) { rafId = 0; return; }
-      t += 0.008;
+    function renderSmoke(now) {
+      rafId = 0;
+      if (!isVisible || !docVisible) return;
+      if (window.__mediqFastJumping || (lastDrawTs && now && now - lastDrawTs < 24)) {
+        rafId = requestAnimationFrame(renderSmoke);
+        return;
+      }
+      lastDrawTs = now || performance.now();
+      t += 0.011;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
       for (let i = 0; i < puffs.length; i++) {
@@ -958,14 +985,27 @@
       rafId = requestAnimationFrame(renderSmoke);
     }
 
-    rafId = requestAnimationFrame(renderSmoke);
+    const syncHeroSmoke = () => {
+      if (isVisible && docVisible) {
+        if (!rafId) rafId = requestAnimationFrame(renderSmoke);
+      } else if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    };
+
+    syncHeroSmoke();
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
         entries.forEach((en) => { isVisible = en.isIntersecting; });
-        if (isVisible && !rafId) rafId = requestAnimationFrame(renderSmoke);
+        syncHeroSmoke();
       }, { rootMargin: '140px 0px', threshold: 0.01 });
       io.observe(canvas.parentElement || canvas);
     }
+    document.addEventListener('visibilitychange', () => {
+      docVisible = !document.hidden;
+      syncHeroSmoke();
+    });
   }
   initHeroSmokeCanvas();
 
@@ -3697,13 +3737,13 @@
           ctx.stroke();
         }
         ctx.fillStyle = '#ffffff';
-        ctx.font = '700 44px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 44px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('GALAXY', 38, 105);
         ctx.fillStyle = '#9ec5e6';
-        ctx.font = '600 16px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '600 16px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('RAYONE PRELOADED SPIRAL IOL', 38, 185);
         ctx.fillStyle = '#ffffff';
-        ctx.font = '700 22px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 22px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('▲ Rayner', 330, 195);
       });
       const navySideMat = new THREE.MeshStandardMaterial({ color: 0x0c1c30, roughness: 0.35, metalness: 0.1 });
@@ -3721,13 +3761,13 @@
         ctx.fillStyle = '#eaedf2';
         ctx.fillRect(0, 0, w, h);
         ctx.fillStyle = '#0c1c30';
-        ctx.font = '700 38px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 38px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('GALAXY TORIC', 36, 95);
         ctx.fillStyle = '#5c6675';
-        ctx.font = '600 15px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '600 15px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('PRELOADED SPIRAL TORIC IOL', 36, 145);
         ctx.fillStyle = '#0c1c30';
-        ctx.font = '700 22px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 22px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('▲ Rayner', 340, 200);
       });
       const whiteSideMat = new THREE.MeshStandardMaterial({ color: 0xdce1e8, roughness: 0.35 });
@@ -3754,12 +3794,12 @@
         ctx.fillStyle = '#e8562a';
         ctx.fillRect(28, 28, 456, 56);
         ctx.fillStyle = '#ffffff';
-        ctx.font = '700 34px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 34px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('RayOne  Preloaded IOL', 44, 68);
         ctx.fillStyle = '#c4006b';
         ctx.fillRect(28, 92, 180, 26);
         ctx.fillStyle = '#ffffff';
-        ctx.font = '700 16px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 16px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('EMV TORIC', 58, 110);
         // C-Ring graphic
         ctx.beginPath();
@@ -3768,7 +3808,7 @@
         ctx.lineWidth = 14;
         ctx.stroke();
         ctx.fillStyle = '#0a1d40';
-        ctx.font = '700 22px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 22px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('▲ Rayner', 32, 215);
       });
       const whiteMat = new THREE.MeshStandardMaterial({ color: 0xf4f6f9, roughness: 0.3 });
@@ -3859,10 +3899,10 @@
           ctx.fillStyle = `#${cfg.color.toString(16).padStart(6, '0')}`;
           ctx.fillRect(0, 0, w, h);
           ctx.fillStyle = '#ffffff';
-          ctx.font = '700 54px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+          ctx.font = '700 54px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText('AEON', w / 2, 75);
-          ctx.font = '700 26px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+          ctx.font = '700 26px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
           ctx.fillText(cfg.name, w / 2, 112);
           // White teardrop icon
           ctx.beginPath();
@@ -3927,7 +3967,7 @@
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, w, 28);
         ctx.fillStyle = '#0a1d40';
-        ctx.font = '700 18px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 18px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillText('RayPRO® Cloud PROMs Dashboard', 20, 20);
         const cards = [
           { x: 24, y: 52, val: '85%', col: '#3aa0db' },
@@ -3944,7 +3984,7 @@
           ctx.lineWidth = 7;
           ctx.stroke();
           ctx.fillStyle = '#0a1d40';
-          ctx.font = '700 22px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+          ctx.font = '700 22px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText(c.val, c.x + 52, c.y + 80);
         });
@@ -4397,7 +4437,7 @@
       const ctx = c.getContext('2d');
       if (!ctx) return '';
 
-      const family = '"IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+      const family = '"Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
       // Enlarged, majestic scale filling the hero container
       let fontSize = Math.round(180 * S);
       const lineHeight = Math.round(170 * S);
@@ -4408,8 +4448,8 @@
       ctx.textBaseline = 'alphabetic';
       ctx.textAlign = 'left';
 
-      // Width safeguard: ensure title fits with elegant proportion
-      ctx.font = `normal ${fontSize}px ${family}`;
+      // Width safeguard: ensure title fits with clinical precision
+      ctx.font = `600 ${fontSize}px ${family}`;
       const m1 = ctx.measureText('Advanced Vision.');
       const maxW = W * 0.98;
       if (m1.width > maxW) {
@@ -4418,16 +4458,16 @@
 
       if (solid) {
         // Line 1: Advanced Vision. (Pure Pearl Cream)
-        ctx.font = `normal ${fontSize}px ${family}`;
+        ctx.font = `600 ${fontSize}px ${family}`;
         ctx.fillStyle = '#f6f4ee';
         ctx.fillText('Advanced Vision.', startX, line1Y);
 
         // Line 2: Better (Pure Pearl Cream)
         ctx.fillText('Better ', startX, line2Y);
 
-        // Line 2: Lives. (Pure Italic Soft Celestial Blue #cfe2ff)
+        // Line 2: Lives. (Upright Clinical Celestial Blue #cfe2ff — zero italic/cursive)
         const betterWidth = ctx.measureText('Better ').width;
-        ctx.font = `italic ${fontSize}px ${family}`;
+        ctx.font = `600 ${fontSize}px ${family}`;
         ctx.fillStyle = '#cfe2ff';
         ctx.fillText('Lives.', startX + betterWidth, line2Y);
 
@@ -4440,7 +4480,7 @@
       ctx.miterLimit = 3;
 
       // Line 1 Hairline (Pure Text)
-      ctx.font = `normal ${fontSize}px ${family}`;
+      ctx.font = `600 ${fontSize}px ${family}`;
       ctx.strokeStyle = 'rgba(246, 244, 238, 0.48)';
       ctx.strokeText('Advanced Vision.', startX, line1Y);
 
@@ -4448,9 +4488,9 @@
       ctx.strokeStyle = 'rgba(246, 244, 238, 0.48)';
       ctx.strokeText('Better ', startX, line2Y);
 
-      // Line 2 Hairline: Lives. (Pure Italic Celestial Blue Text)
+      // Line 2 Hairline: Lives. (Upright Clinical Celestial Blue Text)
       const betterWidth = ctx.measureText('Better ').width;
-      ctx.font = `italic ${fontSize}px ${family}`;
+      ctx.font = `600 ${fontSize}px ${family}`;
       ctx.strokeStyle = 'rgba(207, 226, 255, 0.65)';
       ctx.strokeText('Lives.', startX + betterWidth, line2Y);
 
@@ -5536,13 +5576,19 @@ const runWorkflowDemo = () => {
   demoRaf = requestAnimationFrame(tick);
 };
 
-const heroDemoVideo = document.getElementById('hero-demo-video-el');
+const heroDemoVideo = document.getElementById('hero-modal-video') || document.getElementById('hero-demo-video-el');
+if (heroDemoVideo && heroDemoModal && heroDemoModal.classList.contains('hidden')) {
+  heroDemoVideo.autoplay = false;
+  heroDemoVideo.preload = 'none';
+  try { heroDemoVideo.pause(); } catch (_) {}
+}
 
 const openDemoModal = () => {
   if (heroDemoModal) {
     heroDemoModal.classList.remove('hidden');
     if (heroDemoVideo) {
-      heroDemoVideo.currentTime = 0;
+      heroDemoVideo.preload = 'auto';
+      try { heroDemoVideo.currentTime = 0; } catch (_) {}
       heroDemoVideo.play().catch(() => { });
     }
     runWorkflowDemo();
@@ -5654,116 +5700,78 @@ function initHeroEyeLifespan() {
   let autoTimer = null;
   const INTERVAL = 7200;
 
-  // Anatomical Orbital Blink Canvas Engine (Exact 1376x768 coordinate lock, zero nose/cheek seam, 2-3 slow blinks per slide)
-  const BLINK_STAGE_SPECS = [
-    {
-      url: 'assets/img/hero-eye-kid-blink.jpg?v=99.00',
-      leftOrb: { cx: 762, cy: 332, rx: 78, ry: 54 },
-      rightOrb: { cx: 1030, cy: 326, rx: 148, ry: 84 },
-      lidTop: 245,
-      lidBot: 412,
-      curveBow: 18
-    },
-    {
-      url: 'assets/img/hero-eye-teen-blink.jpg?v=99.00',
-      leftOrb: { cx: 735, cy: 342, rx: 82, ry: 54 },
-      rightOrb: { cx: 924, cy: 336, rx: 138, ry: 82 },
-      lidTop: 255,
-      lidBot: 420,
-      curveBow: 18
-    },
-    {
-      url: 'assets/img/hero-eye-adult-blink.jpg?v=99.00',
-      leftOrb: { cx: 730, cy: 294, rx: 92, ry: 56 },
-      rightOrb: { cx: 1002, cy: 288, rx: 152, ry: 86 },
-      lidTop: 205,
-      lidBot: 380,
-      curveBow: 18
-    },
-    {
-      url: 'assets/img/hero-eye-senior-blink.jpg?v=99.00',
-      leftOrb: { cx: 752, cy: 306, rx: 80, ry: 54 },
-      rightOrb: { cx: 1008, cy: 298, rx: 152, ry: 86 },
-      lidTop: 215,
-      lidBot: 392,
-      curveBow: 18
-    }
+  // Real Google Flow Veo 3.1 Closing-Eye Videos (1:1 aligned head/eyes across Kid, Teen, Adult, Senior)
+  const BLINK_STAGE_VIDEOS = [
+    'assets/video/hero-eye-kid-v6.mp4',
+    'assets/video/hero-eye-teen-v6.mp4',
+    'assets/video/hero-eye-adult-v6.mp4',
+    'assets/video/hero-eye-senior-v6.mp4'
   ];
 
-  const IMG_W = 1376;
-  const IMG_H = 768;
+  const reducedMotionBlink = typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)')
+    : { matches: false };
+  let heroBlinkVisible = true;
+  let blinkTimers = [];
+
+  function syncHeroVideoFocalPoint() {
+    const pos = window.innerWidth >= 1024 ? '82% 48%' : '80% 48%';
+    slides.forEach((sl) => {
+      const vid = sl.querySelector('.hero-eye-video-layer');
+      if (vid && vid.style.objectPosition !== pos) {
+        vid.style.objectPosition = pos;
+      }
+    });
+  }
 
   const blinkSlots = Array.from(slides).map((sl, i) => {
-    const spec = BLINK_STAGE_SPECS[i];
-    if (!spec) return null;
+    const src = BLINK_STAGE_VIDEOS[i];
+    if (!src) return null;
 
-    const canvas = document.createElement('canvas');
-    canvas.className = 'hero-eye-blink-layer absolute inset-0 size-full block pointer-events-none';
-    canvas.style.opacity = '0';
-    sl.appendChild(canvas);
+    const video = document.createElement('video');
+    video.className = 'hero-eye-video-layer absolute inset-0 size-full block pointer-events-none';
+    video.style.objectFit = 'cover';
+    video.style.objectPosition = window.innerWidth >= 1024 ? '82% 48%' : '80% 48%';
+    video.style.opacity = '0';
+    video.style.transition = 'opacity 180ms ease';
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.preload = i === 0 ? 'auto' : 'none';
+    video.setAttribute('aria-hidden', 'true');
+    if (i === 0) video.src = src;
+    sl.appendChild(video);
 
-    // Pre-build 1376x768 soft-feathered orbital closed-eye patch (only covers eyes + soft orbital rim; cheek/nose stays 100% open photo)
-    const patch = document.createElement('canvas');
-    patch.width = IMG_W;
-    patch.height = IMG_H;
-    const pctx = patch.getContext('2d');
-
-    const img = new Image();
-    img.src = spec.url;
-    const slot = { spec, canvas, patch, img, ready: false, progress: 0, onReadyCallback: null };
-    img.onload = () => {
-      if (!pctx) return;
-      pctx.clearRect(0, 0, IMG_W, IMG_H);
-      pctx.drawImage(img, 0, 0, IMG_W, IMG_H);
-
-      // Build soft elliptical double-eye alpha mask so outer face & nose bridge stay 100% original pixels
-      const mask = document.createElement('canvas');
-      mask.width = IMG_W;
-      mask.height = IMG_H;
-      const mctx = mask.getContext('2d');
-      if (mctx) {
-        [spec.leftOrb, spec.rightOrb].forEach((orb) => {
-          mctx.save();
-          mctx.translate(orb.cx, orb.cy);
-          mctx.scale(orb.rx, orb.ry);
-          const rg = mctx.createRadialGradient(0, 0, 0.38, 0, 0, 1);
-          rg.addColorStop(0, 'rgba(0,0,0,1)');
-          rg.addColorStop(0.68, 'rgba(0,0,0,0.92)');
-          rg.addColorStop(0.86, 'rgba(0,0,0,0.38)');
-          rg.addColorStop(1, 'rgba(0,0,0,0)');
-          mctx.fillStyle = rg;
-          mctx.beginPath();
-          mctx.arc(0, 0, 1, 0, Math.PI * 2);
-          mctx.fill();
-          mctx.restore();
-        });
-        pctx.globalCompositeOperation = 'destination-in';
-        pctx.drawImage(mask, 0, 0);
-        pctx.globalCompositeOperation = 'source-over';
-      }
+    const slot = { video, src, attached: i === 0, ready: false, pendingCb: null };
+    const markReady = () => {
+      if (slot.ready) return;
       slot.ready = true;
-      if (typeof slot.onReadyCallback === 'function') {
-        const cb = slot.onReadyCallback;
-        slot.onReadyCallback = null;
+      video.style.opacity = '1';
+      if (typeof slot.pendingCb === 'function') {
+        const cb = slot.pendingCb;
+        slot.pendingCb = null;
         cb();
       }
     };
 
+    video.addEventListener('loadeddata', markReady);
+    video.addEventListener('canplay', markReady);
+    video.addEventListener('error', () => {
+      video.style.opacity = '0';
+    });
+
     return slot;
   });
 
-  // Reusable 1376x768 scratch buffer for downward curved eyelid sweep compositing
-  const sweepBuf = document.createElement('canvas');
-  sweepBuf.width = IMG_W;
-  sweepBuf.height = IMG_H;
-  const sctx = sweepBuf.getContext('2d');
+  function ensureBlinkSlotLoaded(idx) {
+    const slot = blinkSlots[idx];
+    if (!slot || slot.attached) return;
+    slot.attached = true;
+    slot.video.preload = 'auto';
+    slot.video.src = slot.src;
+  }
 
-  let blinkRaf = 0;
-  let blinkTimers = [];
-  let heroBlinkVisible = true;
-  const reducedMotionBlink = typeof window.matchMedia === 'function'
-    ? window.matchMedia('(prefers-reduced-motion: reduce)')
-    : { matches: false };
+  window.addEventListener('resize', syncHeroVideoFocalPoint, { passive: true });
 
   function clearBlinkTimers() {
     blinkTimers.forEach((id) => clearTimeout(id));
@@ -5772,145 +5780,64 @@ function initHeroEyeLifespan() {
 
   function resetBlinkLayers() {
     clearBlinkTimers();
-    if (blinkRaf) {
-      cancelAnimationFrame(blinkRaf);
-      blinkRaf = 0;
-    }
     blinkSlots.forEach((slot) => {
       if (!slot) return;
-      slot.progress = 0;
-      slot.canvas.style.opacity = '0';
+      slot.pendingCb = null;
+      slot.video.pause();
+      try { slot.video.currentTime = 0; } catch (_) {}
     });
   }
 
-  function drawOrbitalBlinkFrame(slot, closeProgress) {
-    if (!slot || !slot.ready || !sctx) return;
-    slot.progress = closeProgress;
-    const { canvas, patch, spec } = slot;
-    if (closeProgress <= 0.005) {
-      canvas.style.opacity = '0';
-      return;
-    }
-
-    const rect = canvas.getBoundingClientRect();
-    const cw = Math.max(1, Math.round(rect.width || window.innerWidth));
-    const ch = Math.max(1, Math.round(rect.height || window.innerHeight));
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-    const tw = Math.max(1, Math.round(cw * dpr));
-    const th = Math.max(1, Math.round(ch * dpr));
-    if (canvas.width !== tw || canvas.height !== th) {
-      canvas.width = tw;
-      canvas.height = th;
-    }
-
-    // Replicate CSS `bg-cover bg-[position:80%_48%] lg:bg-[position:82%_48%]` transform in image pixels
-    const scale = Math.max(cw / IMG_W, ch / IMG_H);
-    const drawW = IMG_W * scale;
-    const drawH = IMG_H * scale;
-    const posX = cw >= 1024 ? 0.82 : 0.80;
-    const posY = 0.48;
-    const ox = (cw - drawW) * posX;
-    const oy = (ch - drawH) * posY;
-
-    // Composite curved upper-eyelid descent wipe onto 1376x768 orbital buffer
-    const lidY = spec.lidTop + closeProgress * (spec.lidBot - spec.lidTop);
-    sctx.clearRect(0, 0, IMG_W, IMG_H);
-    sctx.globalCompositeOperation = 'source-over';
-    sctx.drawImage(patch, 0, 0);
-
-    // Feathered curved eyelid clip from top down to lidY so upper lid pulls down smoothly
-    const g = sctx.createLinearGradient(0, spec.lidTop - 16, 0, lidY + 18);
-    g.addColorStop(0, 'rgba(0,0,0,1)');
-    g.addColorStop(0.76, 'rgba(0,0,0,1)');
-    g.addColorStop(1, 'rgba(0,0,0,0)');
-    sctx.globalCompositeOperation = 'destination-in';
-    sctx.fillStyle = g;
-    sctx.fillRect(0, 0, IMG_W, lidY + 20);
-    sctx.globalCompositeOperation = 'source-over';
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, cw, ch);
-    ctx.drawImage(sweepBuf, ox, oy, drawW, drawH);
-    canvas.style.opacity = String(Math.min(1, closeProgress * 2.4));
-  }
-
-  function triggerEyeBlink(onComplete) {
+  function triggerEyeBlink() {
     const stageAtStart = currentStage;
     const slot = blinkSlots[stageAtStart];
     if (!slot || reducedMotionBlink.matches || document.hidden || !heroBlinkVisible) return;
-    if (!slot.ready) {
-      slot.onReadyCallback = () => {
-        if (currentStage === stageAtStart) triggerEyeBlink(onComplete);
-      };
+    ensureBlinkSlotLoaded(stageAtStart);
+
+    const startPlay = () => {
+      if (currentStage !== stageAtStart || !heroBlinkVisible || document.hidden) return;
+      slot.video.style.opacity = '1';
+      const p = slot.video.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(() => {
+          slot.video.style.opacity = '0';
+        });
+      }
+    };
+
+    if (!slot.ready && slot.video.readyState < 2) {
+      slot.pendingCb = startPlay;
+      if (slot.video.networkState === 0) slot.video.load();
       return;
     }
-    if (blinkRaf) cancelAnimationFrame(blinkRaf);
-
-    const start = performance.now();
-    const CLOSE_MS = 260;
-    const HOLD_MS = 140;
-    const OPEN_MS = 350;
-    const TOTAL_MS = CLOSE_MS + HOLD_MS + OPEN_MS;
-
-    function tick(now) {
-      if (currentStage !== stageAtStart) {
-        blinkRaf = 0;
-        drawOrbitalBlinkFrame(slot, 0);
-        return;
-      }
-      const elapsed = now - start;
-      if (elapsed >= TOTAL_MS) {
-        blinkRaf = 0;
-        drawOrbitalBlinkFrame(slot, 0);
-        if (typeof onComplete === 'function') onComplete();
-        return;
-      }
-      let prog = 0;
-      if (elapsed < CLOSE_MS) {
-        const u = elapsed / CLOSE_MS;
-        prog = u * u * (3 - 2 * u);
-      } else if (elapsed < CLOSE_MS + HOLD_MS) {
-        prog = 1;
-      } else {
-        const u = (elapsed - CLOSE_MS - HOLD_MS) / OPEN_MS;
-        prog = 1 - u * u * (3 - 2 * u);
-      }
-      drawOrbitalBlinkFrame(slot, prog);
-      blinkRaf = requestAnimationFrame(tick);
-    }
-
-    blinkRaf = requestAnimationFrame(tick);
+    startPlay();
   }
 
   function scheduleStageBlinkTrain(stageIdx) {
     clearBlinkTimers();
-    if (reducedMotionBlink.matches) return;
-    // Run 3 chained slow blinks on slides 0/2 and 2 chained slow blinks on slides 1/3 (~600ms relaxed open-eye pause between blinks)
-    const targetBlinks = (stageIdx % 2 === 0) ? 3 : 2;
-    let remaining = targetBlinks;
-
-    const runStep = () => {
-      if (currentStage !== stageIdx || remaining <= 0) return;
-      remaining -= 1;
-      triggerEyeBlink(() => {
-        if (currentStage === stageIdx && remaining > 0) {
-          const nextId = setTimeout(runStep, 600);
-          blinkTimers.push(nextId);
-        }
-      });
-    };
-
-    const startId = setTimeout(runStep, 550);
-    blinkTimers.push(startId);
+    if (reducedMotionBlink.matches || currentStage !== stageIdx) return;
+    // Let the slide settle briefly (~120ms) then start continuous seamless Flow clip playback
+    const startId = setTimeout(() => {
+      if (currentStage === stageIdx) triggerEyeBlink();
+    }, 120);
+    // Quietly pre-warm ONLY the next stage 2s later so transitions stay instant with zero startup burst
+    const nextIdx = (stageIdx + 1) % blinkSlots.length;
+    const prewarmId = setTimeout(() => {
+      if (heroBlinkVisible && !document.hidden) ensureBlinkSlotLoaded(nextIdx);
+    }, 2000);
+    blinkTimers.push(startId, prewarmId);
   }
 
   const heroSectionEl = document.getElementById('hero');
   if (heroSectionEl && 'IntersectionObserver' in window) {
     const blinkIo = new IntersectionObserver((entries) => {
+      const wasVisible = heroBlinkVisible;
       heroBlinkVisible = entries.some((en) => en.isIntersecting);
-      if (!heroBlinkVisible) resetBlinkLayers();
+      if (!heroBlinkVisible) {
+        resetBlinkLayers();
+      } else if (!wasVisible) {
+        scheduleStageBlinkTrain(currentStage);
+      }
     }, { rootMargin: '100px 0px', threshold: 0.05 });
     blinkIo.observe(heroSectionEl);
   }
@@ -6593,7 +6520,7 @@ void main() {
     const w = Math.max(10, Math.round(rect.width));
     const h = Math.max(10, Math.round(rect.height));
     const comp = window.getComputedStyle(titleEl);
-    const fontFam = comp.fontFamily || '"IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+    const fontFam = comp.fontFamily || '"Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     const weight = comp.fontWeight || '600';
     const fontSize = parseFloat(comp.fontSize) || 48;
     const lines = Array.from(titleEl.querySelectorAll('.ih-h1-line'));
@@ -7459,6 +7386,72 @@ function initAboutDeckController() {
     ? Array.from(subScroll.querySelectorAll('.abt-subpage-panel'))
     : [];
 
+  // Upgrade Who We Are (Layer 0) from legacy lab/doctor video to bespoke MEDIQ & Rayner UK ophthalmic supply visual (keeps locked #about HTML 100% pure)
+  const whoWeAreWrap = aboutSec ? aboutSec.querySelector('[data-forge-img-wrap="0"]') : null;
+  if (whoWeAreWrap) {
+    const legacyWhoVid = whoWeAreWrap.querySelector('video[data-forge-img="0"]');
+    if (legacyWhoVid) {
+      const brandStage = document.createElement('div');
+      brandStage.setAttribute('data-forge-img', '0');
+      brandStage.setAttribute('role', 'img');
+      brandStage.setAttribute('aria-label', 'MEDIQ Pharma and Medical Supplies Distribution — Exclusive Philippine Supplier of Rayner UK Ophthalmic Technologies');
+      brandStage.className = 'relative w-full h-full overflow-hidden will-change-transform pointer-events-none select-none';
+      brandStage.style.transform = 'scale(1.04)';
+      brandStage.innerHTML =
+        '<img src="assets/img/pillars/about_who_video_poster.jpg?v=2.00" alt="" aria-hidden="true" class="w-full h-full object-cover object-center animate-[kenburns_20s_ease-in-out_infinite_alternate]" />' +
+        '<div class="pointer-events-none absolute inset-x-0 top-0 h-[52%] bg-gradient-to-b from-[#040a18]/65 via-[#06122a]/25 to-transparent"></div>' +
+        '<div class="pointer-events-none absolute inset-x-0 top-[11%] sm:top-[12.5%] flex flex-col items-center justify-center px-6 text-center z-[3]">' +
+          '<span class="font-mono text-[8.5px] sm:text-[9.5px] font-medium uppercase tracking-[0.28em] text-[#72c5f8]/90 mb-2.5">Exclusive Philippine Supplier</span>' +
+          '<img src="assets/img/mediq-wordmark-only.png?v=105.00" alt="MEDIQ Pharma and Medical Supplies Distribution" class="w-[54%] max-w-[224px] h-auto object-contain drop-shadow-[0_4px_22px_rgba(58,160,219,0.34)]" />' +
+          '<span class="mt-3 h-px w-14 bg-gradient-to-r from-transparent via-[#72c5f8]/70 to-transparent"></span>' +
+          '<span class="mt-2 font-mono text-[8px] sm:text-[9px] font-medium uppercase tracking-[0.22em] text-[#dbeafe]/78">Rayner UK &middot; Ophthalmic Technologies</span>' +
+        '</div>';
+      legacyWhoVid.replaceWith(brandStage);
+    }
+  }
+
+  // Defer all remaining hidden About Slide 1 MP4 videos at boot so Home opens smoothly with zero background video decode
+  const allAboutVideos = aboutSec
+    ? Array.from(aboutSec.querySelectorAll('video[data-forge-img], video[data-wwd-forge-img], video'))
+    : [];
+  function deferAboutVideosOnBoot() {
+    allAboutVideos.forEach((v) => {
+      const s = v.getAttribute('src');
+      if (s && !v.getAttribute('data-lazy-src')) {
+        v.setAttribute('data-lazy-src', s);
+      }
+      v.autoplay = false;
+      v.preload = 'none';
+      try { v.pause(); } catch (_) {}
+      if (s) {
+        v.removeAttribute('src');
+        try { v.load(); } catch (_) {}
+      }
+    });
+  }
+  function hydrateVideo(v, shouldPlay) {
+    if (!v || v.tagName !== 'VIDEO') return;
+    const lazy = v.getAttribute('data-lazy-src');
+    if (lazy && !v.getAttribute('src')) {
+      v.setAttribute('src', lazy);
+      v.preload = shouldPlay ? 'auto' : 'metadata';
+    }
+    v.muted = true;
+    if (shouldPlay) {
+      if (v.paused) v.play().catch(() => {});
+    } else if (!v.paused) {
+      try { v.pause(); } catch (_) {}
+    }
+  }
+  function pauseAllAboutVideos(exceptVideo) {
+    allAboutVideos.forEach((v) => {
+      if (v !== exceptVideo && !v.paused) {
+        try { v.pause(); } catch (_) {}
+      }
+    });
+  }
+  deferAboutVideosOnBoot();
+
   function setActiveSubnavPill(sectionId) {
     subnavPills.forEach((pill) => {
       const isMatch = pill.getAttribute('data-about-jump') === sectionId;
@@ -7558,12 +7551,13 @@ function initAboutDeckController() {
     if (activeSlideIdx === 1) {
       const dir = (prevSubIdx > 0 && requestedIdx < prevSubIdx) ? -1 : 1;
       showIsolatedSubpage(requestedIdx, dir);
-      if (aboutSec) {
-        aboutSec.querySelectorAll('video[data-forge-img], video[data-wwd-forge-img]').forEach((v) => {
-          v.muted = true;
-          if (v.paused) v.play().catch(() => {});
-        });
-      }
+      // Play ONLY the active subpage panel's initial video (never decode all 9 MP4s simultaneously)
+      const activeSubId = SECTION_MAP[activeSubpageIdx];
+      const activeSubPanel = activeSubId ? document.getElementById(activeSubId) : null;
+      const panelVids = activeSubPanel ? Array.from(activeSubPanel.querySelectorAll('video')) : [];
+      pauseAllAboutVideos(panelVids[0] || null);
+      if (panelVids[0]) hydrateVideo(panelVids[0], true);
+      if (panelVids[1]) hydrateVideo(panelVids[1], false);
       if (false && typeof window !== 'undefined' && false) {
         window.scrollTo({ top: sec.offsetTop, behavior: 'auto' });
       }
@@ -7575,6 +7569,7 @@ function initAboutDeckController() {
     } else {
       activeSubpageIdx = 1;
       window.__aboutActiveSubpageIdx = 1;
+      pauseAllAboutVideos(null);
       if (!opts.silentReset) {
         if (typeof window.__unlockOuterPageScroll === 'function') {
           window.__unlockOuterPageScroll();
@@ -7632,9 +7627,10 @@ function initAboutDeckController() {
       const activeStage = stageP < 0.5 ? 0 : (stageP < 1.5 ? 1 : 2);
       window.__forgeAbtActiveStage = activeStage;
       const activeVid = forgeImgs[activeStage];
-      if (activeVid && activeVid.tagName === 'VIDEO' && activeVid.paused) {
-        activeVid.muted = true;
-        activeVid.play().catch(() => {});
+      if (currentIndex === 1 && activeSubpageIdx === 1) {
+        pauseAllAboutVideos(activeVid || null);
+        if (activeVid) hydrateVideo(activeVid, true);
+        if (forgeImgs[activeStage + 1]) hydrateVideo(forgeImgs[activeStage + 1], false);
       }
       if (forgeNumEl) {
         forgeNumEl.textContent = `0${activeStage + 1}`;
@@ -7736,9 +7732,10 @@ function initAboutDeckController() {
       const activeStage = Math.min(5, Math.max(0, Math.round(stageP)));
       window.__wwdForgeActiveStage = activeStage;
       const activeWwdVid = wwdForgeImgs[activeStage];
-      if (activeWwdVid && activeWwdVid.tagName === 'VIDEO' && activeWwdVid.paused) {
-        activeWwdVid.muted = true;
-        activeWwdVid.play().catch(() => {});
+      if (currentIndex === 1 && activeSubpageIdx === 2) {
+        pauseAllAboutVideos(activeWwdVid || null);
+        if (activeWwdVid) hydrateVideo(activeWwdVid, true);
+        if (wwdForgeImgs[activeStage + 1]) hydrateVideo(wwdForgeImgs[activeStage + 1], false);
       }
 
       if (wwdForgeNumEl) wwdForgeNumEl.textContent = `0${activeStage + 1}`;
@@ -8533,9 +8530,15 @@ function _disabledProductsSmokeCanvas() {
     }
   };
 
-  function renderFrame() {
+  let lastDrawTs = 0;
+  function renderFrame(now) {
     rafId = 0;
     if (!shouldRenderSmoke()) return;
+    if (window.__mediqFastJumping || (lastDrawTs && now && now - lastDrawTs < 24)) {
+      rafId = requestAnimationFrame(renderFrame);
+      return;
+    }
+    lastDrawTs = now || performance.now();
     t += 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
@@ -9820,7 +9823,7 @@ if (document.readyState === 'loading') {
   }
 
   function label(text, x, y, align) {
-    ctx.font = '500 12px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 12px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = LABEL;
     ctx.textAlign = align || 'left';
     ctx.fillText(text, x, y);
@@ -9895,7 +9898,7 @@ if (document.readyState === 'loading') {
       ctx.fill();
       ctx.restore();
 
-      ctx.font = (reached ? '600 ' : '500 ') + '12.5px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+      ctx.font = (reached ? '600 ' : '500 ') + '12.5px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
       ctx.fillStyle = reached ? '#ffffff' : 'rgba(184, 198, 220, 0.50)';
       ctx.textAlign = i === 0 ? 'left' : i === JOURNEY_STOPS.length - 1 ? 'right' : 'center';
       ctx.fillText(JOURNEY_STOPS[i], sx, jy + 24);
@@ -9910,7 +9913,7 @@ if (document.readyState === 'loading') {
 
     label('2–8 °C safe range', padX, wy - 10);
     ctx.save();
-    ctx.font = '500 11.5px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 11.5px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.58)';
     ctx.textAlign = 'right';
     ctx.fillText('8 °C', padX + w, wy - 6);
@@ -9953,7 +9956,7 @@ if (document.readyState === 'loading') {
     const normTemp = 1 - (ly - wy) / wh;
     const tempC = (2 + normTemp * 6).toFixed(1) + ' °C';
     ctx.save();
-    ctx.font = '700 13px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '700 13px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = DOT;
     ctx.textAlign = lx > padX + w * 0.85 ? 'right' : 'left';
     ctx.fillText(tempC, lx + (lx > padX + w * 0.85 ? -10 : 10), ly - 10);
@@ -10000,17 +10003,17 @@ if (document.readyState === 'loading') {
 
     ctx.save();
     ctx.textAlign = 'left';
-    ctx.font = '500 13px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 13px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.82)';
     ctx.fillText('Region ' + (regIdx + 1) + ' of ' + PH_REGIONS.length, leftX, baseCy - 48);
 
     const codeFontPx = Math.round(Math.max(40, Math.min(60, cw * 0.072)));
-    ctx.font = '800 ' + codeFontPx + 'px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '700 ' + codeFontPx + 'px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = DOT;
     ctx.fillText(activeReg[0], leftX, baseCy + 10);
 
     const nameFontPx = Math.round(Math.max(15, Math.min(20, cw * 0.024)));
-    ctx.font = '700 ' + nameFontPx + 'px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '700 ' + nameFontPx + 'px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.fillText(activeReg[1], leftX, baseCy + 40);
 
@@ -10124,7 +10127,7 @@ if (document.readyState === 'loading') {
 
         // Region code beside active marker
         ctx.save();
-        ctx.font = '700 12px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+        ctx.font = '700 12px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
         ctx.fillStyle = '#ffffff';
         ctx.textAlign = 'left';
         ctx.shadowColor = 'rgba(4, 13, 30, 0.9)';
@@ -10214,7 +10217,7 @@ if (document.readyState === 'loading') {
     // Center X/4 label
     ctx.save();
     const ringFontPx = Math.round(Math.max(24, Math.min(36, r * 0.38)));
-    ctx.font = '800 ' + ringFontPx + 'px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '700 ' + ringFontPx + 'px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -10269,7 +10272,7 @@ if (document.readyState === 'loading') {
 
       // Checklist label
       const tx = listX + 38;
-      ctx.font = (checked ? '700 ' : '500 ') + '16px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+      ctx.font = (checked ? '700 ' : '500 ') + '16px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
       ctx.fillStyle = checked ? '#ffffff' : 'rgba(184, 198, 220, 0.52)';
       ctx.textAlign = 'left';
       ctx.fillText(AUDIT_CHECKS[i], tx, ry);
@@ -10324,7 +10327,7 @@ if (document.readyState === 'loading') {
     }
 
     ctx.save();
-    ctx.font = '500 12px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 12px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.72)';
     ctx.textAlign = 'left';
     ctx.fillText('Each dot = one fellow trained', gx - 2, gy + gh + 22);
@@ -10358,7 +10361,7 @@ if (document.readyState === 'loading') {
 
     // Cardinal 00 / 06 / 12 / 18 labels
     ctx.save();
-    ctx.font = '500 12.5px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 12.5px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.78)';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -10370,11 +10373,11 @@ if (document.readyState === 'loading') {
     // Center digital clock & status
     const hh = (curHour < 10 ? '0' : '') + curHour + ':00';
     const clockFontPx = Math.round(Math.max(22, Math.min(34, r * 0.30)));
-    ctx.font = '800 ' + clockFontPx + 'px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '700 ' + clockFontPx + 'px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.fillText(hh, cx, cy - 5);
 
-    ctx.font = '500 12.5px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 12.5px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.82)';
     ctx.fillText('support desk · online', cx, cy + 19);
     ctx.restore();
@@ -10422,13 +10425,13 @@ if (document.readyState === 'loading') {
 
     ctx.save();
     ctx.textAlign = 'left';
-    ctx.font = '700 ' + headPx + 'px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '700 ' + headPx + 'px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.fillText('Every hour.', rx, topY);
     ctx.fillStyle = BLUE;
     ctx.fillText('Every day.', rx, topY + headPx * 1.22);
 
-    ctx.font = '500 13.5px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = '500 13.5px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(184, 198, 220, 0.88)';
     ctx.fillText('Urgent cases go to the front of the queue.', rx, topY + headPx * 1.22 + 28);
 
@@ -10452,7 +10455,7 @@ if (document.readyState === 'loading') {
         ctx.arc(dx, dy, dr, 0, Math.PI * 2);
         ctx.stroke();
       }
-      ctx.font = (isToday ? '700 ' : '600 ') + '12.5px "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
+      ctx.font = (isToday ? '700 ' : '600 ') + '12.5px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
       ctx.fillStyle = isToday ? '#041022' : 'rgba(220, 232, 248, 0.85)';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -12197,10 +12200,12 @@ if (document.readyState === 'loading') {
       clearTimeout(el._sub3dTimer);
       el._sub3dTimer = null;
     }
+    if (el._sub3dRaf) {
+      cancelAnimationFrame(el._sub3dRaf);
+      el._sub3dRaf = 0;
+    }
     el.classList.remove('mediq-subpage-3d-next', 'mediq-subpage-3d-prev');
-    void el.offsetWidth;
     const cls = dir < 0 ? 'mediq-subpage-3d-prev' : 'mediq-subpage-3d-next';
-    el.classList.add(cls);
     const cleanup = () => {
       el.classList.remove('mediq-subpage-3d-next', 'mediq-subpage-3d-prev');
       if (el._sub3dTimer) {
@@ -12208,8 +12213,13 @@ if (document.readyState === 'loading') {
         el._sub3dTimer = null;
       }
     };
-    el.addEventListener('animationend', cleanup, { once: true });
-    el._sub3dTimer = setTimeout(cleanup, 480);
+    // Schedule via rAF instead of synchronous offsetWidth reflow so slide opening stays 60/120 FPS
+    el._sub3dRaf = requestAnimationFrame(() => {
+      el._sub3dRaf = 0;
+      el.classList.add(cls);
+      el.addEventListener('animationend', cleanup, { once: true });
+      el._sub3dTimer = setTimeout(cleanup, 400);
+    });
   };
 
   let lastLockedHostEl = null;
@@ -12602,4 +12612,67 @@ if (document.readyState === 'loading') {
       if (sc) sc.scrollTo({ top: maxSc, behavior: 'smooth' });
     }
   });
+})();
+
+/* ========================================================================= */
+/* FOUNDATION 01 & 02 CARDS — INTERACTIVE SPOTLIGHT, 3D MICRO-TILT & ENTRANCE */
+/* ========================================================================= */
+(function initFoundationCardsMotion() {
+  const fndSec = document.getElementById('about-sec-foundation');
+  if (!fndSec) return;
+  const cards = Array.from(fndSec.querySelectorAll('.fnd-copy > .grid > div'));
+  if (!cards.length) return;
+
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isTouch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+
+  // Interactive cursor-tracking spotlight & subtle 3D optical tilt (desktop pointer)
+  if (!reduced && !isTouch) {
+    cards.forEach((card) => {
+      let rect = null;
+      card.addEventListener('pointerenter', () => {
+        rect = card.getBoundingClientRect();
+        card.style.setProperty('--fnd-spot', '1');
+      }, { passive: true });
+
+      card.addEventListener('pointermove', (e) => {
+        if (!rect) rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const nx = (x / Math.max(1, rect.width)) * 2 - 1;
+        const ny = (y / Math.max(1, rect.height)) * 2 - 1;
+        card.style.setProperty('--fnd-mx', x.toFixed(1) + 'px');
+        card.style.setProperty('--fnd-my', y.toFixed(1) + 'px');
+        card.style.setProperty('--fnd-rx', (-ny * 3.2).toFixed(2) + 'deg');
+        card.style.setProperty('--fnd-ry', (nx * 3.8).toFixed(2) + 'deg');
+      }, { passive: true });
+
+      card.addEventListener('pointerleave', () => {
+        rect = null;
+        card.style.setProperty('--fnd-spot', '0');
+        card.style.setProperty('--fnd-rx', '0deg');
+        card.style.setProperty('--fnd-ry', '0deg');
+      }, { passive: true });
+    });
+  }
+
+  // Coordinated staggered entrance glide when Foundation section scrolls into view
+  if (!reduced && typeof IntersectionObserver !== 'undefined') {
+    let wasInView = false;
+    const io = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
+      if (entry.isIntersecting && !wasInView) {
+        wasInView = true;
+        cards.forEach((card) => {
+          card.classList.remove('is-fnd-entering');
+          // Trigger cleanly on next animation frame without forced layout reflow
+          requestAnimationFrame(() => card.classList.add('is-fnd-entering'));
+        });
+      } else if (!entry.isIntersecting) {
+        wasInView = false;
+      }
+    }, { threshold: 0.25 });
+    io.observe(fndSec);
+  }
 })();

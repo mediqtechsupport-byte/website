@@ -525,6 +525,7 @@
     }
 
     function handleMapResize() {
+      if (!mapBooted) return;
       if (state.liveMap) {
         state.liveMap.resize();
         return;
@@ -535,7 +536,6 @@
     if (typeof ResizeObserver === 'function') {
       new ResizeObserver(handleMapResize).observe(stage);
     }
-    renderFallbackCanvas();
 
     // Progressive Live MapLibre GL + CARTO Dark Matter Upgrade for real online browsers
     function upgradeToLiveMapLibre() {
@@ -566,7 +566,7 @@
           center: CENTER_LNG_LAT,
           zoom: 12.6,
           renderWorldCopies: false,
-          attributionControl: { compact: true }
+          attributionControl: false
         });
 
         mlMap.on('load', function () {
@@ -596,7 +596,30 @@
       };
       document.head.appendChild(jsScript);
     }
-    upgradeToLiveMapLibre();
+    // Lazy-boot fallback canvas & MapLibre GL (~800KB + WebGL map + tiles) only when nearing Contact/Footer
+    var mapBooted = false;
+    function bootMapAssets() {
+      if (mapBooted) return;
+      mapBooted = true;
+      renderFallbackCanvas();
+      upgradeToLiveMapLibre();
+    }
+
+    var bootTarget = document.getElementById('footer-map-band') || document.getElementById('contact') || stage;
+    var r0 = bootTarget ? bootTarget.getBoundingClientRect() : null;
+    if (r0 && r0.bottom > -900 && r0.top < (window.innerHeight || 900) + 900) {
+      bootMapAssets();
+    } else if ('IntersectionObserver' in window && bootTarget) {
+      var bootIo = new IntersectionObserver(function (entries) {
+        if (entries.some(function (en) { return en.isIntersecting; })) {
+          bootIo.disconnect();
+          bootMapAssets();
+        }
+      }, { rootMargin: '900px 0px', threshold: 0.01 });
+      bootIo.observe(bootTarget);
+    } else {
+      bootMapAssets();
+    }
   }
 
   if (document.readyState === 'loading') {
