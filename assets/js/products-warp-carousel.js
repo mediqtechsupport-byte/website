@@ -250,6 +250,21 @@
   const SHARED_MESH_CACHE = new Map();
   const SHARED_IMAGE_CACHE = new Map();
 
+  if (typeof window !== 'undefined' && !window.__mediqWarpPreloadImages) {
+    window.__mediqWarpPreloadImages = function(urls) {
+      if (!Array.isArray(urls)) return;
+      urls.forEach((src) => {
+        if (!src || SHARED_IMAGE_CACHE.has(src)) return;
+        const img = new Image();
+        img.decoding = 'async';
+        const rec = { img, loaded: false };
+        SHARED_IMAGE_CACHE.set(src, rec);
+        img.onload = () => { rec.loaded = true; };
+        img.src = src;
+      });
+    };
+  }
+
   function getCachedMeshCanvas(mesh) {
     const src = mesh && mesh.length ? mesh : MESH_PRESETS.cyan.mesh;
     const key = src.join('|');
@@ -386,6 +401,32 @@
       ctx.fillText(card.footer, 17, 295);
     }
 
+    // Bottom-right "Inquire" frosted pill CTA
+    const inqX = 169;
+    const inqY = 281;
+    const inqW = 70;
+    const inqH = 21;
+    const inqR = 10.5;
+    ctx.save();
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.14)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.34)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    if (ctx.roundRect) {
+      ctx.roundRect(inqX, inqY, inqW, inqH, inqR);
+    } else {
+      ctx.rect(inqX, inqY, inqW, inqH);
+    }
+    ctx.fill();
+    ctx.stroke();
+    const inqSize = sizeForCap(ctx, 500, family, 6.8, 'H');
+    ctx.font = fontStr(500, inqSize, family);
+    ctx.fillStyle = rgba(white, 0.96);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Inquire', inqX + inqW / 2, inqY + inqH / 2 + 0.5);
+    ctx.restore();
+
     // Center Showcase: Product Box Packshot (front box on card center; replaces numeral + slider graphic)
     const boxImg = card._imgEl;
     if (boxImg && boxImg.complete && boxImg.naturalWidth > 0) {
@@ -407,10 +448,22 @@
       const dy = boxCy - dh * 0.5;
 
       ctx.save();
-      ctx.shadowColor = 'rgba(2, 6, 18, 0.58)';
-      ctx.shadowBlur = 18 * k;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 9 * k;
+      const shadowY = dy + dh * 0.90;
+      const shadowRx = Math.max(24, dw * 0.44);
+      const shadowRy = Math.max(8, dh * 0.10);
+      ctx.save();
+      ctx.translate(boxCx, shadowY);
+      ctx.scale(1, shadowRy / shadowRx);
+      const sg = ctx.createRadialGradient(0, 0, 0, 0, 0, shadowRx);
+      sg.addColorStop(0, 'rgba(2, 6, 18, 0.46)');
+      sg.addColorStop(0.65, 'rgba(2, 6, 18, 0.16)');
+      sg.addColorStop(1, 'rgba(2, 6, 18, 0)');
+      ctx.fillStyle = sg;
+      ctx.beginPath();
+      ctx.arc(0, 0, shadowRx, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
       ctx.drawImage(boxImg, dx, dy, dw, dh);
       ctx.restore();
       return;
@@ -838,6 +891,14 @@ void main(){
     st.texW = w;
   }
 
+  function uploadSingleCardLayer(st, cv, layerIdx) {
+    if (!st || !st.gl || !st.tex || layerIdx < 0 || layerIdx >= st.layers) return;
+    const gl = st.gl;
+    gl.bindTexture(gl.TEXTURE_2D_ARRAY, st.tex);
+    gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, 0, 0, 0, layerIdx, cv.width, cv.height, 1, gl.RGBA, gl.UNSIGNED_BYTE, cv);
+    gl.generateMipmap(gl.TEXTURE_2D_ARRAY);
+  }
+
   /* ------------------------------------------------------------------ */
   /* Canvas 2D Fallback (Transparent background)                         */
   /* ------------------------------------------------------------------ */
@@ -1010,6 +1071,7 @@ void main(){
 
     let lastUploadedSignature = '';
     let pendingImgRedraw = 0;
+    const pendingLayerIndices = new Set();
 
     function getPackshotImage(src) {
       if (!src) return null;
@@ -1021,14 +1083,50 @@ void main(){
       SHARED_IMAGE_CACHE.set(src, rec);
       img.onload = () => {
         rec.loaded = true;
-        if (disposed || pendingImgRedraw) return;
+        if (disposed || !list.length) return;
+        for (let i = 0; i < list.length; i++) {
+          if (list[i].image === src) pendingLayerIndices.add(i);
+        }
+        if (pendingImgRedraw) return;
         pendingImgRedraw = requestAnimationFrame(() => {
           pendingImgRedraw = 0;
           if (disposed || !list.length) return;
-          lastUploadedSignature = '';
-          texW = 0;
-          resize();
-          if (!paused && inView && isDocVisible) draw(performance.now() / 1000);
+          const dirty = Array.from(pendingLayerIndices);
+          pendingLayerIndices.clear();
+          const canPatchIncremental =
+            gls &&
+            texW > 0 &&
+            gls.layers === list.length &&
+            gls.texW === texW &&
+            dirty.length > 0 &&
+            dirty.length < list.length;
+
+          if (canPatchIncremental) {
+            const h = Math.round((texW * CH) / CW);
+            dirty.forEach((layerIdx) => {
+              const card = list[layerIdx];
+              if (!card) return;
+              if (card.image) {
+                const r = SHARED_IMAGE_CACHE.get(card.image);
+                card._imgEl = r ? r.img : card._imgEl;
+              }
+              const cv = document.createElement('canvas');
+              cv.width = texW;
+              cv.height = h;
+              paintCard(cv, card, font);
+              uploadSingleCardLayer(gls, cv, layerIdx);
+              cv.width = 0;
+              cv.height = 0;
+            });
+            lastUploadedSignature = computeSignature(texW);
+            restDrawn = false;
+            if (!paused && inView && isDocVisible) draw(performance.now() / 1000);
+          } else {
+            lastUploadedSignature = '';
+            texW = 0;
+            resize();
+            if (!paused && inView && isDocVisible) draw(performance.now() / 1000);
+          }
         });
       };
       img.src = src;
@@ -1095,7 +1193,7 @@ void main(){
         restDrawn = false;
       }
       unit = Math.min(W / (cssW < 640 ? 450 : 720), H / 440);
-      const want = Math.min(896, Math.max(256, Math.round(CW * unit * 1.18)));
+      const want = Math.min(640, Math.max(256, Math.round(CW * unit * 1.05)));
       if (list.length && (want !== texW || !lastUploadedSignature)) paintAll(want);
     }
 
@@ -1372,9 +1470,15 @@ void main(){
         } else if (u < -148) {
           goToIndex(L.index - 1, false);
         } else {
-          // Center card clicked -> open RAYONE EMV detail showcase modal!
+          // Check bottom-right "Inquire" pill hit zone on front center card first
           const realIdx = mod(Math.round(L.P), realCount);
           const item = rawCards[realIdx];
+          const v = (e.clientY - r.top - r.height / 2) / Math.max(0.01, unitCss);
+          if (u >= 26 && u <= 132 && v >= 104 && v <= 162 && item && options.onInquireClick) {
+            options.onInquireClick(item, realIdx);
+            return;
+          }
+          // Otherwise open product detail showcase!
           if (item && options.onFrontClick) {
             options.onFrontClick(item, realIdx);
           }
@@ -1510,10 +1614,37 @@ void main(){
         const item = rawCards[realIdx];
         if (item && options.onFrontClick) options.onFrontClick(item, realIdx);
       },
+      replayIntro(focusIndex) {
+        if (!rawCards.length) return;
+        const idx = typeof focusIndex === 'number' ? focusIndex : L.index;
+        const t0 = performance.now() / 1000;
+        L.index = mod(idx, realCount);
+        L.v = 0;
+        if (!rmq.matches) {
+          L.P = L.index - 0.52;
+          L.to = L.index;
+          L.lastT = t0;
+          L.omega = 7.4;
+          L.mode = 'spring';
+        } else {
+          L.P = L.index;
+          L.to = L.index;
+          L.mode = 'rest';
+        }
+        L.nextAuto = t0 + gap;
+        restDrawn = false;
+        inView = true;
+        if (!paused && isDocVisible) {
+          resize();
+          draw(t0);
+          kick();
+        }
+      },
       setPaused(isPaused) {
         const nextPaused = !!isPaused;
         if (nextPaused === paused && (paused || raf)) return;
         paused = nextPaused;
+        if (!paused && container.offsetWidth > 0) inView = true;
         syncActiveLoop();
         if (!paused && inView && isDocVisible) {
           resize();

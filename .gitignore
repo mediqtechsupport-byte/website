@@ -44,3 +44,6 @@ scratch/fix_mojibake.js
 scratch/remove_rayner_logo.js
 scratch/test_lock.mjs
 
+
+# Original Rayner brand asset downloads (not deployed)
+brand-assets/

@@ -30,6 +30,7 @@
       prompt: 'WHAT ARE YOU LOOKING FOR?',
       filters: [
         { label: 'ALL LENSES', slug: 'all' },
+        { label: 'NEW · GALAXY SPIRAL IOL', slug: 'galaxy' },
         { label: 'ENHANCED MONOVISION (EMV)', slug: 'emv' },
         { label: 'TRIFOCAL OPTICS', slug: 'trifocal' },
         { label: 'TORIC ASTIGMATISM', slug: 'toric' },
@@ -37,6 +38,40 @@
         { label: 'PSEUDOPHAKIC SUPPLEMENTARY', slug: 'sulcoflex' }
       ],
       items: [
+        {
+          id: 'rayone-galaxy',
+          code: 'RAO605G',
+          brand: 'RAYNER UK',
+          kicker: 'NEW 2026 / RAYNER UK / SPIRAL OPTIC / FULL RANGE IOL',
+          title: 'RAYONE\nGALAXY',
+          emboss: 'GALAXY SPIRAL IOL',
+          subtitle: 'The new spiral IOL — a smooth, continuous full range of vision with minimised dysphotopsia and 0% loss of transmitted light.',
+          desc: 'UNIQUE NON-DIFFRACTIVE SPIRAL OPTIC · 6.0 MM BICONVEX ABERRATION-CORRECTING OPTIC · RAYACRYL HYDROPHILIC ACRYLIC · +5.0 TO +30.0 D · FULLY PRELOADED 2.2 MM INCISION.',
+          badge: 'NEW · Spiral Optic · Preloaded',
+          packshot: 'assets/img/packshots/galaxy_carton.png?v=2',
+          accent: '#3aa0db',
+          tags: ['all', 'galaxy'],
+          keywords: ['galaxy', 'spiral', 'new', 'full range', 'edof', 'non-diffractive', 'rao605g', 'latest'],
+          detailSlide: 1,
+          iolStage: 0
+        },
+        {
+          id: 'rayone-galaxy-toric',
+          code: 'RAO615X',
+          brand: 'RAYNER UK',
+          kicker: 'NEW 2026 / RAYNER UK / SPIRAL OPTIC / TORIC IOL',
+          title: 'GALAXY\nTORIC',
+          emboss: 'GALAXY TORIC',
+          subtitle: 'Galaxy spiral full-range optics with astigmatism correction from +0.75 D to +4.5 D cylinder.',
+          desc: 'SPIRAL OPTIC WITH ANTI-VAULTING HAPTIC (AVH) ROTATIONAL STABILITY · SE +6.0 TO +30.0 D · CYL +0.75 TO +4.5 D · AMON-APPLE 360° SQUARE EDGE.',
+          badge: 'NEW · Toric · Cyl +0.75 to +4.5 D',
+          packshot: 'assets/img/packshots/galaxy_toric_carton.png?v=2',
+          accent: '#94a3b8',
+          tags: ['all', 'galaxy', 'toric'],
+          keywords: ['galaxy', 'toric', 'spiral', 'astigmatism', 'new', 'rao615x', 'latest'],
+          detailSlide: 1,
+          iolStage: 1
+        },
         {
           id: 'rayone-emv',
           code: 'RAO200E',
@@ -52,7 +87,7 @@
           tags: ['all', 'emv'],
           keywords: ['emv', 'monovision', 'enhanced', 'range', 'depth', 'barrett', '200e'],
           detailSlide: 1,
-          iolStage: 0
+          iolStage: 2
         },
         {
           id: 'rayone-trifocal',
@@ -69,7 +104,7 @@
           tags: ['all', 'trifocal'],
           keywords: ['trifocal', 'multifocal', 'near', 'intermediate', 'spectacle', '603f'],
           detailSlide: 1,
-          iolStage: 1
+          iolStage: 4
         },
         {
           id: 'rayone-trifocal-toric',
@@ -86,7 +121,7 @@
           tags: ['all', 'trifocal', 'toric'],
           keywords: ['toric', 'astigmatism', 'trifocal', 'rotation', '613t'],
           detailSlide: 1,
-          iolStage: 2
+          iolStage: 5
         },
         {
           id: 'rayone-aspheric',
@@ -103,41 +138,41 @@
           tags: ['all', 'monofocal'],
           keywords: ['aspheric', 'monofocal', '600c', 'contrast', 'clear'],
           detailSlide: 1,
+          iolStage: 6
+        },
+        {
+          id: 'rayone-emv-toric',
+          code: 'RAO210T',
+          brand: 'RAYNER UK',
+          kicker: '2026 / RAYNER UK / ENHANCED MONOVISION TORIC / IOL',
+          title: 'RAYONE\nEMV TORIC',
+          emboss: 'EMV TORIC',
+          subtitle: 'Up to 1.5 D extended range of vision combined with precise astigmatism correction and Lock & Roll delivery.',
+          desc: 'PATENTED POSITIVE SPHERICAL ABERRATION OPTIC WITH ANTI-VAULTING HAPTIC (AVH) ROTATIONAL STABILITY FOR ASTIGMATIC PATIENTS.',
+          badge: 'Up to 1.5 D Range · Toric AVH',
+          packshot: 'assets/img/packshots/authentic_emv_toric.png',
+          accent: '#eb5a28',
+          tags: ['all', 'emv', 'toric'],
+          keywords: ['emv', 'toric', 'monovision', 'astigmatism', 'rao210t', '210t'],
+          detailSlide: 1,
           iolStage: 3
         },
         {
-          id: 'rayone-hydrophobic',
-          code: 'RAO800C',
+          id: 'sulcoflex-aspheric',
+          code: '653L',
           brand: 'RAYNER UK',
-          kicker: '2026 / RAYNER UK / CROSS-LINKED HYDROPHOBIC / IOL',
-          title: 'RAYONE\nHYDROPHOBIC',
-          emboss: '360 SQUARE EDGE',
-          subtitle: 'Proprietary cross-linked hydrophobic acrylic with Amon-Apple 360° enhanced square edge.',
-          desc: 'NEXT-GENERATION HYDROPHOBIC ACRYLIC OPTIC WITH CONTROLLED UNFOLDING AND ULTRA-LOW PCO INCIDENCE.',
-          badge: '360° Square Edge · Anti-PCO',
-          packshot: 'assets/img/packshots/authentic_emv_toric.png',
-          accent: '#f59e0b',
-          tags: ['all', 'monofocal'],
-          keywords: ['hydrophobic', '800c', 'pco', 'square edge'],
-          detailSlide: 1,
-          iolStage: 4
-        },
-        {
-          id: 'sulcoflex-trifocal',
-          code: '703F',
-          brand: 'RAYNER UK',
-          kicker: '2026 / RAYNER UK / CILIARY SULCUS DUET / IOL',
-          title: 'SULCOFLEX\nTRIFOCAL',
-          emboss: 'SULCOFLEX DUET',
-          subtitle: 'Reversible pseudophakic supplementary lens converting any monofocal into full-range trifocal vision.',
-          desc: 'LARGE 6.5 MM UNDULATING ROUND-EDGE SULCUS OPTIC WITH 10° POSTERIOR ANGULATED HAPTICS FOR REVERSIBLE TRIFOCAL UPGRADES.',
-          badge: 'Reversible Duet · 6.5 mm Optic',
+          kicker: '2026 / RAYNER UK / PSEUDOPHAKIC SUPPLEMENTARY / IOL',
+          title: 'SULCOFLEX\nASPHERIC',
+          emboss: 'SULCOFLEX 653L',
+          subtitle: 'Pseudophakic supplementary sulcus lens for reversible residual refractive error correction.',
+          desc: 'LARGE 6.5 MM UNDULATING ROUND-EDGE SULCUS OPTIC WITH 10° POSTERIOR ANGULATED HAPTICS DESIGNED TO REDUCE UVEAL CONTACT AND PIGMENT DISPERSION.',
+          badge: 'Supplementary Sulcus · 6.5 mm Optic',
           packshot: 'assets/img/packshots/authentic_sulcoflex.png',
-          accent: '#f43f5e',
-          tags: ['all', 'sulcoflex', 'trifocal'],
-          keywords: ['sulcoflex', 'supplementary', 'duet', 'sulcus', '703f'],
+          accent: '#a855f7',
+          tags: ['all', 'sulcoflex', 'monofocal'],
+          keywords: ['sulcoflex', 'aspheric', 'supplementary', 'duet', 'sulcus', '653l'],
           detailSlide: 1,
-          iolStage: 5
+          iolStage: 7
         }
       ]
     },
@@ -146,11 +181,11 @@
     // SUBPAGE 2: OPHTHALMIC SOLUTIONS & VERIFIED OVDs (Ophteis OVDs & AEON Eye Solutions)
     // ========================================================================
     2: {
-      subpageTitle: 'OPHTHALMIC SOLUTIONS & VERIFIED OVDs · OPHTEIS® & AEON™',
+      subpageTitle: 'OPHTHALMIC SOLUTIONS & VERIFIED OVDs · OPHTEIS & AEON™',
       prompt: 'WHAT ARE YOU LOOKING FOR?',
       filters: [
         { label: 'ALL OPHTHALMIC SOLUTIONS', slug: 'all' },
-        { label: 'VERIFIED OVDs (OPHTEIS®)', slug: 'ovd' },
+        { label: 'VERIFIED OVDs (OPHTEIS)', slug: 'ovd' },
         { label: 'OPHTHALMIC EYE SOLUTIONS (AEON™)', slug: 'aeon' },
         { label: 'DISPERSIVE PROTECTION', slug: 'dispersive' },
         { label: 'OCULAR SURFACE CARE', slug: 'dryeye' }
@@ -159,7 +194,7 @@
         {
           id: 'ophteis-bio-30',
           code: 'OPH-30',
-          brand: 'OPHTEIS® OVD',
+          brand: 'OPHTEIS OVD',
           kicker: '2026 / RAYNER UK / 3.0% SODIUM HYALURONATE / OVD',
           title: 'OPHTEIS\nBIO 3.0',
           emboss: 'OPHTEIS BIO 3.0',
@@ -177,7 +212,7 @@
         {
           id: 'ophteis-bio-18',
           code: 'OPH-18',
-          brand: 'OPHTEIS® OVD',
+          brand: 'OPHTEIS OVD',
           kicker: '2026 / RAYNER UK / 1.8% SODIUM HYALURONATE / OVD',
           title: 'OPHTEIS\nBIO 1.8',
           emboss: 'OPHTEIS BIO 1.8',
@@ -195,7 +230,7 @@
         {
           id: 'ophteis-max',
           code: 'OPH-MAX',
-          brand: 'OPHTEIS® OVD',
+          brand: 'OPHTEIS OVD',
           kicker: '2026 / RAYNER UK / 2.0% HPMC DISPERSIVE / OVD',
           title: 'OPHTEIS\nMAX HPMC',
           emboss: 'ENDOTHELIAL SHIELD',
@@ -910,8 +945,8 @@
     'rayone-trifocal': { value: '89', unit: '%', detail: 'ring', preset: 'cerulean' },
     'rayone-trifocal-toric': { value: '1.8', unit: '°', detail: 'cross', labels: ['AVH', 'Haptic', 'Toric'], preset: 'cobalt' },
     'rayone-aspheric': { value: '1.65', unit: 'mm', detail: 'wave', preset: 'plum' },
-    'rayone-hydrophobic': { value: '360', unit: '°', detail: 'ring', preset: 'orange' },
-    'sulcoflex-trifocal': { value: '6.5', unit: 'mm', detail: 'cross', labels: ['Duet', 'Sulcus', '10°'], preset: 'aubergine' },
+    'rayone-emv-toric': { value: '1.5', unit: 'D', detail: 'ring', preset: 'orange' },
+    'sulcoflex-aspheric': { value: '6.5', unit: 'mm', detail: 'cross', labels: ['Sulcus', 'Aspheric', '10°'], preset: 'aubergine' },
     'ophteis-bio-30': { value: '3.0', unit: '%', detail: 'slider', labels: ['Cohesive', '85k mPa·s'], preset: 'cerulean' },
     'ophteis-bio-18': { value: '1.8', unit: '%', detail: 'ring', preset: 'lavender' },
     'ophteis-max': { value: '2.0', unit: '%', detail: 'cross', labels: ['HPMC', 'Cell', 'Shield'], preset: 'marigold' },
@@ -975,6 +1010,33 @@
       onFrontClick(card) {
         const it = card && card.itemRef;
         if (it) enterDetailMode(it);
+      },
+      onInquireClick(card) {
+        const it = card && card.itemRef;
+        if (!it) return;
+        const cleanTitle = (it.title || '').replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+        const codePart = it.code ? ` (${it.code})` : '';
+        const preferredTopic = activeSubpage === 1 ? 'IOL portfolio' : 'Hospital supply';
+        const topicBtn = document.querySelector(`#contact-topic-pills button[data-contact-topic="${preferredTopic}"]`);
+        if (topicBtn) topicBtn.click();
+        const subj = document.getElementById('inq-subject');
+        if (subj) {
+          subj.value = `Product Inquiry: ${cleanTitle}${codePart}`;
+        }
+        const msg = document.getElementById('inq-message');
+        if (msg && (!msg.value.trim() || msg.value.startsWith('I would like to inquire about '))) {
+          msg.value = `I would like to inquire about ${cleanTitle}${codePart}.`;
+        }
+        if (typeof window.navigateToSection === 'function') {
+          window.navigateToSection('#contact');
+        } else {
+          if (typeof window.goToProductSlide === 'function') window.goToProductSlide(0);
+          const contactSec = document.getElementById('contact');
+          if (contactSec) contactSec.scrollIntoView({ behavior: 'smooth' });
+        }
+        if (msg) {
+          setTimeout(() => { try { msg.focus({ preventScroll: true }); } catch (_) {} }, 550);
+        }
       }
     });
     return warpCtrl;
@@ -1202,7 +1264,10 @@
 
   // 6. SUBPAGE HOOKS, IDLE PACKSHOT PRELOAD & SELF-HEALING ACTIVATION
   // ============================================================================
+  let prewarmedSubpage = 0;
+
   function preloadAllCatalogPackshots() {
+    const urls = [];
     const seen = new Set();
     [1, 2, 4].forEach((k) => {
       const cat = CATALOG[k];
@@ -1210,17 +1275,60 @@
       cat.items.forEach((it) => {
         if (it.packshot && !seen.has(it.packshot)) {
           seen.add(it.packshot);
-          const pre = new Image();
-          pre.decoding = 'async';
-          pre.src = it.packshot;
+          urls.push(it.packshot);
         }
       });
     });
+    if (typeof window.__mediqWarpPreloadImages === 'function') {
+      window.__mediqWarpPreloadImages(urls);
+    } else {
+      urls.forEach((src) => {
+        const pre = new Image();
+        pre.decoding = 'async';
+        pre.src = src;
+      });
+    }
+  }
+
+  function prewarmWarpStage() {
+    if (warpCtrl || activeSubpage !== 0 || !warpMountEl) return;
+    const cat = CATALOG[1];
+    if (!cat || !cat.items) return;
+    resizeCanvases();
+    const ctrl = ensureWarpCarousel();
+    if (ctrl) {
+      const items = cat.items.slice();
+      visibleItems = items;
+      ctrl.setCards(items.map((item, idx) => toWarpCard(item, idx)), 0);
+      ctrl.setPaused(true);
+      prewarmedSubpage = 1;
+    }
+  }
+
+  function schedulePrewarm() {
+    preloadAllCatalogPackshots();
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(() => prewarmWarpStage(), { timeout: 2200 });
+    } else {
+      setTimeout(prewarmWarpStage, 1200);
+    }
+  }
+
+  if (typeof IntersectionObserver !== 'undefined' && prodSec) {
+    let prewarmScheduled = false;
+    const preIo = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting) && !prewarmScheduled) {
+        prewarmScheduled = true;
+        preIo.disconnect();
+        schedulePrewarm();
+      }
+    }, { rootMargin: '500px 0px', threshold: 0.01 });
+    preIo.observe(prodSec);
   }
   if (typeof window.requestIdleCallback === 'function') {
-    window.requestIdleCallback(preloadAllCatalogPackshots, { timeout: 1400 });
+    window.requestIdleCallback(schedulePrewarm, { timeout: 2200 });
   } else {
-    setTimeout(preloadAllCatalogPackshots, 800);
+    setTimeout(schedulePrewarm, 1200);
   }
 
   window.__activateProductsActiveTheory = function(slideIdx) {
@@ -1254,7 +1362,15 @@
       if (kickerEl) kickerEl.textContent = cat.subpageTitle;
 
       resizeCanvases();
-      buildHelixCards(visibleItems, 0);
+      if (idx === 1 && prewarmedSubpage === 1 && warpCtrl) {
+        prewarmedSubpage = 0;
+        if (counterTotEl) counterTotEl.textContent = String(visibleItems.length).padStart(2, '0');
+        warpCtrl.setPaused(false);
+        if (typeof warpCtrl.replayIntro === 'function') warpCtrl.replayIntro(0);
+      } else {
+        prewarmedSubpage = 0;
+        buildHelixCards(visibleItems, 0);
+      }
       renderSpiralChatMenu(idx);
       kickDust();
       notifyProductsStageChange();
@@ -1305,7 +1421,10 @@
       const origFn = window.goToProductSlide;
       const wrapped = function(idx) {
         const res = origFn.apply(this, arguments);
-        window.__activateProductsActiveTheory(Number(idx) || 0);
+        const nextIdx = Number(idx) || 0;
+        if (activeSubpage !== nextIdx) {
+          window.__activateProductsActiveTheory(nextIdx);
+        }
         return res;
       };
       wrapped.__atWrapped = true;

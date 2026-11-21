@@ -27,3 +27,11 @@ Whenever making changes to `index.html` or workspace files, the assistant **MUST
 node scratch/verify_all_locks.js
 ```
 Both sections must report `100% PASS`. If any discrepancy is detected, the agent **MUST immediately revert** to the protected master baselines in `components/`.
+
+
+---
+
+## 🚀 DEPLOYMENT RULE — ALWAYS ASK BEFORE PUBLISHING TO THE HOST WEBSITE
+* After ANY design or code update, the assistant **MUST ASK the USER** whether the change should be published to the live host website (**https://website-96f.pages.dev/**) before doing it.
+* **NEVER** run `git commit`, `git push`, `wrangler pages deploy`, or any other deploy/publish step without the USER's explicit "yes" for that specific update.
+* Local preview (`http://127.0.0.1:8000/`) testing is always fine without asking.

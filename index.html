@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 
 <head>
@@ -314,7 +314,7 @@
       #site-header nav > ul {
         gap: 0.125rem !important;
       }
-      #site-header nav .spotlight-pill {
+      #site-header nav .motion-nav-pill, #site-header nav .spotlight-pill {
         padding: 0.45rem 0.42rem !important;
         font-size: 11.5px !important;
         gap: 0.3rem !important;
@@ -1858,6 +1858,123 @@
       transform: translateY(-0.5rem) !important;
     }
 
+    /* ========================================================== */
+    /* MOTION NAVIGATION MENU (Spring Highlight & Morph Viewport) */
+    /* ========================================================== */
+    #motion-nav-list-highlight {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      pointer-events: none;
+      border-radius: 8px;
+      background: rgba(114, 197, 248, 0.14);
+      border: 1px solid rgba(114, 197, 248, 0.22);
+      opacity: 0;
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), width 0.28s cubic-bezier(0.22, 1, 0.36, 1), height 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.18s ease;
+    }
+
+    #motion-nav-root .motion-nav-pill.spotlight-pill {
+      position: relative;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #motion-nav-root .motion-nav-pill.spotlight-pill.is-active {
+      background: rgba(58, 160, 219, 0.14) !important;
+      color: #ffffff !important;
+      box-shadow: inset 0 -1.5px 0 rgba(114, 197, 248, 0.72) !important;
+    }
+
+    #motion-nav-root .motion-nav-pill.spotlight-pill[data-state="open"],
+    #motion-nav-root .motion-nav-pill.spotlight-pill:hover {
+      color: #ffffff !important;
+    }
+
+    #motion-nav-root .motion-nav-chevron {
+      transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+    }
+
+    #motion-nav-root [data-slot="navigation-menu-trigger"][data-state="open"] .motion-nav-chevron {
+      transform: translateY(1px) rotate(180deg);
+      opacity: 1;
+    }
+
+    #motion-nav-viewport-pos {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      padding-top: 10px;
+      z-index: 70;
+      pointer-events: none;
+      transition: left 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #motion-nav-viewport-pos.is-open {
+      pointer-events: auto;
+    }
+
+    #motion-nav-viewport {
+      position: relative;
+      overflow: hidden;
+      width: 0px;
+      height: 0px;
+      opacity: 0;
+      transform: scale(0.95);
+      transform-origin: top center;
+      border-radius: 14px;
+      background: rgba(7, 20, 44, 0.94);
+      border: 1px solid rgba(114, 197, 248, 0.22);
+      box-shadow: 0 22px 54px rgba(2, 8, 22, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(22px) saturate(160%);
+      -webkit-backdrop-filter: blur(22px) saturate(160%);
+      transition: width 0.34s cubic-bezier(0.22, 1, 0.36, 1), height 0.34s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #motion-nav-viewport.is-open {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .motion-nav-panel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: max-content;
+      padding: 10px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .motion-nav-panel.is-panel-motion {
+      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease;
+    }
+
+    .motion-nav-panel-inner {
+      position: relative;
+    }
+
+    .motion-nav-inner-highlight {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      pointer-events: none;
+      border-radius: 10px;
+      background: rgba(114, 197, 248, 0.14);
+      border: 1px solid rgba(114, 197, 248, 0.18);
+      opacity: 0;
+      transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), width 0.26s cubic-bezier(0.22, 1, 0.36, 1), height 0.26s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.16s ease;
+    }
+
+    .motion-nav-panel [data-slot="navigation-menu-link"] {
+      position: relative;
+      z-index: 1;
+    }
+
     /* Solid dark navy header bar when viewing light-mode #contact section */
     #site-header.is-light-page #header-bar {
       background-color: rgba(10, 29, 64, 0.94);
@@ -2139,13 +2256,23 @@
       transition: background 0.4s ease;
     }
 
+    .sv-box-wrap {
+      position: relative;
+      width: var(--bw);
+      height: var(--bh);
+      transform-style: preserve-3d;
+      transform: scale3d(1, 1, 1) translate3d(0, 0, 0);
+      visibility: visible;
+      transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1) 0.14s, visibility 0s linear 0.14s;
+      z-index: 5;
+    }
+
     .sv-box-float {
       position: relative;
       width: var(--bw);
       height: var(--bh);
       transform-style: preserve-3d;
       animation: sv-packshot-float 6.5s ease-in-out infinite;
-      z-index: 5;
     }
 
     .sv-box3d {
@@ -2163,20 +2290,21 @@
     }
 
     .sv-box3d.is-spinning {
+      transition: none;
       animation: sv-box-spin360 7s linear infinite;
     }
 
     @keyframes sv-box-spin360 {
       0% {
-        transform: rotateX(5deg) rotateY(-24deg);
+        transform: rotateX(6deg) rotateY(-24deg);
       }
 
       50% {
-        transform: rotateX(-4deg) rotateY(-204deg);
+        transform: rotateX(-3deg) rotateY(-204deg);
       }
 
       100% {
-        transform: rotateX(5deg) rotateY(-384deg);
+        transform: rotateX(6deg) rotateY(-384deg);
       }
     }
 
@@ -2460,10 +2588,83 @@
       background: radial-gradient(ellipse at center, rgba(10, 29, 64, 0.55) 0%, rgba(10, 29, 64, 0.22) 48%, transparent 74%);
       filter: blur(9px);
       pointer-events: none;
+      transition: opacity 0.45s ease, width 0.45s ease;
       z-index: 2;
     }
 
-    /* 4 View Pill Buttons (Front | Side | Back | Spin) */
+    /* Interactive 3D Lens Inspection Overlay (Shown on View Lens toggle) */
+    .sv-lens-stage {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      opacity: 0;
+      transform: scale(0.88) translateY(10px);
+      pointer-events: none;
+      transition: opacity 0.15s ease-out 0s, transform 0.16s ease-out 0s;
+      z-index: 8;
+    }
+
+    .sv-lens-float {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-style: preserve-3d;
+      animation: sv-packshot-float 5.8s ease-in-out infinite;
+      transition: transform 0.18s ease-out;
+      will-change: transform;
+    }
+
+    .sv-lens-img {
+      width: clamp(275px, 23vw, 375px);
+      height: clamp(275px, 23vw, 375px);
+      object-fit: contain;
+      filter: drop-shadow(0 24px 36px rgba(0, 0, 0, 0.68)) drop-shadow(0 0 28px var(--box-glow, rgba(58, 160, 219, 0.36)));
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .sv-lens-caption {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(226, 232, 240, 0.88);
+      padding: 5px 14px;
+      border-radius: 9999px;
+      background: rgba(10, 29, 64, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      backdrop-filter: blur(10px);
+    }
+
+    .sv-scene[data-view="lens"] .sv-box-wrap {
+      transform: scale3d(0.001, 0.001, 0.001) translate3d(0, -18px, 0);
+      visibility: hidden;
+      pointer-events: none;
+      transition: transform 0.20s cubic-bezier(0.4, 0, 1, 1) 0s, visibility 0s linear 0.20s;
+    }
+
+    .sv-scene[data-view="lens"] .sv-box-shadow {
+      opacity: 0.45;
+      width: clamp(210px, 16vw, 270px);
+    }
+
+    .sv-scene[data-view="lens"] .sv-lens-stage {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: auto;
+      transition: opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1) 0.16s, transform 0.38s cubic-bezier(0.22, 1, 0.36, 1) 0.16s;
+    }
+
+    .sv-scene[data-view="lens"] .sv-stage {
+      cursor: default;
+    }
+
+    /* 2 View Pill Buttons (Spin | View Lens) */
     .sv-box-controls {
       display: flex;
       align-items: center;
@@ -2476,6 +2677,10 @@
     .sv-box-btn {
       appearance: none;
       -webkit-appearance: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       border: 1px solid rgba(148, 163, 184, 0.42);
       background: rgba(255, 255, 255, 0.10);
       backdrop-filter: blur(12px);
@@ -2483,11 +2688,17 @@
       font-family: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
       font-size: 15.5px;
       font-weight: 600;
-      padding: 10px 27px;
+      padding: 10px 24px;
       border-radius: 9999px;
       cursor: pointer;
       transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
       line-height: 1.2;
+    }
+
+    .sv-box-btn__icon {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
     }
 
     .sv-box-btn:hover {
@@ -3104,6 +3315,55 @@
         width: min(100%, 348px) !important;
         height: clamp(134px, 19.5svh, 178px) !important;
         aspect-ratio: auto !important;
+      }
+
+      /* Who We Are brand visual (mobile wide-short frame): compact logo on the left, lens visible on the right */
+      #about .forge-brand-stage .forge-brand-bg {
+        object-position: 50% 58% !important;
+      }
+
+      #about .forge-brand-stage .forge-brand-scrim {
+        top: 0 !important;
+        bottom: 0 !important;
+        height: auto !important;
+        width: 62% !important;
+        background: linear-gradient(90deg, rgba(4, 10, 24, 0.82) 0%, rgba(6, 18, 42, 0.52) 58%, transparent 100%) !important;
+      }
+
+      #about .forge-brand-stage .forge-brand-overlay {
+        top: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: auto !important;
+        width: 54% !important;
+        padding: 0 0 0 16px !important;
+        align-items: flex-start !important;
+        text-align: left !important;
+      }
+
+      #about .forge-brand-stage .forge-brand-eyebrow {
+        font-size: 7px !important;
+        letter-spacing: 0.2em !important;
+        margin-bottom: 6px !important;
+        white-space: nowrap !important;
+      }
+
+      #about .forge-brand-stage .forge-brand-logo {
+        width: 100% !important;
+        max-width: 132px !important;
+      }
+
+      #about .forge-brand-stage .forge-brand-rule {
+        margin-top: 7px !important;
+        width: 36px !important;
+        background: linear-gradient(90deg, rgba(114, 197, 248, 0.75), transparent) !important;
+      }
+
+      #about .forge-brand-stage .forge-brand-sub {
+        margin-top: 5px !important;
+        font-size: 6.5px !important;
+        letter-spacing: 0.18em !important;
+        white-space: nowrap !important;
       }
 
       #about #forge-about-sticky,
@@ -4232,608 +4492,423 @@
             class="h-8 sm:h-9 xl:h-10 2xl:h-11 w-auto object-contain transition group-hover:opacity-90 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]" />
         </a>
 
-        <!-- Center: Original Layout Nav Links with Sleek Spotlight Lamp Hover & Active Effect -->
-        <ul class="hidden lg:flex items-center gap-0.5 xl:gap-1 2xl:gap-2 min-w-0">
+        <!-- Center: MotionNavigationMenu (Sliding Highlight + Shared Morphing Viewport) -->
+        <div id="motion-nav-root" data-slot="navigation-menu" data-viewport="true" class="hidden lg:flex relative flex-1 items-center justify-center min-w-0">
+          <div id="motion-nav-list-wrap" class="relative flex items-center">
+            <span id="motion-nav-list-highlight" aria-hidden="true"></span>
+            <ul data-slot="navigation-menu-list" class="relative z-10 flex list-none items-center justify-center gap-0.5 xl:gap-1 2xl:gap-1.5">
 
-          <!-- 1. HOME -->
-          <li class="relative py-2">
-            <a id="nav-home" href="#top"
-              class="spotlight-pill is-active flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60">
-              <span class="spotlight-lamp"></span>
-              <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-              </svg>
-              <span>Home</span>
-            </a>
-          </li>
+              <!-- 1. HOME (Direct Link) -->
+              <li data-slot="navigation-menu-item" class="relative">
+                <a id="nav-home" href="#top" data-motion-nav-direct="true"
+                  class="motion-nav-pill spotlight-pill is-active flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2.5 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60">
+                  <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                  <span>Home</span>
+                </a>
+              </li>
 
-          <!-- 2. ABOUT MEDIQ (Dropdown: Who We Are, What We Do, Foundation, Values) -->
-          <li class="relative group py-2">
-            <a id="nav-about" href="#about" data-slide-target="0"
-              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60"
-              aria-haspopup="true" aria-expanded="false">
-              <span class="spotlight-lamp"></span>
-              <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
-                <path d="M9 22v-4h6v4" />
-                <path d="M8 6h.01" />
-                <path d="M16 6h.01" />
-                <path d="M8 10h.01" />
-                <path d="M16 10h.01" />
-                <path d="M8 14h.01" />
-                <path d="M16 14h.01" />
-              </svg>
-              <span>About MEDIQ</span>
-              <svg
-                class="size-3.5 opacity-60 transition-transform duration-200 group-hover:rotate-180 group-hover:opacity-100"
-                viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path d="m4 6 4 4 4-4" />
-              </svg>
-            </a>
-            <div
-              class="nav-dropdown-panel invisible pointer-events-none absolute left-0 top-full pt-2 opacity-0 -translate-y-2 transition-all duration-200 ease-out group-hover:visible group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 z-50">
-              <div class="transparent-blue-dropdown w-64 rounded-2xl ring-1 ring-white/10 p-2 space-y-0.5">
-                <!-- Who We Are -->
-                <a href="#about" data-slide-target="1"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                      <circle cx="9" cy="7" r="4" />
-                      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Who
-                    We Are</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
+              <!-- 2. ABOUT MEDIQ -->
+              <li data-slot="navigation-menu-item" data-value="about" class="relative">
+                <a id="nav-about" href="#about" data-slide-target="0"
+                  data-slot="navigation-menu-trigger" data-panel-target="about" data-state="closed"
+                  aria-haspopup="true" aria-expanded="false"
+                  class="motion-nav-pill spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2.5 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60">
+                  <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
+                    <path d="M9 22v-4h6v4" />
+                    <path d="M8 6h.01" />
+                    <path d="M16 6h.01" />
+                    <path d="M8 10h.01" />
+                    <path d="M16 10h.01" />
+                    <path d="M8 14h.01" />
+                    <path d="M16 14h.01" />
+                  </svg>
+                  <span>About MEDIQ</span>
+                  <svg class="motion-nav-chevron size-3.5 opacity-65 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="m4 6 4 4 4-4" />
                   </svg>
                 </a>
-                <!-- What We Do -->
-                <a href="#about" data-slide-target="2"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
-                      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">What
-                    We Do</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
+              </li>
+
+              <!-- 3. PRODUCTS -->
+              <li data-slot="navigation-menu-item" data-value="products" class="relative">
+                <a id="nav-products" href="#products"
+                  data-slot="navigation-menu-trigger" data-panel-target="products" data-state="closed"
+                  aria-haspopup="true" aria-expanded="false"
+                  class="motion-nav-pill spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2.5 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60">
+                  <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m7.5 4.27 9 5.15" />
+                    <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                    <path d="m3.3 7 8.7 5 8.7-5" />
+                    <path d="M12 22V12" />
+                  </svg>
+                  <span>Products</span>
+                  <svg class="motion-nav-chevron size-3.5 opacity-65 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="m4 6 4 4 4-4" />
                   </svg>
                 </a>
-                <!-- Foundation -->
-                <a href="#about" data-slide-target="3"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M2 20h20" />
-                      <path d="M5 20V8" />
-                      <path d="M19 20V8" />
-                      <path d="M9 20v-8h6v8" />
-                      <path d="m12 2 10 6H2z" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Foundation</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
+              </li>
+
+              <!-- 4. BRANDS & PARTNERS -->
+              <li data-slot="navigation-menu-item" data-value="brands" class="relative">
+                <a id="nav-brands" href="#brands" data-deck-target="brands:0"
+                  data-slot="navigation-menu-trigger" data-panel-target="brands" data-state="closed"
+                  aria-haspopup="true" aria-expanded="false"
+                  class="motion-nav-pill spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2.5 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60">
+                  <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m11 17 2 2a1 1 0 0 0 1.4 0l4.3-4.3a1 1 0 0 0 0-1.4l-2.6-2.6a1 1 0 0 0-1.4 0L12 13" />
+                    <path d="m14 14 2.5 2.5" />
+                    <path d="m3 7 3-3a1 1 0 0 1 1.4 0l5.3 5.3a1 1 0 0 1 0 1.4L10 13" />
+                    <path d="m6 4 2.5 2.5" />
+                    <path d="m2 14 4.5 4.5a2 2 0 0 0 2.8 0L12 16" />
+                    <path d="m18 10 4-4a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0L14 6" />
+                  </svg>
+                  <span>Brands &amp; Partners</span>
+                  <svg class="motion-nav-chevron size-3.5 opacity-65 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="m4 6 4 4 4-4" />
                   </svg>
                 </a>
-                <!-- Values -->
-                <a href="#about" data-slide-target="4"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                      <path d="m9 12 2 2 4-4" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Values</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
+              </li>
+
+              <!-- 5. SERVICES -->
+              <li data-slot="navigation-menu-item" data-value="services" class="relative">
+                <a id="nav-services" href="#distribution" data-deck-target="services:0"
+                  data-slot="navigation-menu-trigger" data-panel-target="services" data-state="closed"
+                  aria-haspopup="true" aria-expanded="false"
+                  class="motion-nav-pill spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2.5 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60">
+                  <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                  </svg>
+                  <span>Services</span>
+                  <svg class="motion-nav-chevron size-3.5 opacity-65 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="m4 6 4 4 4-4" />
                   </svg>
                 </a>
+              </li>
+
+              <!-- 6. RESOURCES -->
+              <li data-slot="navigation-menu-item" data-value="resources" class="relative">
+                <a id="nav-resources" href="#resources" data-deck-target="resources:0"
+                  data-slot="navigation-menu-trigger" data-panel-target="resources" data-state="closed"
+                  aria-haspopup="true" aria-expanded="false"
+                  class="motion-nav-pill spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2.5 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60">
+                  <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+                    <path d="M6 6h10" />
+                    <path d="M6 10h10" />
+                    <path d="M9 2v20" />
+                  </svg>
+                  <span>Resources</span>
+                  <svg class="motion-nav-chevron size-3.5 opacity-65 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="m4 6 4 4 4-4" />
+                  </svg>
+                </a>
+              </li>
+
+              <!-- 7. NEWS & EVENTS (Direct Link) -->
+              <li data-slot="navigation-menu-item" class="relative">
+                <a id="nav-news" href="#activities" data-deck-target="news:0" data-motion-nav-direct="true"
+                  class="motion-nav-pill spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2.5 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60">
+                  <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                    <line x1="16" x2="16" y1="2" y2="6" />
+                    <line x1="8" x2="8" y1="2" y2="6" />
+                    <line x1="3" x2="21" y1="10" y2="10" />
+                  </svg>
+                  <span>News &amp; Events</span>
+                </a>
+              </li>
+
+              <!-- 8. CONTACT US (Direct Link) -->
+              <li data-slot="navigation-menu-item" class="relative">
+                <a id="nav-contact" href="#contact" data-deck-target="contact:0" data-motion-nav-direct="true"
+                  class="motion-nav-pill spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2.5 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60">
+                  <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect width="20" height="16" x="2" y="4" rx="2" />
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                  </svg>
+                  <span>Contact Us</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Shared Morphing Viewport -->
+          <div id="motion-nav-viewport-pos">
+            <div id="motion-nav-viewport" data-slot="navigation-menu-viewport">
+
+              <!-- PANEL 1: ABOUT MEDIQ -->
+              <div data-slot="navigation-menu-content" data-panel="about" class="motion-nav-panel">
+                <div class="motion-nav-panel-inner">
+                  <span class="motion-nav-inner-highlight" aria-hidden="true"></span>
+                  <div class="relative z-10 grid w-[500px] grid-cols-[1fr_1.28fr] gap-2">
+                    <a href="#about" data-slide-target="0" data-slot="navigation-menu-link"
+                      class="flex min-h-44 flex-col justify-between rounded-[10px] border border-white/10 bg-[#0d2248]/70 p-4 text-left transition-colors">
+                      <span class="flex items-center justify-between gap-2">
+                        <span class="flex size-9 items-center justify-center rounded-lg border border-[#72c5f8]/25 bg-[#0a1d40] text-[#72c5f8]">
+                          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
+                            <path d="M9 22v-4h6v4" />
+                            <path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01" />
+                          </svg>
+                        </span>
+                        <img src="assets/img/mediq-logo-white.png" alt="MEDIQ Pharma" class="h-5 w-auto object-contain opacity-90" />
+                      </span>
+                      <span class="space-y-1">
+                        <span class="block text-sm font-semibold text-white">About MEDIQ Pharma</span>
+                        <span class="block text-xs leading-relaxed text-[#9eb4cc]">Connecting global ophthalmic innovation with Philippine surgical centres.</span>
+                      </span>
+                    </a>
+                    <div class="grid grid-cols-2 gap-0.5">
+                      <a href="#about" data-slide-target="1" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
+                        <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
+                          <span>Who We Are</span>
+                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                        </span>
+                        <span class="text-xs leading-snug text-[#9eb4cc]">Philippine specialty pharma leadership.</span>
+                      </a>
+                      <a href="#about" data-slide-target="2" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
+                        <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
+                          <span>What We Do</span>
+                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                        </span>
+                        <span class="text-xs leading-snug text-[#9eb4cc]">Regulatory, sales &amp; cold-chain reach.</span>
+                      </a>
+                      <a href="#about" data-slide-target="3" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
+                        <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
+                          <span>Foundation</span>
+                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                        </span>
+                        <span class="text-xs leading-snug text-[#9eb4cc]">Exclusive Rayner UK strategic alliance.</span>
+                      </a>
+                      <a href="#about" data-slide-target="4" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
+                        <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
+                          <span>Values</span>
+                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                        </span>
+                        <span class="text-xs leading-snug text-[#9eb4cc]">Clinical integrity &amp; patient safety.</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </li>
 
-          <!-- 3. PRODUCTS (Dropdown: Intraocular Lenses, Medical Supplies, Devices & Equipment, Product Catalogs) -->
-          <li class="relative group py-2">
-            <a id="nav-products" href="#products"
-              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60"
-              aria-haspopup="true" aria-expanded="false">
-              <span class="spotlight-lamp"></span>
-              <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="m7.5 4.27 9 5.15" />
-                <path
-                  d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
-                <path d="m3.3 7 8.7 5 8.7-5" />
-                <path d="M12 22V12" />
-              </svg>
-              <span>Products</span>
-              <svg
-                class="size-3.5 opacity-60 transition-transform duration-200 group-hover:rotate-180 group-hover:opacity-100"
-                viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path d="m4 6 4 4 4-4" />
-              </svg>
-            </a>
-            <div
-              class="nav-dropdown-panel invisible pointer-events-none absolute left-0 top-full pt-2 opacity-0 -translate-y-2 transition-all duration-200 ease-out group-hover:visible group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 z-50">
-              <div class="transparent-blue-dropdown w-64 rounded-2xl ring-1 ring-white/10 p-2 space-y-0.5">
-                <!-- Established Ophthalmology · IOLs -->
-                <a href="#products" data-product-slide="1"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Ophthalmology &middot; IOLs</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
-                <!-- Ophthalmic OVDs & Solutions -->
-                <a href="#products" data-product-slide="2"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect width="20" height="16" x="2" y="6" rx="2" />
-                      <path d="M10 6V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2" />
-                      <line x1="12" x2="12" y1="11" y2="17" />
-                      <line x1="9" x2="15" y1="14" y2="14" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Ophthalmic OVDs &amp; Solutions</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
-                <!-- Future Portfolio Development -->
-                <a href="#products" data-product-slide="3"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect width="20" height="14" x="2" y="3" rx="2" />
-                      <path d="M12 17v4" />
-                      <path d="M8 21h8" />
-                      <path d="m6 10 2.5-3 3 6 2-3 2.5 2 2-2" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Future Portfolio Development</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
-                <!-- Product Catalogs -->
-                <a href="#products" data-product-slide="4"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Product
-                    Catalogs</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
+              <!-- PANEL 2: PRODUCTS -->
+              <div data-slot="navigation-menu-content" data-panel="products" class="motion-nav-panel">
+                <div class="motion-nav-panel-inner">
+                  <span class="motion-nav-inner-highlight" aria-hidden="true"></span>
+                  <div class="relative z-10 grid w-[540px] grid-cols-[1.05fr_1.3fr] gap-2">
+                    <a href="#products" data-product-slide="1" data-slot="navigation-menu-link"
+                      class="flex min-h-44 flex-col justify-between rounded-[10px] border border-white/10 bg-[#0d2248]/70 p-4 text-left transition-colors">
+                      <div class="flex items-center justify-center rounded-lg border border-white/10 bg-[#08152e]/80 p-2">
+                        <img src="assets/img/packshots/galaxy_carton.png?v=2" alt="RayOne Galaxy Spiral IOL" class="h-20 w-auto object-contain" />
+                      </div>
+                      <span class="space-y-1">
+                        <span class="flex items-center gap-1.5 text-sm font-semibold text-white">
+                          <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1M5.6 18.4l2.1-2.1m8.6-8.6 2.1-2.1" /></svg>
+                          <span>RayOne Galaxy Spiral IOL</span>
+                        </span>
+                        <span class="block text-xs leading-snug text-[#9eb4cc]">Full-range spiral optic engineered with Rayner UK.</span>
+                      </span>
+                    </a>
+                    <div class="grid grid-cols-2 gap-0.5">
+                      <a href="#products" data-product-slide="1" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
+                        <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
+                          <span>Ophthalmology &middot; IOLs</span>
+                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                        </span>
+                        <span class="text-xs leading-snug text-[#9eb4cc]">Galaxy Spiral, EMV, Trifocal &amp; Sulcoflex.</span>
+                      </a>
+                      <a href="#products" data-product-slide="2" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
+                        <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
+                          <span>Ophthalmic OVDs &amp; Solutions</span>
+                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                        </span>
+                        <span class="text-xs leading-snug text-[#9eb4cc]">Ophteis viscoelastics &amp; AEON drops.</span>
+                      </a>
+                      <a href="#products" data-product-slide="3" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
+                        <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
+                          <span>Future Portfolio Development</span>
+                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                        </span>
+                        <span class="text-xs leading-snug text-[#9eb4cc]">Complementary surgical &amp; diagnostic care.</span>
+                      </a>
+                      <a href="#products" data-product-slide="4" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
+                        <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
+                          <span>Product Catalogs</span>
+                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                        </span>
+                        <span class="text-xs leading-snug text-[#9eb4cc]">2026 clinical brochures &amp; specs.</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </li>
 
-          <!-- 4. BRANDS & PARTNERS (Dropdown: Principal Brands, Brand Profiles, Downloadable Brochures) -->
-          <li class="relative group py-2">
-            <a id="nav-brands" href="#brands" data-deck-target="brands:0"
-              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60"
-              aria-haspopup="true" aria-expanded="false">
-              <span class="spotlight-lamp"></span>
-              <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="m11 17 2 2a1 1 0 0 0 1.4 0l4.3-4.3a1 1 0 0 0 0-1.4l-2.6-2.6a1 1 0 0 0-1.4 0L12 13" />
-                <path d="m14 14 2.5 2.5" />
-                <path d="m3 7 3-3a1 1 0 0 1 1.4 0l5.3 5.3a1 1 0 0 1 0 1.4L10 13" />
-                <path d="m6 4 2.5 2.5" />
-                <path d="m2 14 4.5 4.5a2 2 0 0 0 2.8 0L12 16" />
-                <path d="m18 10 4-4a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0L14 6" />
-              </svg>
-              <span>Brands &amp; Partners</span>
-              <svg
-                class="size-3.5 opacity-60 transition-transform duration-200 group-hover:rotate-180 group-hover:opacity-100"
-                viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path d="m4 6 4 4 4-4" />
-              </svg>
-            </a>
-            <div
-              class="nav-dropdown-panel invisible pointer-events-none absolute left-0 top-full pt-2 opacity-0 -translate-y-2 transition-all duration-200 ease-out group-hover:visible group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 z-50">
-              <div class="transparent-blue-dropdown w-64 rounded-2xl ring-1 ring-white/10 p-2 space-y-0.5">
-                <!-- Principal Brands -->
-                <a href="#brands" data-deck-target="brands:1"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="12" cy="8" r="6" />
-                      <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Principal
-                    Brands</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
-                <!-- Brand Profiles -->
-                <a href="#brands" data-deck-target="brands:2"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polygon points="12 2 2 7 12 12 22 7 12 2" />
-                      <polyline points="2 17 12 22 22 17" />
-                      <polyline points="2 12 12 17 22 12" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Brand
-                    Profiles</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
-                <!-- Downloadable Brochures -->
-                <a href="assets/brochure/RayOne-EMV-Platform-Brochure-2024_2.2.pdf" download="RayOne EMV Platform Brochure 2024_2.2.pdf"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                      <polyline points="14 2 14 8 20 8" />
-                      <line x1="12" x2="12" y1="18" y2="12" />
-                      <polyline points="9 15 12 18 15 15" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Downloadable
-                    Brochures</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
+              <!-- PANEL 3: BRANDS & PARTNERS -->
+              <div data-slot="navigation-menu-content" data-panel="brands" class="motion-nav-panel">
+                <div class="motion-nav-panel-inner">
+                  <span class="motion-nav-inner-highlight" aria-hidden="true"></span>
+                  <div class="relative z-10 grid w-[470px] grid-cols-[1fr_1.15fr] gap-2">
+                    <a href="#brands" data-deck-target="brands:1" data-slot="navigation-menu-link"
+                      class="flex min-h-44 flex-col justify-between rounded-[10px] border border-white/10 bg-[#0d2248]/70 p-4 text-left transition-colors">
+                      <div class="flex h-16 items-center justify-center rounded-lg border border-white/10 bg-[#08152e]/80 px-3">
+                        <img src="assets/img/rayner-logo-white.png" alt="Rayner UK" class="h-7 w-auto object-contain" />
+                      </div>
+                      <span class="space-y-1">
+                        <span class="block text-sm font-semibold text-white">Exclusive Rayner Partner</span>
+                        <span class="block text-xs leading-snug text-[#9eb4cc]">Authorized Philippine distributor for British ophthalmic innovation.</span>
+                      </span>
+                    </a>
+                    <div class="space-y-0.5">
+                      <a href="#brands" data-deck-target="brands:1" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
+                        <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
+                          <span>Principal Brands</span>
+                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                        </span>
+                        <span class="text-xs leading-snug text-[#9eb4cc]">Global ophthalmic &amp; surgical principals.</span>
+                      </a>
+                      <a href="#brands" data-deck-target="brands:2" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
+                        <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
+                          <span>Brand Profiles</span>
+                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                        </span>
+                        <span class="text-xs leading-snug text-[#9eb4cc]">Portfolio alignment &amp; heritage.</span>
+                      </a>
+                      <a href="assets/brochure/RayOne-EMV-Platform-Brochure-2024_2.2.pdf" download="RayOne EMV Platform Brochure 2024_2.2.pdf" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
+                        <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
+                          <span>Downloadable Brochures</span>
+                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                        </span>
+                        <span class="text-xs leading-snug text-[#9eb4cc]">2026 RayOne EMV Platform PDF.</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </li>
 
-          <!-- 5. SERVICES (Dropdown: Distribution, Product Support, Training & Education, Customer Service) -->
-          <li class="relative group py-2">
-            <a id="nav-services" href="#distribution" data-deck-target="services:0"
-              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60"
-              aria-haspopup="true" aria-expanded="false">
-              <span class="spotlight-lamp"></span>
-              <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="3" />
-                <path
-                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-              </svg>
-              <span>Services</span>
-              <svg
-                class="size-3.5 opacity-60 transition-transform duration-200 group-hover:rotate-180 group-hover:opacity-100"
-                viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path d="m4 6 4 4 4-4" />
-              </svg>
-            </a>
-            <div
-              class="nav-dropdown-panel invisible pointer-events-none absolute left-0 top-full pt-2 opacity-0 -translate-y-2 transition-all duration-200 ease-out group-hover:visible group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 z-50">
-              <div class="transparent-blue-dropdown w-72 rounded-2xl ring-1 ring-white/10 p-2 space-y-0.5">
-                <!-- 01 Importation & Distribution -->
-                <a href="#distribution" data-deck-target="services:1"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect width="16" height="12" x="1" y="5" rx="2" />
-                      <path d="M17 9h4l2 3v5h-6V9z" />
-                      <circle cx="7" cy="19" r="2" />
-                      <circle cx="17" cy="19" r="2" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Importation
-                    &amp; Distribution</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
-                <!-- 02 Product Marketing -->
-                <a href="#distribution" data-deck-target="services:2"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polygon points="12 2 2 7 12 12 22 7 12 2" />
-                      <polyline points="2 17 12 22 22 17" />
-                      <polyline points="2 12 12 17 22 12" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Product
-                    Marketing</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
-                <!-- 03 Sales & Commercialization -->
-                <a href="#distribution" data-deck-target="services:3"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M3 3v18h18" />
-                      <path d="m19 9-5 5-4-4-3 3" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Sales
-                    &amp; Commercialization</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
-                <!-- 04 Market Development -->
-                <a href="#distribution" data-deck-target="services:4"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="12" cy="12" r="10" />
-                      <path d="M2 12h20" />
-                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Market
-                    Development</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
-                <!-- 05 Professional Education -->
-                <a href="#distribution" data-deck-target="services:5"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect width="12" height="8" x="8" y="2" rx="1" />
-                      <path d="M4 11a2 2 0 0 1 2-2h2" />
-                      <circle cx="4" cy="5" r="2" />
-                      <path d="M2 19v-2a4 4 0 0 1 4-4h2" />
-                      <path d="M14 14v7" />
-                      <path d="M11 21h6" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Professional
-                    Education</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
-                <!-- 06 Quality & Customer Support -->
-                <a href="#distribution" data-deck-target="services:6"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                      <circle cx="9" cy="7" r="4" />
-                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Quality
-                    &amp; Customer Support</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
+              <!-- PANEL 4: SERVICES -->
+              <div data-slot="navigation-menu-content" data-panel="services" class="motion-nav-panel">
+                <div class="motion-nav-panel-inner">
+                  <span class="motion-nav-inner-highlight" aria-hidden="true"></span>
+                  <div class="relative z-10 w-[430px] space-y-1">
+                    <div class="px-2.5 py-1 text-[11px] font-medium tracking-wide text-[#72c5f8]">Built for Philippine healthcare institutions</div>
+                    <a href="#distribution" data-deck-target="services:1" data-slot="navigation-menu-link" class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[10px] p-2 text-left">
+                      <span class="flex size-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[#72c5f8]">
+                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="12" x="1" y="5" rx="2" /><path d="M17 9h4l2 3v5h-6V9z" /><circle cx="7" cy="19" r="2" /><circle cx="17" cy="19" r="2" /></svg>
+                      </span>
+                      <span>
+                        <span class="block text-[13px] font-medium text-white">Importation &amp; Distribution</span>
+                        <span class="block text-xs text-[#9eb4cc]">FDA-compliant national supply to hospitals.</span>
+                      </span>
+                      <span class="rounded-lg border border-[#72c5f8]/25 px-2 py-0.5 text-[11px] text-[#72c5f8]">View</span>
+                    </a>
+                    <a href="#distribution" data-deck-target="services:2" data-slot="navigation-menu-link" class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[10px] p-2 text-left">
+                      <span class="flex size-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[#72c5f8]">
+                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2" /><polyline points="2 17 12 22 22 17" /><polyline points="2 12 12 17 22 12" /></svg>
+                      </span>
+                      <span>
+                        <span class="block text-[13px] font-medium text-white">Product Marketing</span>
+                        <span class="block text-xs text-[#9eb4cc]">Clinical positioning &amp; specialty awareness.</span>
+                      </span>
+                      <span class="rounded-lg border border-[#72c5f8]/25 px-2 py-0.5 text-[11px] text-[#72c5f8]">View</span>
+                    </a>
+                    <a href="#distribution" data-deck-target="services:3" data-slot="navigation-menu-link" class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[10px] p-2 text-left">
+                      <span class="flex size-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[#72c5f8]">
+                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18" /><path d="m19 9-5 5-4-4-3 3" /></svg>
+                      </span>
+                      <span>
+                        <span class="block text-[13px] font-medium text-white">Sales &amp; Commercialization</span>
+                        <span class="block text-xs text-[#9eb4cc]">Dedicated surgical &amp; hospital coverage.</span>
+                      </span>
+                      <span class="rounded-lg border border-[#72c5f8]/25 px-2 py-0.5 text-[11px] text-[#72c5f8]">View</span>
+                    </a>
+                    <a href="#distribution" data-deck-target="services:4" data-slot="navigation-menu-link" class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[10px] p-2 text-left">
+                      <span class="flex size-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[#72c5f8]">
+                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /><path d="M2 12h20" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
+                      </span>
+                      <span>
+                        <span class="block text-[13px] font-medium text-white">Market Development</span>
+                        <span class="block text-xs text-[#9eb4cc]">Regional clinic expansion nationwide.</span>
+                      </span>
+                      <span class="rounded-lg border border-[#72c5f8]/25 px-2 py-0.5 text-[11px] text-[#72c5f8]">View</span>
+                    </a>
+                    <a href="#distribution" data-deck-target="services:5" data-slot="navigation-menu-link" class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[10px] p-2 text-left">
+                      <span class="flex size-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[#72c5f8]">
+                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" /></svg>
+                      </span>
+                      <span>
+                        <span class="block text-[13px] font-medium text-white">Professional Education</span>
+                        <span class="block text-xs text-[#9eb4cc]">Surgeon workshops, symposia &amp; wet-labs.</span>
+                      </span>
+                      <span class="rounded-lg border border-[#72c5f8]/25 px-2 py-0.5 text-[11px] text-[#72c5f8]">View</span>
+                    </a>
+                    <a href="#distribution" data-deck-target="services:6" data-slot="navigation-menu-link" class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[10px] p-2 text-left">
+                      <span class="flex size-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[#72c5f8]">
+                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                      </span>
+                      <span>
+                        <span class="block text-[13px] font-medium text-white">Quality &amp; Customer Support</span>
+                        <span class="block text-xs text-[#9eb4cc]">Responsive clinical coordination &amp; care.</span>
+                      </span>
+                      <span class="rounded-lg border border-[#72c5f8]/25 px-2 py-0.5 text-[11px] text-[#72c5f8]">View</span>
+                    </a>
+                  </div>
+                </div>
               </div>
-            </div>
-          </li>
 
-          <!-- 6. RESOURCES (Dropdown: Product Literature, Professional Education, 2026 Corporate Profile, Official Regulatory Guidance) -->
-          <li class="relative group py-2">
-            <a id="nav-resources" href="#resources" data-deck-target="resources:0"
-              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60"
-              aria-haspopup="true" aria-expanded="false">
-              <span class="spotlight-lamp"></span>
-              <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
-                <path d="M6 6h10" />
-                <path d="M6 10h10" />
-                <path d="M9 2v20" />
-              </svg>
-              <span>Resources</span>
-              <svg
-                class="size-3.5 opacity-60 transition-transform duration-200 group-hover:rotate-180 group-hover:opacity-100"
-                viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path d="m4 6 4 4 4-4" />
-              </svg>
-            </a>
-            <div
-              class="nav-dropdown-panel invisible pointer-events-none absolute left-0 top-full pt-2 opacity-0 -translate-y-2 transition-all duration-200 ease-out group-hover:visible group-hover:pointer-events-auto group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 z-50">
-              <div class="transparent-blue-dropdown w-72 rounded-2xl ring-1 ring-white/10 p-2 space-y-0.5">
-                <!-- 01 Product-Approved Literature -->
-                <a href="#resources" data-deck-target="resources:1"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                      <polyline points="14 2 14 8 20 8" />
-                      <line x1="16" y1="13" x2="8" y2="13" />
-                      <line x1="16" y1="17" x2="8" y2="17" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Product-Approved
-                    Literature</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
-                <!-- 02 Professional Educational Materials -->
-                <a href="#resources" data-deck-target="resources:2"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                      <path d="M6 12v5c3 3 9 3 12 0v-5" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Professional
-                    Education</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
-                <!-- 03 2026 Corporate Profile -->
-                <a href="#resources" data-deck-target="resources:3"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
-                      <path d="M9 22v-4h6v4" />
-                      <path d="M8 6h.01" />
-                      <path d="M16 6h.01" />
-                      <path d="M8 10h.01" />
-                      <path d="M16 10h.01" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">2026
-                    Corporate Profile</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
-                <!-- 04 Official Regulatory Guidance -->
-                <a href="#resources" data-deck-target="resources:4"
-                  class="nav-dropdown-card flex items-center gap-3 px-3 py-2.5 rounded-xl text-cream/85 hover:text-white hover:bg-sky/15 transition-all duration-150 group/item">
-                  <span
-                    class="flex size-7 shrink-0 items-center justify-center text-sky group-hover/item:text-[#72c5f8] transition-colors">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                      <path d="m9 12 2 2 4-4" />
-                    </svg>
-                  </span>
-                  <span
-                    class="text-[13px] font-medium tracking-wide text-pearl group-hover/item:text-white transition-colors">Official
-                    Regulatory Guidance</span>
-                  <svg
-                    class="size-3.5 ml-auto text-sky/60 opacity-0 -translate-x-1 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                    viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 3l5 5-5 5" />
-                  </svg>
-                </a>
+              <!-- PANEL 5: RESOURCES -->
+              <div data-slot="navigation-menu-content" data-panel="resources" class="motion-nav-panel">
+                <div class="motion-nav-panel-inner">
+                  <span class="motion-nav-inner-highlight" aria-hidden="true"></span>
+                  <div class="relative z-10 grid w-[510px] grid-cols-2 gap-2">
+                    <div class="space-y-0.5">
+                      <a href="#resources" data-deck-target="resources:1" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
+                        <span class="flex items-center gap-2 text-[13px] font-medium text-white">
+                          <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>
+                          <span>Product-Approved Literature</span>
+                        </span>
+                        <span class="text-xs leading-snug text-[#9eb4cc]">Clinical dossiers &amp; DFU references.</span>
+                      </a>
+                      <a href="#resources" data-deck-target="resources:2" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
+                        <span class="flex items-center gap-2 text-[13px] font-medium text-white">
+                          <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" /></svg>
+                          <span>Professional Education</span>
+                        </span>
+                        <span class="text-xs leading-snug text-[#9eb4cc]">Ophthalmic training materials &amp; guides.</span>
+                      </a>
+                      <a href="#resources" data-deck-target="resources:4" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
+                        <span class="flex items-center gap-2 text-[13px] font-medium text-white">
+                          <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="m9 12 2 2 4-4" /></svg>
+                          <span>Official Regulatory Guidance</span>
+                        </span>
+                        <span class="text-xs leading-snug text-[#9eb4cc]">Compliance &amp; Philippine FDA filings.</span>
+                      </a>
+                    </div>
+                    <a href="#resources" data-deck-target="resources:3" data-slot="navigation-menu-link"
+                      class="flex min-h-44 flex-col justify-between rounded-[10px] border border-white/10 bg-[#0d2248]/70 p-4 text-left transition-colors">
+                      <div class="h-20 w-full overflow-hidden rounded-md border border-white/10">
+                        <img src="assets/img/rayone-emv-brochure.jpg" alt="2026 Corporate Profile &amp; Brochure" class="h-full w-full object-cover" />
+                      </div>
+                      <span class="space-y-1">
+                        <span class="flex items-center gap-1.5 text-sm font-semibold text-white">
+                          <span>2026 Corporate Profile</span>
+                        </span>
+                        <span class="block text-xs leading-snug text-[#9eb4cc]">Company credentials, principals, and institutional overview.</span>
+                      </span>
+                      <span class="text-xs font-medium text-[#72c5f8]">Read profile &rarr;</span>
+                    </a>
+                  </div>
+                </div>
               </div>
+
             </div>
-          </li>
-
-          <!-- 7. NEWS & EVENTS (Direct Link) -->
-          <li class="relative py-2">
-            <a id="nav-news" href="#activities" data-deck-target="news:0"
-              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60">
-              <span class="spotlight-lamp"></span>
-              <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-                <line x1="16" x2="16" y1="2" y2="6" />
-                <line x1="8" x2="8" y1="2" y2="6" />
-                <line x1="3" x2="21" y1="10" y2="10" />
-              </svg>
-              <span>News &amp; Events</span>
-            </a>
-          </li>
-
-          <!-- 8. CONTACT US (Direct Link — Single Unified Page) -->
-          <li class="relative py-2">
-            <a id="nav-contact" href="#contact" data-deck-target="contact:0"
-              class="spotlight-pill flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 xl:px-2 2xl:px-3 py-2 text-cream/90 hover:text-white text-[12px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky/60">
-              <span class="spotlight-lamp"></span>
-              <svg class="hidden xl:block size-3.5 2xl:size-4 text-sky shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect width="20" height="16" x="2" y="4" rx="2" />
-                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-              </svg>
-              <span>Contact Us</span>
-            </a>
-          </li>
-        </ul>
+          </div>
+        </div>
 
         <!-- Right side: Global Action Search Bar Trigger + Mobile burger -->
         <div class="flex items-center gap-2.5 shrink-0">
@@ -8430,7 +8505,7 @@
                 </p>
 
                 <h2 id="products-title"
-                  class="ih-h1 prod-serif text-center !mt-5 !text-[38px] sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] !leading-[1.08] !tracking-[-0.03em] !font-bold">
+                  class="ih-h1 prod-serif text-center !mt-5 !text-[38px] sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] !leading-[1.08] !tracking-[-0.03em] !font-normal">
                   Pioneering Optical &amp; <br class="hidden sm:inline" />Surgical <span class="text-[#72c5f8]">Solutions.</span>
                 </h2>
 
@@ -8497,26 +8572,355 @@
           class="product-slide absolute inset-x-0 top-[128px] bottom-0 w-full flex flex-col bg-transparent text-cream overflow-hidden transition-all duration-500 ease-out opacity-0 pointer-events-none translate-x-12 z-0"
           data-product-index="1">
 
-          <!-- Inner Scroll Track (Responsive Height 300vh for fluid scroll choreography across 6 innovations) -->
+          <!-- Inner Scroll Track (Responsive Height 400vh for fluid scroll choreography across 8 innovations) -->
           <div id="iol-scroll-container" class="relative w-full h-full overflow-y-auto z-10">
-            <div class="h-[300vh] w-full relative">
+            <div class="h-[400vh] w-full relative">
 
               <!-- Pinned Sticky Stage -->
               <div class="sticky top-0 h-[calc(100svh-126px)] w-full flex items-center justify-center overflow-hidden">
 
-                <!-- ================= STAGE 0: RayOne EMV (Scene Left, Content Right) ================= -->
+                <!-- ================= STAGE 0: RayOne Galaxy (Scene Left, Content Right) ================= -->
                 <div id="iol-scene-0"
                   class="iol-anim-scene absolute inset-y-0 hidden lg:flex w-1/2 left-0 items-center justify-end lg:pr-6 xl:pr-10 pointer-events-auto transition-transform duration-500 will-change-transform z-10">
+                  <div class="sv-scene" data-view="front"
+                    style="--box-accent: #1e3a5f; --box-accent-dark: #0f172a; --box-glow: rgba(58, 160, 219, 0.36);"
+                    onpointermove="handleIolTilt(event, this)" onpointerleave="resetIolTilt(this)">
+                    <div class="sv-stage" onpointerdown="startIolBoxDrag(event, this)">
+                      <div class="sv-box-halo"></div>
+                      <div class="sv-box-wrap">
+                        <div class="sv-box-float">
+                        <div class="sv-box3d">
+                          <!-- FRONT FACE (Authentic Rayner Galaxy Carton Texture) -->
+                          <div class="sv-box3d__face sv-box3d__face--front" style="padding: 0; background: #161b20;">
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_front_galaxy.png?v=1.0"
+                              alt="RayOne Galaxy Packaging Box Front"
+                              style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
+                              draggable="false">
+                          </div>
+
+                          <!-- BACK FACE -->
+                          <div class="sv-box3d__face sv-box3d__face--back"
+                            style="background: linear-gradient(145deg, #161b20 0%, #0f172a 100%); border: 1px solid rgba(58, 160, 219, 0.25); color: #cbd5e1;">
+                            <div
+                              style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(58,160,219,0.20); padding-bottom: 8px;">
+                              <span
+                                style="font-size:13.5px; font-weight:800; color:#e2e8f0; letter-spacing:0.04em;">RAYNER
+                                INTRAOCULAR LENSES LTD</span>
+                              <span style="font-size:13.5px; font-weight:800; color:#3aa0db;">RAO605G</span>
+                            </div>
+                            <div style="display:flex; gap:14px; align-items:center; margin:auto 0;">
+                              <div style="flex:1; font-size:10.5px; line-height:1.6; color:#94a3b8;">
+                                10 Dominion Way, Worthing, West Sussex, BN14 8AQ, United Kingdom<br>
+                                Sterile EO &bull; Single Use Only &bull; Store between 2&deg;C and 35&deg;C<br>
+                                Distributed in the Philippines by <strong style="color:#e2e8f0;">MediQ Pharma &amp; Medical Supplies</strong>
+                              </div>
+                              <div
+                                style="width:92px; height:44px; background:repeating-linear-gradient(90deg, #e2e8f0 0 2px, transparent 2px 4px, #e2e8f0 4px 5px, transparent 5px 8px); opacity:0.65; border-radius:2px;">
+                              </div>
+                            </div>
+                            <div
+                              style="display:flex; justify-content:space-between; align-items:center; font-size:10.5px; font-weight:700; color:#64748b;">
+                              <span>CE 2797 &bull; MD</span>
+                              <span style="color:#72c5f8;">RAYONE GALAXY &bull; SPIRAL IOL</span>
+                            </div>
+                          </div>
+
+                          <!-- RIGHT SPINE (SIDE) -->
+                          <div class="sv-box3d__face sv-box3d__face--right" style="padding: 0; background: #6b8494;">
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_side_galaxy.png?v=1.0" alt=""
+                              style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
+                              draggable="false">
+                          </div>
+
+                          <!-- LEFT SPINE -->
+                          <div class="sv-box3d__face sv-box3d__face--left"
+                            style="background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); border-color: rgba(58,160,219,0.22);">
+                            <span class="sv-box3d__spine-name" style="color: #e2e8f0;">RayOne Galaxy</span>
+                          </div>
+
+                          <!-- TOP & BOTTOM FACES -->
+                          <div class="sv-box3d__face sv-box3d__face--top" style="background: #161b20;">
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_top_galaxy.png?v=1.0" alt=""
+                              style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
+                              draggable="false">
+                          </div>
+                          <div class="sv-box3d__face sv-box3d__face--bottom"
+                            style="background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);"></div>
+                        </div>
+                        </div>
+                      </div>
+                      <div class="sv-lens-stage" aria-hidden="true">
+                        <div class="sv-lens-float">
+                          <img loading="lazy" decoding="async" src="assets/img/packshots/lens_galaxy.png?v=2.0" alt="RayOne Galaxy Intraocular Lens" class="sv-lens-img" draggable="false">
+                        </div>
+                        <span class="sv-lens-caption">RAO605G &bull; SPIRAL FULL-RANGE IOL</span>
+                      </div>
+                      <div class="sv-box-shadow"></div>
+                    </div>
+
+                    <!-- 4 Interactive View Pill Buttons -->
+                    <div class="sv-box-controls" role="group" aria-label="RayOne Galaxy View Controls">
+                      <button type="button" class="sv-box-btn" data-view="spin" aria-pressed="false"
+                        onclick="setIolBoxView(this, 'spin')">
+                        <svg class="sv-box-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                          <path d="M21 3v5h-5" />
+                        </svg>
+                        <span>Spin</span>
+                      </button>
+                      <button type="button" class="sv-box-btn" data-view="lens" aria-pressed="false"
+                        onclick="setIolBoxView(this, 'lens')">
+                        <svg class="sv-box-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <circle cx="12" cy="12" r="9" />
+                          <circle cx="12" cy="12" r="4" />
+                        </svg>
+                        <span>View Lens</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="iol-content-0"
+                  class="iol-anim-content absolute inset-y-0 hidden lg:flex w-1/2 right-0 items-center justify-start lg:pl-6 xl:pl-10 pointer-events-auto transition-transform duration-500 will-change-transform z-20">
+                  <div class="sv-content"
+                    style="--iol-accent: #3aa0db; --iol-accent-border: rgba(58, 160, 219, 0.55); --iol-accent-ring: rgba(58, 160, 219, 0.25); --iol-accent-bg: rgba(58, 160, 219, 0.15);">
+                    <h2 class="sv-title">RayOne <span class="sv-title-accent"
+                        style="--iol-accent:#3aa0db;">Galaxy</span></h2>
+                    <p class="sv-subtitle">World's First Spiral IOL: Continuous Full Range of Vision</p>
+                    <p class="sv-pitch">
+                      Unique non-diffractive spiral optic engineered to deliver a smooth, continuous full range of
+                      vision from distance to near with minimised dysphotopsia and 0% loss of transmitted light.
+                    </p>
+
+                    <ul class="sv-list">
+                      <li class="sv-row" data-open="true">
+                        <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
+                          <span class="sv-row__left">
+                            <span class="sv-row__led" aria-hidden="true"></span>
+                            <span class="sv-row__title">Unique Non-Diffractive Spiral Optic</span>
+                          </span>
+                          <span class="sv-row__plus" aria-hidden="true">+</span>
+                        </button>
+                        <div class="sv-row__panel">
+                          <div class="sv-row__clip">
+                            <p class="sv-row__desc">Continuous refractive spiral optic eliminates sharp diffractive steps,
+                              transmitting 100% of available light with monofocal-like halos and glare.</p>
+                          </div>
+                        </div>
+                      </li>
+
+                      <li class="sv-row" data-open="false">
+                        <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
+                          <span class="sv-row__left">
+                            <span class="sv-row__led" aria-hidden="true"></span>
+                            <span class="sv-row__title">Full Sphere Range (+5.0 to +30.0 D)</span>
+                          </span>
+                          <span class="sv-row__plus" aria-hidden="true">+</span>
+                        </button>
+                        <div class="sv-row__panel">
+                          <div class="sv-row__clip">
+                            <p class="sv-row__desc">6.0 mm biconvex aberration-correcting optic (A-constant 118.6) with
+                              Amon-Apple 360&deg; enhanced posterior square edge in 0.5 D increments.</p>
+                          </div>
+                        </div>
+                      </li>
+
+                      <li class="sv-row" data-open="false">
+                        <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
+                          <span class="sv-row__left">
+                            <span class="sv-row__led" aria-hidden="true"></span>
+                            <span class="sv-row__title">Preloaded 1.65mm Micro-Incision Delivery</span>
+                          </span>
+                          <span class="sv-row__plus" aria-hidden="true">+</span>
+                        </button>
+                        <div class="sv-row__panel">
+                          <div class="sv-row__clip">
+                            <p class="sv-row__desc">Single-piece Rayacryl hydrophilic acrylic preloaded into
+                              RayOne's single-handed plunger injector for smooth 2.2 mm capsular bag placement.</p>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- ================= STAGE 1: RayOne Galaxy Toric (Content Left, Scene Right) ================= -->
+                <div id="iol-content-1"
+                  class="iol-anim-content absolute inset-y-0 hidden lg:flex w-1/2 left-0 items-center justify-end lg:pr-6 xl:pr-10 opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-20">
+                  <div class="sv-content"
+                    style="--iol-accent: #a78bfa; --iol-accent-border: rgba(167, 139, 250, 0.55); --iol-accent-ring: rgba(167, 139, 250, 0.25); --iol-accent-bg: rgba(167, 139, 250, 0.15);">
+                    <h2 class="sv-title">RayOne <span class="sv-title-accent"
+                        style="--iol-accent:#c4b5fd;">Galaxy Toric</span></h2>
+                    <p class="sv-subtitle">Spiral Full-Range Optics: Precision Astigmatism Correction</p>
+                    <p class="sv-pitch">
+                      Combines RayOne Galaxy's continuous non-diffractive spiral optic and 0% light loss with Rayner's
+                      closed-loop Anti-Vaulting Haptic (AVH) platform for enduring rotational stability.
+                    </p>
+
+                    <ul class="sv-list">
+                      <li class="sv-row" data-open="true">
+                        <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
+                          <span class="sv-row__left">
+                            <span class="sv-row__led" aria-hidden="true"></span>
+                            <span class="sv-row__title">Cylinder +0.75 D to +4.5 D (0.75 D Steps)</span>
+                          </span>
+                          <span class="sv-row__plus" aria-hidden="true">+</span>
+                        </button>
+                        <div class="sv-row__panel">
+                          <div class="sv-row__clip">
+                            <p class="sv-row__desc">Spanning SE +6.0 to +30.0 D in 0.5 D increments to resolve regular
+                              corneal astigmatism alongside full-range presbyopic vision.</p>
+                          </div>
+                        </div>
+                      </li>
+
+                      <li class="sv-row" data-open="false">
+                        <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
+                          <span class="sv-row__left">
+                            <span class="sv-row__led" aria-hidden="true"></span>
+                            <span class="sv-row__title">Closed-Loop Anti-Vaulting Haptic (AVH)</span>
+                          </span>
+                          <span class="sv-row__plus" aria-hidden="true">+</span>
+                        </button>
+                        <div class="sv-row__panel">
+                          <div class="sv-row__clip">
+                            <p class="sv-row__desc">0&deg; uniplanar 12.5 mm overall diameter anchors securely along the
+                              capsular bag equator, preserving precise post-op toric axis alignment.</p>
+                          </div>
+                        </div>
+                      </li>
+
+                      <li class="sv-row" data-open="false">
+                        <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
+                          <span class="sv-row__left">
+                            <span class="sv-row__led" aria-hidden="true"></span>
+                            <span class="sv-row__title">Minimised Dysphotopsia &amp; 0% Light Loss</span>
+                          </span>
+                          <span class="sv-row__plus" aria-hidden="true">+</span>
+                        </button>
+                        <div class="sv-row__panel">
+                          <div class="sv-row__clip">
+                            <p class="sv-row__desc">Avoids concentric diffractive rings so patients gain continuous near,
+                              intermediate, and distance focus with cleaner nighttime vision.</p>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div id="iol-scene-1"
+                  class="iol-anim-scene absolute inset-y-0 hidden lg:flex w-1/2 right-0 items-center justify-start lg:pl-6 xl:pl-10 opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-10">
+                  <div class="sv-scene" data-view="front"
+                    style="--box-accent: #8b7b8e; --box-accent-dark: #6b5b6e; --box-glow: rgba(167, 139, 250, 0.30);"
+                    onpointermove="handleIolTilt(event, this)" onpointerleave="resetIolTilt(this)">
+                    <div class="sv-stage" onpointerdown="startIolBoxDrag(event, this)">
+                      <div class="sv-box-halo"></div>
+                      <div class="sv-box-wrap">
+                        <div class="sv-box-float">
+                        <div class="sv-box3d">
+                          <!-- FRONT FACE (Authentic Rayner Galaxy Toric Carton Texture) -->
+                          <div class="sv-box3d__face sv-box3d__face--front" style="padding: 0; background: #e4e3e6;">
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_front_galaxy_toric.png?v=1.0"
+                              alt="RayOne Galaxy Toric Packaging Box Front"
+                              style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
+                              draggable="false">
+                          </div>
+
+                          <!-- BACK FACE -->
+                          <div class="sv-box3d__face sv-box3d__face--back"
+                            style="background: linear-gradient(145deg, #eceaef 0%, #d8d4de 100%);">
+                            <div
+                              style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(15,23,42,0.10); padding-bottom: 8px;">
+                              <span
+                                style="font-size:13.5px; font-weight:800; color:#334155; letter-spacing:0.04em;">RAYNER
+                                INTRAOCULAR LENSES LTD</span>
+                              <span style="font-size:13.5px; font-weight:800; color:#7c6882;">RAO615X</span>
+                            </div>
+                            <div style="display:flex; gap:14px; align-items:center; margin:auto 0;">
+                              <div style="flex:1; font-size:10.5px; line-height:1.6; color:#475569;">
+                                10 Dominion Way, Worthing, West Sussex, BN14 8AQ, United Kingdom<br>
+                                Sterile EO &bull; Single Use Only &bull; Store between 2&deg;C and 35&deg;C<br>
+                                Distributed in the Philippines by <strong>MediQ Pharma &amp; Medical Supplies</strong>
+                              </div>
+                              <div
+                                style="width:92px; height:44px; background:repeating-linear-gradient(90deg, #334155 0 2px, transparent 2px 4px, #334155 4px 5px, transparent 5px 8px); opacity:0.65; border-radius:2px;">
+                              </div>
+                            </div>
+                            <div
+                              style="display:flex; justify-content:space-between; align-items:center; font-size:10.5px; font-weight:700; color:#64748b;">
+                              <span>CE 2797 &bull; MD</span>
+                              <span>RAYONE GALAXY TORIC</span>
+                            </div>
+                          </div>
+
+                          <!-- RIGHT SPINE (SIDE) -->
+                          <div class="sv-box3d__face sv-box3d__face--right" style="padding: 0; background: #98869a;">
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_side_galaxy_toric.png?v=1.0" alt=""
+                              style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
+                              draggable="false">
+                          </div>
+
+                          <!-- LEFT SPINE -->
+                          <div class="sv-box3d__face sv-box3d__face--left">
+                            <span class="sv-box3d__spine-name">RayOne Galaxy Toric</span>
+                          </div>
+
+                          <!-- TOP & BOTTOM FACES -->
+                          <div class="sv-box3d__face sv-box3d__face--top" style="background: #c5c4c7;">
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_top_galaxy_toric.png?v=1.0" alt=""
+                              style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
+                              draggable="false">
+                          </div>
+                          <div class="sv-box3d__face sv-box3d__face--bottom"></div>
+                        </div>
+                        </div>
+                      </div>
+                      <div class="sv-lens-stage" aria-hidden="true">
+                        <div class="sv-lens-float">
+                          <img loading="lazy" decoding="async" src="assets/img/packshots/lens_galaxy_toric.png?v=2.0" alt="RayOne Galaxy Toric Intraocular Lens" class="sv-lens-img" draggable="false">
+                        </div>
+                        <span class="sv-lens-caption">RAO615X &bull; SPIRAL TORIC IOL</span>
+                      </div>
+                      <div class="sv-box-shadow"></div>
+                    </div>
+
+                    <!-- 4 Interactive View Pill Buttons -->
+                    <div class="sv-box-controls" role="group" aria-label="RayOne Galaxy Toric View Controls">
+                      <button type="button" class="sv-box-btn" data-view="spin" aria-pressed="false"
+                        onclick="setIolBoxView(this, 'spin')">
+                        <svg class="sv-box-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                          <path d="M21 3v5h-5" />
+                        </svg>
+                        <span>Spin</span>
+                      </button>
+                      <button type="button" class="sv-box-btn" data-view="lens" aria-pressed="false"
+                        onclick="setIolBoxView(this, 'lens')">
+                        <svg class="sv-box-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <circle cx="12" cy="12" r="9" />
+                          <circle cx="12" cy="12" r="4" />
+                        </svg>
+                        <span>View Lens</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ================= STAGE 2: RayOne EMV (Scene Left, Content Right) ================= -->
+                <div id="iol-scene-2"
+                  class="iol-anim-scene absolute inset-y-0 hidden lg:flex w-1/2 left-0 items-center justify-end lg:pr-6 xl:pr-10 opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-10">
                   <div class="sv-scene" data-view="front"
                     style="--box-accent: #c21868; --box-accent-dark: #94104e; --box-glow: rgba(194, 24, 104, 0.30);"
                     onpointermove="handleIolTilt(event, this)" onpointerleave="resetIolTilt(this)">
                     <div class="sv-stage" onpointerdown="startIolBoxDrag(event, this)">
                       <div class="sv-box-halo"></div>
-                      <div class="sv-box-float">
+                      <div class="sv-box-wrap">
+                        <div class="sv-box-float">
                         <div class="sv-box3d">
                           <!-- FRONT FACE (Authentic Rayner Asset Texture) -->
                           <div class="sv-box3d__face sv-box3d__face--front" style="padding: 0; background: #ffffff;">
-                            <img src="assets/img/packshots/box_front_emv.png?v=375.0"
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_front_emv.png?v=375.0"
                               alt="RayOne EMV Packaging Box Front"
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
@@ -8550,7 +8954,7 @@
 
                           <!-- RIGHT SPINE (SIDE) -->
                           <div class="sv-box3d__face sv-box3d__face--right" style="padding: 0;">
-                            <img src="assets/img/packshots/box_side_emv.png?v=380.0" alt=""
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_side_emv.png?v=380.0" alt=""
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
                           </div>
@@ -8562,35 +8966,50 @@
 
                           <!-- TOP & BOTTOM FACES (Authentic Rayner Top Flap Texture) -->
                           <div class="sv-box3d__face sv-box3d__face--top">
-                            <img src="assets/img/packshots/box_top_emv.png?v=380.0" alt=""
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_top_emv.png?v=380.0" alt=""
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
                           </div>
                           <div class="sv-box3d__face sv-box3d__face--bottom"></div>
                         </div>
+                        </div>
+                      </div>
+                      <div class="sv-lens-stage" aria-hidden="true">
+                        <div class="sv-lens-float">
+                          <img loading="lazy" decoding="async" src="assets/img/packshots/lens_emv.png?v=2.0" alt="RayOne EMV Intraocular Lens" class="sv-lens-img" draggable="false">
+                        </div>
+                        <span class="sv-lens-caption">RAO200E &bull; ENHANCED MONOVISION IOL</span>
                       </div>
                       <div class="sv-box-shadow"></div>
                     </div>
 
                     <!-- 4 Interactive View Pill Buttons -->
-                    <div class="sv-box-controls" role="group" aria-label="RayOne EMV 3D Box View Controls">
-                      <button type="button" class="sv-box-btn" data-view="front" aria-pressed="true"
-                        onclick="setIolBoxView(this, 'front')">Front</button>
-                      <button type="button" class="sv-box-btn" data-view="side" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'side')">Side</button>
-                      <button type="button" class="sv-box-btn" data-view="back" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'back')">Back</button>
+                    <div class="sv-box-controls" role="group" aria-label="RayOne EMV View Controls">
                       <button type="button" class="sv-box-btn" data-view="spin" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'spin')">Spin</button>
+                        onclick="setIolBoxView(this, 'spin')">
+                        <svg class="sv-box-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                          <path d="M21 3v5h-5" />
+                        </svg>
+                        <span>Spin</span>
+                      </button>
+                      <button type="button" class="sv-box-btn" data-view="lens" aria-pressed="false"
+                        onclick="setIolBoxView(this, 'lens')">
+                        <svg class="sv-box-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <circle cx="12" cy="12" r="9" />
+                          <circle cx="12" cy="12" r="4" />
+                        </svg>
+                        <span>View Lens</span>
+                      </button>
                     </div>
                   </div>
                 </div>
 
-                <div id="iol-content-0"
-                  class="iol-anim-content absolute inset-y-0 hidden lg:flex w-1/2 right-0 items-center justify-start lg:pl-6 xl:pl-10 pointer-events-auto transition-transform duration-500 will-change-transform z-20">
+                <div id="iol-content-2"
+                  class="iol-anim-content absolute inset-y-0 hidden lg:flex w-1/2 right-0 items-center justify-start lg:pl-6 xl:pl-10 opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-20">
                   <div class="sv-content"
                     style="--iol-accent: #e11d74; --iol-accent-border: rgba(225, 29, 116, 0.55); --iol-accent-ring: rgba(225, 29, 116, 0.25); --iol-accent-bg: rgba(194, 24, 104, 0.15);">
-                    <h2 class="sv-title">RayOne<sup class="sv-title-reg">&reg;</sup> <span class="sv-title-accent"
+                    <h2 class="sv-title">RayOne <span class="sv-title-accent"
                         style="--iol-accent:#e11d74;">EMV</span></h2>
                     <p class="sv-subtitle">Co-developed with Prof. Graham Barrett: Extended Visual Depth</p>
                     <p class="sv-pitch">
@@ -8636,7 +9055,7 @@
                         <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
                           <span class="sv-row__left">
                             <span class="sv-row__led" aria-hidden="true"></span>
-                            <span class="sv-row__title">Glistening-Free Rayacryl&reg; Copolymer</span>
+                            <span class="sv-row__title">Glistening-Free Rayacryl Copolymer</span>
                           </span>
                           <span class="sv-row__plus" aria-hidden="true">+</span>
                         </button>
@@ -8652,12 +9071,12 @@
                   </div>
                 </div>
 
-                <!-- ================= STAGE 1: RayOne EMV Toric (Content Left, Scene Right) ================= -->
-                <div id="iol-content-1"
+                <!-- ================= STAGE 3: RayOne EMV Toric (Content Left, Scene Right) ================= -->
+                <div id="iol-content-3"
                   class="iol-anim-content absolute inset-y-0 hidden lg:flex w-1/2 left-0 items-center justify-end lg:pr-6 xl:pr-10 opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-20">
                   <div class="sv-content"
                     style="--iol-accent: #eb5a28; --iol-accent-border: rgba(235, 90, 40, 0.55); --iol-accent-ring: rgba(235, 90, 40, 0.25); --iol-accent-bg: rgba(235, 90, 40, 0.15);">
-                    <h2 class="sv-title">RayOne<sup class="sv-title-reg">&reg;</sup> <span class="sv-title-accent"
+                    <h2 class="sv-title">RayOne <span class="sv-title-accent"
                         style="--iol-accent:#eb5a28;">EMV Toric</span></h2>
                     <p class="sv-subtitle">Extended Visual Depth: Precision Corneal Astigmatism Correction</p>
                     <p class="sv-pitch">
@@ -8704,13 +9123,13 @@
                         <button type="button" class="sv-row__btn" onclick="toggleIolAcc(this)">
                           <span class="sv-row__left">
                             <span class="sv-row__led" aria-hidden="true"></span>
-                            <span class="sv-row__title">Raytrace&reg; Online Toric Calculator</span>
+                            <span class="sv-row__title">Raytrace Online Toric Calculator</span>
                           </span>
                           <span class="sv-row__plus" aria-hidden="true">+</span>
                         </button>
                         <div class="sv-row__panel">
                           <div class="sv-row__clip">
-                            <p class="sv-row__desc">Integrated with the Raytrace® toric calculator utilizing total
+                            <p class="sv-row__desc">Integrated with the Raytrace toric calculator utilizing total
                               corneal power measurements for sub-diopter surgical accuracy and easy planning.</p>
                           </div>
                         </div>
@@ -8719,18 +9138,19 @@
                   </div>
                 </div>
 
-                <div id="iol-scene-1"
+                <div id="iol-scene-3"
                   class="iol-anim-scene absolute inset-y-0 hidden lg:flex w-1/2 right-0 items-center justify-start lg:pl-6 xl:pl-10 opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-10">
                   <div class="sv-scene" data-view="front"
                     style="--box-accent: #eb5a28; --box-accent-dark: #bf4217; --box-glow: rgba(235, 90, 40, 0.30);"
                     onpointermove="handleIolTilt(event, this)" onpointerleave="resetIolTilt(this)">
                     <div class="sv-stage" onpointerdown="startIolBoxDrag(event, this)">
                       <div class="sv-box-halo"></div>
-                      <div class="sv-box-float">
+                      <div class="sv-box-wrap">
+                        <div class="sv-box-float">
                         <div class="sv-box3d">
                           <!-- FRONT FACE (Authentic Rayner Asset Texture) -->
                           <div class="sv-box3d__face sv-box3d__face--front" style="padding: 0; background: #ffffff;">
-                            <img src="assets/img/packshots/box_front_emv_toric.png?v=375.0"
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_front_emv_toric.png?v=375.0"
                               alt="RayOne EMV Toric Packaging Box Front"
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
@@ -8764,7 +9184,7 @@
 
                           <!-- RIGHT SPINE (SIDE) -->
                           <div class="sv-box3d__face sv-box3d__face--right" style="padding: 0;">
-                            <img src="assets/img/packshots/box_side_emv_toric.png?v=380.0" alt=""
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_side_emv_toric.png?v=380.0" alt=""
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
                           </div>
@@ -8776,43 +9196,59 @@
 
                           <!-- TOP & BOTTOM FACES (Authentic Rayner Top Flap Texture) -->
                           <div class="sv-box3d__face sv-box3d__face--top">
-                            <img src="assets/img/packshots/box_top_emv_toric.png?v=380.0" alt=""
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_top_emv_toric.png?v=380.0" alt=""
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
                           </div>
                           <div class="sv-box3d__face sv-box3d__face--bottom"></div>
                         </div>
+                        </div>
+                      </div>
+                      <div class="sv-lens-stage" aria-hidden="true">
+                        <div class="sv-lens-float">
+                          <img loading="lazy" decoding="async" src="assets/img/packshots/lens_emv_toric.png?v=2.0" alt="RayOne EMV Toric Intraocular Lens" class="sv-lens-img" draggable="false">
+                        </div>
+                        <span class="sv-lens-caption">RAO210T &bull; EMV TORIC AXIS IOL</span>
                       </div>
                       <div class="sv-box-shadow"></div>
                     </div>
 
                     <!-- 4 Interactive View Pill Buttons -->
-                    <div class="sv-box-controls" role="group" aria-label="RayOne EMV Toric 3D Box View Controls">
-                      <button type="button" class="sv-box-btn" data-view="front" aria-pressed="true"
-                        onclick="setIolBoxView(this, 'front')">Front</button>
-                      <button type="button" class="sv-box-btn" data-view="side" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'side')">Side</button>
-                      <button type="button" class="sv-box-btn" data-view="back" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'back')">Back</button>
+                    <div class="sv-box-controls" role="group" aria-label="RayOne EMV Toric View Controls">
                       <button type="button" class="sv-box-btn" data-view="spin" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'spin')">Spin</button>
+                        onclick="setIolBoxView(this, 'spin')">
+                        <svg class="sv-box-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                          <path d="M21 3v5h-5" />
+                        </svg>
+                        <span>Spin</span>
+                      </button>
+                      <button type="button" class="sv-box-btn" data-view="lens" aria-pressed="false"
+                        onclick="setIolBoxView(this, 'lens')">
+                        <svg class="sv-box-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <circle cx="12" cy="12" r="9" />
+                          <circle cx="12" cy="12" r="4" />
+                        </svg>
+                        <span>View Lens</span>
+                      </button>
                     </div>
                   </div>
                 </div>
 
-                <!-- ================= STAGE 2: RayOne Trifocal (Scene Left, Content Right) ================= -->
-                <div id="iol-scene-2"
+                <!-- ================= STAGE 4: RayOne Trifocal (Scene Left, Content Right) ================= -->
+                <div id="iol-scene-4"
                   class="iol-anim-scene absolute inset-y-0 hidden lg:flex w-1/2 left-0 items-center justify-end lg:pr-6 xl:pr-10 opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-10">
                   <div class="sv-scene" data-view="front"
                     style="--box-accent: #3ca6bf; --box-accent-dark: #297f94; --box-glow: rgba(60, 166, 191, 0.30);"
                     onpointermove="handleIolTilt(event, this)" onpointerleave="resetIolTilt(this)">
                     <div class="sv-stage" onpointerdown="startIolBoxDrag(event, this)">
                       <div class="sv-box-halo"></div>
-                      <div class="sv-box-float">
+                      <div class="sv-box-wrap">
+                        <div class="sv-box-float">
                         <div class="sv-box3d">
                           <!-- FRONT FACE (Authentic Rayner Asset Texture) -->
                           <div class="sv-box3d__face sv-box3d__face--front" style="padding: 0; background: #ffffff;">
-                            <img src="assets/img/packshots/box_front_trifocal.png?v=375.0"
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_front_trifocal.png?v=375.0"
                               alt="RayOne Trifocal Packaging Box Front"
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
@@ -8846,7 +9282,7 @@
 
                           <!-- RIGHT SPINE (SIDE) -->
                           <div class="sv-box3d__face sv-box3d__face--right" style="padding: 0;">
-                            <img src="assets/img/packshots/box_side_trifocal.png?v=380.0" alt=""
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_side_trifocal.png?v=380.0" alt=""
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
                           </div>
@@ -8858,35 +9294,50 @@
 
                           <!-- TOP & BOTTOM FACES (Authentic Rayner Top Flap Texture) -->
                           <div class="sv-box3d__face sv-box3d__face--top">
-                            <img src="assets/img/packshots/box_top_trifocal.png?v=380.0" alt=""
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_top_trifocal.png?v=380.0" alt=""
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
                           </div>
                           <div class="sv-box3d__face sv-box3d__face--bottom"></div>
                         </div>
+                        </div>
+                      </div>
+                      <div class="sv-lens-stage" aria-hidden="true">
+                        <div class="sv-lens-float">
+                          <img loading="lazy" decoding="async" src="assets/img/packshots/lens_trifocal.png?v=2.0" alt="RayOne Trifocal Intraocular Lens" class="sv-lens-img" draggable="false">
+                        </div>
+                        <span class="sv-lens-caption">RAO603F &bull; 16-STEP DIFFRACTIVE TRIFOCAL</span>
                       </div>
                       <div class="sv-box-shadow"></div>
                     </div>
 
                     <!-- 4 Interactive View Pill Buttons -->
-                    <div class="sv-box-controls" role="group" aria-label="RayOne Trifocal 3D Box View Controls">
-                      <button type="button" class="sv-box-btn" data-view="front" aria-pressed="true"
-                        onclick="setIolBoxView(this, 'front')">Front</button>
-                      <button type="button" class="sv-box-btn" data-view="side" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'side')">Side</button>
-                      <button type="button" class="sv-box-btn" data-view="back" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'back')">Back</button>
+                    <div class="sv-box-controls" role="group" aria-label="RayOne Trifocal View Controls">
                       <button type="button" class="sv-box-btn" data-view="spin" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'spin')">Spin</button>
+                        onclick="setIolBoxView(this, 'spin')">
+                        <svg class="sv-box-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                          <path d="M21 3v5h-5" />
+                        </svg>
+                        <span>Spin</span>
+                      </button>
+                      <button type="button" class="sv-box-btn" data-view="lens" aria-pressed="false"
+                        onclick="setIolBoxView(this, 'lens')">
+                        <svg class="sv-box-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <circle cx="12" cy="12" r="9" />
+                          <circle cx="12" cy="12" r="4" />
+                        </svg>
+                        <span>View Lens</span>
+                      </button>
                     </div>
                   </div>
                 </div>
 
-                <div id="iol-content-2"
+                <div id="iol-content-4"
                   class="iol-anim-content absolute inset-y-0 hidden lg:flex w-1/2 right-0 items-center justify-start lg:pl-6 xl:pl-10 opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-20">
                   <div class="sv-content"
                     style="--iol-accent: #3ca6bf; --iol-accent-border: rgba(60, 166, 191, 0.55); --iol-accent-ring: rgba(60, 166, 191, 0.25); --iol-accent-bg: rgba(60, 166, 191, 0.15);">
-                    <h2 class="sv-title">RayOne<sup class="sv-title-reg">&reg;</sup> <span class="sv-title-accent"
+                    <h2 class="sv-title">RayOne <span class="sv-title-accent"
                         style="--iol-accent:#3ca6bf;">Trifocal</span></h2>
                     <p class="sv-subtitle">Patented 16-Ring Diffractive Profile: Maximum Light Transmission</p>
                     <p class="sv-pitch">
@@ -8949,12 +9400,12 @@
                   </div>
                 </div>
 
-                <!-- ================= STAGE 3: RayOne Trifocal Toric (Content Left, Scene Right) ================= -->
-                <div id="iol-content-3"
+                <!-- ================= STAGE 5: RayOne Trifocal Toric (Content Left, Scene Right) ================= -->
+                <div id="iol-content-5"
                   class="iol-anim-content absolute inset-y-0 hidden lg:flex w-1/2 left-0 items-center justify-end lg:pr-6 xl:pr-10 opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-20">
                   <div class="sv-content"
                     style="--iol-accent: #3b82f6; --iol-accent-border: rgba(59, 130, 246, 0.55); --iol-accent-ring: rgba(59, 130, 246, 0.25); --iol-accent-bg: rgba(37, 99, 235, 0.18);">
-                    <h2 class="sv-title">RayOne<sup class="sv-title-reg">&reg;</sup> <span class="sv-title-accent"
+                    <h2 class="sv-title">RayOne <span class="sv-title-accent"
                         style="--iol-accent:#3b82f6;">Trifocal Toric</span></h2>
                     <p class="sv-subtitle">Full Spectacle Independence: Simultaneous Astigmatism Correction</p>
                     <p class="sv-pitch">
@@ -9014,18 +9465,19 @@
                   </div>
                 </div>
 
-                <div id="iol-scene-3"
+                <div id="iol-scene-5"
                   class="iol-anim-scene absolute inset-y-0 hidden lg:flex w-1/2 right-0 items-center justify-start lg:pl-6 xl:pl-10 opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-10">
                   <div class="sv-scene" data-view="front"
                     style="--box-accent: #0a1d40; --box-accent-dark: #0a1d40; --box-glow: rgba(22, 55, 103, 0.34);"
                     onpointermove="handleIolTilt(event, this)" onpointerleave="resetIolTilt(this)">
                     <div class="sv-stage" onpointerdown="startIolBoxDrag(event, this)">
                       <div class="sv-box-halo"></div>
-                      <div class="sv-box-float">
+                      <div class="sv-box-wrap">
+                        <div class="sv-box-float">
                         <div class="sv-box3d">
                           <!-- FRONT FACE (Authentic Rayner Asset Texture) -->
                           <div class="sv-box3d__face sv-box3d__face--front" style="padding: 0; background: #ffffff;">
-                            <img src="assets/img/packshots/box_front_trifocal_toric.png?v=375.0"
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_front_trifocal_toric.png?v=375.0"
                               alt="RayOne Trifocal Toric Packaging Box Front"
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
@@ -9059,7 +9511,7 @@
 
                           <!-- RIGHT SPINE (SIDE) -->
                           <div class="sv-box3d__face sv-box3d__face--right" style="padding: 0;">
-                            <img src="assets/img/packshots/box_side_trifocal_toric.png?v=380.0" alt=""
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_side_trifocal_toric.png?v=380.0" alt=""
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
                           </div>
@@ -9071,43 +9523,59 @@
 
                           <!-- TOP & BOTTOM FACES (Authentic Rayner Top Flap Texture) -->
                           <div class="sv-box3d__face sv-box3d__face--top">
-                            <img src="assets/img/packshots/box_top_trifocal_toric.png?v=380.0" alt=""
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_top_trifocal_toric.png?v=380.0" alt=""
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
                           </div>
                           <div class="sv-box3d__face sv-box3d__face--bottom"></div>
                         </div>
+                        </div>
+                      </div>
+                      <div class="sv-lens-stage" aria-hidden="true">
+                        <div class="sv-lens-float">
+                          <img loading="lazy" decoding="async" src="assets/img/packshots/lens_trifocal_toric.png?v=2.0" alt="RayOne Trifocal Toric Intraocular Lens" class="sv-lens-img" draggable="false">
+                        </div>
+                        <span class="sv-lens-caption">RAO613T &bull; TRIFOCAL TORIC AXIS IOL</span>
                       </div>
                       <div class="sv-box-shadow"></div>
                     </div>
 
                     <!-- 4 Interactive View Pill Buttons -->
-                    <div class="sv-box-controls" role="group" aria-label="RayOne Trifocal Toric 3D Box View Controls">
-                      <button type="button" class="sv-box-btn" data-view="front" aria-pressed="true"
-                        onclick="setIolBoxView(this, 'front')">Front</button>
-                      <button type="button" class="sv-box-btn" data-view="side" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'side')">Side</button>
-                      <button type="button" class="sv-box-btn" data-view="back" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'back')">Back</button>
+                    <div class="sv-box-controls" role="group" aria-label="RayOne Trifocal Toric View Controls">
                       <button type="button" class="sv-box-btn" data-view="spin" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'spin')">Spin</button>
+                        onclick="setIolBoxView(this, 'spin')">
+                        <svg class="sv-box-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                          <path d="M21 3v5h-5" />
+                        </svg>
+                        <span>Spin</span>
+                      </button>
+                      <button type="button" class="sv-box-btn" data-view="lens" aria-pressed="false"
+                        onclick="setIolBoxView(this, 'lens')">
+                        <svg class="sv-box-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <circle cx="12" cy="12" r="9" />
+                          <circle cx="12" cy="12" r="4" />
+                        </svg>
+                        <span>View Lens</span>
+                      </button>
                     </div>
                   </div>
                 </div>
 
-                <!-- ================= STAGE 4: RayOne Aspheric (Scene Left, Content Right) ================= -->
-                <div id="iol-scene-4"
+                <!-- ================= STAGE 6: RayOne Aspheric (Scene Left, Content Right) ================= -->
+                <div id="iol-scene-6"
                   class="iol-anim-scene absolute inset-y-0 hidden lg:flex w-1/2 left-0 items-center justify-end lg:pr-6 xl:pr-10 opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-10">
                   <div class="sv-scene" data-view="front"
                     style="--box-accent: #5a1e50; --box-accent-dark: #3d1236; --box-glow: rgba(90, 30, 80, 0.32);"
                     onpointermove="handleIolTilt(event, this)" onpointerleave="resetIolTilt(this)">
                     <div class="sv-stage" onpointerdown="startIolBoxDrag(event, this)">
                       <div class="sv-box-halo"></div>
-                      <div class="sv-box-float">
+                      <div class="sv-box-wrap">
+                        <div class="sv-box-float">
                         <div class="sv-box3d">
                           <!-- FRONT FACE (Authentic Rayner Asset Texture) -->
                           <div class="sv-box3d__face sv-box3d__face--front" style="padding: 0; background: #ffffff;">
-                            <img src="assets/img/packshots/box_front_aspheric.png?v=375.0"
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_front_aspheric.png?v=375.0"
                               alt="RayOne Aspheric Packaging Box Front"
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
@@ -9141,7 +9609,7 @@
 
                           <!-- RIGHT SPINE (SIDE) -->
                           <div class="sv-box3d__face sv-box3d__face--right" style="padding: 0;">
-                            <img src="assets/img/packshots/box_side_aspheric.png?v=380.0" alt=""
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_side_aspheric.png?v=380.0" alt=""
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
                           </div>
@@ -9153,35 +9621,50 @@
 
                           <!-- TOP & BOTTOM FACES (Authentic Rayner Top Flap Texture) -->
                           <div class="sv-box3d__face sv-box3d__face--top">
-                            <img src="assets/img/packshots/box_top_aspheric.png?v=380.0" alt=""
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_top_aspheric.png?v=380.0" alt=""
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
                           </div>
                           <div class="sv-box3d__face sv-box3d__face--bottom"></div>
                         </div>
+                        </div>
+                      </div>
+                      <div class="sv-lens-stage" aria-hidden="true">
+                        <div class="sv-lens-float">
+                          <img loading="lazy" decoding="async" src="assets/img/packshots/lens_aspheric.png?v=2.0" alt="RayOne Aspheric Intraocular Lens" class="sv-lens-img" draggable="false">
+                        </div>
+                        <span class="sv-lens-caption">RAO600C &bull; ABERRATION-NEUTRAL MONOFOCAL</span>
                       </div>
                       <div class="sv-box-shadow"></div>
                     </div>
 
                     <!-- 4 Interactive View Pill Buttons -->
-                    <div class="sv-box-controls" role="group" aria-label="RayOne Aspheric 3D Box View Controls">
-                      <button type="button" class="sv-box-btn" data-view="front" aria-pressed="true"
-                        onclick="setIolBoxView(this, 'front')">Front</button>
-                      <button type="button" class="sv-box-btn" data-view="side" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'side')">Side</button>
-                      <button type="button" class="sv-box-btn" data-view="back" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'back')">Back</button>
+                    <div class="sv-box-controls" role="group" aria-label="RayOne Aspheric View Controls">
                       <button type="button" class="sv-box-btn" data-view="spin" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'spin')">Spin</button>
+                        onclick="setIolBoxView(this, 'spin')">
+                        <svg class="sv-box-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                          <path d="M21 3v5h-5" />
+                        </svg>
+                        <span>Spin</span>
+                      </button>
+                      <button type="button" class="sv-box-btn" data-view="lens" aria-pressed="false"
+                        onclick="setIolBoxView(this, 'lens')">
+                        <svg class="sv-box-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <circle cx="12" cy="12" r="9" />
+                          <circle cx="12" cy="12" r="4" />
+                        </svg>
+                        <span>View Lens</span>
+                      </button>
                     </div>
                   </div>
                 </div>
 
-                <div id="iol-content-4"
+                <div id="iol-content-6"
                   class="iol-anim-content absolute inset-y-0 hidden lg:flex w-1/2 right-0 items-center justify-start lg:pl-6 xl:pl-10 opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-20">
                   <div class="sv-content"
                     style="--iol-accent: #7c286c; --iol-accent-border: rgba(124, 40, 108, 0.72); --iol-accent-ring: rgba(124, 40, 108, 0.34); --iol-accent-bg: rgba(88, 29, 78, 0.38);">
-                    <h2 class="sv-title">RayOne<sup class="sv-title-reg">&reg;</sup> <span class="sv-title-accent"
+                    <h2 class="sv-title">RayOne <span class="sv-title-accent"
                         style="--iol-accent:#7c286c;">Aspheric</span></h2>
                     <p class="sv-subtitle">Aberration-Neutral Precision: Universal Corneal Compatibility</p>
                     <p class="sv-pitch">
@@ -9241,12 +9724,12 @@
                   </div>
                 </div>
 
-                <!-- ================= STAGE 5: Sulcoflex Aspheric (Content Left, Scene Right) ================= -->
-                <div id="iol-content-5"
+                <!-- ================= STAGE 7: Sulcoflex Aspheric (Content Left, Scene Right) ================= -->
+                <div id="iol-content-7"
                   class="iol-anim-content absolute inset-y-0 hidden lg:flex w-1/2 left-0 items-center justify-end lg:pr-6 xl:pr-10 opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-20">
                   <div class="sv-content"
                     style="--iol-accent: #7c286c; --iol-accent-border: rgba(124, 40, 108, 0.72); --iol-accent-ring: rgba(124, 40, 108, 0.34); --iol-accent-bg: rgba(88, 29, 78, 0.38);">
-                    <h2 class="sv-title">Sulcoflex<sup class="sv-title-reg">&reg;</sup> <span class="sv-title-accent"
+                    <h2 class="sv-title">Sulcoflex <span class="sv-title-accent"
                         style="--iol-accent:#7c286c;">Aspheric</span></h2>
                     <p class="sv-subtitle">Pseudophakic Supplementary Platform: Reversible Ciliary Sulcus Placement</p>
                     <p class="sv-pitch">
@@ -9307,18 +9790,19 @@
                   </div>
                 </div>
 
-                <div id="iol-scene-5"
+                <div id="iol-scene-7"
                   class="iol-anim-scene absolute inset-y-0 hidden lg:flex w-1/2 right-0 items-center justify-start lg:pl-6 xl:pl-10 opacity-0 pointer-events-none transition-transform duration-500 will-change-transform z-10">
                   <div class="sv-scene" data-view="front"
                     style="--box-accent: #581d4e; --box-accent-dark: #3b1134; --box-glow: rgba(88, 29, 78, 0.32);"
                     onpointermove="handleIolTilt(event, this)" onpointerleave="resetIolTilt(this)">
                     <div class="sv-stage" onpointerdown="startIolBoxDrag(event, this)">
                       <div class="sv-box-halo"></div>
-                      <div class="sv-box-float">
+                      <div class="sv-box-wrap">
+                        <div class="sv-box-float">
                         <div class="sv-box3d">
                           <!-- FRONT FACE (Authentic Rayner Asset Texture) -->
                           <div class="sv-box3d__face sv-box3d__face--front" style="padding: 0; background: #ffffff;">
-                            <img src="assets/img/packshots/box_front_sulcoflex.png?v=375.0"
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_front_sulcoflex.png?v=375.0"
                               alt="Sulcoflex Aspheric Packaging Box Front"
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
@@ -9352,7 +9836,7 @@
 
                           <!-- RIGHT SPINE (SIDE) -->
                           <div class="sv-box3d__face sv-box3d__face--right" style="padding: 0;">
-                            <img src="assets/img/packshots/box_side_sulcoflex.png?v=380.0" alt=""
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_side_sulcoflex.png?v=380.0" alt=""
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
                           </div>
@@ -9364,26 +9848,41 @@
 
                           <!-- TOP & BOTTOM FACES (Authentic Rayner Top Flap Texture) -->
                           <div class="sv-box3d__face sv-box3d__face--top">
-                            <img src="assets/img/packshots/box_top_sulcoflex.png?v=380.0" alt=""
+                            <img loading="lazy" decoding="async" src="assets/img/packshots/box_top_sulcoflex.png?v=380.0" alt=""
                               style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                               draggable="false">
                           </div>
                           <div class="sv-box3d__face sv-box3d__face--bottom"></div>
                         </div>
+                        </div>
+                      </div>
+                      <div class="sv-lens-stage" aria-hidden="true">
+                        <div class="sv-lens-float">
+                          <img loading="lazy" decoding="async" src="assets/img/packshots/lens_sulcoflex.png?v=2.0" alt="Sulcoflex Aspheric Intraocular Lens" class="sv-lens-img" draggable="false">
+                        </div>
+                        <span class="sv-lens-caption">653L &bull; SUPPLEMENTARY SULCUS IOL</span>
                       </div>
                       <div class="sv-box-shadow"></div>
                     </div>
 
                     <!-- 4 Interactive View Pill Buttons -->
-                    <div class="sv-box-controls" role="group" aria-label="Sulcoflex Aspheric 3D Box View Controls">
-                      <button type="button" class="sv-box-btn" data-view="front" aria-pressed="true"
-                        onclick="setIolBoxView(this, 'front')">Front</button>
-                      <button type="button" class="sv-box-btn" data-view="side" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'side')">Side</button>
-                      <button type="button" class="sv-box-btn" data-view="back" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'back')">Back</button>
+                    <div class="sv-box-controls" role="group" aria-label="Sulcoflex Aspheric View Controls">
                       <button type="button" class="sv-box-btn" data-view="spin" aria-pressed="false"
-                        onclick="setIolBoxView(this, 'spin')">Spin</button>
+                        onclick="setIolBoxView(this, 'spin')">
+                        <svg class="sv-box-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                          <path d="M21 3v5h-5" />
+                        </svg>
+                        <span>Spin</span>
+                      </button>
+                      <button type="button" class="sv-box-btn" data-view="lens" aria-pressed="false"
+                        onclick="setIolBoxView(this, 'lens')">
+                        <svg class="sv-box-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <circle cx="12" cy="12" r="9" />
+                          <circle cx="12" cy="12" r="4" />
+                        </svg>
+                        <span>View Lens</span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -9392,11 +9891,11 @@
                 <div
                   class="lg:hidden flex flex-col items-center justify-center w-full px-4 pt-16 pb-20 overflow-y-auto">
                   <div class="w-full max-w-sm aspect-square flex items-center justify-center mb-4">
-                    <img id="iol-mobile-packshot" src="assets/img/packshots/authentic_emv.png?v=366.00" alt="RayOne IOL"
+                    <img loading="lazy" decoding="async" id="iol-mobile-packshot" src="assets/img/packshots/galaxy_carton.png?v=2" alt="RayOne IOL"
                       class="max-h-64 object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)]">
                   </div>
                   <div class="w-full max-w-md text-center">
-                    <h2 id="iol-mobile-title" class="text-3xl font-extrabold text-white mb-1">RayOne&reg; EMV</h2>
+                    <h2 id="iol-mobile-title" class="text-3xl font-extrabold text-white mb-1">RayOne Galaxy</h2>
                     <p id="iol-mobile-sub" class="text-xs text-sky font-semibold mb-3">Co-developed with Prof. Graham
                       Barrett</p>
                     <p id="iol-mobile-desc" class="text-xs text-cream/75 leading-relaxed mb-4">
@@ -9406,47 +9905,61 @@
                   </div>
                 </div>
 
-                <!-- Bottom Minimal Progress Line (All 6 IOL Innovations) -->
+                <!-- Bottom Minimal Progress Line (All 8 IOL Innovations) -->
                 <div class="sv-rail" role="tablist" aria-label="IOL Stage Progress">
-                  <button type="button" class="sv-rail__item" aria-label="RayOne EMV" aria-current="true"
+                  <button type="button" class="sv-rail__item" aria-label="RayOne Galaxy" aria-current="true"
                     onclick="jumpIolStage(0)">
                     <div class="sv-rail__track">
                       <div id="iol-fill-0" class="sv-rail__fill" style="transform: scaleX(1);"></div>
                     </div>
                   </button>
 
-                  <button type="button" class="sv-rail__item" aria-label="RayOne EMV Toric" aria-current="false"
+                  <button type="button" class="sv-rail__item" aria-label="RayOne Galaxy Toric" aria-current="false"
                     onclick="jumpIolStage(1)">
                     <div class="sv-rail__track">
                       <div id="iol-fill-1" class="sv-rail__fill"></div>
                     </div>
                   </button>
 
-                  <button type="button" class="sv-rail__item" aria-label="RayOne Trifocal" aria-current="false"
+                  <button type="button" class="sv-rail__item" aria-label="RayOne EMV" aria-current="false"
                     onclick="jumpIolStage(2)">
                     <div class="sv-rail__track">
                       <div id="iol-fill-2" class="sv-rail__fill"></div>
                     </div>
                   </button>
 
-                  <button type="button" class="sv-rail__item" aria-label="RayOne Trifocal Toric" aria-current="false"
+                  <button type="button" class="sv-rail__item" aria-label="RayOne EMV Toric" aria-current="false"
                     onclick="jumpIolStage(3)">
                     <div class="sv-rail__track">
                       <div id="iol-fill-3" class="sv-rail__fill"></div>
                     </div>
                   </button>
 
-                  <button type="button" class="sv-rail__item" aria-label="RayOne Aspheric" aria-current="false"
+                  <button type="button" class="sv-rail__item" aria-label="RayOne Trifocal" aria-current="false"
                     onclick="jumpIolStage(4)">
                     <div class="sv-rail__track">
                       <div id="iol-fill-4" class="sv-rail__fill"></div>
                     </div>
                   </button>
 
-                  <button type="button" class="sv-rail__item" aria-label="Sulcoflex Aspheric" aria-current="false"
+                  <button type="button" class="sv-rail__item" aria-label="RayOne Trifocal Toric" aria-current="false"
                     onclick="jumpIolStage(5)">
                     <div class="sv-rail__track">
                       <div id="iol-fill-5" class="sv-rail__fill"></div>
+                    </div>
+                  </button>
+
+                  <button type="button" class="sv-rail__item" aria-label="RayOne Aspheric" aria-current="false"
+                    onclick="jumpIolStage(6)">
+                    <div class="sv-rail__track">
+                      <div id="iol-fill-6" class="sv-rail__fill"></div>
+                    </div>
+                  </button>
+
+                  <button type="button" class="sv-rail__item" aria-label="Sulcoflex Aspheric" aria-current="false"
+                    onclick="jumpIolStage(7)">
+                    <div class="sv-rail__track">
+                      <div id="iol-fill-7" class="sv-rail__fill"></div>
                     </div>
                   </button>
                 </div>
@@ -9476,13 +9989,13 @@
                 <div class="max-w-5xl mx-auto flex flex-col items-center">
                   <h3
                     class="text-4xl sm:text-6xl lg:text-[68px] xl:text-[76px] font-black text-white tracking-[-0.03em] leading-[1.02]">
-                    Ophthalmic Solutions &bull; <span class="text-sky">Ophteis&reg; OVDs &amp; AEON&reg; Care</span>
+                    Ophthalmic Solutions &bull; <span class="text-sky">Ophteis OVDs &amp; AEON Care</span>
                   </h3>
 
                   <p
                     class="mt-5 sm:mt-6 text-xs sm:text-sm lg:text-base font-semibold uppercase tracking-[0.14em] text-cream/85 max-w-3xl leading-relaxed">
-                    Established ophthalmology portfolio featuring verified Ophteis&reg; bio-engineered viscoelastics and
-                    AEON&reg; ophthalmic ocular surface solutions.
+                    Established ophthalmology portfolio featuring verified Ophteis bio-engineered viscoelastics and
+                    AEON ophthalmic ocular surface solutions.
                   </p>
 
                   <button type="button" onclick="if(window.jumpMedSuppliesStage){window.jumpMedSuppliesStage(1);}"
@@ -9521,7 +10034,7 @@
                   <h4
                     class="text-[14px] sm:text-[17px] font-bold tracking-[0.08em] uppercase text-[#f4f7fb] flex items-center gap-2.5 mb-5 sm:mb-7">
                     <span class="transition-colors duration-300" style="color: var(--med-accent);">01 &bull;</span>
-                    <span>OPHTEIS&reg; VISCOSURGICAL DEVICES (OVDS)</span>
+                    <span>OPHTEIS VISCOSURGICAL DEVICES (OVDS)</span>
                   </h4>
 
                   <!-- Top 3 Serif Product Tabs (Adaptive Pro / Cohesive / Dispersive) -->
@@ -9562,7 +10075,7 @@
 
                       <h5 id="ophteis-title"
                         class="prod-serif text-[36px] sm:text-[48px] lg:text-[56px] font-bold text-[#f4f7fb] tracking-[-0.02em] leading-[1.06] mb-4">
-                        Ophteis&reg; Dispersive
+                        Ophteis Dispersive
                       </h5>
 
                       <p id="ophteis-desc"
@@ -9630,21 +10143,21 @@
                             <div class="med-3d-face med-3d-face--left"></div>
                             <!-- RIGHT SPINE -->
                             <div class="med-3d-face med-3d-face--right">
-                              <img id="ophteis-box-right-img"
+                              <img loading="lazy" decoding="async" id="ophteis-box-right-img"
                                 src="assets/img/packshots/box_right_ophteis_dispersive.png?v=380.0" alt=""
                                 style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                                 draggable="false">
                             </div>
                             <!-- TOP FLAP -->
                             <div class="med-3d-face med-3d-face--top">
-                              <img id="ophteis-box-top-img"
+                              <img loading="lazy" decoding="async" id="ophteis-box-top-img"
                                 src="assets/img/packshots/box_top_ophteis_dispersive.png?v=380.0" alt=""
                                 style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                                 draggable="false">
                             </div>
                             <!-- FRONT FACE (Authentic Rayner Ophteis Packaging) -->
                             <div class="med-3d-face med-3d-face--front">
-                              <img id="ophteis-box-front-img"
+                              <img loading="lazy" decoding="async" id="ophteis-box-front-img"
                                 src="assets/img/packshots/box_front_ophteis_dispersive.png?v=380.0"
                                 alt="Ophteis Dispersive Packaging"
                                 style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
@@ -9684,7 +10197,7 @@
                   <h4
                     class="text-[14px] sm:text-[17px] font-bold tracking-[0.08em] uppercase text-[#f4f7fb] flex items-center gap-2.5 mb-5 sm:mb-7">
                     <span class="transition-colors duration-300" style="color: var(--med-accent);">02 &bull;</span>
-                    <span>AEON&reg; EYE SOLUTIONS &amp; OCULAR SURFACE CARE</span>
+                    <span>AEON EYE SOLUTIONS &amp; OCULAR SURFACE CARE</span>
                   </h4>
 
                   <!-- Top 4 Serif Product Tabs (Protect / Protect Plus / Repair / Sodium Chloride 5%) -->
@@ -9732,7 +10245,7 @@
 
                       <h5 id="aeon-title"
                         class="prod-serif text-[36px] sm:text-[48px] lg:text-[56px] font-bold text-[#f4f7fb] tracking-[-0.02em] leading-[1.06] mb-4">
-                        AEON&reg; Protect
+                        AEON Protect
                       </h5>
 
                       <p id="aeon-desc"
@@ -9802,20 +10315,20 @@
                             <div class="med-3d-face aeon-3d-face--top"></div>
                             <!-- LEFT SPINE (Authentic Rayner AEON Side Panel) -->
                             <div class="med-3d-face aeon-3d-face--left">
-                              <img id="aeon-box-side-img" src="assets/img/packshots/box_side_aeon_protect.png?v=380.0"
+                              <img loading="lazy" decoding="async" id="aeon-box-side-img" src="assets/img/packshots/box_side_aeon_protect.png?v=380.0"
                                 alt=""
                                 style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                                 draggable="false">
                             </div>
                             <!-- FRONT FACE (Authentic Rayner AEON Vertical Carton) -->
                             <div class="med-3d-face aeon-3d-face--front">
-                              <img id="aeon-box-front-img" src="assets/img/packshots/box_front_aeon_protect.png?v=380.0"
+                              <img loading="lazy" decoding="async" id="aeon-box-front-img" src="assets/img/packshots/box_front_aeon_protect.png?v=380.0"
                                 alt="AEON Protect Packaging"
                                 style="width: 100%; height: 100%; object-fit: fill; display: block; pointer-events: none;"
                                 draggable="false">
                             </div>
                             <!-- 3D-FLOATING AEON DROPPER BOTTLE -->
-                            <img id="aeon-bottle-img" class="aeon-3d-bottle"
+                            <img loading="lazy" decoding="async" id="aeon-bottle-img" class="aeon-3d-bottle"
                               src="assets/img/packshots/bottle_aeon_protect.png?v=380.0" alt="AEON Protect 10ml Bottle"
                               draggable="false">
                           </div>
@@ -9847,12 +10360,12 @@
                 <button type="button" data-med-stage-btn="1"
                   onclick="if(window.jumpMedSuppliesStage){window.jumpMedSuppliesStage(1);}"
                   class="px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider text-cream/60 hover:text-white border border-transparent transition-all cursor-pointer">
-                  01 &middot; Ophteis&reg; OVDs
+                  01 &middot; Ophteis OVDs
                 </button>
                 <button type="button" data-med-stage-btn="2"
                   onclick="if(window.jumpMedSuppliesStage){window.jumpMedSuppliesStage(2);}"
                   class="px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider text-cream/60 hover:text-white border border-transparent transition-all cursor-pointer">
-                  02 &middot; AEON&reg; Care
+                  02 &middot; AEON Care
                 </button>
               </div>
 
@@ -10124,7 +10637,7 @@
             </div>
             <h2 id="galaxy-delivery-title"
               class="mt-1 font-serif text-2xl font-normal leading-tight tracking-tight text-white sm:text-3xl">
-              RayOne&reg; Galaxy Delivery Simulation
+              RayOne Galaxy Delivery Simulation
             </h2>
             <p class="mt-0.5 text-xs text-cream/65 sm:text-[13px]">
               Official 9-stage 3D sequence: preloaded injector unboxing, Lock &amp; Roll&trade; OVD priming, and
@@ -10511,6 +11024,7 @@
       class="page-snap-section page-transition-section relative isolate w-full h-[100svh] min-h-[100svh] max-h-[100svh] overflow-hidden bg-[#0a1d40] scroll-mt-0">
 
       <style id="brands-editorial-scoped-styles">
+        #brands #brands-title, #brands #brands-title * { font-weight: 400 !important; }
         #brands .br-serif {
           font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
         }
@@ -10756,7 +11270,7 @@
                   <span class="inline-block h-0.5 bg-sky/50 w-12 ml-1"></span>
                 </p>
 
-                <h2 id="brands-title" class="ih-h1 br-serif">
+                <h2 id="brands-title" class="ih-h1 br-serif !font-normal">
                   <span class="ih-h1-line">Bringing global</span>
                   <span class="ih-h1-line">medical technologies to</span>
                   <span class="ih-h1-line">Philippine <span class="text-[#72c5f8]">institutions.</span></span>
@@ -10870,12 +11384,12 @@
                       <div class="pel-copy">
                           <div class="pel-prod">
                             <span class="pel-status is-hi">Currently offered &middot; Verified IOL scope</span>
-                            <div class="pel-prod-title">RayOne&reg; Intraocular Lenses &mdash; Rayner (UK)</div>
-                            <p>Manufactured by Rayner (UK) &middot; RayOne&reg; Aspheric, RayOne&reg; EMV, RayOne&reg; Trifocal &amp; RayOne&reg; Galaxy platforms (specific model availability confirmed upon inquiry).</p>
+                            <div class="pel-prod-title">RayOne Intraocular Lenses &mdash; Rayner (UK)</div>
+                            <p>Manufactured by Rayner (UK) &middot; RayOne Aspheric, RayOne EMV, RayOne Trifocal &amp; RayOne Galaxy platforms (specific model availability confirmed upon inquiry).</p>
                           </div>
                           <div class="pel-prod">
                             <span class="pel-status">Subject to model inquiry &amp; review</span>
-                            <div class="pel-prod-title">Sulcoflex&reg; Supplementary IOLs &mdash; Rayner (UK)</div>
+                            <div class="pel-prod-title">Sulcoflex Supplementary IOLs &mdash; Rayner (UK)</div>
                             <p>Manufactured by Rayner (UK) &middot; Pseudophakic supplementary ciliary sulcus IOL models shown for clinical inquiry and authorization verification.</p>
                           </div>
                       </div>
@@ -10901,12 +11415,12 @@
                       <div class="pel-copy">
                           <div class="pel-prod">
                             <span class="pel-status">For future inquiry / review only</span>
-                            <div class="pel-prod-title">Ophteis&reg; OVDs &mdash; Rayner (UK)</div>
+                            <div class="pel-prod-title">Ophteis OVDs &mdash; Rayner (UK)</div>
                             <p>Manufactured by Rayner (UK) &middot; Ophthalmic viscosurgical range shown for institutional inquiry; not automatically covered under IOL exclusivity and subject to separate authorization.</p>
                           </div>
                           <div class="pel-prod">
                             <span class="pel-status">For future inquiry / review only</span>
-                            <div class="pel-prod-title">AEON&reg; Ocular Surface &mdash; Rayner (UK)</div>
+                            <div class="pel-prod-title">AEON Ocular Surface &mdash; Rayner (UK)</div>
                             <p>Manufactured by Rayner (UK) &middot; Ocular surface care line shown for future portfolio review, subject to applicable regulatory and principal authorization.</p>
                           </div>
                       </div>
@@ -10931,13 +11445,13 @@
                       <dl class="pel-meta"><dt class="pel-label">Category</dt><dd>Delivery &amp; planning systems</dd><dt class="pel-label">Scope</dt><dd>Manufacturer-engineered delivery injectors and surgical reference tools</dd><dt class="pel-label">Manufacturer</dt><dd>Rayner (UK)</dd></dl>
                       <div class="pel-copy">
                           <div class="pel-prod">
-                            <span class="pel-status is-hi">Paired with offered RayOne&reg; IOLs</span>
-                            <div class="pel-prod-title">RayOne&reg; Preloaded Delivery &mdash; Rayner (UK)</div>
-                            <p>Manufactured by Rayner (UK) &middot; Manufacturer-integrated preloaded injector system supplied with authorized RayOne&reg; intraocular lens models.</p>
+                            <span class="pel-status is-hi">Paired with offered RayOne IOLs</span>
+                            <div class="pel-prod-title">RayOne Preloaded Delivery &mdash; Rayner (UK)</div>
+                            <p>Manufactured by Rayner (UK) &middot; Manufacturer-integrated preloaded injector system supplied with authorized RayOne intraocular lens models.</p>
                           </div>
                           <div class="pel-prod">
                             <span class="pel-status">Manufacturer platform &middot; Inquiry / review</span>
-                            <div class="pel-prod-title">RayTrace&reg; &amp; RayPRO&reg; Digital &mdash; Rayner (UK)</div>
+                            <div class="pel-prod-title">RayTrace &amp; RayPRO Digital &mdash; Rayner (UK)</div>
                             <p>Operated by Rayner (UK) &middot; Manufacturer online IOL power calculator and digital platform; local institutional onboarding subject to review.</p>
                           </div>
                       </div>
@@ -12026,7 +12540,7 @@
                 </p>
 
                 <h2 id="distribution-title"
-                  class="ih-h1 srv-serif text-center !mt-5 !text-[38px] sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] !leading-[1.08] !tracking-[-0.03em] !font-bold">
+                  class="ih-h1 srv-serif text-center !mt-5 !text-[38px] sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] !leading-[1.08] !tracking-[-0.03em] !font-normal">
                   Precision Support for <br class="hidden sm:inline" />Every Operating <span class="text-[#72c5f8]">Theatre.</span>
                 </h2>
 
@@ -12213,7 +12727,7 @@
                 </p>
 
                 <h2 id="resources-title"
-                  class="ih-h1 res-serif text-center !mt-5 !text-[38px] sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] !leading-[1.08] !tracking-[-0.03em] !font-bold">
+                  class="ih-h1 res-serif text-center !mt-5 !text-[38px] sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] !leading-[1.08] !tracking-[-0.03em] !font-normal">
                   Corporate Literature &amp; <br class="hidden sm:inline" />Professional <span class="text-[#72c5f8]">Resources.</span>
                 </h2>
 
@@ -12317,7 +12831,7 @@
                 <div class="flex-1 min-w-0">
                   <div
                     class="text-[17px] sm:text-[20px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-1.5 transition-all duration-300 tracking-[-0.01em]">
-                    RayOne&reg; EMV Intraocular Lens Product Brochure</div>
+                    RayOne EMV Intraocular Lens Product Brochure</div>
                   <div class="text-[12px] text-[#7e9ab8] mt-0.5">Legal Manufacturer: Rayner Intraocular Lenses Ltd.
                     (Worthing, UK) &bull; Version Control: Ver. 2026.1 &bull; Exclusive PH IOL Scope</div>
                 </div>
@@ -12337,7 +12851,7 @@
                 <div class="flex-1 min-w-0">
                   <div
                     class="text-[17px] sm:text-[20px] font-semibold text-[#dce7f5] group-hover:text-white group-hover:translate-x-1.5 transition-all duration-300 tracking-[-0.01em]">
-                    RayOne&reg; Intraocular Lens Portfolio Overview &amp; Specifications</div>
+                    RayOne Intraocular Lens Portfolio Overview &amp; Specifications</div>
                   <div class="text-[12px] text-[#7e9ab8] mt-0.5">Legal Manufacturer: Rayner Intraocular Lenses Ltd. (UK)
                     &bull; Version Control: Ver. 2026.1 &bull; Individual model availability confirmed upon inquiry</div>
                 </div>
@@ -13356,7 +13870,7 @@
     <!-- Top Reader Toolbar -->
     <div class="flex items-center justify-between border-b border-cream/10 bg-ink/90 px-4 py-3 sm:px-8">
       <div class="flex items-center gap-4">
-        <span class="bg-magenta px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white">RayOne®
+        <span class="bg-magenta px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white">RayOne
           EMV</span>
         <h2 id="brochure-modal-title"
           class="hidden text-xs font-semibold uppercase tracking-[0.22em] text-cream/80 sm:block">
@@ -14606,19 +15120,344 @@
     }
   </style>
 
+  <!-- ============== LANDING PAGE MICRO-ANIMATIONS (About, Products, Brands, Services, Resources — Slide 0) ============== -->
+  <style id="mq-landing-motion">
+    @keyframes mqLandRise {
+      0% { opacity: 0; transform: translate3d(0, 10px, 0); filter: blur(6px); }
+      100% { opacity: 1; transform: translate3d(0, 0, 0); filter: blur(0); }
+    }
+    @keyframes mqWordIn {
+      0% { opacity: 0; transform: translate3d(0, 14px, 0); filter: blur(4px); }
+      100% { opacity: 1; transform: translate3d(0, 0, 0); filter: blur(0); }
+    }
+    @keyframes mqWordWave {
+      0%, 100% {
+        transform: translate3d(0, 0, 0);
+        text-shadow: 0 8px 28px rgba(3, 10, 24, 0.5);
+      }
+      14% {
+        transform: translate3d(0, -2.5px, 0);
+        text-shadow: 0 0 22px rgba(114, 197, 248, 0.52), 0 8px 28px rgba(3, 10, 24, 0.5);
+      }
+      28% {
+        transform: translate3d(0, 0, 0);
+        text-shadow: 0 8px 28px rgba(3, 10, 24, 0.5);
+      }
+    }
+    @keyframes mqAccentWave {
+      0%, 100% {
+        transform: translate3d(0, 0, 0);
+        filter: drop-shadow(0 0 0 rgba(114, 197, 248, 0));
+      }
+      14% {
+        transform: translate3d(0, -2.5px, 0);
+        filter: drop-shadow(0 0 14px rgba(114, 197, 248, 0.45));
+      }
+      28% {
+        transform: translate3d(0, 0, 0);
+        filter: drop-shadow(0 0 0 rgba(114, 197, 248, 0));
+      }
+    }
+    @keyframes mqAccentShimmer {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    @keyframes mqEyebrowLine {
+      0%, 100% { transform: scaleX(0.45); opacity: 0.45; }
+      50% { transform: scaleX(1); opacity: 1; }
+    }
+    @keyframes mqBtnSheen {
+      0%, 68% { transform: translate3d(-140%, 0, 0) skewX(-20deg); }
+      100% { transform: translate3d(320%, 0, 0) skewX(-20deg); }
+    }
+    @keyframes mqArrowNudge {
+      0%, 70%, 100% { transform: translate3d(0, 0, 0); }
+      80% { transform: translate3d(4px, 0, 0); }
+      90% { transform: translate3d(0, 0, 0); }
+    }
+    @keyframes mqStripBeam {
+      0% { transform: translate3d(-100%, 0, 0); opacity: 0; }
+      12% { opacity: 1; }
+      88% { opacity: 1; }
+      100% { transform: translate3d(340%, 0, 0); opacity: 0; }
+    }
+    @keyframes mqAuroraDrift {
+      0% { background-position: 30% 35%, 70% 65%; opacity: 0.7; }
+      100% { background-position: 42% 45%, 58% 55%; opacity: 1; }
+    }
+
+    /* 1. Staggered entrance each time a landing page comes into view */
+    html.mq-land-js .mq-land-host:not(.mq-land-in) .ih-hero-copy > * {
+      opacity: 0;
+    }
+    html.mq-land-js .mq-land-host:not(.mq-land-in) .mq-title-w,
+    html.mq-land-js .mq-land-host:not(.mq-land-in) .mq-title-accent {
+      opacity: 0;
+    }
+    .mq-land-host.mq-land-in .ih-hero-copy > * {
+      animation: mqLandRise 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    }
+    .mq-land-host.mq-land-in .ih-hero-copy > .ih-eyebrow { animation-delay: 40ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > h2 { animation-delay: 140ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > h2 .ih-h1-line {
+      display: block;
+      animation: mqLandRise 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    }
+    .mq-land-host.mq-land-in .ih-hero-copy > h2 .ih-h1-line:nth-child(1) { animation-delay: 160ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > h2 .ih-h1-line:nth-child(2) { animation-delay: 250ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > h2 .ih-h1-line:nth-child(3) { animation-delay: 340ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > p:not(.ih-eyebrow) { animation-delay: 360ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > p:not(.ih-eyebrow) + p { animation-delay: 430ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > div:not(.border-t) { animation-delay: 500ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > div.border-t { animation-delay: 620ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > div.border-t > div {
+      animation: mqLandRise 0.8s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    }
+    .mq-land-host.mq-land-in .ih-hero-copy > div.border-t > div:nth-child(1) { animation-delay: 700ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > div.border-t > div:nth-child(2) { animation-delay: 800ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > div.border-t > div:nth-child(3) { animation-delay: 900ms; }
+
+    /* 1b. Simple sequential word float & soft optical wave on Products/Brands/Services/Resources headlines */
+    .mq-title-w {
+      display: inline-block;
+      transition: color 0.25s ease, text-shadow 0.25s ease;
+    }
+    .mq-land-host.mq-land-in .mq-title-w {
+      will-change: transform, opacity, filter;
+      animation:
+        mqWordIn 0.72s cubic-bezier(0.22, 1, 0.36, 1) calc(80ms + var(--wi, 0) * 65ms) backwards,
+        mqWordWave 4.8s ease-in-out calc(920ms + var(--wi, 0) * 165ms) infinite;
+    }
+    .mq-land-host.mq-land-in .mq-title-w:hover {
+      color: #e0f2fe;
+      text-shadow: 0 0 26px rgba(114, 197, 248, 0.72);
+    }
+
+    /* 2. Luminous shimmer gliding through the highlighted accent word + matching wave lift */
+    .mq-land-host h2 span[class*="text-[#72c5f8]"] {
+      display: inline-block;
+      background: linear-gradient(90deg, #72c5f8 0%, #72c5f8 30%, #e0f2fe 45%, #ffffff 50%, #e0f2fe 55%, #72c5f8 70%, #72c5f8 100%);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: mqAccentShimmer 5.2s linear infinite;
+    }
+    .mq-land-host.mq-land-in h2 span[class*="text-[#72c5f8]"].mq-title-accent {
+      will-change: transform, opacity, filter, background-position;
+      animation:
+        mqAccentShimmer 5.2s linear infinite,
+        mqWordIn 0.72s cubic-bezier(0.22, 1, 0.36, 1) calc(80ms + var(--wi, 5) * 65ms) backwards,
+        mqAccentWave 4.8s ease-in-out calc(920ms + var(--wi, 5) * 165ms) infinite;
+    }
+
+    /* 3. Breathing eyebrow hairlines */
+    .mq-land-host .ih-eyebrow > span[class*="h-px"],
+    .mq-land-host .ih-eyebrow > span[class*="h-0.5"] {
+      transform-origin: left center;
+      animation: mqEyebrowLine 3.6s ease-in-out infinite;
+    }
+    .mq-land-host .ih-eyebrow > span[class*="h-px"]:first-child {
+      transform-origin: right center;
+    }
+
+    /* 4. Soft light sheen sweeping across the primary button + nudging arrow */
+    .mq-land-host .ih-btn-pill-primary,
+    .mq-land-host .about-go-next,
+    .mq-land-host .br-cta-row > button {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .mq-land-host .ih-btn-pill-primary::after,
+    .mq-land-host .about-go-next::after,
+    .mq-land-host .br-cta-row > button::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 38%;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.28) 50%, transparent 100%);
+      pointer-events: none;
+      z-index: 1;
+      animation: mqBtnSheen 4.8s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+    }
+    .mq-land-host .ih-btn-pill-primary svg,
+    .mq-land-host .about-go-next svg {
+      animation: mqArrowNudge 3.2s ease-in-out infinite;
+    }
+
+    /* 5. Light beam travelling along the bottom scope-strip hairline */
+    .mq-land-host .ih-hero-copy > div.border-t {
+      position: relative;
+      overflow: hidden;
+    }
+    .mq-land-host .ih-hero-copy > div.border-t::before {
+      content: "";
+      position: absolute;
+      top: -1px;
+      left: 0;
+      width: 30%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(114, 197, 248, 0.95), rgba(224, 242, 254, 1), rgba(114, 197, 248, 0.95), transparent);
+      box-shadow: 0 0 10px rgba(114, 197, 248, 0.7);
+      pointer-events: none;
+      animation: mqStripBeam 6.5s ease-in-out infinite;
+    }
+
+    /* 6. Slow drifting aurora glow behind the centered landing pages */
+    #products .product-slide[data-product-index="0"].mq-land-host::after,
+    #distribution .deck-slide[data-slide-index="0"].mq-land-host::after,
+    #resources .deck-slide[data-slide-index="0"].mq-land-host::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 38% 30% at center, rgba(58, 160, 219, 0.12), transparent 70%),
+        radial-gradient(ellipse 34% 28% at center, rgba(37, 99, 235, 0.10), transparent 70%);
+      background-size: 140% 140%, 140% 140%;
+      background-repeat: no-repeat;
+      animation: mqAuroraDrift 14s ease-in-out infinite alternate;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .mq-land-host *,
+      .mq-land-host::after,
+      .mq-land-host *::before,
+      .mq-land-host *::after {
+        animation: none !important;
+      }
+    }
+  </style>
+  <script>
+    (function () {
+      var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var selectors = [
+        '#about .about-slide[data-index="0"]',
+        '#products .product-slide[data-product-index="0"]',
+        '#brands .deck-slide[data-slide-index="0"]',
+        '#distribution .deck-slide[data-slide-index="0"]',
+        '#resources .deck-slide[data-slide-index="0"]'
+      ];
+      var animatedTitleIds = ['products-title', 'brands-title', 'distribution-title', 'resources-title'];
+
+      function wrapTitleWords(titleEl) {
+        if (!titleEl || titleEl.dataset.mqWordsReady === '1') return;
+        titleEl.dataset.mqWordsReady = '1';
+        var wordIdx = 0;
+
+        function walk(node) {
+          var children = Array.prototype.slice.call(node.childNodes);
+          children.forEach(function (child) {
+            if (child.nodeType === 1) {
+              var cls = child.getAttribute('class') || '';
+              if (cls.indexOf('text-[#72c5f8]') !== -1) {
+                child.classList.add('mq-title-accent');
+                child.style.setProperty('--wi', String(wordIdx++));
+                return;
+              }
+              if (child.tagName !== 'BR') {
+                walk(child);
+              }
+            } else if (child.nodeType === 3) {
+              var text = child.nodeValue;
+              if (!text || !text.trim()) return;
+              var frag = document.createDocumentFragment();
+              text.split(/(\s+)/).forEach(function (part) {
+                if (!part) return;
+                if (/^\s+$/.test(part)) {
+                  frag.appendChild(document.createTextNode(part));
+                } else {
+                  var sp = document.createElement('span');
+                  sp.className = 'mq-title-w';
+                  sp.style.setProperty('--wi', String(wordIdx++));
+                  sp.textContent = part;
+                  frag.appendChild(sp);
+                }
+              });
+              node.replaceChild(frag, child);
+            }
+          });
+        }
+
+        walk(titleEl);
+      }
+
+      function init() {
+        animatedTitleIds.forEach(function (id) {
+          wrapTitleWords(document.getElementById(id));
+        });
+
+        var hosts = [];
+        selectors.forEach(function (sel) {
+          var el = document.querySelector(sel);
+          if (el) {
+            el.classList.add('mq-land-host');
+            hosts.push(el);
+          }
+        });
+        if (reduced || !hosts.length || !('IntersectionObserver' in window)) {
+          hosts.forEach(function (h) { h.classList.add('mq-land-in'); });
+          return;
+        }
+        document.documentElement.classList.add('mq-land-js');
+
+        function replay(host) {
+          host.classList.remove('mq-land-in');
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () { host.classList.add('mq-land-in'); });
+          });
+        }
+
+        hosts.forEach(function (host) {
+          var section = host.closest('section') || host;
+          var inView = false;
+          var io = new IntersectionObserver(function (entries) {
+            var entry = entries[0];
+            if (!entry) return;
+            if (entry.isIntersecting && !inView) {
+              inView = true;
+              replay(host);
+            } else if (!entry.isIntersecting && inView) {
+              inView = false;
+              host.classList.remove('mq-land-in');
+            }
+          }, { threshold: 0.3 });
+          io.observe(section);
+
+          // Replay when returning to the landing page from a subpage within the same section
+          var wasHidden = host.classList.contains('opacity-0');
+          new MutationObserver(function () {
+            var hidden = host.classList.contains('opacity-0');
+            if (wasHidden && !hidden && inView) replay(host);
+            wasHidden = hidden;
+          }).observe(host, { attributes: true, attributeFilter: ['class'] });
+        });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
   <script src="assets/js/gsap.min.js" defer></script>
   <script src="assets/js/ScrollTrigger.min.js" defer></script>
     <script src="assets/js/GLTFLoader.js?v=3.00" defer></script>
   <script src="assets/js/foundation-logo-data.js?v=1.00" defer></script>
   <script src="assets/js/foundation-particles-gl.js?v=4.64" defer></script>
   <script src="assets/js/foundation-vr-scene.js?v=1.03" defer></script>
-  <script src="assets/js/main.js?v=388.41" defer></script>
+  <script src="assets/js/main.js?v=388.47" defer></script>
+  <script src="assets/js/motion-navbar.js?v=1.00" defer></script>
   <script src="assets/js/galaxy-delivery-3d.js?v=14.41" defer></script>
   <script src="assets/js/about-route-globe.js?v=9.01" defer></script>
   <script src="assets/js/aller-silhouette.js?v=11.60" defer></script>
   <script src="assets/js/core-values-monument.js?v=16.00" defer></script>
-  <script src="assets/js/products-warp-carousel.js?v=1.04" defer></script>
-  <script src="assets/js/products-active-theory.js?v=11.07" defer></script>
+  <script src="assets/js/products-warp-carousel.js?v=1.06" defer></script>
+  <script src="assets/js/products-active-theory.js?v=11.12" defer></script>
   <script src="assets/js/services-liquid-text.js?v=1.04" defer></script>
   <script src="assets/js/news-coverflow.js?v=1.04" defer></script>
   <script src="assets/js/services-3d-backdrop.js?v=2.01" defer></script>

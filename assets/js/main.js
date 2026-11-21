@@ -421,7 +421,7 @@
     galaxy: {
       id: 'galaxy',
       num: '01 / 05',
-      title: 'RayOne® Galaxy & Galaxy Toric',
+      title: 'RayOne Galaxy & Galaxy Toric',
       category: 'Non-Diffractive Full Range',
       badge: "World's First Spiral IOL",
       model: 'RAO605G · RAO615X · UK CA & CE Certified',
@@ -431,7 +431,7 @@
       specs: [
         { label: 'Optic Design', val: 'Continuous Spiral' },
         { label: 'Light Efficiency', val: '100% Transmitted (0% Loss)' },
-        { label: 'Delivery Platform', val: 'Lock & Roll® 1.65 mm' },
+        { label: 'Delivery Platform', val: 'Lock & Roll 1.65 mm' },
         { label: 'Dysphotopsia', val: '0.0% Photic Rings' }
       ],
       actions: {
@@ -443,7 +443,7 @@
     emv: {
       id: 'emv',
       num: '02 / 05',
-      title: 'RayOne® EMV & EMV Toric',
+      title: 'RayOne EMV & EMV Toric',
       category: 'Enhanced Monovision (EDOF)',
       badge: 'Controlled Spherical Aberration',
       model: 'RAO200E · RAO210T · FDA Registered',
@@ -453,7 +453,7 @@
       specs: [
         { label: 'Optic Design', val: 'Barrett Aberration Profile' },
         { label: 'Focal Depth', val: 'Up to 2.25 D Blended' },
-        { label: 'Delivery Platform', val: 'Lock & Roll® Preloaded' },
+        { label: 'Delivery Platform', val: 'Lock & Roll Preloaded' },
         { label: 'Toric Stability', val: '1.83° Mean Rotation' }
       ],
       actions: {
@@ -466,7 +466,7 @@
     trifocal: {
       id: 'trifocal',
       num: '03 / 05',
-      title: 'RayOne® Trifocal & Trifocal Toric',
+      title: 'RayOne Trifocal & Trifocal Toric',
       category: 'Diffractive Micro-Incision',
       badge: 'Patented 16-Ring Design',
       model: 'RAO600T · RAO610T · Micro-Incision',
@@ -488,7 +488,7 @@
     monofocal: {
       id: 'monofocal',
       num: '04 / 05',
-      title: 'RayOne® Aspheric & Hydrophobic Monofocal',
+      title: 'RayOne Aspheric & Hydrophobic Monofocal',
       category: 'Standard of Care Monofocal',
       badge: 'Zero Glistenings · Pure Rayacryl',
       model: 'RAO100A · RAO100H · Ultra-Pure',
@@ -498,7 +498,7 @@
       specs: [
         { label: 'Material', val: 'Rayacryl Ultra-Pure Copolymer' },
         { label: 'Abbe Number', val: '56 (Lowest Chromatic Blur)' },
-        { label: 'Delivery Platform', val: 'Lock & Roll® Preloaded' },
+        { label: 'Delivery Platform', val: 'Lock & Roll Preloaded' },
         { label: 'Incision Size', val: '1.65 mm to 1.80 mm' }
       ],
       actions: {
@@ -510,7 +510,7 @@
     aeon: {
       id: 'aeon',
       num: '05 / 05',
-      title: 'AEON® Ophthalmic Solutions',
+      title: 'AEON Ophthalmic Solutions',
       category: 'Preservative-Free Ocular Surface',
       badge: 'Preservative-Free · Cross-Linked HA',
       model: 'AEON Protect · Protect Plus · Repair',
@@ -537,7 +537,7 @@
       badge: "World's First Spiral IOL",
       pill1: "100% Light Transmission",
       pill2: "0.0% Photic Dysphotopsia",
-      captionLeft: "RayOne® Galaxy · AI-Designed Spiral Intraocular Lens",
+      captionLeft: "RayOne Galaxy · AI-Designed Spiral Intraocular Lens",
       captionRight: "Worthing, UK Engineered · MediQ Pharma"
     },
     emv: {
@@ -545,15 +545,15 @@
       badge: "Barrett Aberration Profile",
       pill1: "+1.5D Extended Depth of Focus",
       pill2: "Natural Binocular Fusion",
-      captionLeft: "RayOne® EMV & EMV Toric · Enhanced Monovision",
+      captionLeft: "RayOne EMV & EMV Toric · Enhanced Monovision",
       captionRight: "Co-developed with Prof. Graham Barrett"
     },
     toric: {
       image: 'assets/rayner/toric-carton-injector.png',
-      badge: "Sub-2.2mm Lock & Roll®",
+      badge: "Sub-2.2mm Lock & Roll",
       pill1: "1.83° Capsular Rotational Stability",
       pill2: "Anti-Vaulting Haptics (AVH™)",
-      captionLeft: "RayOne® Toric & Lock & Roll® Preloaded Injector",
+      captionLeft: "RayOne Toric & Lock & Roll Preloaded Injector",
       captionRight: "Single-Handed Delivery · Worthing, UK"
     },
     aeon: {
@@ -561,7 +561,7 @@
       badge: "Preservative-Free Ocular Care",
       pill1: "Cross-Linked CMC Formula",
       pill2: "Zero Corneal Toxicity · Rapid Healing",
-      captionLeft: "AEON® Surgical Tear Protection Drops",
+      captionLeft: "AEON Surgical Tear Protection Drops",
       captionRight: "Optimized Pre & Post Cataract Biometry"
     }
   };
@@ -1160,17 +1160,17 @@
 
   // 8. Interactive 12-Page RayOne EMV Brochure Reader Modal
   const brochurePages = [
-    { src: 'assets/brochure/mobile_1.jpg', title: 'Page 01 — Cover: RayOne® EMV & EMV Toric' },
+    { src: 'assets/brochure/mobile_1.jpg', title: 'Page 01 — Cover: RayOne EMV & EMV Toric' },
     { src: 'assets/brochure/mobile_2.jpg', title: 'Page 02 — Rayner UK Heritage (Since 1949)' },
     { src: 'assets/brochure/mobile_3.jpg', title: 'Page 03 — Introduction: Up to 1.5 D High Quality Vision' },
-    { src: 'assets/brochure/mobile_4.jpg', title: 'Page 04 — How RayOne® EMV Positive Spherical Aberration Works' },
+    { src: 'assets/brochure/mobile_4.jpg', title: 'Page 04 — How RayOne EMV Positive Spherical Aberration Works' },
     { src: 'assets/brochure/mobile_5.jpg', title: 'Page 05 — Clinical Results & Binocular Defocus Curve' },
     { src: 'assets/brochure/mobile_6.jpg', title: 'Page 06 — Prospective Clinical Acuity & Surgeon Feedback' },
-    { src: 'assets/brochure/mobile_7.jpg', title: 'Page 07 — RayOne® EMV & EMV Toric Rotational Stability' },
+    { src: 'assets/brochure/mobile_7.jpg', title: 'Page 07 — RayOne EMV & EMV Toric Rotational Stability' },
     { src: 'assets/brochure/mobile_8.jpg', title: 'Page 08 — 360° Square Edge PCO Barrier & Preloaded Comparison' },
     { src: 'assets/brochure/mobile_9.jpg', title: 'Page 09 — Patented Lock & Roll™ 2-Step Preloaded Injector' },
     { src: 'assets/brochure/mobile_10.jpg', title: 'Page 10 — Comparative Study of 6 Preloaded Delivery Systems' },
-    { src: 'assets/brochure/mobile_11.jpg', title: 'Page 11 — RayPRO® 3-Year Real-Time Patient Outcomes Platform' },
+    { src: 'assets/brochure/mobile_11.jpg', title: 'Page 11 — RayPRO 3-Year Real-Time Patient Outcomes Platform' },
     { src: 'assets/brochure/mobile_12.jpg', title: 'Page 12 — Technical Information & Optical Biometry Constants' }
   ];
 
@@ -3968,7 +3968,7 @@
         ctx.fillRect(0, 0, w, 28);
         ctx.fillStyle = '#0a1d40';
         ctx.font = '700 18px "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif';
-        ctx.fillText('RayPRO® Cloud PROMs Dashboard', 20, 20);
+        ctx.fillText('RayPRO Cloud PROMs Dashboard', 20, 20);
         const cards = [
           { x: 24, y: 52, val: '85%', col: '#3aa0db' },
           { x: 144, y: 52, val: '100%', col: '#c4006b' },
@@ -4263,13 +4263,13 @@
         currentModelGroup = buildRayOneIOLMesh(THREE, envMap, 'galaxy', 0xeaf4ff);
         currentModelGroup.rotation.z = Math.PI * 0.5; // Natural horizontal anatomical orientation
         currentRayBundle = createRayBundle(0x3aa0db, 'galaxy');
-        if (modeLabel) modeLabel.textContent = 'RayOne® Galaxy · AI Non-Diffractive Optic';
+        if (modeLabel) modeLabel.textContent = 'RayOne Galaxy · AI Non-Diffractive Optic';
         if (paramLabel) paramLabel.textContent = 'Zero Light Loss · Continuous Focal Bridge · RI 1.46';
       } else if (mode === 'emv') {
         currentModelGroup = buildRayOneIOLMesh(THREE, envMap, 'emv', 0xffeef7);
         currentModelGroup.rotation.z = Math.PI * 0.5; // Natural horizontal anatomical orientation
         currentRayBundle = createRayBundle(0xff3b9a, 'emv');
-        if (modeLabel) modeLabel.textContent = 'RayOne® EMV · Positive Spherical Aberration (+0.20 µm)';
+        if (modeLabel) modeLabel.textContent = 'RayOne EMV · Positive Spherical Aberration (+0.20 µm)';
         if (paramLabel) paramLabel.textContent = 'Extended Depth of Focus: +1.5 D · Dysphotopsia: 0.0%';
       } else {
         currentModelGroup = new THREE.Group();
@@ -4292,7 +4292,7 @@
         currentModelGroup.add(nozzle);
 
         currentRayBundle = createRayBundle(0xe8562a, 'avh');
-        if (modeLabel) modeLabel.textContent = 'RayOne® Delivery · Patented Lock & Roll™ System';
+        if (modeLabel) modeLabel.textContent = 'RayOne Delivery · Patented Lock & Roll™ System';
         if (paramLabel) paramLabel.textContent = 'Nozzle: 1.65 mm · Sub-Incision: 2.2 mm · Toric Rotation: 1.83°';
       }
 
@@ -7395,16 +7395,16 @@ function initAboutDeckController() {
       brandStage.setAttribute('data-forge-img', '0');
       brandStage.setAttribute('role', 'img');
       brandStage.setAttribute('aria-label', 'MEDIQ Pharma and Medical Supplies Distribution — Exclusive Philippine Supplier of Rayner UK Ophthalmic Technologies');
-      brandStage.className = 'relative w-full h-full overflow-hidden will-change-transform pointer-events-none select-none';
+      brandStage.className = 'forge-brand-stage relative w-full h-full overflow-hidden will-change-transform pointer-events-none select-none';
       brandStage.style.transform = 'scale(1.04)';
       brandStage.innerHTML =
-        '<img src="assets/img/pillars/about_who_video_poster.jpg?v=2.00" alt="" aria-hidden="true" class="w-full h-full object-cover object-center animate-[kenburns_20s_ease-in-out_infinite_alternate]" />' +
-        '<div class="pointer-events-none absolute inset-x-0 top-0 h-[52%] bg-gradient-to-b from-[#040a18]/65 via-[#06122a]/25 to-transparent"></div>' +
-        '<div class="pointer-events-none absolute inset-x-0 top-[11%] sm:top-[12.5%] flex flex-col items-center justify-center px-6 text-center z-[3]">' +
-          '<span class="font-mono text-[8.5px] sm:text-[9.5px] font-medium uppercase tracking-[0.28em] text-[#72c5f8]/90 mb-2.5">Exclusive Philippine Supplier</span>' +
-          '<img src="assets/img/mediq-wordmark-only.png?v=105.00" alt="MEDIQ Pharma and Medical Supplies Distribution" class="w-[54%] max-w-[224px] h-auto object-contain drop-shadow-[0_4px_22px_rgba(58,160,219,0.34)]" />' +
-          '<span class="mt-3 h-px w-14 bg-gradient-to-r from-transparent via-[#72c5f8]/70 to-transparent"></span>' +
-          '<span class="mt-2 font-mono text-[8px] sm:text-[9px] font-medium uppercase tracking-[0.22em] text-[#dbeafe]/78">Ophthalmic Technologies</span>' +
+        '<img src="assets/img/pillars/about_who_video_poster.jpg?v=2.00" alt="" aria-hidden="true" class="forge-brand-bg w-full h-full object-cover object-center animate-[kenburns_20s_ease-in-out_infinite_alternate]" />' +
+        '<div class="forge-brand-scrim pointer-events-none absolute inset-x-0 top-0 h-[52%] bg-gradient-to-b from-[#040a18]/65 via-[#06122a]/25 to-transparent"></div>' +
+        '<div class="forge-brand-overlay pointer-events-none absolute inset-x-0 top-[11%] sm:top-[12.5%] flex flex-col items-center justify-center px-6 text-center z-[3]">' +
+          '<span class="forge-brand-eyebrow font-mono text-[8.5px] sm:text-[9.5px] font-medium uppercase tracking-[0.28em] text-[#72c5f8]/90 mb-2.5">Exclusive Philippine Supplier</span>' +
+          '<img src="assets/img/mediq-wordmark-only.png?v=105.00" alt="MEDIQ Pharma and Medical Supplies Distribution" class="forge-brand-logo w-[54%] max-w-[224px] h-auto object-contain drop-shadow-[0_4px_22px_rgba(58,160,219,0.34)]" />' +
+          '<span class="forge-brand-rule mt-3 h-px w-14 bg-gradient-to-r from-transparent via-[#72c5f8]/70 to-transparent"></span>' +
+          '<span class="forge-brand-sub mt-2 font-mono text-[8px] sm:text-[9px] font-medium uppercase tracking-[0.22em] text-[#dbeafe]/78">Ophthalmic Technologies</span>' +
         '</div>';
       legacyWhoVid.replaceWith(brandStage);
     }
@@ -8040,7 +8040,7 @@ if (document.readyState === 'loading') {
 }
 
 /* ========================================================================= */
-/* INTRAOCULAR LENSES 3D SCROLL-DRIVEN STAGE CHOREOGRAPHY (6 INNOVATIONS)     */
+/* INTRAOCULAR LENSES 3D SCROLL-DRIVEN STAGE CHOREOGRAPHY (8 INNOVATIONS)     */
 /* ========================================================================= */
 function initIOLScrollStageController() {
   const scrollContainer = document.getElementById('iol-scroll-container');
@@ -8052,7 +8052,9 @@ function initIOLScrollStageController() {
     document.getElementById('iol-scene-2'),
     document.getElementById('iol-scene-3'),
     document.getElementById('iol-scene-4'),
-    document.getElementById('iol-scene-5')
+    document.getElementById('iol-scene-5'),
+    document.getElementById('iol-scene-6'),
+    document.getElementById('iol-scene-7')
   ];
   const contents = [
     document.getElementById('iol-content-0'),
@@ -8060,7 +8062,9 @@ function initIOLScrollStageController() {
     document.getElementById('iol-content-2'),
     document.getElementById('iol-content-3'),
     document.getElementById('iol-content-4'),
-    document.getElementById('iol-content-5')
+    document.getElementById('iol-content-5'),
+    document.getElementById('iol-content-6'),
+    document.getElementById('iol-content-7')
   ];
   const fills = [
     document.getElementById('iol-fill-0'),
@@ -8068,18 +8072,22 @@ function initIOLScrollStageController() {
     document.getElementById('iol-fill-2'),
     document.getElementById('iol-fill-3'),
     document.getElementById('iol-fill-4'),
-    document.getElementById('iol-fill-5')
+    document.getElementById('iol-fill-5'),
+    document.getElementById('iol-fill-6'),
+    document.getElementById('iol-fill-7')
   ];
   const railTabs = document.querySelectorAll('.sv-rail__item');
   const badgeText = document.getElementById('iol-stage-badge-text');
 
   const STAGE_NAMES = [
-    'STAGE 01 • RAYONE® EMV',
-    'STAGE 02 • RAYONE® EMV TORIC',
-    'STAGE 03 • RAYONE® TRIFOCAL',
-    'STAGE 04 • RAYONE® TRIFOCAL TORIC',
-    'STAGE 05 • RAYONE® ASPHERIC',
-    'STAGE 06 • SULCOFLEX® ASPHERIC'
+    'STAGE 01 • RAYONE GALAXY',
+    'STAGE 02 • RAYONE GALAXY TORIC',
+    'STAGE 03 • RAYONE EMV',
+    'STAGE 04 • RAYONE EMV TORIC',
+    'STAGE 05 • RAYONE TRIFOCAL',
+    'STAGE 06 • RAYONE TRIFOCAL TORIC',
+    'STAGE 07 • RAYONE ASPHERIC',
+    'STAGE 08 • SULCOFLEX ASPHERIC'
   ];
 
   const mobileImg = document.getElementById('iol-mobile-packshot');
@@ -8089,52 +8097,67 @@ function initIOLScrollStageController() {
 
   const MOBILE_DATA = [
     {
+      img: 'assets/img/packshots/galaxy_carton.png?v=2',
+      titleHtml: 'RayOne <span style="color:#3aa0db">Galaxy</span>',
+      sub: "World's First Spiral IOL • Continuous Full Range",
+      desc: 'Unique non-diffractive spiral optic engineered for a smooth, continuous visual range from distance to near with minimised dysphotopsia and 0% loss of transmitted light.'
+    },
+    {
+      img: 'assets/img/packshots/galaxy_toric_carton.png?v=2',
+      titleHtml: 'RayOne <span style="color:#c4b5fd">Galaxy Toric</span>',
+      sub: 'Spiral Full-Range Optics • Astigmatism Correction',
+      desc: 'Combines RayOne Galaxy spiral full-range optics with Anti-Vaulting Haptic (AVH) closed-loop rotational stability from +0.75 D to +4.5 D cylinder.'
+    },
+    {
       img: 'assets/img/packshots/authentic_emv.png?v=366.00',
-      titleHtml: 'RayOne<sup class="sv-title-reg">&reg;</sup> <span style="color:#e11d74">EMV</span>',
+      titleHtml: 'RayOne <span style="color:#e11d74">EMV</span>',
       sub: 'Co-developed with Prof. Graham Barrett',
       desc: 'Non-diffractive extended depth of field IOL providing seamless intermediate and functional near vision without dysphotopsia.'
     },
     {
       img: 'assets/img/packshots/authentic_emv_toric.png?v=366.00',
-      titleHtml: 'RayOne<sup class="sv-title-reg">&reg;</sup> <span style="color:#eb5a28">EMV Toric</span>',
+      titleHtml: 'RayOne <span style="color:#eb5a28">EMV Toric</span>',
       sub: 'Extended Depth of Focus • Precision Astigmatism Correction',
       desc: 'Combines patented positive spherical aberration EDOF optics with rotatably stable closed-loop toric haptics.'
     },
     {
       img: 'assets/img/packshots/authentic_trifocal.png?v=366.00',
-      titleHtml: 'RayOne<sup class="sv-title-reg">&reg;</sup> <span style="color:#3ca6bf">Trifocal</span>',
+      titleHtml: 'RayOne <span style="color:#3ca6bf">Trifocal</span>',
       sub: 'Halved diffractive rings for maximum light transmission',
       desc: 'Patented 16-ring design delivers crystal clarity at distance, intermediate, and near with 89% light transmitted to retina.'
     },
     {
       img: 'assets/img/packshots/authentic_trifocal_toric.png?v=366.00',
-      titleHtml: 'RayOne<sup class="sv-title-reg">&reg;</sup> <span style="color:#3b82f6">Trifocal Toric</span>',
+      titleHtml: 'RayOne <span style="color:#3b82f6">Trifocal Toric</span>',
       sub: 'True spectacle independence across all distances with astigmatism correction',
       desc: 'Seamless trifocal diffractive optics engineered directly onto Rayner rotatably stable anti-vaulting closed-loop toric haptics.'
     },
     {
       img: 'assets/img/packshots/authentic_aspheric.png?v=366.00',
-      titleHtml: 'RayOne<sup class="sv-title-reg">&reg;</sup> <span style="color:#7c286c">Aspheric</span>',
+      titleHtml: 'RayOne <span style="color:#7c286c">Aspheric</span>',
       sub: 'Aberration-neutral monofocal precision',
       desc: 'Zero spherical aberration design provides pristine contrast sensitivity regardless of corneal shape or previous refractive surgery.'
     },
     {
       img: 'assets/img/packshots/authentic_sulcoflex.png?v=366.00',
-      titleHtml: 'Sulcoflex<sup class="sv-title-reg">&reg;</sup> <span style="color:#7c286c">Aspheric</span>',
+      titleHtml: 'Sulcoflex <span style="color:#7c286c">Aspheric</span>',
       sub: 'Pseudophakic supplementary sulcus platform',
       desc: 'Reversible optical refinement for residual refractive errors with undulating rounded haptics protecting delicate sulcus tissues.'
     }
   ];
 
-  // 6 Zones covering 0.0 to 1.0 smoothly
+  // 8 Zones covering 0.0 to 1.0 smoothly (hold = 0.09, transition = 0.04)
   const ZONES = [
-    { hold: [0, 0.12], exit: [0.12, 0.18], enter: null },
-    { hold: [0.18, 0.30], exit: [0.30, 0.36], enter: [0.12, 0.18] },
-    { hold: [0.36, 0.48], exit: [0.48, 0.54], enter: [0.30, 0.36] },
-    { hold: [0.54, 0.66], exit: [0.66, 0.72], enter: [0.48, 0.54] },
-    { hold: [0.72, 0.84], exit: [0.84, 0.90], enter: [0.66, 0.72] },
-    { hold: [0.90, 1.00], exit: null, enter: [0.84, 0.90] }
+    { hold: [0.00, 0.09], exit: [0.09, 0.13], enter: null },
+    { hold: [0.13, 0.22], exit: [0.22, 0.26], enter: [0.09, 0.13] },
+    { hold: [0.26, 0.35], exit: [0.35, 0.39], enter: [0.22, 0.26] },
+    { hold: [0.39, 0.48], exit: [0.48, 0.52], enter: [0.35, 0.39] },
+    { hold: [0.52, 0.61], exit: [0.61, 0.65], enter: [0.48, 0.52] },
+    { hold: [0.65, 0.74], exit: [0.74, 0.78], enter: [0.61, 0.65] },
+    { hold: [0.78, 0.87], exit: [0.87, 0.91], enter: [0.74, 0.78] },
+    { hold: [0.91, 1.00], exit: null,         enter: [0.87, 0.91] }
   ];
+  const STAGE_SCROLL_TARGETS = [0, 0.175, 0.305, 0.435, 0.565, 0.695, 0.825, 1];
 
   function clamp(val, min, max) {
     return Math.min(Math.max(val, min), max);
@@ -8187,15 +8210,15 @@ function initIOLScrollStageController() {
     if (maxScroll <= 0) return;
     const globalProgress = clamp(scrollContainer.scrollTop / maxScroll, 0, 1);
 
-    // Update all 6 stages with exact opposing translation
-    for (let i = 0; i < 6; i++) {
+    // Update all 8 stages with exact opposing translation
+    for (let i = 0; i < 8; i++) {
       const sceneEl = scenes[i];
       const contentEl = contents[i];
       if (!sceneEl || !contentEl) continue;
 
       // Alternating columns:
-      // Even index (0, 2, 4): Scene is Left, Content is Right
-      // Odd index (1, 3, 5): Scene is Right, Content is Left
+      // Even index (0, 2, 4, 6): Scene is Left, Content is Right
+      // Odd index (1, 3, 5, 7): Scene is Right, Content is Left
       const sceneCol = (i % 2 === 1) ? 'right' : 'left';
       const contentCol = (i % 2 === 1) ? 'left' : 'right';
 
@@ -8211,14 +8234,16 @@ function initIOLScrollStageController() {
       contentEl.style.pointerEvents = cStyle.opacity > 0.08 ? 'auto' : 'none';
     }
 
-    // Determine active stage across 6 stages
+    // Determine active stage across 8 stages
     let activeStage = 0;
-    if (globalProgress < 0.15) activeStage = 0;
-    else if (globalProgress < 0.33) activeStage = 1;
-    else if (globalProgress < 0.51) activeStage = 2;
-    else if (globalProgress < 0.69) activeStage = 3;
-    else if (globalProgress < 0.87) activeStage = 4;
-    else activeStage = 5;
+    if (globalProgress < 0.11) activeStage = 0;
+    else if (globalProgress < 0.24) activeStage = 1;
+    else if (globalProgress < 0.37) activeStage = 2;
+    else if (globalProgress < 0.50) activeStage = 3;
+    else if (globalProgress < 0.63) activeStage = 4;
+    else if (globalProgress < 0.76) activeStage = 5;
+    else if (globalProgress < 0.89) activeStage = 6;
+    else activeStage = 7;
 
     // Highlight active stage badge
     if (badgeText) {
@@ -8239,7 +8264,7 @@ function initIOLScrollStageController() {
     });
 
     // Update each fill bar
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 8; i++) {
       if (!fills[i]) continue;
       const zone = ZONES[i];
       let p = 0;
@@ -8264,8 +8289,12 @@ function initIOLScrollStageController() {
 
   window.jumpIolStage = function (stageIdx) {
     const maxScroll = scrollContainer.scrollHeight - scrollContainer.clientHeight;
-    let target = maxScroll * (stageIdx / 5);
+    const clampedIdx = clamp(stageIdx, 0, STAGE_SCROLL_TARGETS.length - 1);
+    const target = maxScroll * STAGE_SCROLL_TARGETS[clampedIdx];
     scrollContainer.scrollTo({ top: target, behavior: 'smooth' });
+    if (Math.abs(scrollContainer.scrollTop - target) < 2) {
+      updateScroll();
+    }
   };
 }
 
@@ -8289,22 +8318,51 @@ window.setIolBoxView = function (btn, view) {
   const box = scene.querySelector('.sv-box3d');
   if (!box) return;
 
-  scene.setAttribute('data-view', view);
+  if (scene._spinTimer) {
+    clearTimeout(scene._spinTimer);
+    scene._spinTimer = null;
+  }
+
+  const currentView = scene.getAttribute('data-view') || 'front';
+  const nextView = (currentView === view) ? 'front' : view;
+
+  scene.setAttribute('data-view', nextView);
   delete scene._customRx;
   delete scene._customRy;
 
   const buttons = scene.querySelectorAll('.sv-box-btn');
   buttons.forEach((b) => {
-    b.setAttribute('aria-pressed', b.getAttribute('data-view') === view ? 'true' : 'false');
+    b.setAttribute('aria-pressed', b.getAttribute('data-view') === nextView ? 'true' : 'false');
   });
 
+  const lensStage = scene.querySelector('.sv-lens-stage');
+  if (lensStage) {
+    lensStage.setAttribute('aria-hidden', nextView !== 'lens' ? 'true' : 'false');
+  }
+  const lensFloat = scene.querySelector('.sv-lens-float');
+  if (lensFloat) {
+    lensFloat.style.transform = '';
+  }
+
   box.classList.remove('is-interacting');
-  if (view === 'spin') {
-    box.classList.add('is-spinning');
-    box.style.transform = '';
+  if (nextView === 'spin') {
+    if (currentView === 'lens') {
+      box.classList.remove('is-spinning');
+      const base = IOL_BOX_VIEW_ANGLES.front;
+      box.style.transform = `rotateX(${base.rx}deg) rotateY(${base.ry}deg)`;
+      scene._spinTimer = setTimeout(() => {
+        scene._spinTimer = null;
+        if (scene.getAttribute('data-view') !== 'spin') return;
+        box.style.transform = '';
+        box.classList.add('is-spinning');
+      }, 180);
+    } else {
+      box.style.transform = '';
+      box.classList.add('is-spinning');
+    }
   } else {
     box.classList.remove('is-spinning');
-    const base = IOL_BOX_VIEW_ANGLES[view] || IOL_BOX_VIEW_ANGLES.front;
+    const base = IOL_BOX_VIEW_ANGLES.front;
     box.style.transform = `rotateX(${base.rx}deg) rotateY(${base.ry}deg)`;
   }
 };
@@ -8312,8 +8370,14 @@ window.setIolBoxView = function (btn, view) {
 window.startIolBoxDrag = function (e, stage) {
   const scene = stage.closest('.sv-scene');
   if (!scene) return;
+  if ((scene.getAttribute('data-view') || 'front') === 'lens') return;
   const box = scene.querySelector('.sv-box3d');
   if (!box) return;
+
+  if (scene._spinTimer) {
+    clearTimeout(scene._spinTimer);
+    scene._spinTimer = null;
+  }
 
   const base = getIolSceneBaseAngles(scene);
   scene._isDragging = true;
@@ -8322,6 +8386,7 @@ window.startIolBoxDrag = function (e, stage) {
   scene._startRx = base.rx;
   scene._startRy = base.ry;
 
+  scene.querySelectorAll('.sv-box-btn').forEach((b) => b.setAttribute('aria-pressed', 'false'));
   box.classList.remove('is-spinning');
   box.classList.add('is-interacting');
 
@@ -8352,15 +8417,27 @@ window.handleIolTilt = function (e, scene) {
   if (!scene || scene._isDragging) return;
   const view = scene.getAttribute('data-view') || 'front';
   if (view === 'spin') return;
-
-  const box = scene.querySelector('.sv-box3d');
-  if (!box) return;
+  if (e.target && e.target.closest && e.target.closest('.sv-box-controls')) {
+    window.resetIolTilt(scene);
+    return;
+  }
 
   const rect = scene.getBoundingClientRect();
   const nx = (e.clientX - rect.left) / rect.width - 0.5;
   const ny = (e.clientY - rect.top) / rect.height - 0.5;
-  const base = getIolSceneBaseAngles(scene);
 
+  if (view === 'lens') {
+    const lensFloat = scene.querySelector('.sv-lens-float');
+    if (lensFloat) {
+      lensFloat.style.transform = `rotateX(${(-ny * 14).toFixed(2)}deg) rotateY(${(nx * 18).toFixed(2)}deg)`;
+    }
+    return;
+  }
+
+  const box = scene.querySelector('.sv-box3d');
+  if (!box) return;
+
+  const base = getIolSceneBaseAngles(scene);
   const rx = base.rx - ny * 10;
   const ry = base.ry + nx * 14;
   box.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
@@ -8370,6 +8447,14 @@ window.resetIolTilt = function (scene) {
   if (!scene || scene._isDragging) return;
   const view = scene.getAttribute('data-view') || 'front';
   if (view === 'spin') return;
+
+  if (view === 'lens') {
+    const lensFloat = scene.querySelector('.sv-lens-float');
+    if (lensFloat) {
+      lensFloat.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    }
+    return;
+  }
 
   const box = scene.querySelector('.sv-box3d');
   if (!box) return;
@@ -8637,7 +8722,7 @@ function initProductsDeckController() {
       if (i === currentIndex) {
         slide.classList.add('opacity-100', 'pointer-events-auto', 'translate-x-0', 'z-10');
         slide.scrollTop = 0;
-        if (typeof window.__triggerLotticiStagger === 'function') {
+        if (currentIndex >= 3 && typeof window.__triggerLotticiStagger === 'function') {
           window.__triggerLotticiStagger(slide);
         }
         if (currentIndex === 3 && slide.firstElementChild && typeof window.__playSubpage3DEntrance === 'function') {
