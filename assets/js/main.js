@@ -7404,7 +7404,7 @@ function initAboutDeckController() {
           '<span class="font-mono text-[8.5px] sm:text-[9.5px] font-medium uppercase tracking-[0.28em] text-[#72c5f8]/90 mb-2.5">Exclusive Philippine Supplier</span>' +
           '<img src="assets/img/mediq-wordmark-only.png?v=105.00" alt="MEDIQ Pharma and Medical Supplies Distribution" class="w-[54%] max-w-[224px] h-auto object-contain drop-shadow-[0_4px_22px_rgba(58,160,219,0.34)]" />' +
           '<span class="mt-3 h-px w-14 bg-gradient-to-r from-transparent via-[#72c5f8]/70 to-transparent"></span>' +
-          '<span class="mt-2 font-mono text-[8px] sm:text-[9px] font-medium uppercase tracking-[0.22em] text-[#dbeafe]/78">Rayner UK &middot; Ophthalmic Technologies</span>' +
+          '<span class="mt-2 font-mono text-[8px] sm:text-[9px] font-medium uppercase tracking-[0.22em] text-[#dbeafe]/78">Ophthalmic Technologies</span>' +
         '</div>';
       legacyWhoVid.replaceWith(brandStage);
     }
