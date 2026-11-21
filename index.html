@@ -1868,8 +1868,8 @@
       z-index: 0;
       pointer-events: none;
       border-radius: 8px;
-      background: rgba(114, 197, 248, 0.14);
-      border: 1px solid rgba(114, 197, 248, 0.22);
+      background: rgba(255, 255, 255, 0.065);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       opacity: 0;
       transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), width 0.28s cubic-bezier(0.22, 1, 0.36, 1), height 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.18s ease;
     }
@@ -1883,9 +1883,9 @@
     }
 
     #motion-nav-root .motion-nav-pill.spotlight-pill.is-active {
-      background: rgba(58, 160, 219, 0.14) !important;
+      background: rgba(255, 255, 255, 0.07) !important;
       color: #ffffff !important;
-      box-shadow: inset 0 -1.5px 0 rgba(114, 197, 248, 0.72) !important;
+      box-shadow: inset 0 -1.5px 0 rgba(255, 255, 255, 0.55) !important;
     }
 
     #motion-nav-root .motion-nav-pill.spotlight-pill[data-state="open"],
@@ -1926,11 +1926,11 @@
       transform: scale(0.95);
       transform-origin: top center;
       border-radius: 14px;
-      background: rgba(7, 20, 44, 0.94);
-      border: 1px solid rgba(114, 197, 248, 0.22);
-      box-shadow: 0 22px 54px rgba(2, 8, 22, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-      backdrop-filter: blur(22px) saturate(160%);
-      -webkit-backdrop-filter: blur(22px) saturate(160%);
+      background: linear-gradient(172deg, rgba(16, 20, 29, 0.96) 0%, rgba(10, 14, 22, 0.98) 65%, rgba(7, 10, 17, 0.99) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      box-shadow: 0 28px 64px rgba(0, 0, 0, 0.68), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(22px) saturate(140%);
+      -webkit-backdrop-filter: blur(22px) saturate(140%);
       transition: width 0.34s cubic-bezier(0.22, 1, 0.36, 1), height 0.34s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
@@ -1964,10 +1964,15 @@
       z-index: 0;
       pointer-events: none;
       border-radius: 10px;
-      background: rgba(114, 197, 248, 0.14);
-      border: 1px solid rgba(114, 197, 248, 0.18);
+      background: rgba(255, 255, 255, 0.065);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       opacity: 0;
       transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), width 0.26s cubic-bezier(0.22, 1, 0.36, 1), height 0.26s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.16s ease;
+    }
+
+    .motion-nav-featured {
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0.015) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.075);
     }
 
     .motion-nav-panel [data-slot="navigation-menu-link"] {
@@ -4647,50 +4652,43 @@
                   <span class="motion-nav-inner-highlight" aria-hidden="true"></span>
                   <div class="relative z-10 grid w-[500px] grid-cols-[1fr_1.28fr] gap-2">
                     <a href="#about" data-slide-target="0" data-slot="navigation-menu-link"
-                      class="flex min-h-44 flex-col justify-between rounded-[10px] border border-white/10 bg-[#0d2248]/70 p-4 text-left transition-colors">
-                      <span class="flex items-center justify-between gap-2">
-                        <span class="flex size-9 items-center justify-center rounded-lg border border-[#72c5f8]/25 bg-[#0a1d40] text-[#72c5f8]">
-                          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
-                            <path d="M9 22v-4h6v4" />
-                            <path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01" />
-                          </svg>
-                        </span>
-                        <img src="assets/img/mediq-logo-white.png" alt="MEDIQ Pharma" class="h-5 w-auto object-contain opacity-90" />
+                      class="motion-nav-featured flex min-h-44 flex-col justify-between rounded-[10px] p-4 text-left transition-colors">
+                      <span class="block pt-0.5">
+                        <img src="assets/img/mediq-logo-white.png" alt="MEDIQ Pharma" class="h-7 w-auto object-contain object-left opacity-95" />
                       </span>
                       <span class="space-y-1">
                         <span class="block text-sm font-semibold text-white">About MEDIQ Pharma</span>
-                        <span class="block text-xs leading-relaxed text-[#9eb4cc]">Connecting global ophthalmic innovation with Philippine surgical centres.</span>
+                        <span class="block text-xs leading-relaxed text-[#94a3b8]">Connecting global ophthalmic innovation with Philippine surgical centres.</span>
                       </span>
                     </a>
                     <div class="grid grid-cols-2 gap-0.5">
                       <a href="#about" data-slide-target="1" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
                         <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
                           <span>Who We Are</span>
-                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                          <svg class="size-3 shrink-0 text-white/35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
                         </span>
-                        <span class="text-xs leading-snug text-[#9eb4cc]">Philippine specialty pharma leadership.</span>
+                        <span class="text-xs leading-snug text-[#94a3b8]">Philippine specialty pharma leadership.</span>
                       </a>
                       <a href="#about" data-slide-target="2" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
                         <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
                           <span>What We Do</span>
-                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                          <svg class="size-3 shrink-0 text-white/35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
                         </span>
-                        <span class="text-xs leading-snug text-[#9eb4cc]">Regulatory, sales &amp; cold-chain reach.</span>
+                        <span class="text-xs leading-snug text-[#94a3b8]">Regulatory, sales &amp; cold-chain reach.</span>
                       </a>
                       <a href="#about" data-slide-target="3" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
                         <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
                           <span>Foundation</span>
-                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                          <svg class="size-3 shrink-0 text-white/35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
                         </span>
-                        <span class="text-xs leading-snug text-[#9eb4cc]">Exclusive Rayner UK strategic alliance.</span>
+                        <span class="text-xs leading-snug text-[#94a3b8]">Exclusive Rayner UK strategic alliance.</span>
                       </a>
                       <a href="#about" data-slide-target="4" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
                         <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
                           <span>Values</span>
-                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                          <svg class="size-3 shrink-0 text-white/35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
                         </span>
-                        <span class="text-xs leading-snug text-[#9eb4cc]">Clinical integrity &amp; patient safety.</span>
+                        <span class="text-xs leading-snug text-[#94a3b8]">Clinical integrity &amp; patient safety.</span>
                       </a>
                     </div>
                   </div>
@@ -4703,46 +4701,44 @@
                   <span class="motion-nav-inner-highlight" aria-hidden="true"></span>
                   <div class="relative z-10 grid w-[540px] grid-cols-[1.05fr_1.3fr] gap-2">
                     <a href="#products" data-product-slide="1" data-slot="navigation-menu-link"
-                      class="flex min-h-44 flex-col justify-between rounded-[10px] border border-white/10 bg-[#0d2248]/70 p-4 text-left transition-colors">
-                      <div class="flex items-center justify-center rounded-lg border border-white/10 bg-[#08152e]/80 p-2">
-                        <img src="assets/img/packshots/galaxy_carton.png?v=2" alt="RayOne Galaxy Spiral IOL" class="h-20 w-auto object-contain" />
+                      class="motion-nav-featured flex min-h-44 flex-col justify-between rounded-[10px] p-4 text-left transition-colors">
+                      <div class="flex items-center justify-center py-1">
+                        <img src="assets/img/packshots/galaxy_carton.png?v=2" alt="RayOne Galaxy Spiral IOL" class="h-20 w-auto object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.45)]" />
                       </div>
                       <span class="space-y-1">
-                        <span class="flex items-center gap-1.5 text-sm font-semibold text-white">
-                          <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1M5.6 18.4l2.1-2.1m8.6-8.6 2.1-2.1" /></svg>
-                          <span>RayOne Galaxy Spiral IOL</span>
-                        </span>
-                        <span class="block text-xs leading-snug text-[#9eb4cc]">Full-range spiral optic engineered with Rayner UK.</span>
+                        <span class="block font-mono text-[10px] uppercase tracking-[0.16em] text-white/50">New &middot; 2026</span>
+                        <span class="block text-sm font-semibold text-white">RayOne Galaxy Spiral IOL</span>
+                        <span class="block text-xs leading-snug text-[#94a3b8]">Full-range spiral optic engineered with Rayner UK.</span>
                       </span>
                     </a>
                     <div class="grid grid-cols-2 gap-0.5">
                       <a href="#products" data-product-slide="1" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
                         <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
                           <span>Ophthalmology &middot; IOLs</span>
-                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                          <svg class="size-3 shrink-0 text-white/35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
                         </span>
-                        <span class="text-xs leading-snug text-[#9eb4cc]">Galaxy Spiral, EMV, Trifocal &amp; Sulcoflex.</span>
+                        <span class="text-xs leading-snug text-[#94a3b8]">Galaxy Spiral, EMV, Trifocal &amp; Sulcoflex.</span>
                       </a>
                       <a href="#products" data-product-slide="2" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
                         <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
                           <span>Ophthalmic OVDs &amp; Solutions</span>
-                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                          <svg class="size-3 shrink-0 text-white/35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
                         </span>
-                        <span class="text-xs leading-snug text-[#9eb4cc]">Ophteis viscoelastics &amp; AEON drops.</span>
+                        <span class="text-xs leading-snug text-[#94a3b8]">Ophteis viscoelastics &amp; AEON drops.</span>
                       </a>
                       <a href="#products" data-product-slide="3" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
                         <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
                           <span>Future Portfolio Development</span>
-                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                          <svg class="size-3 shrink-0 text-white/35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
                         </span>
-                        <span class="text-xs leading-snug text-[#9eb4cc]">Complementary surgical &amp; diagnostic care.</span>
+                        <span class="text-xs leading-snug text-[#94a3b8]">Complementary surgical &amp; diagnostic care.</span>
                       </a>
                       <a href="#products" data-product-slide="4" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
                         <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
                           <span>Product Catalogs</span>
-                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                          <svg class="size-3 shrink-0 text-white/35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
                         </span>
-                        <span class="text-xs leading-snug text-[#9eb4cc]">2026 clinical brochures &amp; specs.</span>
+                        <span class="text-xs leading-snug text-[#94a3b8]">2026 clinical brochures &amp; specs.</span>
                       </a>
                     </div>
                   </div>
@@ -4755,36 +4751,36 @@
                   <span class="motion-nav-inner-highlight" aria-hidden="true"></span>
                   <div class="relative z-10 grid w-[470px] grid-cols-[1fr_1.15fr] gap-2">
                     <a href="#brands" data-deck-target="brands:1" data-slot="navigation-menu-link"
-                      class="flex min-h-44 flex-col justify-between rounded-[10px] border border-white/10 bg-[#0d2248]/70 p-4 text-left transition-colors">
-                      <div class="flex h-16 items-center justify-center rounded-lg border border-white/10 bg-[#08152e]/80 px-3">
-                        <img src="assets/img/rayner-logo-white.png" alt="Rayner UK" class="h-7 w-auto object-contain" />
-                      </div>
+                      class="motion-nav-featured flex min-h-44 flex-col justify-between rounded-[10px] p-4 text-left transition-colors">
+                      <span class="block pt-0.5">
+                        <img src="assets/img/rayner-logo-white.png" alt="Rayner UK" class="h-6 w-auto object-contain object-left opacity-95" />
+                      </span>
                       <span class="space-y-1">
                         <span class="block text-sm font-semibold text-white">Exclusive Rayner Partner</span>
-                        <span class="block text-xs leading-snug text-[#9eb4cc]">Authorized Philippine distributor for British ophthalmic innovation.</span>
+                        <span class="block text-xs leading-snug text-[#94a3b8]">Authorized Philippine distributor for British ophthalmic innovation.</span>
                       </span>
                     </a>
                     <div class="space-y-0.5">
                       <a href="#brands" data-deck-target="brands:1" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
                         <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
                           <span>Principal Brands</span>
-                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                          <svg class="size-3 shrink-0 text-white/35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
                         </span>
-                        <span class="text-xs leading-snug text-[#9eb4cc]">Global ophthalmic &amp; surgical principals.</span>
+                        <span class="text-xs leading-snug text-[#94a3b8]">Global ophthalmic &amp; surgical principals.</span>
                       </a>
                       <a href="#brands" data-deck-target="brands:2" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
                         <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
                           <span>Brand Profiles</span>
-                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                          <svg class="size-3 shrink-0 text-white/35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
                         </span>
-                        <span class="text-xs leading-snug text-[#9eb4cc]">Portfolio alignment &amp; heritage.</span>
+                        <span class="text-xs leading-snug text-[#94a3b8]">Portfolio alignment &amp; heritage.</span>
                       </a>
                       <a href="assets/brochure/RayOne-EMV-Platform-Brochure-2024_2.2.pdf" download="RayOne EMV Platform Brochure 2024_2.2.pdf" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
                         <span class="flex items-center justify-between gap-1.5 text-[13px] font-medium text-white">
                           <span>Downloadable Brochures</span>
-                          <svg class="size-3 shrink-0 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+                          <svg class="size-3 shrink-0 text-white/35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
                         </span>
-                        <span class="text-xs leading-snug text-[#9eb4cc]">2026 RayOne EMV Platform PDF.</span>
+                        <span class="text-xs leading-snug text-[#94a3b8]">2026 RayOne EMV Platform PDF.</span>
                       </a>
                     </div>
                   </div>
@@ -4796,66 +4792,54 @@
                 <div class="motion-nav-panel-inner">
                   <span class="motion-nav-inner-highlight" aria-hidden="true"></span>
                   <div class="relative z-10 w-[430px] space-y-1">
-                    <div class="px-2.5 py-1 text-[11px] font-medium tracking-wide text-[#72c5f8]">Built for Philippine healthcare institutions</div>
-                    <a href="#distribution" data-deck-target="services:1" data-slot="navigation-menu-link" class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[10px] p-2 text-left">
-                      <span class="flex size-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[#72c5f8]">
-                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="12" x="1" y="5" rx="2" /><path d="M17 9h4l2 3v5h-6V9z" /><circle cx="7" cy="19" r="2" /><circle cx="17" cy="19" r="2" /></svg>
-                      </span>
+                    <div class="px-2.5 py-1 text-[11px] font-medium tracking-wide text-white/45">Built for Philippine healthcare institutions</div>
+                    <a href="#distribution" data-deck-target="services:1" data-slot="navigation-menu-link" class="grid grid-cols-[24px_1fr_auto] items-center gap-3 rounded-[10px] px-2.5 py-2 text-left">
+                      <span class="font-mono text-[11px] font-medium text-white/40">01</span>
                       <span>
                         <span class="block text-[13px] font-medium text-white">Importation &amp; Distribution</span>
-                        <span class="block text-xs text-[#9eb4cc]">FDA-compliant national supply to hospitals.</span>
+                        <span class="block text-xs text-[#94a3b8]">FDA-compliant national supply to hospitals.</span>
                       </span>
-                      <span class="rounded-lg border border-[#72c5f8]/25 px-2 py-0.5 text-[11px] text-[#72c5f8]">View</span>
+                      <span class="text-[11px] text-white/45">View</span>
                     </a>
-                    <a href="#distribution" data-deck-target="services:2" data-slot="navigation-menu-link" class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[10px] p-2 text-left">
-                      <span class="flex size-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[#72c5f8]">
-                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2" /><polyline points="2 17 12 22 22 17" /><polyline points="2 12 12 17 22 12" /></svg>
-                      </span>
+                    <a href="#distribution" data-deck-target="services:2" data-slot="navigation-menu-link" class="grid grid-cols-[24px_1fr_auto] items-center gap-3 rounded-[10px] px-2.5 py-2 text-left">
+                      <span class="font-mono text-[11px] font-medium text-white/40">02</span>
                       <span>
                         <span class="block text-[13px] font-medium text-white">Product Marketing</span>
-                        <span class="block text-xs text-[#9eb4cc]">Clinical positioning &amp; specialty awareness.</span>
+                        <span class="block text-xs text-[#94a3b8]">Clinical positioning &amp; specialty awareness.</span>
                       </span>
-                      <span class="rounded-lg border border-[#72c5f8]/25 px-2 py-0.5 text-[11px] text-[#72c5f8]">View</span>
+                      <span class="text-[11px] text-white/45">View</span>
                     </a>
-                    <a href="#distribution" data-deck-target="services:3" data-slot="navigation-menu-link" class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[10px] p-2 text-left">
-                      <span class="flex size-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[#72c5f8]">
-                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18" /><path d="m19 9-5 5-4-4-3 3" /></svg>
-                      </span>
+                    <a href="#distribution" data-deck-target="services:3" data-slot="navigation-menu-link" class="grid grid-cols-[24px_1fr_auto] items-center gap-3 rounded-[10px] px-2.5 py-2 text-left">
+                      <span class="font-mono text-[11px] font-medium text-white/40">03</span>
                       <span>
                         <span class="block text-[13px] font-medium text-white">Sales &amp; Commercialization</span>
-                        <span class="block text-xs text-[#9eb4cc]">Dedicated surgical &amp; hospital coverage.</span>
+                        <span class="block text-xs text-[#94a3b8]">Dedicated surgical &amp; hospital coverage.</span>
                       </span>
-                      <span class="rounded-lg border border-[#72c5f8]/25 px-2 py-0.5 text-[11px] text-[#72c5f8]">View</span>
+                      <span class="text-[11px] text-white/45">View</span>
                     </a>
-                    <a href="#distribution" data-deck-target="services:4" data-slot="navigation-menu-link" class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[10px] p-2 text-left">
-                      <span class="flex size-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[#72c5f8]">
-                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /><path d="M2 12h20" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
-                      </span>
+                    <a href="#distribution" data-deck-target="services:4" data-slot="navigation-menu-link" class="grid grid-cols-[24px_1fr_auto] items-center gap-3 rounded-[10px] px-2.5 py-2 text-left">
+                      <span class="font-mono text-[11px] font-medium text-white/40">04</span>
                       <span>
                         <span class="block text-[13px] font-medium text-white">Market Development</span>
-                        <span class="block text-xs text-[#9eb4cc]">Regional clinic expansion nationwide.</span>
+                        <span class="block text-xs text-[#94a3b8]">Regional clinic expansion nationwide.</span>
                       </span>
-                      <span class="rounded-lg border border-[#72c5f8]/25 px-2 py-0.5 text-[11px] text-[#72c5f8]">View</span>
+                      <span class="text-[11px] text-white/45">View</span>
                     </a>
-                    <a href="#distribution" data-deck-target="services:5" data-slot="navigation-menu-link" class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[10px] p-2 text-left">
-                      <span class="flex size-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[#72c5f8]">
-                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" /></svg>
-                      </span>
+                    <a href="#distribution" data-deck-target="services:5" data-slot="navigation-menu-link" class="grid grid-cols-[24px_1fr_auto] items-center gap-3 rounded-[10px] px-2.5 py-2 text-left">
+                      <span class="font-mono text-[11px] font-medium text-white/40">05</span>
                       <span>
                         <span class="block text-[13px] font-medium text-white">Professional Education</span>
-                        <span class="block text-xs text-[#9eb4cc]">Surgeon workshops, symposia &amp; wet-labs.</span>
+                        <span class="block text-xs text-[#94a3b8]">Surgeon workshops, symposia &amp; wet-labs.</span>
                       </span>
-                      <span class="rounded-lg border border-[#72c5f8]/25 px-2 py-0.5 text-[11px] text-[#72c5f8]">View</span>
+                      <span class="text-[11px] text-white/45">View</span>
                     </a>
-                    <a href="#distribution" data-deck-target="services:6" data-slot="navigation-menu-link" class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[10px] p-2 text-left">
-                      <span class="flex size-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[#72c5f8]">
-                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
-                      </span>
+                    <a href="#distribution" data-deck-target="services:6" data-slot="navigation-menu-link" class="grid grid-cols-[24px_1fr_auto] items-center gap-3 rounded-[10px] px-2.5 py-2 text-left">
+                      <span class="font-mono text-[11px] font-medium text-white/40">06</span>
                       <span>
                         <span class="block text-[13px] font-medium text-white">Quality &amp; Customer Support</span>
-                        <span class="block text-xs text-[#9eb4cc]">Responsive clinical coordination &amp; care.</span>
+                        <span class="block text-xs text-[#94a3b8]">Responsive clinical coordination &amp; care.</span>
                       </span>
-                      <span class="rounded-lg border border-[#72c5f8]/25 px-2 py-0.5 text-[11px] text-[#72c5f8]">View</span>
+                      <span class="text-[11px] text-white/45">View</span>
                     </a>
                   </div>
                 </div>
@@ -4868,39 +4852,28 @@
                   <div class="relative z-10 grid w-[510px] grid-cols-2 gap-2">
                     <div class="space-y-0.5">
                       <a href="#resources" data-deck-target="resources:1" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
-                        <span class="flex items-center gap-2 text-[13px] font-medium text-white">
-                          <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>
-                          <span>Product-Approved Literature</span>
-                        </span>
-                        <span class="text-xs leading-snug text-[#9eb4cc]">Clinical dossiers &amp; DFU references.</span>
+                        <span class="text-[13px] font-medium text-white">Product-Approved Literature</span>
+                        <span class="text-xs leading-snug text-[#94a3b8]">Clinical dossiers &amp; DFU references.</span>
                       </a>
                       <a href="#resources" data-deck-target="resources:2" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
-                        <span class="flex items-center gap-2 text-[13px] font-medium text-white">
-                          <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" /></svg>
-                          <span>Professional Education</span>
-                        </span>
-                        <span class="text-xs leading-snug text-[#9eb4cc]">Ophthalmic training materials &amp; guides.</span>
+                        <span class="text-[13px] font-medium text-white">Professional Education</span>
+                        <span class="text-xs leading-snug text-[#94a3b8]">Ophthalmic training materials &amp; guides.</span>
                       </a>
                       <a href="#resources" data-deck-target="resources:4" data-slot="navigation-menu-link" class="flex flex-col gap-1 rounded-[10px] p-2.5 text-left">
-                        <span class="flex items-center gap-2 text-[13px] font-medium text-white">
-                          <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="m9 12 2 2 4-4" /></svg>
-                          <span>Official Regulatory Guidance</span>
-                        </span>
-                        <span class="text-xs leading-snug text-[#9eb4cc]">Compliance &amp; Philippine FDA filings.</span>
+                        <span class="text-[13px] font-medium text-white">Official Regulatory Guidance</span>
+                        <span class="text-xs leading-snug text-[#94a3b8]">Compliance &amp; Philippine FDA filings.</span>
                       </a>
                     </div>
                     <a href="#resources" data-deck-target="resources:3" data-slot="navigation-menu-link"
-                      class="flex min-h-44 flex-col justify-between rounded-[10px] border border-white/10 bg-[#0d2248]/70 p-4 text-left transition-colors">
+                      class="motion-nav-featured flex min-h-44 flex-col justify-between rounded-[10px] p-4 text-left transition-colors">
                       <div class="h-20 w-full overflow-hidden rounded-md border border-white/10">
                         <img src="assets/img/rayone-emv-brochure.jpg" alt="2026 Corporate Profile &amp; Brochure" class="h-full w-full object-cover" />
                       </div>
                       <span class="space-y-1">
-                        <span class="flex items-center gap-1.5 text-sm font-semibold text-white">
-                          <span>2026 Corporate Profile</span>
-                        </span>
-                        <span class="block text-xs leading-snug text-[#9eb4cc]">Company credentials, principals, and institutional overview.</span>
+                        <span class="block text-sm font-semibold text-white">2026 Corporate Profile</span>
+                        <span class="block text-xs leading-snug text-[#94a3b8]">Company credentials, principals, and institutional overview.</span>
                       </span>
-                      <span class="text-xs font-medium text-[#72c5f8]">Read profile &rarr;</span>
+                      <span class="text-xs font-medium text-white/80">Read profile &rarr;</span>
                     </a>
                   </div>
                 </div>
@@ -8516,7 +8489,7 @@
 
                 <div class="ih-hero-ctas justify-center !mt-9 !gap-4 sm:!gap-5">
                   <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(1);}"
-                    class="ih-btn-pill-primary !min-w-[216px] !h-12 !px-7">
+                    class="ih-btn-pill-primary min-w-0 lg:!min-w-[216px] !h-12 !px-7">
                     <span>Explore Portfolio</span>
                     <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M5 12h14" />
@@ -8524,7 +8497,7 @@
                     </svg>
                   </button>
                   <a href="#contact" data-select-inquiry="Product Information"
-                    class="ih-btn-video-secondary group !min-w-[216px] !h-12 !px-6 !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
+                    class="ih-btn-video-secondary group min-w-0 lg:!min-w-[216px] !h-12 !px-6 !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
                     <span class="ih-play-circle !size-7 !border-[#72c5f8]/45">
                       <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M7 17L17 7" />
@@ -11343,7 +11316,7 @@
               </header>
 
               <ol class="pel-list">
-              <li class="pel-row" data-pel-row="0" data-open="false" data-lit="false" data-colors="#3aa0db,#0284c7,#72c5f8" data-hover-img="assets/img/hero-products.jpg" data-hover-fit="cover" data-hover-sub="Exclusive Philippine IOL Distribution">
+              <li class="pel-row" data-pel-row="0" data-open="false" data-lit="false" data-colors="#3aa0db,#0284c7,#72c5f8" data-hover-img="assets/img/brands-hover-rayner.jpg?v=1.0" data-hover-fit="cover" data-hover-sub="Exclusive Philippine IOL Distribution">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-btn-0" class="pel-trigger" aria-expanded="false" aria-controls="pel-panel-0">
@@ -11366,7 +11339,7 @@
                   </div>
                 </div>
               </li>
-              <li class="pel-row br-cat-col" data-br-col="lenses" data-pel-row="1" data-open="false" data-lit="false" data-colors="#72c5f8,#0ea5e9,#1d4ed8" data-hover-img="assets/img/news-spiral-optic-showcase.jpg" data-hover-fit="cover" data-hover-sub="RayOne &amp; Sulcoflex Intraocular Lenses">
+              <li class="pel-row br-cat-col" data-br-col="lenses" data-pel-row="1" data-open="false" data-lit="false" data-colors="#72c5f8,#0ea5e9,#1d4ed8" data-hover-img="assets/img/brands-hover-lenses.jpg?v=1.0" data-hover-fit="cover" data-hover-sub="RayOne &amp; Sulcoflex Intraocular Lenses">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-btn-1" class="pel-trigger" aria-expanded="false" aria-controls="pel-panel-1">
@@ -11397,7 +11370,7 @@
                   </div>
                 </div>
               </li>
-              <li class="pel-row br-cat-col" data-br-col="viscoelastics" data-pel-row="2" data-open="false" data-lit="false" data-colors="#2dd4bf,#0284c7,#72c5f8" data-hover-img="assets/img/packshots/ophteis_cohesive_clean.png" data-hover-fit="contain" data-hover-sub="Ophteis OVDs &amp; AEON Ocular Surface">
+              <li class="pel-row br-cat-col" data-br-col="viscoelastics" data-pel-row="2" data-open="false" data-lit="false" data-colors="#2dd4bf,#0284c7,#72c5f8" data-hover-img="assets/img/brands-hover-viscoelastics.jpg?v=1.0" data-hover-fit="cover" data-hover-sub="Ophteis OVDs &amp; AEON Ocular Surface">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-btn-2" class="pel-trigger" aria-expanded="false" aria-controls="pel-panel-2">
@@ -11428,7 +11401,7 @@
                   </div>
                 </div>
               </li>
-              <li class="pel-row br-cat-col" data-br-col="systems" data-pel-row="3" data-open="false" data-lit="false" data-colors="#60a5fa,#0ea5e9,#a5f3fc" data-hover-img="assets/img/packshots/emv_stage.png" data-hover-fit="contain" data-hover-sub="Preloaded Injector &amp; Digital Planning">
+              <li class="pel-row br-cat-col" data-br-col="systems" data-pel-row="3" data-open="false" data-lit="false" data-colors="#60a5fa,#0ea5e9,#a5f3fc" data-hover-img="assets/img/brands-hover-delivery.jpg?v=2.0" data-hover-fit="cover" data-hover-sub="Preloaded Injector &amp; Digital Planning">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-btn-3" class="pel-trigger" aria-expanded="false" aria-controls="pel-panel-3">
@@ -11459,7 +11432,7 @@
                   </div>
                 </div>
               </li>
-              <li class="pel-row" data-pel-row="4" data-open="false" data-lit="false" data-colors="#3aa0db,#1e40af,#72c5f8" data-hover-img="assets/img/pillars/p1_cleanroom_inspect.jpg" data-hover-fit="cover" data-hover-sub="Scoped Authorization &amp; Cleanroom QA">
+              <li class="pel-row" data-pel-row="4" data-open="false" data-lit="false" data-colors="#3aa0db,#1e40af,#72c5f8" data-hover-img="assets/img/brands-hover-governance.jpg?v=1.0" data-hover-fit="cover" data-hover-sub="Scoped Authorization &amp; Cleanroom QA">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-btn-4" class="pel-trigger" aria-expanded="false" aria-controls="pel-panel-4">
@@ -11503,7 +11476,7 @@
               </header>
 
               <ol class="pel-list">
-              <li class="pel-row" data-pel-row="0" data-open="false" data-lit="false" data-colors="#3aa0db,#0284c7,#72c5f8" data-hover-img="assets/activities/mediq1.jpg" data-hover-fit="cover" data-hover-sub="01 · Philippine Healthcare Landscape">
+              <li class="pel-row" data-pel-row="0" data-open="false" data-lit="false" data-colors="#3aa0db,#0284c7,#72c5f8" data-hover-img="assets/img/brands-p2-market-assessment.jpg?v=1.0" data-hover-fit="cover" data-hover-sub="01 · Philippine Healthcare Landscape">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-p2-btn-0" class="pel-trigger" aria-expanded="false" aria-controls="pel-p2-panel-0">
@@ -11526,7 +11499,7 @@
                   </div>
                 </div>
               </li>
-              <li class="pel-row" data-pel-row="1" data-open="false" data-lit="false" data-colors="#72c5f8,#0ea5e9,#1d4ed8" data-hover-img="assets/img/rayone-emv-brochure.jpg" data-hover-fit="contain" data-hover-sub="02 · Evidence-Based Positioning">
+              <li class="pel-row" data-pel-row="1" data-open="false" data-lit="false" data-colors="#72c5f8,#0ea5e9,#1d4ed8" data-hover-img="assets/img/brands-p2-brand-development.jpg?v=1.0" data-hover-fit="cover" data-hover-sub="02 · Evidence-Based Positioning">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-p2-btn-1" class="pel-trigger" aria-expanded="false" aria-controls="pel-p2-panel-1">
@@ -11549,7 +11522,7 @@
                   </div>
                 </div>
               </li>
-              <li class="pel-row" data-pel-row="2" data-open="false" data-lit="false" data-colors="#2dd4bf,#0284c7,#72c5f8" data-hover-img="assets/img/pillars/p4_market_expansion.jpg" data-hover-fit="cover" data-hover-sub="03 · Clinical &amp; Institutional Engagement">
+              <li class="pel-row" data-pel-row="2" data-open="false" data-lit="false" data-colors="#2dd4bf,#0284c7,#72c5f8" data-hover-img="assets/img/brands-p2-market-development.jpg?v=1.0" data-hover-fit="cover" data-hover-sub="03 · Clinical &amp; Institutional Engagement">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-p2-btn-2" class="pel-trigger" aria-expanded="false" aria-controls="pel-p2-panel-2">
@@ -11572,7 +11545,7 @@
                   </div>
                 </div>
               </li>
-              <li class="pel-row" data-pel-row="3" data-open="false" data-lit="false" data-colors="#60a5fa,#0ea5e9,#a5f3fc" data-hover-img="assets/img/pillars/p6_quality_metrology.jpg" data-hover-fit="cover" data-hover-sub="04 · Quality Assurance &amp; Traceability">
+              <li class="pel-row" data-pel-row="3" data-open="false" data-lit="false" data-colors="#60a5fa,#0ea5e9,#a5f3fc" data-hover-img="assets/img/brands-p2-dependable-supply.jpg?v=2.0" data-hover-fit="cover" data-hover-sub="04 · Quality Assurance &amp; Traceability">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-p2-btn-3" class="pel-trigger" aria-expanded="false" aria-controls="pel-p2-panel-3">
@@ -11595,7 +11568,7 @@
                   </div>
                 </div>
               </li>
-              <li class="pel-row" data-pel-row="4" data-open="false" data-lit="false" data-colors="#3aa0db,#1e40af,#72c5f8" data-hover-img="assets/activities/5.jpg" data-hover-fit="cover" data-hover-sub="Medical Devices · Pharma · Diagnostics">
+              <li class="pel-row" data-pel-row="4" data-open="false" data-lit="false" data-colors="#3aa0db,#1e40af,#72c5f8" data-hover-img="assets/img/brands-p2-partner-scope.jpg?v=1.0" data-hover-fit="cover" data-hover-sub="Medical Devices · Pharma · Diagnostics">
                 <canvas class="pel-ink" aria-hidden="true"></canvas>
                 <h4 class="pel-h">
                   <button type="button" id="pel-p2-btn-4" class="pel-trigger" aria-expanded="false" aria-controls="pel-p2-panel-4">
@@ -12045,16 +12018,20 @@
           box-sizing: border-box;
           display: block;
         }
+        #srv-book-carousel-slide .bc-inside {
+          background-color: #f7f5f0;
+          border-left-color: #142a4f;
+        }
         #srv-book-carousel-slide .bc-page {
           width: calc(var(--bc-open-w, 284px) - 4px);
           height: calc(100% - 4px);
           top: 2px;
           left: 2px;
-          background: #f9fbff;
-          background-image: linear-gradient(to right, rgba(10, 29, 64, 0.28) 0%, rgba(10, 29, 64, 0.07) 9%, rgba(0, 0, 0, 0) 22%);
+          background: #f7f5f0;
+          background-image: linear-gradient(to right, rgba(10, 29, 64, 0.22) 0%, rgba(10, 29, 64, 0.05) 9%, rgba(0, 0, 0, 0) 22%);
           box-sizing: border-box;
           border-right: 2px solid #0e2d5c;
-          box-shadow: inset -6px 0 14px rgba(10, 29, 64, 0.06), 0 24px 48px rgba(2, 8, 22, 0.45);
+          box-shadow: inset -6px 0 14px rgba(10, 29, 64, 0.05), 0 24px 48px rgba(2, 8, 22, 0.45);
           border-radius: 1px 5px 5px 1px;
           display: block;
         }
@@ -12069,16 +12046,16 @@
           user-select: text;
         }
 
-        /* Left Inner Page (.bc-inside-spread) */
+        /* Left Inner Page (.bc-inside-spread — Swiss Editorial Printed Monograph) */
         #srv-book-carousel-slide .bc-inside-spread {
           width: 100%;
           height: 100%;
-          padding: calc(15px * var(--bc-page-scale, 1)) calc(18px * var(--bc-page-scale, 1)) calc(14px * var(--bc-page-scale, 1)) calc(17px * var(--bc-page-scale, 1));
+          padding: calc(15px * var(--bc-page-scale, 1)) calc(18px * var(--bc-page-scale, 1)) calc(13px * var(--bc-page-scale, 1)) calc(18px * var(--bc-page-scale, 1));
           display: flex;
           flex-direction: column;
           box-sizing: border-box;
           text-align: left;
-          color: #0a1d40;
+          color: #102442;
           overflow: hidden;
         }
         #srv-book-carousel-slide .bc-spread-topbar {
@@ -12086,68 +12063,18 @@
           align-items: center;
           justify-content: space-between;
           gap: 8px;
+          padding-bottom: calc(5px * var(--bc-page-scale, 1));
           margin-bottom: calc(8px * var(--bc-page-scale, 1));
+          border-bottom: 1px solid rgba(10, 29, 64, 0.14);
         }
-        #srv-book-carousel-slide .bc-spread-eyebrow {
+        #srv-book-carousel-slide .bc-spread-eyebrow,
+        #srv-book-carousel-slide .bc-spread-folio {
           font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(8.2px * var(--bc-page-scale, 1));
+          font-size: calc(7.4px * var(--bc-page-scale, 1));
           letter-spacing: 0.16em;
           text-transform: uppercase;
-          color: #2563a6;
-          font-weight: 700;
-        }
-        #srv-book-carousel-slide .bc-spread-close {
-          width: calc(22px * var(--bc-page-scale, 1));
-          height: calc(22px * var(--bc-page-scale, 1));
-          border-radius: 9999px;
-          border: 1px solid rgba(10, 29, 64, 0.18);
-          background: rgba(10, 29, 64, 0.06);
-          color: #0a1d40;
-          font-size: calc(14px * var(--bc-page-scale, 1));
-          line-height: 1;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: background 0.2s ease, border-color 0.2s ease;
-        }
-        #srv-book-carousel-slide .bc-spread-close:hover {
-          background: #0a1d40;
-          color: #ffffff;
-          border-color: #0a1d40;
-        }
-        #srv-book-carousel-slide .bc-spread-thumb {
-          position: relative;
-          width: 100%;
-          height: 20%;
-          min-height: 56px;
-          border-radius: 5px;
-          overflow: hidden;
-          margin-bottom: calc(9px * var(--bc-page-scale, 1));
-          border: 1px solid rgba(10, 29, 64, 0.14);
-        }
-        #srv-book-carousel-slide .bc-spread-thumb img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-        #srv-book-carousel-slide .bc-spread-thumb__veil {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(135deg, rgba(10, 29, 64, 0.52) 0%, rgba(14, 52, 108, 0.22) 100%);
-        }
-        #srv-book-carousel-slide .bc-spread-thumb__vol {
-          position: absolute;
-          left: calc(8px * var(--bc-page-scale, 1));
-          bottom: calc(6px * var(--bc-page-scale, 1));
-          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(8px * var(--bc-page-scale, 1));
-          letter-spacing: 0.16em;
-          color: #e2f1ff;
-          background: rgba(10, 29, 64, 0.78);
-          padding: 2px 6px;
-          border-radius: 3px;
+          color: #4b6587;
+          font-weight: 400;
         }
         #srv-book-carousel-slide .bc-spread-heading {
           display: flex;
@@ -12156,65 +12083,94 @@
         }
         #srv-book-carousel-slide .bc-spread-volnum {
           font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(18px * var(--bc-page-scale, 1));
-          font-weight: 700;
+          font-size: calc(15px * var(--bc-page-scale, 1));
+          font-weight: 400;
           line-height: 1;
-          color: #2c7be5;
+          color: #2c6db8;
           flex-shrink: 0;
         }
         #srv-book-carousel-slide .bc-spread-title {
           font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-          font-size: calc(15px * var(--bc-page-scale, 1));
-          font-weight: 700;
+          font-size: calc(14.5px * var(--bc-page-scale, 1));
+          font-weight: 400;
           line-height: 1.18;
           letter-spacing: -0.02em;
-          color: #0a1d40;
+          color: #0d213f;
           margin: 0;
         }
         #srv-book-carousel-slide .bc-spread-rule {
-          width: calc(28px * var(--bc-page-scale, 1));
-          height: 2px;
-          background: #3aa0db;
-          margin: calc(7px * var(--bc-page-scale, 1)) 0;
+          width: calc(26px * var(--bc-page-scale, 1));
+          height: 1px;
+          background: rgba(16, 42, 82, 0.35);
+          margin: calc(6px * var(--bc-page-scale, 1)) 0;
         }
         #srv-book-carousel-slide .bc-spread-sub {
-          font-size: calc(9.8px * var(--bc-page-scale, 1));
+          font-size: calc(9.2px * var(--bc-page-scale, 1));
           line-height: 1.44;
-          color: #355075;
-          margin: 0 0 calc(9px * var(--bc-page-scale, 1));
+          color: #364e6e;
+          margin: 0 0 calc(8px * var(--bc-page-scale, 1));
+        }
+        #srv-book-carousel-slide .bc-spread-figure {
+          margin: 0 0 calc(8px * var(--bc-page-scale, 1));
+          padding: 0;
+        }
+        #srv-book-carousel-slide .bc-spread-thumb {
+          position: relative;
+          width: 100%;
+          height: calc(56px * var(--bc-page-scale, 1));
+          border-radius: 0;
+          overflow: hidden;
+          border: 1px solid rgba(10, 29, 64, 0.16);
+        }
+        #srv-book-carousel-slide .bc-spread-thumb img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        #srv-book-carousel-slide .bc-spread-caption {
+          margin-top: calc(3.5px * var(--bc-page-scale, 1));
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-size: calc(6.8px * var(--bc-page-scale, 1));
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: #5a7394;
         }
         #srv-book-carousel-slide .bc-spread-highlights {
-          border: 1px solid rgba(10, 29, 64, 0.12);
-          background: rgba(255, 255, 255, 0.85);
-          border-radius: 6px;
-          padding: calc(8px * var(--bc-page-scale, 1)) calc(10px * var(--bc-page-scale, 1));
+          border: none;
+          border-top: 1px solid rgba(10, 29, 64, 0.16);
+          background: transparent;
+          border-radius: 0;
+          padding: calc(7px * var(--bc-page-scale, 1)) 0 0 0;
           margin-bottom: auto;
-          box-shadow: 0 2px 6px rgba(10, 29, 64, 0.04);
+          box-shadow: none;
         }
         #srv-book-carousel-slide .bc-spread-highlights__head {
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 6px;
-          padding-bottom: calc(5px * var(--bc-page-scale, 1));
-          margin-bottom: calc(5px * var(--bc-page-scale, 1));
-          border-bottom: 1px solid rgba(10, 29, 64, 0.09);
+          padding-bottom: calc(4px * var(--bc-page-scale, 1));
+          margin-bottom: calc(4px * var(--bc-page-scale, 1));
+          border-bottom: 1px solid rgba(10, 29, 64, 0.08);
         }
         #srv-book-carousel-slide .bc-spread-highlights__kicker {
           font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(7.4px * var(--bc-page-scale, 1));
-          font-weight: 700;
-          letter-spacing: 0.12em;
-          color: #2563a6;
+          font-size: calc(7px * var(--bc-page-scale, 1));
+          font-weight: 400;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: #365780;
         }
         #srv-book-carousel-slide .bc-spread-badge {
           font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: calc(6.6px * var(--bc-page-scale, 1));
-          letter-spacing: 0.07em;
-          color: #0e3a72;
-          background: rgba(58, 160, 219, 0.14);
-          padding: 1px 5px;
-          border-radius: 3px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #5b7494;
+          background: transparent;
+          padding: 0;
+          border-radius: 0;
           white-space: nowrap;
         }
         #srv-book-carousel-slide .bc-spread-highlight-list {
@@ -12223,155 +12179,164 @@
           padding: 0;
           display: flex;
           flex-direction: column;
-          gap: calc(4.5px * var(--bc-page-scale, 1));
+          gap: calc(4px * var(--bc-page-scale, 1));
         }
         #srv-book-carousel-slide .bc-spread-highlight-item {
           display: flex;
-          align-items: flex-start;
+          align-items: baseline;
           gap: calc(6px * var(--bc-page-scale, 1));
-          font-size: calc(8.9px * var(--bc-page-scale, 1));
+          font-size: calc(8.6px * var(--bc-page-scale, 1));
           line-height: 1.32;
-          color: #1f3b62;
-          font-weight: 500;
+          color: #203b60;
+          font-weight: 400;
         }
-        #srv-book-carousel-slide .bc-spread-dot {
-          width: calc(4.5px * var(--bc-page-scale, 1));
-          height: calc(4.5px * var(--bc-page-scale, 1));
-          border-radius: 9999px;
-          background: #2c7be5;
-          margin-top: calc(4px * var(--bc-page-scale, 1));
+        #srv-book-carousel-slide .bc-spread-dash {
+          color: #5b7b9e;
           flex-shrink: 0;
+          font-size: calc(8.4px * var(--bc-page-scale, 1));
         }
         #srv-book-carousel-slide .bc-spread-nav {
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 6px;
-          padding-top: calc(8px * var(--bc-page-scale, 1));
-          border-top: 1px solid rgba(10, 29, 64, 0.12);
+          padding-top: calc(7px * var(--bc-page-scale, 1));
+          border-top: 1px solid rgba(10, 29, 64, 0.14);
           margin-top: calc(8px * var(--bc-page-scale, 1));
         }
         #srv-book-carousel-slide .bc-spread-navbtn {
-          padding: calc(4px * var(--bc-page-scale, 1)) calc(8px * var(--bc-page-scale, 1));
-          border-radius: 5px;
-          border: 1px solid rgba(10, 29, 64, 0.18);
-          background: #ffffff;
-          color: #0a1d40;
+          padding: calc(3.5px * var(--bc-page-scale, 1)) calc(6px * var(--bc-page-scale, 1));
+          border-radius: 0;
+          border: 1px solid rgba(10, 29, 64, 0.2);
+          background: transparent;
+          color: #102442;
           font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(8.6px * var(--bc-page-scale, 1));
-          font-weight: 700;
+          font-size: calc(8px * var(--bc-page-scale, 1));
+          font-weight: 400;
+          letter-spacing: 0.08em;
           cursor: pointer;
           transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
         }
         #srv-book-carousel-slide .bc-spread-navbtn:hover {
-          background: #0a1d40;
-          color: #ffffff;
-          border-color: #0a1d40;
+          background: #102442;
+          color: #f7f5f0;
+          border-color: #102442;
         }
         #srv-book-carousel-slide .bc-spread-inquire {
-          padding: calc(4.5px * var(--bc-page-scale, 1)) calc(10px * var(--bc-page-scale, 1));
-          border-radius: 9999px;
-          border: 1px solid #0e3a72;
-          background: #0a1d40;
-          color: #f4f7fb;
+          padding: calc(4px * var(--bc-page-scale, 1)) calc(11px * var(--bc-page-scale, 1));
+          border-radius: 2px;
+          border: 1px solid #102442;
+          background: #102442;
+          color: #f7f5f0;
           font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(8.2px * var(--bc-page-scale, 1));
-          font-weight: 700;
-          letter-spacing: 0.08em;
+          font-size: calc(7.8px * var(--bc-page-scale, 1));
+          font-weight: 400;
+          letter-spacing: 0.12em;
           text-transform: uppercase;
           cursor: pointer;
           transition: background 0.18s ease, border-color 0.18s ease;
         }
         #srv-book-carousel-slide .bc-spread-inquire:hover {
-          background: #2563a6;
-          border-color: #2563a6;
+          background: #235591;
+          border-color: #235591;
         }
 
-        /* Right Paper Page (.bc-page-spread) */
+        /* Right Paper Page (.bc-page-spread — Swiss Editorial Hairline Ledger) */
         #srv-book-carousel-slide .bc-page-spread {
           width: 100%;
           height: 100%;
-          padding: calc(16px * var(--bc-page-scale, 1)) calc(17px * var(--bc-page-scale, 1)) calc(14px * var(--bc-page-scale, 1)) calc(20px * var(--bc-page-scale, 1));
+          padding: calc(15px * var(--bc-page-scale, 1)) calc(17px * var(--bc-page-scale, 1)) calc(13px * var(--bc-page-scale, 1)) calc(20px * var(--bc-page-scale, 1));
           display: flex;
           flex-direction: column;
           box-sizing: border-box;
           text-align: left;
-          color: #0a1d40;
+          color: #102442;
           overflow: hidden;
         }
         #srv-book-carousel-slide .bc-page-toprow {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding-bottom: calc(6px * var(--bc-page-scale, 1));
-          margin-bottom: calc(8px * var(--bc-page-scale, 1));
-          border-bottom: 1px solid rgba(10, 29, 64, 0.12);
+          padding-bottom: calc(5px * var(--bc-page-scale, 1));
+          margin-bottom: calc(4px * var(--bc-page-scale, 1));
+          border-bottom: 1px solid rgba(10, 29, 64, 0.14);
         }
         #srv-book-carousel-slide .bc-page-kicker {
           font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(8.2px * var(--bc-page-scale, 1));
-          letter-spacing: 0.15em;
-          color: #2563a6;
-          font-weight: 700;
+          font-size: calc(7.4px * var(--bc-page-scale, 1));
+          letter-spacing: 0.16em;
+          color: #365780;
+          font-weight: 400;
         }
         #srv-book-carousel-slide .bc-page-ref {
           font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(8.2px * var(--bc-page-scale, 1));
-          letter-spacing: 0.12em;
-          color: #6b85a8;
+          font-size: calc(7.4px * var(--bc-page-scale, 1));
+          letter-spacing: 0.14em;
+          color: #5b7494;
         }
         #srv-book-carousel-slide .bc-paper-cards {
           flex: 1 1 auto;
           display: grid;
           grid-template-rows: repeat(4, minmax(0, 1fr));
-          gap: calc(7px * var(--bc-page-scale, 1));
+          gap: 0;
           min-height: 0;
         }
         #srv-book-carousel-slide .bc-paper-card {
-          border: 1px solid rgba(10, 29, 64, 0.12);
-          background: rgba(255, 255, 255, 0.86);
-          border-radius: 6px;
-          padding: calc(7px * var(--bc-page-scale, 1)) calc(10px * var(--bc-page-scale, 1));
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          box-shadow: 0 2px 6px rgba(10, 29, 64, 0.04);
+          border: none;
+          border-bottom: 1px solid rgba(10, 29, 64, 0.13);
+          background: transparent;
+          border-radius: 0;
+          padding: calc(6px * var(--bc-page-scale, 1)) 0;
+          display: grid;
+          grid-template-columns: calc(20px * var(--bc-page-scale, 1)) minmax(0, 1fr);
+          gap: calc(6px * var(--bc-page-scale, 1));
+          align-content: center;
+          box-shadow: none;
+        }
+        #srv-book-carousel-slide .bc-paper-card:last-child {
+          border-bottom: none;
+        }
+        #srv-book-carousel-slide .bc-paper-card__idx {
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-size: calc(8px * var(--bc-page-scale, 1));
+          letter-spacing: 0.1em;
+          color: #3669a3;
+          padding-top: calc(1.5px * var(--bc-page-scale, 1));
+        }
+        #srv-book-carousel-slide .bc-paper-card__main {
+          min-width: 0;
         }
         #srv-book-carousel-slide .bc-paper-card__meta {
           display: flex;
-          align-items: center;
+          align-items: baseline;
           justify-content: space-between;
           gap: 6px;
-          margin-bottom: calc(2px * var(--bc-page-scale, 1));
-        }
-        #srv-book-carousel-slide .bc-paper-card__code {
-          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(7.8px * var(--bc-page-scale, 1));
-          letter-spacing: 0.12em;
-          color: #2c7be5;
-          font-weight: 700;
-        }
-        #srv-book-carousel-slide .bc-paper-card__tag {
-          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(7px * var(--bc-page-scale, 1));
-          letter-spacing: 0.08em;
-          color: #355075;
-          background: rgba(58, 160, 219, 0.12);
-          padding: 1px 5px;
-          border-radius: 3px;
+          margin-bottom: calc(2.5px * var(--bc-page-scale, 1));
         }
         #srv-book-carousel-slide .bc-paper-card__title {
           font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-          font-size: calc(11.4px * var(--bc-page-scale, 1));
-          font-weight: 700;
-          line-height: 1.2;
-          color: #0a1d40;
-          margin: 0 0 calc(2px * var(--bc-page-scale, 1));
+          font-size: calc(10.8px * var(--bc-page-scale, 1));
+          font-weight: 400;
+          line-height: 1.22;
+          color: #0d213f;
+          margin: 0;
+        }
+        #srv-book-carousel-slide .bc-paper-card__tag {
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-size: calc(6.4px * var(--bc-page-scale, 1));
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #637c9c;
+          background: transparent;
+          padding: 0;
+          border-radius: 0;
+          white-space: nowrap;
+          flex-shrink: 0;
         }
         #srv-book-carousel-slide .bc-paper-card__desc {
-          font-size: calc(9.2px * var(--bc-page-scale, 1));
-          line-height: 1.35;
-          color: #466084;
+          font-size: calc(8.8px * var(--bc-page-scale, 1));
+          line-height: 1.38;
+          color: #425b7d;
           margin: 0;
         }
 
@@ -12551,7 +12516,7 @@
 
                 <div class="ih-hero-ctas justify-center !mt-9 !gap-4 sm:!gap-5">
                   <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 7);}"
-                    class="ih-btn-pill-primary !min-w-[216px] !h-12 !px-7">
+                    class="ih-btn-pill-primary min-w-0 lg:!min-w-[216px] !h-12 !px-7">
                     <span>Explore Services</span>
                     <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M5 12h14" />
@@ -12559,7 +12524,7 @@
                     </svg>
                   </button>
                   <a href="#contact" data-select-inquiry="Institutional Supply"
-                    class="ih-btn-video-secondary group !min-w-[216px] !h-12 !px-6 !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
+                    class="ih-btn-video-secondary group min-w-0 lg:!min-w-[216px] !h-12 !px-6 !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
                     <span class="ih-play-circle !size-7 !border-[#72c5f8]/45">
                       <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M7 17L17 7" />
@@ -12622,6 +12587,9 @@
             aria-hidden="true"></canvas>
           <div id="srv-library-transparent-veil"
             class="bc-library-veil pointer-events-none absolute inset-0 z-[1]"
+            aria-hidden="true"></div>
+          <div id="srv-library-showroom-bg"
+            class="srv-library-showroom-bg pointer-events-none absolute inset-0 z-[1]"
             aria-hidden="true"></div>
 
 
@@ -12743,7 +12711,7 @@
 
                 <div class="ih-hero-ctas justify-center !mt-8 !gap-4 sm:!gap-5">
                   <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 3);}"
-                    class="ih-btn-pill-primary !min-w-[232px] !h-12 !px-7">
+                    class="ih-btn-pill-primary min-w-0 lg:!min-w-[232px] !h-12 !px-7">
                     <span>2026 Corporate Profile</span>
                     <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M5 12h14" />
@@ -12751,7 +12719,7 @@
                     </svg>
                   </button>
                   <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 1);}"
-                    class="ih-btn-video-secondary group !min-w-[232px] !h-12 !px-6 !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
+                    class="ih-btn-video-secondary group min-w-0 lg:!min-w-[232px] !h-12 !px-6 !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
                     <span class="ih-play-circle !size-7 !border-[#72c5f8]/45">
                       <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M7 17L17 7" />
@@ -14000,6 +13968,7 @@
     #about #about-interactive-stage,
     #about #about-subpage-scroll,
     #about #about-sec-who-we-are,
+    #about #about-sec-who-we-are > div:first-child,
     #about #forge-about-sticky,
     #about #about-slide-what-we-do,
     #about #wwd-forge-sticky,
@@ -14025,6 +13994,16 @@
     #site-footer #footer-inner {
       background-color: #0b0c0f !important;
       background-image: var(--mediq-halo-bg) !important;
+    }
+
+    /* Maintain exact font sizes across ALL subpages & footer while rendering non-bold (regular 400); #hero & navbar stay untouched */
+    html body section.page-snap-section:not(#hero),
+    html body section.page-snap-section:not(#hero) *,
+    html body #galaxy-delivery,
+    html body #galaxy-delivery *,
+    html body #site-footer,
+    html body #site-footer * {
+      font-weight: 400 !important;
     }
 
     /* Keep #hero smoky fluid canvas active & blended smoothly with the eye photography into obsidian edges */
@@ -14146,6 +14125,46 @@
       display: none !important;
       opacity: 0 !important;
       visibility: hidden !important;
+    }
+
+    /* Services 3D Book Carousel — Executive Architectural Library & Showroom Stage */
+    #srv-book-carousel-slide #srv-library-showroom-bg {
+      display: block !important;
+      opacity: 0.78 !important;
+      visibility: visible !important;
+      background-color: #040c1d;
+      background-image: url("assets/img/services-executive-library-bg.jpg?v=1.0");
+      background-size: cover;
+      background-position: center 56%;
+      background-repeat: no-repeat;
+      filter: blur(1.4px) saturate(0.92) brightness(0.86);
+      transform: scale(1.03);
+      transition: opacity 0.45s ease, filter 0.45s ease, transform 0.55s ease;
+    }
+    #srv-book-carousel-slide #srv-library-showroom-bg::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 68% 62% at 50% 48%, rgba(8, 22, 52, 0.14) 0%, rgba(5, 14, 34, 0.56) 62%, rgba(3, 8, 20, 0.88) 100%),
+        linear-gradient(180deg, rgba(4, 11, 28, 0.82) 0%, rgba(6, 17, 40, 0.16) 24%, rgba(6, 17, 40, 0.18) 68%, rgba(3, 9, 22, 0.72) 100%);
+    }
+    #srv-book-carousel-slide #srv-library-showroom-bg::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: clamp(118px, 16.5vh, 172px);
+      background:
+        linear-gradient(180deg, rgba(114, 197, 248, 0.16) 0px, rgba(114, 197, 248, 0.05) 2px, rgba(6, 16, 38, 0.35) 18%, rgba(3, 8, 20, 0.86) 100%);
+      border-top: 1px solid rgba(114, 197, 248, 0.16);
+      box-shadow: inset 0 18px 42px -18px rgba(58, 160, 219, 0.24);
+    }
+    #srv-book-carousel-slide.is-reading-open #srv-library-showroom-bg {
+      opacity: 0.42 !important;
+      filter: blur(4px) saturate(0.85) brightness(0.68);
+      transform: scale(1.06);
     }
 
     /* Ultra-subtle structural borders */
@@ -14660,11 +14679,15 @@
       #brands .deck-slide[data-slide-index="0"] .br-cta-row > a,
       #brands .deck-slide[data-slide-index="0"] .br-cta-row > button {
         width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
         min-height: 44px !important;
-        padding: 10px 10px !important;
-        font-size: clamp(11.5px, 3.05vw, 13px) !important;
+        padding: 10px 8px !important;
+        font-size: clamp(10.2px, 2.68vw, 12px) !important;
         letter-spacing: 0 !important;
         line-height: 1.15 !important;
+        gap: 5px !important;
         justify-content: center !important;
         border-radius: 9999px !important;
         white-space: nowrap !important;
@@ -14677,7 +14700,10 @@
         font-size: clamp(9.2px, 2.38vw, 10.6px) !important;
         gap: 4px !important;
       }
-      #hero .ih-btn-pill-primary svg {
+      #hero .ih-btn-pill-primary svg,
+      #products .ih-btn-pill-primary svg,
+      #distribution .ih-btn-pill-primary svg,
+      #resources .ih-btn-pill-primary svg {
         width: 12px !important;
         height: 12px !important;
         flex-shrink: 0 !important;
@@ -14687,15 +14713,18 @@
       #distribution .ih-btn-video-secondary,
       #resources .ih-btn-video-secondary {
         width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
         min-height: 44px !important;
-        padding: 8px 10px !important;
+        padding: 8px 8px !important;
         border-radius: 9999px !important;
         border: 1px solid rgba(114, 197, 248, 0.34) !important;
         background: rgba(10, 29, 64, 0.56) !important;
-        font-size: clamp(11.5px, 3.05vw, 13px) !important;
-        font-weight: 500 !important;
+        font-size: clamp(10.2px, 2.68vw, 12px) !important;
+        font-weight: 400 !important;
         letter-spacing: 0 !important;
-        gap: 6px !important;
+        gap: 5px !important;
         justify-content: center !important;
         white-space: nowrap !important;
         box-sizing: border-box !important;
@@ -14710,11 +14739,36 @@
       #products .ih-play-circle,
       #distribution .ih-play-circle,
       #resources .ih-play-circle {
-        width: 22px !important;
-        min-width: 22px !important;
-        height: 22px !important;
-        min-height: 22px !important;
-        flex: 0 0 22px !important;
+        width: 18px !important;
+        min-width: 18px !important;
+        height: 18px !important;
+        min-height: 18px !important;
+        flex: 0 0 18px !important;
+      }
+      #brands .br-eyebrow > span.w-12 {
+        display: none !important;
+      }
+      #brands #brands-aller-silhouette-stage {
+        opacity: 0.42 !important;
+      }
+      /* Prevent Active Theory ChatDOM overlay from overlapping RayOne Galaxy card on mobile */
+      #products #at-products-work-stage:not(.is-detail-open):not(.is-3d-box-mode) #at-work-viewport {
+        transform: translateY(-76px) scale(0.84) !important;
+        transform-origin: center center !important;
+      }
+      #products #at-products-work-stage #at-chat-wrapper {
+        padding: 8px 14px 10px !important;
+        width: 100% !important;
+        background: linear-gradient(to top, rgba(4, 8, 18, 0.96) 0%, rgba(4, 8, 18, 0.85) 78%, transparent 100%) !important;
+      }
+      #products #at-products-work-stage .at-chat-messages {
+        max-height: 112px !important;
+        margin-bottom: 6px !important;
+      }
+      #products #at-products-work-stage .at-chat-line {
+        font-size: 9.5px !important;
+        line-height: 1.3 !important;
+        margin: 1.5px 0 1.5px 2px !important;
       }
       #hero .ih-play-circle {
         width: 18px !important;
@@ -15406,36 +15460,88 @@
         document.documentElement.classList.add('mq-land-js');
 
         function replay(host) {
+          if (!host) return;
+          if (!host.classList.contains('mq-land-in')) {
+            host.classList.add('mq-land-in');
+            return;
+          }
           host.classList.remove('mq-land-in');
           requestAnimationFrame(function () {
             requestAnimationFrame(function () { host.classList.add('mq-land-in'); });
           });
         }
 
+        function isSectionInView(sec) {
+          if (!sec) return false;
+          var r = sec.getBoundingClientRect();
+          var vh = window.innerHeight || document.documentElement.clientHeight || 800;
+          return r.top < vh * 0.88 && r.bottom > vh * 0.12;
+        }
+
+        window.__revealLandingHost = function (sectionEl) {
+          var host = sectionEl && sectionEl.querySelector ? sectionEl.querySelector('.mq-land-host') : null;
+          if (host) host.classList.add('mq-land-in');
+        };
+
+        var hostRecords = [];
         hosts.forEach(function (host) {
           var section = host.closest('section') || host;
-          var inView = false;
+          var rec = { host: host, section: section, inView: false };
+          hostRecords.push(rec);
+
+          function syncVisibility(forceReplay) {
+            var visible = isSectionInView(section);
+            if (visible && !rec.inView) {
+              rec.inView = true;
+              if (forceReplay) replay(host);
+              else host.classList.add('mq-land-in');
+            } else if (!visible && rec.inView) {
+              rec.inView = false;
+              host.classList.remove('mq-land-in');
+            }
+          }
+
           var io = new IntersectionObserver(function (entries) {
             var entry = entries[0];
             if (!entry) return;
-            if (entry.isIntersecting && !inView) {
-              inView = true;
-              replay(host);
-            } else if (!entry.isIntersecting && inView) {
-              inView = false;
+            if (entry.isIntersecting || isSectionInView(section)) {
+              if (!rec.inView) {
+                rec.inView = true;
+                replay(host);
+              } else {
+                host.classList.add('mq-land-in');
+              }
+            } else if (!isSectionInView(section) && rec.inView) {
+              rec.inView = false;
               host.classList.remove('mq-land-in');
             }
-          }, { threshold: 0.3 });
+          }, { threshold: 0.02 });
           io.observe(section);
 
           // Replay when returning to the landing page from a subpage within the same section
           var wasHidden = host.classList.contains('opacity-0');
           new MutationObserver(function () {
             var hidden = host.classList.contains('opacity-0');
-            if (wasHidden && !hidden && inView) replay(host);
+            if (wasHidden && !hidden) host.classList.add('mq-land-in');
             wasHidden = hidden;
           }).observe(host, { attributes: true, attributeFilter: ['class'] });
+
+          syncVisibility(false);
         });
+
+        window.addEventListener('scroll', function () {
+          for (var hi = 0; hi < hostRecords.length; hi++) {
+            var hr = hostRecords[hi];
+            if (isSectionInView(hr.section)) {
+              if (!hr.inView) {
+                hr.inView = true;
+                replay(hr.host);
+              } else if (!hr.host.classList.contains('mq-land-in')) {
+                hr.host.classList.add('mq-land-in');
+              }
+            }
+          }
+        }, { passive: true });
       }
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
@@ -15462,7 +15568,7 @@
   <script src="assets/js/news-coverflow.js?v=1.04" defer></script>
   <script src="assets/js/services-3d-backdrop.js?v=2.01" defer></script>
   <script src="assets/js/services-book-character.js?v=1.00" defer></script>
-  <script src="assets/js/services-book-carousel.js?v=1.14" defer></script>
+  <script src="assets/js/services-book-carousel.js?v=1.17" defer></script>
   <script src="assets/js/site-search.js?v=3.01" defer></script>
   <script src="assets/js/contact-map.js?v=2.00" defer></script>
   <script>
@@ -15502,6 +15608,43 @@
       }, 900);
       return false;
     };
+  </script>
+  <script>
+    (function () {
+      var bust = 'v=20261121f';
+      function appendBust(url) {
+        if (!url || url.indexOf(bust) !== -1) return url;
+        return url + (url.indexOf('?') === -1 ? '?' : '&') + bust;
+      }
+      function applyVideoBust() {
+        var vids = document.querySelectorAll('#about video');
+        for (var i = 0; i < vids.length; i++) {
+          var v = vids[i];
+          var src = v.getAttribute('src');
+          if (src && src.indexOf('assets/video/') === 0) {
+            v.setAttribute('src', appendBust(src));
+          }
+          var lazy = v.getAttribute('data-lazy-src');
+          if (lazy && lazy.indexOf('assets/video/') === 0) {
+            v.setAttribute('data-lazy-src', appendBust(lazy));
+          }
+          var poster = v.getAttribute('poster');
+          if (poster && poster.indexOf('assets/img/pillars/') === 0) {
+            v.setAttribute('poster', appendBust(poster));
+          }
+        }
+        var bgs = document.querySelectorAll('#about [data-wwd-forge-bg]');
+        for (var j = 0; j < bgs.length; j++) {
+          var bg = bgs[j].style && bgs[j].style.backgroundImage;
+          if (bg && bg.indexOf('assets/img/pillars/') !== -1 && bg.indexOf(bust) === -1) {
+            bgs[j].style.backgroundImage = bg.replace(/(assets\/img\/pillars\/[^"')]+)/g, function (m) {
+              return appendBust(m);
+            });
+          }
+        }
+      }
+      applyVideoBust();
+    })();
   </script>
 </body>
 

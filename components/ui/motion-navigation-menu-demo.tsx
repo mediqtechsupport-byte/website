@@ -8,26 +8,7 @@ import {
   MotionNavigationMenuList,
   MotionNavigationMenuTrigger,
 } from "@/components/ui/motion-navigation-menu";
-import {
-  ArrowUpRight,
-  Award,
-  BookOpen,
-  Briefcase,
-  Building2,
-  Download,
-  FileText,
-  Globe,
-  GraduationCap,
-  HeartHandshake,
-  Landmark,
-  Layers,
-  type LucideIcon,
-  ShieldCheck,
-  Sparkles,
-  TrendingUp,
-  Truck,
-  Users,
-} from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 interface MotionNavigationMenuDemoProps {
   viewport?: boolean;
@@ -36,38 +17,34 @@ interface MotionNavigationMenuDemoProps {
   springDamping?: number;
 }
 
-const ABOUT_ITEMS: { title: string; desc: string; href: string; slide: number; icon: LucideIcon }[] = [
+const ABOUT_ITEMS = [
   {
     title: "Who We Are",
     desc: "Philippine specialty pharma leadership.",
     href: "#about",
     slide: 1,
-    icon: Users,
   },
   {
     title: "What We Do",
-    desc: "Regulatory, sales, and cold-chain reach.",
+    desc: "Regulatory, sales & cold-chain reach.",
     href: "#about",
     slide: 2,
-    icon: Briefcase,
   },
   {
     title: "Foundation",
     desc: "Exclusive Rayner UK strategic alliance.",
     href: "#about",
     slide: 3,
-    icon: Landmark,
   },
   {
     title: "Values",
-    desc: "Clinical integrity and patient safety.",
+    desc: "Clinical integrity & patient safety.",
     href: "#about",
     slide: 4,
-    icon: ShieldCheck,
   },
 ];
 
-const PRODUCT_ITEMS: { title: string; desc: string; href: string; slide: number }[] = [
+const PRODUCT_ITEMS = [
   {
     title: "Ophthalmology · IOLs",
     desc: "Galaxy Spiral, EMV, Trifocal & Sulcoflex.",
@@ -75,86 +52,41 @@ const PRODUCT_ITEMS: { title: string; desc: string; href: string; slide: number 
     slide: 1,
   },
   {
-    title: "OVDs & Solutions",
+    title: "Ophthalmic OVDs & Solutions",
     desc: "Ophteis viscoelastics & AEON drops.",
     href: "#products",
     slide: 2,
   },
   {
-    title: "Future Portfolio",
+    title: "Future Portfolio Development",
     desc: "Complementary surgical & diagnostic care.",
     href: "#products",
     slide: 3,
   },
   {
     title: "Product Catalogs",
-    desc: "Full 2026 brochures & lens specifications.",
+    desc: "2026 clinical brochures & specs.",
     href: "#products",
     slide: 4,
   },
 ];
 
-const SERVICES_ITEMS: { title: string; desc: string; target: string; icon: LucideIcon }[] = [
-  {
-    title: "Importation & Distribution",
-    desc: "FDA-compliant national supply to hospitals.",
-    target: "services:1",
-    icon: Truck,
-  },
-  {
-    title: "Product Marketing",
-    desc: "Clinical positioning & specialty awareness.",
-    target: "services:2",
-    icon: Layers,
-  },
-  {
-    title: "Sales & Commercialization",
-    desc: "Dedicated surgical & hospital coverage.",
-    target: "services:3",
-    icon: TrendingUp,
-  },
-  {
-    title: "Market Development",
-    desc: "Regional clinic expansion nationwide.",
-    target: "services:4",
-    icon: Globe,
-  },
-  {
-    title: "Professional Education",
-    desc: "Surgeon workshops, symposia & wet-labs.",
-    target: "services:5",
-    icon: GraduationCap,
-  },
-  {
-    title: "Quality & Customer Support",
-    desc: "Responsive clinical coordination & care.",
-    target: "services:6",
-    icon: HeartHandshake,
-  },
+const SERVICES_ITEMS = [
+  { num: "01", title: "Importation & Distribution", desc: "FDA-compliant national supply to hospitals.", target: "services:1" },
+  { num: "02", title: "Product Marketing", desc: "Clinical positioning & specialty awareness.", target: "services:2" },
+  { num: "03", title: "Sales & Commercialization", desc: "Dedicated surgical & hospital coverage.", target: "services:3" },
+  { num: "04", title: "Market Development", desc: "Regional clinic expansion nationwide.", target: "services:4" },
+  { num: "05", title: "Professional Education", desc: "Surgeon workshops, symposia & wet-labs.", target: "services:5" },
+  { num: "06", title: "Quality & Customer Support", desc: "Responsive clinical coordination & care.", target: "services:6" },
 ];
 
-const RESOURCES_ITEMS: { title: string; desc: string; target: string; icon: LucideIcon }[] = [
-  {
-    title: "Product-Approved Literature",
-    desc: "Clinical dossiers & DFU references.",
-    target: "resources:1",
-    icon: FileText,
-  },
-  {
-    title: "Professional Education",
-    desc: "Ophthalmic training materials & guides.",
-    target: "resources:2",
-    icon: BookOpen,
-  },
-  {
-    title: "Official Regulatory Guidance",
-    desc: "Compliance & Philippine FDA filings.",
-    target: "resources:4",
-    icon: ShieldCheck,
-  },
+const RESOURCES_ITEMS = [
+  { title: "Product-Approved Literature", desc: "Clinical dossiers & DFU references.", target: "resources:1" },
+  { title: "Professional Education", desc: "Ophthalmic training materials & guides.", target: "resources:2" },
+  { title: "Official Regulatory Guidance", desc: "Compliance & Philippine FDA filings.", target: "resources:4" },
 ];
 
-const highlightClassName = "bg-[#72c5f8]/15 rounded-lg";
+const highlightClassName = "bg-white/[0.065] rounded-[10px]";
 
 export function MotionNavigationMenuDemo({
   viewport,
@@ -166,12 +98,12 @@ export function MotionNavigationMenuDemo({
     <div className="flex min-h-full w-full items-center justify-center px-6">
       <MotionNavigationMenu
         viewport={viewport}
-        viewportClassName="bg-[#07142c]/95 border border-[#72c5f8]/20 rounded-xl shadow-[0_22px_54px_rgba(2,8,22,0.62)] text-[#f6f2ea]"
+        viewportClassName="bg-[#0c1018]/95 border border-white/[0.09] rounded-2xl shadow-[0_28px_64px_rgba(0,0,0,0.68)] text-[#f6f2ea]"
         springBounce={springBounce}
         springStiffness={springStiffness}
         springDamping={springDamping}
       >
-        <MotionNavigationMenuList highlightClassName="bg-[#72c5f8]/15 rounded-lg">
+        <MotionNavigationMenuList highlightClassName="bg-white/[0.065] rounded-lg">
           <MotionNavigationMenuItem>
             <MotionNavigationMenuLink
               href="#top"
@@ -190,23 +122,20 @@ export function MotionNavigationMenuDemo({
                 <MotionNavigationMenuLink
                   href="#about"
                   data-slide-target="0"
-                  className="min-h-44 justify-between rounded-lg bg-[#0d2248]/70 p-4 border border-white/10"
+                  className="min-h-44 justify-between rounded-[10px] border border-white/[0.075] bg-gradient-to-b from-white/[0.045] to-white/[0.015] p-4"
                 >
-                  <span className="flex items-center justify-between gap-2">
-                    <span className="flex size-9 items-center justify-center rounded-lg border border-[#72c5f8]/25 bg-[#0a1d40]">
-                      <Building2 className="size-4 text-[#72c5f8]" />
-                    </span>
+                  <span className="block pt-0.5">
                     <img
                       src="assets/img/mediq-logo-white.png"
                       alt="MEDIQ Pharma"
-                      className="h-5 w-auto object-contain opacity-90"
+                      className="h-7 w-auto object-contain object-left opacity-95"
                     />
                   </span>
                   <span className="space-y-1">
                     <span className="block text-sm font-semibold text-white">
                       About MEDIQ Pharma
                     </span>
-                    <span className="block text-xs text-[#9eb4cc]">
+                    <span className="block text-xs text-[#94a3b8]">
                       Connecting global ophthalmic innovation with Philippine surgical centres.
                     </span>
                   </span>
@@ -219,13 +148,10 @@ export function MotionNavigationMenuDemo({
                       data-slide-target={item.slide}
                     >
                       <span className="flex items-center justify-between gap-2 text-sm font-medium text-white">
-                        <span className="flex items-center gap-1.5">
-                          <item.icon className="size-3.5 text-[#72c5f8]" />
-                          {item.title}
-                        </span>
-                        <ArrowUpRight className="size-3 text-[#72c5f8]" />
+                        <span>{item.title}</span>
+                        <ArrowUpRight className="size-3 text-white/35" />
                       </span>
-                      <span className="text-xs text-[#9eb4cc]">{item.desc}</span>
+                      <span className="text-xs text-[#94a3b8]">{item.desc}</span>
                     </MotionNavigationMenuLink>
                   ))}
                 </div>
@@ -242,9 +168,9 @@ export function MotionNavigationMenuDemo({
                 <MotionNavigationMenuLink
                   href="#products"
                   data-product-slide="1"
-                  className="min-h-44 justify-between rounded-lg bg-[#0d2248]/70 p-4 border border-white/10"
+                  className="min-h-44 justify-between rounded-[10px] border border-white/[0.075] bg-gradient-to-b from-white/[0.045] to-white/[0.015] p-4"
                 >
-                  <div className="flex items-center justify-center rounded-lg bg-[#08152e]/80 p-2 border border-white/10">
+                  <div className="flex items-center justify-center py-1">
                     <img
                       src="assets/img/packshots/galaxy_carton.png?v=2"
                       alt="RayOne Galaxy Spiral IOL"
@@ -252,11 +178,13 @@ export function MotionNavigationMenuDemo({
                     />
                   </div>
                   <span className="space-y-1">
-                    <span className="flex items-center gap-1.5 text-sm font-semibold text-white">
-                      <Sparkles className="size-3.5 text-[#72c5f8]" />
+                    <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-white/50">
+                      New · 2026
+                    </span>
+                    <span className="block text-sm font-semibold text-white">
                       RayOne Galaxy Spiral IOL
                     </span>
-                    <span className="block text-xs text-[#9eb4cc]">
+                    <span className="block text-xs text-[#94a3b8]">
                       Full-range spiral optic engineered with Rayner UK.
                     </span>
                   </span>
@@ -270,9 +198,9 @@ export function MotionNavigationMenuDemo({
                     >
                       <span className="flex items-center justify-between gap-2 text-sm font-medium text-white">
                         {product.title}
-                        <ArrowUpRight className="size-3 text-[#72c5f8]" />
+                        <ArrowUpRight className="size-3 text-white/35" />
                       </span>
-                      <span className="text-xs text-[#9eb4cc]">{product.desc}</span>
+                      <span className="text-xs text-[#94a3b8]">{product.desc}</span>
                     </MotionNavigationMenuLink>
                   ))}
                 </div>
@@ -289,21 +217,20 @@ export function MotionNavigationMenuDemo({
                 <MotionNavigationMenuLink
                   href="#brands"
                   data-deck-target="brands:1"
-                  className="min-h-44 justify-between rounded-lg bg-[#0d2248]/70 p-4 border border-white/10"
+                  className="min-h-44 justify-between rounded-[10px] border border-white/[0.075] bg-gradient-to-b from-white/[0.045] to-white/[0.015] p-4"
                 >
-                  <div className="flex h-16 items-center justify-center rounded-lg border border-white/10 bg-[#08152e]/80 px-3">
+                  <span className="block pt-0.5">
                     <img
                       src="assets/img/rayner-logo-white.png"
                       alt="Rayner UK"
-                      className="h-7 w-auto object-contain"
+                      className="h-6 w-auto object-contain object-left opacity-95"
                     />
-                  </div>
+                  </span>
                   <span className="space-y-1">
-                    <span className="flex items-center gap-1.5 text-sm font-semibold text-white">
-                      <Award className="size-3.5 text-[#72c5f8]" />
+                    <span className="block text-sm font-semibold text-white">
                       Exclusive Rayner Partner
                     </span>
-                    <span className="block text-xs text-[#9eb4cc]">
+                    <span className="block text-xs text-[#94a3b8]">
                       Authorized Philippine distributor for British ophthalmic innovation.
                     </span>
                   </span>
@@ -312,19 +239,19 @@ export function MotionNavigationMenuDemo({
                   <MotionNavigationMenuLink href="#brands" data-deck-target="brands:1">
                     <span className="flex items-center justify-between gap-2 text-sm font-medium text-white">
                       Principal Brands
-                      <ArrowUpRight className="size-3 text-[#72c5f8]" />
+                      <ArrowUpRight className="size-3 text-white/35" />
                     </span>
-                    <span className="text-xs text-[#9eb4cc]">
+                    <span className="text-xs text-[#94a3b8]">
                       Global ophthalmic &amp; surgical principals.
                     </span>
                   </MotionNavigationMenuLink>
                   <MotionNavigationMenuLink href="#brands" data-deck-target="brands:2">
                     <span className="flex items-center justify-between gap-2 text-sm font-medium text-white">
                       Brand Profiles
-                      <ArrowUpRight className="size-3 text-[#72c5f8]" />
+                      <ArrowUpRight className="size-3 text-white/35" />
                     </span>
-                    <span className="text-xs text-[#9eb4cc]">
-                      Portfolio alignment &amp; manufacturer history.
+                    <span className="text-xs text-[#94a3b8]">
+                      Portfolio alignment &amp; heritage.
                     </span>
                   </MotionNavigationMenuLink>
                   <MotionNavigationMenuLink
@@ -332,13 +259,10 @@ export function MotionNavigationMenuDemo({
                     download="RayOne EMV Platform Brochure 2024_2.2.pdf"
                   >
                     <span className="flex items-center justify-between gap-2 text-sm font-medium text-white">
-                      <span className="flex items-center gap-1.5">
-                        <Download className="size-3.5 text-[#72c5f8]" />
-                        Downloadable Brochures
-                      </span>
-                      <ArrowUpRight className="size-3 text-[#72c5f8]" />
+                      Downloadable Brochures
+                      <ArrowUpRight className="size-3 text-white/35" />
                     </span>
-                    <span className="text-xs text-[#9eb4cc]">
+                    <span className="text-xs text-[#94a3b8]">
                       2026 RayOne EMV Platform PDF.
                     </span>
                   </MotionNavigationMenuLink>
@@ -353,7 +277,7 @@ export function MotionNavigationMenuDemo({
             </MotionNavigationMenuTrigger>
             <MotionNavigationMenuContent highlightClassName={highlightClassName}>
               <div className="w-[430px] space-y-1">
-                <div className="px-2 py-1.5 text-xs font-medium text-[#72c5f8]">
+                <div className="px-2.5 py-1.5 text-xs font-medium text-white/45">
                   Built for Philippine healthcare institutions
                 </div>
                 {SERVICES_ITEMS.map((service) => (
@@ -361,20 +285,18 @@ export function MotionNavigationMenuDemo({
                     key={service.title}
                     href="#distribution"
                     data-deck-target={service.target}
-                    className="grid grid-cols-[auto_1fr_auto] items-center gap-3"
+                    className="grid grid-cols-[24px_1fr_auto] items-center gap-3"
                   >
-                    <span className="flex size-8 items-center justify-center rounded-lg bg-white/5 border border-white/10">
-                      <service.icon className="size-4 text-[#72c5f8]" />
+                    <span className="font-mono text-xs font-medium text-white/40">
+                      {service.num}
                     </span>
                     <span className="space-y-0.5">
                       <span className="block text-sm font-medium text-white">
                         {service.title}
                       </span>
-                      <span className="block text-xs text-[#9eb4cc]">{service.desc}</span>
+                      <span className="block text-xs text-[#94a3b8]">{service.desc}</span>
                     </span>
-                    <span className="rounded-lg px-2 py-0.5 text-xs text-[#72c5f8] border border-[#72c5f8]/25">
-                      View
-                    </span>
+                    <span className="text-xs text-white/45">View</span>
                   </MotionNavigationMenuLink>
                 ))}
               </div>
@@ -394,20 +316,17 @@ export function MotionNavigationMenuDemo({
                       href="#resources"
                       data-deck-target={res.target}
                     >
-                      <span className="flex items-center gap-2 text-sm font-medium text-white">
-                        <res.icon className="size-3.5 text-[#72c5f8]" />
-                        {res.title}
-                      </span>
-                      <span className="text-xs text-[#9eb4cc]">{res.desc}</span>
+                      <span className="text-sm font-medium text-white">{res.title}</span>
+                      <span className="text-xs text-[#94a3b8]">{res.desc}</span>
                     </MotionNavigationMenuLink>
                   ))}
                 </div>
                 <MotionNavigationMenuLink
                   href="#resources"
                   data-deck-target="resources:3"
-                  className="min-h-44 justify-between rounded-lg bg-[#0d2248]/70 p-4 border border-white/10"
+                  className="min-h-44 justify-between rounded-[10px] border border-white/[0.075] bg-gradient-to-b from-white/[0.045] to-white/[0.015] p-4"
                 >
-                  <div className="overflow-hidden rounded-md border border-white/10 h-20 w-full">
+                  <div className="h-20 w-full overflow-hidden rounded-md border border-white/10">
                     <img
                       src="assets/img/rayone-emv-brochure.jpg"
                       alt="2026 Corporate Profile & Clinical Brochure"
@@ -415,15 +334,14 @@ export function MotionNavigationMenuDemo({
                     />
                   </div>
                   <span className="space-y-1">
-                    <span className="flex items-center gap-1.5 text-sm font-semibold text-white">
-                      <Sparkles className="size-3.5 text-[#72c5f8]" />
+                    <span className="block text-sm font-semibold text-white">
                       2026 Corporate Profile
                     </span>
-                    <span className="block text-xs text-[#9eb4cc]">
+                    <span className="block text-xs text-[#94a3b8]">
                       Company credentials, principals, and institutional overview.
                     </span>
                   </span>
-                  <span className="text-xs font-medium text-[#72c5f8]">
+                  <span className="text-xs font-medium text-white/80">
                     Read profile →
                   </span>
                 </MotionNavigationMenuLink>

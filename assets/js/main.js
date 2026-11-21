@@ -10875,7 +10875,9 @@ if (document.readyState === 'loading') {
             setTimeout(() => window.refreshPrincipalPel(), 240);
           }
         }
-        if (typeof window.__triggerLotticiStagger === 'function') {
+        if (displayIdx === 0 && typeof window.__revealLandingHost === 'function') {
+          window.__revealLandingHost(sec);
+        } else if (displayIdx > 0 && typeof window.__triggerLotticiStagger === 'function') {
           window.__triggerLotticiStagger(slide);
         }
         if (isSubpage && slide.id !== 'srv-book-carousel-slide' && slide.firstElementChild && typeof window.__playSubpage3DEntrance === 'function') {

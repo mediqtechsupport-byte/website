@@ -35,7 +35,7 @@
       h: 356,
       rotZ: 0,
       isMain: true,
-      img: 'assets/img/hero-products.jpg',
+      img: 'assets/img/book-01-importation.jpg?v=1.0',
       slideIndex: 1,
       cards: [
         {
@@ -84,7 +84,7 @@
       h: 342,
       rotZ: -1.5,
       isMain: false,
-      img: 'assets/img/rayone-emv-brochure.jpg',
+      img: 'assets/img/book-02-product-marketing.jpg?v=1.0',
       slideIndex: 2,
       cards: [
         {
@@ -133,7 +133,7 @@
       h: 368,
       rotZ: 1.2,
       isMain: false,
-      img: 'assets/activities/3.jpg',
+      img: 'assets/img/book-03-sales.jpg?v=1.0',
       slideIndex: 3,
       cards: [
         {
@@ -182,7 +182,7 @@
       h: 332,
       rotZ: -2,
       isMain: false,
-      img: 'assets/img/scene_daylight_city.jpg',
+      img: 'assets/img/book-04-market-development.jpg?v=1.0',
       slideIndex: 4,
       cards: [
         {
@@ -231,7 +231,7 @@
       h: 350,
       rotZ: 1.5,
       isMain: false,
-      img: 'assets/activities/5.jpg',
+      img: 'assets/img/book-05-education.jpg?v=1.0',
       slideIndex: 5,
       cards: [
         {
@@ -280,7 +280,7 @@
       h: 362,
       rotZ: -1,
       isMain: true,
-      img: 'assets/activities/mediq1.jpg',
+      img: 'assets/img/book-06-quality.jpg?v=1.0',
       slideIndex: 6,
       cards: [
         {
@@ -328,23 +328,27 @@
       .map(
         (h) => `
           <li class="bc-spread-highlight-item">
-            <span class="bc-spread-dot" aria-hidden="true"></span>
+            <span class="bc-spread-dash" aria-hidden="true">&mdash;</span>
             <span>${escapeHtml(h)}</span>
           </li>`
       )
       .join('');
     const cardsHtml = book.cards
-      .map(
-        (c) => `
+      .map((c, ci) => {
+        const idxNum = String(ci + 1).padStart(2, '0');
+        const tagLabel = c.tag || c.code || '';
+        return `
           <div class="bc-paper-card">
-            <div class="bc-paper-card__meta">
-              <span class="bc-paper-card__code">${escapeHtml(c.code)}</span>
-              <span class="bc-paper-card__tag">${escapeHtml(c.tag)}</span>
+            <div class="bc-paper-card__idx" aria-hidden="true">${idxNum}</div>
+            <div class="bc-paper-card__main">
+              <div class="bc-paper-card__meta">
+                <h4 class="bc-paper-card__title">${escapeHtml(c.title)}</h4>
+                <span class="bc-paper-card__tag">${escapeHtml(tagLabel)}</span>
+              </div>
+              <p class="bc-paper-card__desc">${escapeHtml(c.desc)}</p>
             </div>
-            <h4 class="bc-paper-card__title">${escapeHtml(c.title)}</h4>
-            <p class="bc-paper-card__desc">${escapeHtml(c.desc)}</p>
-          </div>`
-      )
+          </div>`;
+      })
       .join('');
 
     return `
@@ -365,23 +369,24 @@
             <div class="bc-face bc-inside" style="width:${BASE_OPEN_W}px;">
               <div class="bc-inside-spread">
                 <div class="bc-spread-topbar">
-                  <span class="bc-spread-eyebrow">SERVICE PILLAR ${escapeHtml(book.num)} &bull; MEDIQ</span>
+                  <span class="bc-spread-eyebrow">MEDIQ SERVICES</span>
+                  <span class="bc-spread-folio">VOL. ${escapeHtml(book.num)}</span>
                 </div>
-                ${
-                  book.img
-                    ? `<div class="bc-spread-thumb"><img src="${escapeHtml(book.img)}" alt="${escapeHtml(book.title)}" loading="lazy" /><div class="bc-spread-thumb__veil"></div><span class="bc-spread-thumb__vol">VOL. ${escapeHtml(book.num)} &bull; OVERVIEW</span></div>`
-                    : ''
-                }
                 <div class="bc-spread-heading">
                   <span class="bc-spread-volnum">${escapeHtml(book.num)}</span>
                   <h3 class="bc-spread-title">${escapeHtml(book.title)}</h3>
                 </div>
                 <div class="bc-spread-rule"></div>
                 <p class="bc-spread-sub">${escapeHtml(book.subtitle)}</p>
+                ${
+                  book.img
+                    ? `<figure class="bc-spread-figure"><div class="bc-spread-thumb"><img src="${escapeHtml(book.img)}" alt="${escapeHtml(book.title)}" loading="lazy" /></div><figcaption class="bc-spread-caption">PLATE ${escapeHtml(book.num)} &mdash; ${escapeHtml(book.badge || 'MEDIQ SOP')}</figcaption></figure>`
+                    : ''
+                }
                 <div class="bc-spread-highlights">
                   <div class="bc-spread-highlights__head">
                     <span class="bc-spread-highlights__kicker">KEY SCOPE &amp; STANDARDS</span>
-                    <span class="bc-spread-badge">${escapeHtml(book.badge || 'MEDIQ SOP')}</span>
+                    <span class="bc-spread-badge">${escapeHtml(book.inquiry || 'Services')}</span>
                   </div>
                   <ul class="bc-spread-highlight-list">${highlightsHtml}</ul>
                 </div>
@@ -397,7 +402,7 @@
           <div class="bc-face bc-page" style="transform:translateZ(${sW / 2 - 1}px);">
             <div class="bc-page-spread">
               <div class="bc-page-toprow">
-                <span class="bc-page-kicker">CORE DELIVERABLES &bull; 01 &mdash; 04</span>
+                <span class="bc-page-kicker">CORE DELIVERABLES</span>
                 <div class="bc-page-toprow-right">
                   <span class="bc-page-ref">P. ${escapeHtml(book.num)}</span>
                   <button type="button" class="bc-book-top-close" aria-label="Close service book">
