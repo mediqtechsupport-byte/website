@@ -15364,25 +15364,7 @@
       }
       #about #forge-about-sticky .abt-forge-media-box > button,
       #about #wwd-forge-sticky .abt-forge-media-box > button {
-        display: inline-flex !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        left: 50% !important;
-        right: auto !important;
-        bottom: 10px !important;
-        translate: -50% 0 !important;
-        transform: none !important;
-        padding: 4.5px 11px !important;
-        border-radius: 999px !important;
-        background: transparent !important;
-        backdrop-filter: blur(6px) !important;
-        -webkit-backdrop-filter: blur(6px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.30) !important;
-        box-shadow: none !important;
-        text-shadow: 0 1px 6px rgba(0, 0, 0, 0.65) !important;
-        font-size: 8.5px !important;
-        letter-spacing: 0.16em !important;
-        color: rgba(241, 245, 249, 0.94) !important;
+        display: none !important;
       }
       #about #forge-about-sticky .forge-panels-stack,
       #about #wwd-forge-sticky .forge-panels-stack {
@@ -16401,6 +16383,73 @@
         filter: drop-shadow(0 0 0 rgba(114, 197, 248, 0));
       }
     }
+    /* Mobile About Up/Down stage stepper pill (hidden on desktop >= 1024px) */
+    .abt-mobile-stepper {
+      display: none;
+    }
+    @media (max-width: 1023px) {
+      #about #forge-about-sticky .abt-forge-media-box > button,
+      #about #wwd-forge-sticky .abt-forge-media-box > button {
+        display: none !important;
+      }
+      #about .abt-forge-media-box .abt-mobile-stepper {
+        position: absolute;
+        left: auto;
+        right: 10px;
+        bottom: 10px;
+        transform: none;
+        z-index: 15;
+        display: inline-flex;
+        align-items: center;
+        gap: 0;
+        padding: 2px 3px;
+        border-radius: 9999px;
+        background: transparent;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        box-shadow: none;
+      }
+      #about .abt-mobile-stepper .abt-stepper-btn {
+        position: relative;
+        width: 28px;
+        height: 24px;
+        border-radius: 9999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(241, 245, 249, 0.9);
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: transform 0.14s ease, background-color 0.16s ease, color 0.16s ease;
+      }
+      #about .abt-mobile-stepper .abt-stepper-btn svg {
+        width: 12px;
+        height: 12px;
+      }
+      #about .abt-mobile-stepper .abt-stepper-btn--next {
+        color: #72c5f8;
+      }
+      #about .abt-mobile-stepper .abt-stepper-btn--next::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1px;
+        height: 11px;
+        background: rgba(255, 255, 255, 0.18);
+      }
+      #about .abt-mobile-stepper .abt-stepper-btn:active {
+        transform: scale(0.92);
+        background: rgba(114, 197, 248, 0.16);
+      }
+      #about .abt-mobile-stepper .abt-stepper-count {
+        display: none;
+      }
+    }
     @keyframes mqAccentShimmer {
       0% { background-position: 0% 50%; }
       100% { background-position: 200% 50%; }
@@ -16745,7 +16794,7 @@
   <script src="assets/js/foundation-logo-data.js?v=1.00" defer></script>
   <script src="assets/js/foundation-particles-gl.js?v=4.64" defer></script>
   <script src="assets/js/foundation-vr-scene.js?v=1.03" defer></script>
-  <script src="assets/js/main.js?v=388.52" defer></script>
+  <script src="assets/js/main.js?v=388.53" defer></script>
   <script src="assets/js/motion-navbar.js?v=1.00" defer></script>
   <script src="assets/js/galaxy-delivery-3d.js?v=14.41" defer></script>
   <script src="assets/js/about-route-globe.js?v=9.01" defer></script>

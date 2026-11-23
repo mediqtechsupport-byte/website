@@ -7582,6 +7582,88 @@ function initAboutDeckController() {
     if (forgeMediaBox && !forgeMediaBox.getAttribute('data-mobile-banner')) {
       forgeMediaBox.setAttribute('data-mobile-banner', 'Who We Are');
     }
+    function mountAboutMobileStepper(mediaBox, totalCount, onPrev, onNext) {
+      if (!mediaBox) return { setStage() {} };
+      let wrap = mediaBox.querySelector('.abt-mobile-stepper');
+      if (!wrap) {
+        wrap = document.createElement('div');
+        wrap.className = 'abt-mobile-stepper';
+        wrap.setAttribute('role', 'group');
+        wrap.setAttribute('aria-label', 'Section stage controls');
+        wrap.innerHTML =
+          '<button type="button" class="abt-stepper-btn abt-stepper-btn--prev" data-step="prev" aria-label="Previous stage">' +
+            '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 13V3M4.5 6.5 8 3l3.5 3.5"/></svg>' +
+          '</button>' +
+          '<span class="abt-stepper-count">01 / 0' + totalCount + '</span>' +
+          '<button type="button" class="abt-stepper-btn abt-stepper-btn--next" data-step="next" aria-label="Next stage">' +
+            '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v10M4.5 9.5 8 13l3.5-3.5"/></svg>' +
+          '</button>';
+        mediaBox.appendChild(wrap);
+      }
+      const prevControl = wrap.querySelector('[data-step="prev"]');
+      const nextControl = wrap.querySelector('[data-step="next"]');
+      const countEl = wrap.querySelector('.abt-stepper-count');
+      if (prevControl && !prevControl._bound) {
+        prevControl._bound = true;
+        prevControl.addEventListener('click', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          onPrev();
+        });
+      }
+      if (nextControl && !nextControl._bound) {
+        nextControl._bound = true;
+        nextControl.addEventListener('click', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          onNext();
+        });
+      }
+      if (!mediaBox._abtSwipeBound) {
+        mediaBox._abtSwipeBound = true;
+        let sx = 0, sy = 0;
+        mediaBox.addEventListener('touchstart', (e) => {
+          if (!e.touches || e.touches.length !== 1) return;
+          sx = e.touches[0].clientX;
+          sy = e.touches[0].clientY;
+        }, { passive: true });
+        mediaBox.addEventListener('touchend', (e) => {
+          if (window.innerWidth > 1023 || !e.changedTouches || !e.changedTouches.length) return;
+          if (e.target && e.target.closest && e.target.closest('.abt-mobile-stepper')) return;
+          const dx = sx - e.changedTouches[0].clientX;
+          const dy = sy - e.changedTouches[0].clientY;
+          if (Math.abs(dy) >= 42 && Math.abs(dy) > Math.abs(dx) * 1.25) {
+            if (dy > 0) onNext();
+            else onPrev();
+          }
+        }, { passive: true });
+      }
+      return {
+        setStage(idx) {
+          if (countEl) countEl.textContent = '0' + (idx + 1) + ' / 0' + totalCount;
+        }
+      };
+    }
+    const forgeStepper = mountAboutMobileStepper(
+      forgeMediaBox,
+      3,
+      () => {
+        const cur = window.__forgeAbtActiveStage || 0;
+        if (cur > 0 && window.jumpForgeAboutStage) {
+          window.jumpForgeAboutStage(cur - 1);
+        } else {
+          subScroll.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      },
+      () => {
+        const cur = window.__forgeAbtActiveStage || 0;
+        if (cur < 2 && window.jumpForgeAboutStage) {
+          window.jumpForgeAboutStage(cur + 1);
+        } else if (typeof goToSlide === 'function') {
+          goToSlide(2);
+        }
+      }
+    );
     const forgeNumEl = document.getElementById('forge-abt-num');
     const forgeCatEl = document.getElementById('forge-abt-cat');
     const forgeFrameCatEl = document.getElementById('forge-abt-frame-cat');
@@ -7643,6 +7725,7 @@ function initAboutDeckController() {
       if (forgeMediaBox) {
         forgeMediaBox.setAttribute('data-mobile-banner', ['Who We Are', 'Our Mission', 'Our Vision'][activeStage] || 'Who We Are');
       }
+      forgeStepper.setStage(activeStage);
 
       forgeBgs.forEach((bg, idx) => {
         bg.style.opacity = idx === activeStage ? '1' : '0';
@@ -7670,6 +7753,10 @@ function initAboutDeckController() {
 
     window.jumpForgeAboutStage = function(stageIdx) {
       if (!forgeBlock || !subScroll) return;
+      if (window.innerWidth <= 1023) {
+        const inner = forgeBlock.querySelector('#forge-about-sticky > .relative.z-10');
+        if (inner) inner.scrollTop = 0;
+      }
       const blockTop = forgeBlock.offsetTop;
       const scrollRange = Math.max(1, forgeBlock.offsetHeight - subScroll.clientHeight);
       const frac = stageIdx === 0 ? 0 : (stageIdx === 1 ? 0.50 : 1.0);
@@ -7686,6 +7773,26 @@ function initAboutDeckController() {
     if (wwdMediaBox && !wwdMediaBox.getAttribute('data-mobile-banner')) {
       wwdMediaBox.setAttribute('data-mobile-banner', 'Strategic importation and distribution');
     }
+    const wwdStepper = mountAboutMobileStepper(
+      wwdMediaBox,
+      6,
+      () => {
+        const cur = window.__wwdForgeActiveStage || 0;
+        if (cur > 0 && window.jumpWwdForgeStage) {
+          window.jumpWwdForgeStage(cur - 1);
+        } else if (typeof goToSlide === 'function') {
+          goToSlide(1);
+        }
+      },
+      () => {
+        const cur = window.__wwdForgeActiveStage || 0;
+        if (cur < 5 && window.jumpWwdForgeStage) {
+          window.jumpWwdForgeStage(cur + 1);
+        } else if (typeof goToSlide === 'function') {
+          goToSlide(3);
+        }
+      }
+    );
     const wwdForgeNumEl = document.getElementById('wwd-forge-num');
     const wwdForgeCatEl = document.getElementById('wwd-forge-cat');
     const wwdForgeFrameCatEl = document.getElementById('wwd-forge-frame-cat');
@@ -7759,6 +7866,7 @@ function initAboutDeckController() {
         const wwdTitle = (wwdForgePanels[activeStage] && wwdForgePanels[activeStage].getAttribute('data-title')) || 'What We Do';
         wwdMediaBox.setAttribute('data-mobile-banner', wwdTitle);
       }
+      wwdStepper.setStage(activeStage);
 
       wwdForgeBgs.forEach((bg, idx) => {
         bg.style.opacity = idx === activeStage ? '1' : '0';
@@ -7790,6 +7898,10 @@ function initAboutDeckController() {
 
     window.jumpWwdForgeStage = function(stageIdx) {
       if (!wwdForgeBlock || !subScroll) return;
+      if (window.innerWidth <= 1023) {
+        const inner = wwdForgeBlock.querySelector('#wwd-forge-sticky > .relative.z-10');
+        if (inner) inner.scrollTop = 0;
+      }
       const blockTop = getWwdForgeBlockTop();
       const scrollRange = Math.max(1, wwdForgeBlock.offsetHeight - subScroll.clientHeight);
       const frac = Math.min(1, Math.max(0, stageIdx / 5));
