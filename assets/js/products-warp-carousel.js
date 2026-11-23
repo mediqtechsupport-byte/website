@@ -1472,7 +1472,8 @@ void main(){
       L.v = 0.6 * L.v + 0.4 * ((P - L.P) / dt);
       L.P = P;
       L.lastT = now;
-      if (Math.abs(e.clientX - L.downX) > 6) L.moved = true;
+      const moveThresh = e.pointerType === 'touch' ? 12 : 6;
+      if (Math.abs(e.clientX - L.downX) > moveThresh) L.moved = true;
       restDrawn = false;
       kick();
     });
@@ -1497,7 +1498,7 @@ void main(){
           const realIdx = mod(Math.round(L.P), realCount);
           const item = rawCards[realIdx];
           const v = (e.clientY - r.top - r.height / 2) / Math.max(0.01, unitCss);
-          if (u >= 26 && u <= 132 && v >= 104 && v <= 162 && item && options.onInquireClick) {
+          if (u >= 20 && u <= 135 && v >= 98 && v <= 165 && item && options.onInquireClick) {
             options.onInquireClick(item, realIdx);
             return;
           }

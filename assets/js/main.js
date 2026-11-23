@@ -71,6 +71,7 @@
       lines[1].style.width = open ? '1.5rem' : '';
     }
   };
+  window.__closeMediqMobileMenu = () => setMenu(false);
 
   if (toggle && menu) {
     toggle.addEventListener('click', (e) => {
@@ -333,7 +334,7 @@
         window.__resetAllSubpagesExcept(null);
       }
       if (typeof window.__unlockOuterPageScroll === 'function') {
-        window.__unlockOuterPageScroll();
+        window.__unlockOuterPageScroll({ skipRestore: true });
       }
 
       sweepTransitionCurtain();
@@ -375,9 +376,7 @@
       e.preventDefault();
 
       // Close mobile menu BEFORE scrolling
-      if (toggle && toggle.getAttribute('aria-expanded') === 'true') {
-        setMenu(false);
-      }
+      setMenu(false);
 
       // If this is an explicit subpage trigger (e.g., About -> Foundation, Services -> Product Marketing),
       // the subpage controller already aligned & locked the section; do not reset or run unlocked smooth scroll.
@@ -385,13 +384,15 @@
         return;
       }
 
+      e.__mediqNavHandled = true;
+
       // Top-level navigation (Home, About MEDIQ, Products, Brands, Services, Resources, Contact, Hero CTAs, Footer):
       // Reset ALL sections back to their specific Landing Page (Slide 0) and unlock main-page scrolling!
       if (typeof window.__resetAllSubpagesExcept === 'function') {
         window.__resetAllSubpagesExcept(null);
       }
       if (typeof window.__unlockOuterPageScroll === 'function') {
-        window.__unlockOuterPageScroll();
+        window.__unlockOuterPageScroll({ skipRestore: true });
       }
 
       sweepTransitionCurtain();
@@ -8948,11 +8949,27 @@ function initProductsDeckController() {
 
   // Global helper for direct button navigation to any section
   window.navigateToSection = function(selector) {
+    if (typeof window.__closeMediqMobileMenu === 'function') {
+      window.__closeMediqMobileMenu();
+    }
+    const brochureModal = document.getElementById('brochure-modal');
+    if (brochureModal && brochureModal.classList.contains('opacity-100')) {
+      const bClose = document.getElementById('brochure-close');
+      if (bClose) bClose.click();
+    }
+    const wwdModal = document.getElementById('wwd-modal');
+    if (wwdModal && !wwdModal.hidden && wwdModal.style.display !== 'none') {
+      const wClose = document.getElementById('wwd-modal-close');
+      if (wClose) wClose.click();
+    }
+    if (typeof window.__cancelUnlockRestore === 'function') {
+      window.__cancelUnlockRestore();
+    }
     if (typeof window.__resetAllSubpagesExcept === 'function') {
       window.__resetAllSubpagesExcept(null);
     }
     if (typeof window.__unlockOuterPageScroll === 'function') {
-      window.__unlockOuterPageScroll();
+      window.__unlockOuterPageScroll({ skipRestore: true });
     } else {
       unlockPage();
     }
@@ -10937,7 +10954,7 @@ if (document.readyState === 'loading') {
         window.__resetAllSubpagesExcept(null);
       }
       if (typeof window.__unlockOuterPageScroll === 'function') {
-        window.__unlockOuterPageScroll();
+        window.__unlockOuterPageScroll({ skipRestore: !!shouldScroll });
       } else {
         document.documentElement.classList.remove('mediq-subpage-locked');
         document.documentElement.style.overflow = '';
@@ -11682,11 +11699,16 @@ if (document.readyState === 'loading') {
   // Bind all navbar and dropdown items with [data-deck-target="deck:index"]
   document.querySelectorAll('[data-deck-target]').forEach((link) => {
     link.addEventListener('click', (e) => {
+      if (typeof window.__closeMediqMobileMenu === 'function') {
+        window.__closeMediqMobileMenu();
+      }
       const raw = link.getAttribute('data-deck-target') || '';
       const [deckKey, idxStr] = raw.split(':');
       const idx = parseInt(idxStr || '0', 10);
       if (deckKey && DECK_MAP[deckKey]) {
         e.preventDefault();
+        if (idx === 0 && e.__mediqNavHandled) return;
+        e.__mediqNavHandled = true;
         goToDeckSlide(deckKey, idx, true);
       }
     });
@@ -11694,9 +11716,15 @@ if (document.readyState === 'loading') {
 
   // Also ensure any link to #contact opens Contact overview cleanly and resets open subpages
   document.addEventListener('click', (e) => {
+    if (e.__mediqNavHandled) return;
     const a = e.target.closest && e.target.closest('a[href="#contact"]');
     if (a && !a.hasAttribute('data-deck-target')) {
-      goToDeckSlide('contact', 0, true);
+      e.preventDefault();
+      if (typeof window.navigateToSection === 'function') {
+        window.navigateToSection('#contact');
+      } else {
+        goToDeckSlide('contact', 0, true);
+      }
     }
   });
 
@@ -12241,13 +12269,13 @@ if (document.readyState === 'loading') {
     const diff = targetY - currentY;
     if (Math.abs(diff) > 0.45) {
       currentY += diff * (1 - Math.exp(-13.2 * dt));
-      window.scrollTo(0, currentY);
+      window.scrollTo({ top: currentY, left: 0, behavior: 'instant' });
       applyGrailTransforms(currentY);
       if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll(currentY);
       requestAnimationFrame(tick);
     } else {
       currentY = targetY;
-      window.scrollTo(0, currentY);
+      window.scrollTo({ top: currentY, left: 0, behavior: 'instant' });
       applyGrailTransforms(currentY);
       if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll(currentY);
       isAnimating = false;
@@ -12294,6 +12322,27 @@ if (document.readyState === 'loading') {
   // Programmatic smooth glide API for navbar links, dropdowns, and page indicator dots
   // Multi-page jumps pre-position smoothly right before the target section so intermediate WebGL canvases stay asleep.
   window.grailScrollTo = function(targetElOrY) {
+    if (typeof window.__cancelUnlockRestore === 'function') {
+      window.__cancelUnlockRestore();
+    }
+    if (typeof window.__closeMediqMobileMenu === 'function') {
+      window.__closeMediqMobileMenu();
+    }
+    if (window.innerWidth < 1024) {
+      clearTimeout(snapTimer);
+      isAnimating = false;
+      lastTickTs = 0;
+      const liveDest = typeof targetElOrY === 'number'
+        ? Math.max(0, targetElOrY)
+        : (targetElOrY && typeof targetElOrY.getBoundingClientRect === 'function'
+          ? Math.max(0, Math.round(targetElOrY.getBoundingClientRect().top + window.scrollY))
+          : 0);
+      currentY = liveDest;
+      targetY = liveDest;
+      window.scrollTo({ top: liveDest, left: 0, behavior: 'smooth' });
+      if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll(liveDest);
+      return;
+    }
     measureSections();
     let destY = 0;
     if (typeof targetElOrY === 'number') {
@@ -12329,6 +12378,9 @@ if (document.readyState === 'loading') {
 
   // Immediate zero-latency snap API for locking flush onto a subpage host section
   window.grailSnapTo = function(targetElOrY) {
+    if (typeof window.__cancelUnlockRestore === 'function') {
+      window.__cancelUnlockRestore();
+    }
     clearTimeout(snapTimer);
     isAnimating = false;
     measureSections();
@@ -12392,6 +12444,14 @@ if (document.readyState === 'loading') {
   };
 
   let lastLockedHostEl = null;
+  let pendingRestoreRaf = 0;
+
+  window.__cancelUnlockRestore = function() {
+    if (pendingRestoreRaf) {
+      cancelAnimationFrame(pendingRestoreRaf);
+      pendingRestoreRaf = 0;
+    }
+  };
 
   const setActiveSubpageHost = (secEl) => {
     document.querySelectorAll('.mediq-subpage-active-host').forEach((el) => {
@@ -12403,7 +12463,8 @@ if (document.readyState === 'loading') {
     }
   };
 
-  window.__unlockOuterPageScroll = function() {
+  window.__unlockOuterPageScroll = function(opts) {
+    window.__cancelUnlockRestore();
     edgeAccum = 0;
     const hostToRestore = lastLockedHostEl;
     lastLockedHostEl = null;
@@ -12413,8 +12474,9 @@ if (document.readyState === 'loading') {
     document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
     document.documentElement.style.scrollSnapType = '';
-    if (hostToRestore && window.innerWidth < 1024) {
-      requestAnimationFrame(() => {
+    if (!(opts && opts.skipRestore) && hostToRestore && window.innerWidth < 1024) {
+      pendingRestoreRaf = requestAnimationFrame(() => {
+        pendingRestoreRaf = 0;
         if (window.__isAnyMediqSubpageOpen && window.__isAnyMediqSubpageOpen()) return;
         if (typeof window.grailSnapTo === 'function') {
           window.grailSnapTo(hostToRestore);

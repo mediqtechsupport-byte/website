@@ -991,6 +991,37 @@
     };
   }
 
+  function openProductInquiry(it) {
+    if (!it) return;
+    if ((detailMode || box3dMode) && typeof exitDetailMode === 'function') {
+      exitDetailMode(false);
+    }
+    const cleanTitle = (it.title || '').replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+    const codePart = it.code ? ` (${it.code})` : '';
+    const preferredTopic = activeSubpage === 1 ? 'IOL portfolio' : 'Hospital supply';
+    const topicBtn = document.querySelector(`#contact-topic-pills button[data-contact-topic="${preferredTopic}"]`);
+    if (topicBtn) topicBtn.click();
+    const subj = document.getElementById('inq-subject');
+    if (subj) {
+      subj.value = `Product Inquiry: ${cleanTitle}${codePart}`;
+    }
+    const msg = document.getElementById('inq-message');
+    if (msg && (!msg.value.trim() || msg.value.startsWith('I would like to inquire about '))) {
+      msg.value = `I would like to inquire about ${cleanTitle}${codePart}.`;
+    }
+    if (typeof window.navigateToSection === 'function') {
+      window.navigateToSection('#contact');
+    } else {
+      if (typeof window.goToProductSlide === 'function') window.goToProductSlide(0);
+      if (typeof window.__unlockOuterPageScroll === 'function') window.__unlockOuterPageScroll({ skipRestore: true });
+      const contactSec = document.getElementById('contact');
+      if (contactSec) contactSec.scrollIntoView({ behavior: 'smooth' });
+    }
+    if (msg && window.innerWidth >= 1024) {
+      setTimeout(() => { try { msg.focus({ preventScroll: true }); } catch (_) {} }, 600);
+    }
+  }
+
   let warpCtrl = null;
   function ensureWarpCarousel() {
     if (warpCtrl || !warpMountEl || typeof window.createMediqWarpCarousel !== 'function') return warpCtrl;
@@ -1015,31 +1046,7 @@
         if (it) enterDetailMode(it);
       },
       onInquireClick(card) {
-        const it = card && card.itemRef;
-        if (!it) return;
-        const cleanTitle = (it.title || '').replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-        const codePart = it.code ? ` (${it.code})` : '';
-        const preferredTopic = activeSubpage === 1 ? 'IOL portfolio' : 'Hospital supply';
-        const topicBtn = document.querySelector(`#contact-topic-pills button[data-contact-topic="${preferredTopic}"]`);
-        if (topicBtn) topicBtn.click();
-        const subj = document.getElementById('inq-subject');
-        if (subj) {
-          subj.value = `Product Inquiry: ${cleanTitle}${codePart}`;
-        }
-        const msg = document.getElementById('inq-message');
-        if (msg && (!msg.value.trim() || msg.value.startsWith('I would like to inquire about '))) {
-          msg.value = `I would like to inquire about ${cleanTitle}${codePart}.`;
-        }
-        if (typeof window.navigateToSection === 'function') {
-          window.navigateToSection('#contact');
-        } else {
-          if (typeof window.goToProductSlide === 'function') window.goToProductSlide(0);
-          const contactSec = document.getElementById('contact');
-          if (contactSec) contactSec.scrollIntoView({ behavior: 'smooth' });
-        }
-        if (msg) {
-          setTimeout(() => { try { msg.focus({ preventScroll: true }); } catch (_) {} }, 550);
-        }
+        openProductInquiry(card && card.itemRef);
       }
     });
     return warpCtrl;
@@ -1140,8 +1147,7 @@
         if (has3dBox) {
           enter3dBoxInspectMode(item);
         } else {
-          const contactSec = document.getElementById('contact');
-          if (contactSec) contactSec.scrollIntoView({ behavior: 'smooth' });
+          openProductInquiry(item);
         }
       });
     }
