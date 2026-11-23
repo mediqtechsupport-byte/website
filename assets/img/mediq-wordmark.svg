@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1792 552" fill="none" role="img" aria-label="MEDIQ Pharma and Medical Supplies Distribution">
+  <g fill="#FFFFFF" shape-rendering="geometricPrecision">
+    <path d="M11 449L96.5 5L250 356L403.5 5L489 449H442.5L386.5 164L250 464L113.5 164L57.5 449H11Z"/>
+    <path d="M545 26H764V69H591V196H758V238H591V406H764V449H545V26Z"/>
+    <path fill-rule="evenodd" d="M845 26H948A211 211.5 0 0 1 948 449H845V26ZM891 69V406H948A165 168.5 0 0 0 948 69H891Z"/>
+    <path d="M1227 26H1273V449H1227V26Z"/>
+    <path fill-rule="evenodd" d="M1559 19A220 218.5 0 1 0 1559 456A220 218.5 0 1 0 1559 19ZM1559 62A174.5 175.5 0 1 1 1559 413A174.5 175.5 0 1 1 1559 62Z"/>
+    <path d="M1553 279H1612L1779 449H1720L1553 279Z"/>
+  </g>
+  <text x="14" y="534" textLength="1762" lengthAdjust="spacing" fill="#E6F0FA" font-family="Instrument Sans, Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="64" font-weight="600" letter-spacing="8" text-rendering="geometricPrecision">PHARMA AND MEDICAL SUPPLIES DISTRIBUTION</text>
+</svg>

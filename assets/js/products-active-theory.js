@@ -596,7 +596,7 @@
 
     <!-- 5. Floating Return Button when inspecting card detail or 3D box -->
     <button type="button" id="at-work-back-spiral-btn" class="at-work-back-spiral-btn is-hidden">
-      <span>&lt;- BACK TO CAROUSEL</span>
+      <span>&larr; Back</span>
     </button>
 
     <!-- 6. Bottom-Left "WHAT ARE YOU LOOKING FOR?" ChatDOM Terminal -->
@@ -941,6 +941,8 @@
   // 3. WARP CAROUSEL CARD MAPPING & FILTERING (Mesh matched 1:1 to Box Color)
   // ============================================================================
   const WARP_SPECS = {
+    'rayone-galaxy': { value: '0%', unit: '', detail: 'ring', preset: 'obsidian' },
+    'rayone-galaxy-toric': { value: '0%', unit: '', detail: 'ring', preset: 'pearl' },
     'rayone-emv': { value: '1.5', unit: 'D', detail: 'slider', labels: ['Monofocal', 'Binocular EDoF'], preset: 'magenta' },
     'rayone-trifocal': { value: '89', unit: '%', detail: 'ring', preset: 'cerulean' },
     'rayone-trifocal-toric': { value: '1.8', unit: '°', detail: 'cross', labels: ['AVH', 'Haptic', 'Toric'], preset: 'cobalt' },
@@ -982,6 +984,7 @@
       numeral: p.numeral,
       glow: p.glow || item.accent,
       accent: p.accent || item.accent,
+      lightCard: !!p.lightCard,
       detail: spec.detail || ['slider', 'cross', 'ring', 'wave'][idx % 4],
       labels: spec.labels || ['MediQ', 'in', 'out'],
       itemRef: item
@@ -1099,12 +1102,6 @@
       <div class="at-detail-showcase-frame">
         <!-- Giant Matte-Black 3D Embossed Background Letters (00:12 - 00:15 in video) -->
         <div class="at-detail-embossed-bg" aria-hidden="true">${embossRepeated}</div>
-
-        <!-- Top Micro Controls inside the 16:10 Frame -->
-        <div class="relative z-10 w-full flex items-center justify-between text-[10px] font-mono tracking-[0.18em] text-white/60 uppercase">
-          <span>${item.brand} &bull; ${item.code}</span>
-          <span>${item.badge}</span>
-        </div>
 
         <!-- Center Hero Lockup (Packshot + Giant Display Title + Subtitle + Pill CTA) -->
         <div class="at-detail-hero-center">

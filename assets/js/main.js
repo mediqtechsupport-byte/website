@@ -6219,13 +6219,7 @@ if (window.gsap && window.ScrollTrigger && footerWrap) {
       scrollTrigger: { trigger: footerWrap, start: 'top 80%', end: 'bottom bottom', scrub: 1 }
     });
   }
-  const headingEl = footerWrap.querySelector('#footer-heading');
-  if (headingEl) {
-    gsap.fromTo(headingEl, { y: 16, opacity: 0.25 }, {
-      y: 0, opacity: 1, ease: 'power3.out',
-      scrollTrigger: { trigger: footerWrap, start: 'top 95%', end: 'bottom bottom', scrub: 1 }
-    });
-  }
+  // Keep #footer-heading crisp and static (avoid downward translateY overlapping subtitle on mobile/partial scroll)
 
   document.querySelectorAll('.magnetic-pill').forEach((el) => {
     el.addEventListener('mousemove', (e) => {
@@ -7583,6 +7577,10 @@ function initAboutDeckController() {
   // Drive Forge Automotive (01/03) & What We Do (01/06) pinned scroll showcases inside the isolated active sub-page
   if (subScroll) {
     const forgeBlock = document.getElementById('about-vision-mission-block');
+    const forgeMediaBox = forgeBlock ? forgeBlock.querySelector('.abt-forge-media-box') : null;
+    if (forgeMediaBox && !forgeMediaBox.getAttribute('data-mobile-banner')) {
+      forgeMediaBox.setAttribute('data-mobile-banner', 'Who We Are');
+    }
     const forgeNumEl = document.getElementById('forge-abt-num');
     const forgeCatEl = document.getElementById('forge-abt-cat');
     const forgeFrameCatEl = document.getElementById('forge-abt-frame-cat');
@@ -7607,24 +7605,25 @@ function initAboutDeckController() {
       const rawP = Math.min(1, Math.max(0, (subScroll.scrollTop - blockTop) / scrollRange));
       const stageP = rawP * 2; // 0.0 -> 1.0 -> 2.0 across the 3 stages
 
-      // Continuous clip-path curtain wipe + kinematic zoom with full-reveal plateau so no top sliver remains
-      const t1 = Math.min(1, Math.max(0, stageP / 0.85));
-      const t2 = Math.min(1, Math.max(0, (stageP - 1) / 0.85));
-
-      if (forgeImgs[0]) {
-        forgeImgs[0].style.transform = `scale(${(1.06 - t1 * 0.06).toFixed(4)})`;
-      }
-      if (forgeWraps[1] && forgeImgs[1]) {
-        forgeWraps[1].style.clipPath = `inset(${((1 - t1) * 100).toFixed(2)}% 0 0 0)`;
-        forgeImgs[1].style.transform = `scale(${(1.16 - t1 * 0.16).toFixed(4)})`;
-      }
-      if (forgeWraps[2] && forgeImgs[2]) {
-        forgeWraps[2].style.clipPath = `inset(${((1 - t2) * 100).toFixed(2)}% 0 0 0)`;
-        forgeImgs[2].style.transform = `scale(${(1.16 - t2 * 0.16).toFixed(4)})`;
-      }
-
       // Active stage index (0 = Who We Are, 1 = Our Mission, 2 = Our Vision)
       const activeStage = stageP < 0.5 ? 0 : (stageP < 1.5 ? 1 : 2);
+      const isCompact = window.innerWidth <= 1023;
+      const t1 = isCompact ? (activeStage >= 1 ? 1 : 0) : Math.min(1, Math.max(0, (stageP - 0.35) / 0.30));
+      const t2 = isCompact ? (activeStage >= 2 ? 1 : 0) : Math.min(1, Math.max(0, (stageP - 1.35) / 0.30));
+
+      if (forgeImgs[0]) {
+        forgeImgs[0].style.transform = `scale(${(isCompact ? 1 : (1.06 - t1 * 0.06)).toFixed(4)})`;
+      }
+      if (forgeWraps[1] && forgeImgs[1]) {
+        forgeWraps[1].style.transition = isCompact ? 'clip-path 0.32s cubic-bezier(0.22, 1, 0.36, 1)' : '';
+        forgeWraps[1].style.clipPath = `inset(${((1 - t1) * 100).toFixed(2)}% 0 0 0)`;
+        forgeImgs[1].style.transform = `scale(${(isCompact ? 1 : (1.16 - t1 * 0.16)).toFixed(4)})`;
+      }
+      if (forgeWraps[2] && forgeImgs[2]) {
+        forgeWraps[2].style.transition = isCompact ? 'clip-path 0.32s cubic-bezier(0.22, 1, 0.36, 1)' : '';
+        forgeWraps[2].style.clipPath = `inset(${((1 - t2) * 100).toFixed(2)}% 0 0 0)`;
+        forgeImgs[2].style.transform = `scale(${(isCompact ? 1 : (1.16 - t2 * 0.16)).toFixed(4)})`;
+      }
       window.__forgeAbtActiveStage = activeStage;
       const activeVid = forgeImgs[activeStage];
       if (currentIndex === 1 && activeSubpageIdx === 1) {
@@ -7640,6 +7639,9 @@ function initAboutDeckController() {
       if (forgeFrameCatEl) forgeFrameCatEl.textContent = abtMeta.cat;
       if (forgeSlEl) forgeSlEl.textContent = abtMeta.sl;
       if (forgeSvEl) forgeSvEl.textContent = abtMeta.sv;
+      if (forgeMediaBox) {
+        forgeMediaBox.setAttribute('data-mobile-banner', ['Who We Are', 'Our Mission', 'Our Vision'][activeStage] || 'Who We Are');
+      }
 
       forgeBgs.forEach((bg, idx) => {
         bg.style.opacity = idx === activeStage ? '1' : '0';
@@ -7679,6 +7681,10 @@ function initAboutDeckController() {
     // Forge Automotive Services (01 / 06) Pinned Scroll-Scrub Showcase inside #about-slide-what-we-do
     const wwdSec = document.getElementById('about-slide-what-we-do');
     const wwdForgeBlock = document.getElementById('wwd-forge-services-block');
+    const wwdMediaBox = wwdForgeBlock ? wwdForgeBlock.querySelector('.abt-forge-media-box') : null;
+    if (wwdMediaBox && !wwdMediaBox.getAttribute('data-mobile-banner')) {
+      wwdMediaBox.setAttribute('data-mobile-banner', 'Strategic importation and distribution');
+    }
     const wwdForgeNumEl = document.getElementById('wwd-forge-num');
     const wwdForgeCatEl = document.getElementById('wwd-forge-cat');
     const wwdForgeFrameCatEl = document.getElementById('wwd-forge-frame-cat');
@@ -7712,24 +7718,28 @@ function initAboutDeckController() {
       const rawP = Math.min(1, Math.max(0, (subScroll.scrollTop - blockTop) / scrollRange));
       const stageP = rawP * 5; // 0.0 -> 5.0 across the 6 capability stages
 
+      const activeStage = Math.min(5, Math.max(0, Math.round(stageP)));
+      const isCompactWwd = window.innerWidth <= 1023;
+
       // Layer 0 base scale
       if (wwdForgeImgs[0]) {
         const t0 = Math.min(1, Math.max(0, stageP));
-        wwdForgeImgs[0].style.transform = `scale(${(1.06 - t0 * 0.06).toFixed(4)})`;
+        wwdForgeImgs[0].style.transform = `scale(${(isCompactWwd ? 1 : (1.06 - t0 * 0.06)).toFixed(4)})`;
       }
 
-      // Layers 1..5 continuous bottom-up clip-path curtain wipe + kinematic zoom with full-reveal plateau
+      // Layers 1..5 clean stage-snapped wipe on mobile (zero bottom split-tear) and deadzone-protected scrub on desktop
       for (let k = 1; k < 6; k++) {
-        const tk = Math.min(1, Math.max(0, (stageP - (k - 1)) / 0.85));
+        const tk = isCompactWwd
+          ? (activeStage >= k ? 1 : 0)
+          : Math.min(1, Math.max(0, (stageP - (k - 0.65)) / 0.30));
         const wrapEl = wwdForgeWraps[k];
         const imgEl = wwdForgeImgs[k];
         if (wrapEl && imgEl) {
+          wrapEl.style.transition = isCompactWwd ? 'clip-path 0.32s cubic-bezier(0.22, 1, 0.36, 1)' : '';
           wrapEl.style.clipPath = `inset(${((1 - tk) * 100).toFixed(2)}% 0 0 0)`;
-          imgEl.style.transform = `scale(${(1.16 - tk * 0.16).toFixed(4)})`;
+          imgEl.style.transform = `scale(${(isCompactWwd ? 1 : (1.16 - tk * 0.16)).toFixed(4)})`;
         }
       }
-
-      const activeStage = Math.min(5, Math.max(0, Math.round(stageP)));
       window.__wwdForgeActiveStage = activeStage;
       const activeWwdVid = wwdForgeImgs[activeStage];
       if (currentIndex === 1 && activeSubpageIdx === 2) {
@@ -7744,6 +7754,10 @@ function initAboutDeckController() {
       if (wwdForgeFrameCatEl) wwdForgeFrameCatEl.textContent = meta.cat;
       if (wwdForgeSlEl) wwdForgeSlEl.textContent = meta.sl;
       if (wwdForgeSvEl) wwdForgeSvEl.textContent = meta.sv;
+      if (wwdMediaBox) {
+        const wwdTitle = (wwdForgePanels[activeStage] && wwdForgePanels[activeStage].getAttribute('data-title')) || 'What We Do';
+        wwdMediaBox.setAttribute('data-mobile-banner', wwdTitle);
+      }
 
       wwdForgeBgs.forEach((bg, idx) => {
         bg.style.opacity = idx === activeStage ? '1' : '0';
@@ -11193,7 +11207,7 @@ if (document.readyState === 'loading') {
           const bw = s.bw, bh = s.bh, sc = s.cssW / bw;
           const grow = 1 - Math.pow(1 - clamp(level, 0, 1), 3);
           const narrow = s.cssW < 560;
-          const span = clamp((s.nameW || s.cssW * 0.3) * s.reach, 60, 320) * (0.5 + 0.5 * grow);
+          const span = clamp((s.nameW || s.cssW * (narrow ? 0.55 : 0.3)) * (narrow ? 0.68 : s.reach), narrow ? 88 : 60, 320) * (0.5 + 0.5 * grow);
           const R = clamp(s.headH * (narrow ? 0.95 : 1.12), 68, 195) * (0.55 + 0.45 * grow);
           const effStrength = Math.min(1, strength * 1.1) * s.dim;
           const fade = smoothstep(0, 0.35, level) * effStrength * (1 - s.dry * 0.08);
@@ -11215,12 +11229,12 @@ if (document.readyState === 'loading') {
           }
           const xs = Math.max(0, Math.floor(x0)), xe = Math.min(bw - 1, Math.ceil(x1));
           const ys = Math.max(0, Math.floor(y0)), ye = Math.min(bh - 1, Math.ceil(y1));
-          const bandTop = s.nameH ? s.nameTop - s.nameH * 0.3 : 0;
-          const bandBottom = s.nameH ? s.nameTop + s.nameH * 1.02 : s.headH - 6;
+          const bandTop = s.nameH ? (narrow ? s.nameTop - Math.max(14, s.nameH * 0.55) : s.nameTop - s.nameH * 0.3) : 0;
+          const bandBottom = s.nameH ? (narrow ? s.nameTop + s.nameH + Math.max(10, s.nameH * 0.35) : s.nameTop + s.nameH * 1.02) : s.headH - 6;
           const top = (BLEED + Math.max(0, bandTop)) / sc;
           const bottom = (BLEED + bandBottom) / sc;
-          const feather = Math.min(36, (bandBottom - bandTop) * 0.4) / sc;
-          const side = Math.max(s.bleedX - 4, 28) / sc;
+          const feather = (narrow ? Math.min(18, (bandBottom - bandTop) * 0.35) : Math.min(36, (bandBottom - bandTop) * 0.4)) / sc;
+          const side = (narrow ? Math.max(s.bleedX - 2, 10) : Math.max(s.bleedX - 4, 28)) / sc;
 
           for (let y = ys; y <= ye; y++) {
             const env = smoothstep(top, top + feather, y) * (1 - smoothstep(bottom - feather, bottom, y));
@@ -11308,7 +11322,10 @@ if (document.readyState === 'loading') {
           if (s.btn) s.btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
           if (s.panel) s.panel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
 
-          const rest = Math.min(0.5, residue * (0.55 + s.dry * 0.75));
+          const narrowRow = s.cssW > 0 && s.cssW < 560;
+          const rest = narrowRow
+            ? Math.min(0.55, residue * 1.65 * (0.65 + s.dry * 0.6))
+            : Math.min(0.5, residue * (0.55 + s.dry * 0.75));
           const next = pointed || isOpen ? 1 : (residue > 0 ? 0.75 : 0);
           const dim = pointed ? 1 : isOpen ? (elsewhere ? 0.25 : 1) : rest;
           if (next !== s.target || dim !== s.dimTarget) s.lastActive = performance.now();
@@ -11324,6 +11341,7 @@ if (document.readyState === 'loading') {
 
       smears.forEach((s, i) => {
         const li = s.li;
+        let touchClearTimer = 0;
         if (s.btn) {
           s.btn.addEventListener('click', () => {
             s.pointer = false;
@@ -11345,7 +11363,6 @@ if (document.readyState === 'loading') {
           });
         }
         const onMove = (e) => {
-          if (e.pointerType === 'touch') return;
           const r = li.getBoundingClientRect();
           const hx = homeOf(s)[0];
           const w = s.nameW || s.cssW * 0.3;
@@ -11358,13 +11375,36 @@ if (document.readyState === 'loading') {
           s.pointer = true;
           kick();
         };
+        const endTouchBrush = (e) => {
+          if (e.pointerType !== 'touch') return;
+          if (touchClearTimer) clearTimeout(touchClearTimer);
+          touchClearTimer = setTimeout(() => {
+            touchClearTimer = 0;
+            s.pointer = false;
+            const [hx, hy] = homeOf(s);
+            s.tx = hx; s.ty = hy;
+            if (hovered === i) hovered = null;
+            syncTargets();
+          }, 650);
+        };
+        li.addEventListener('pointerdown', (e) => {
+          if (e.pointerType !== 'touch') return;
+          if (touchClearTimer) { clearTimeout(touchClearTimer); touchClearTimer = 0; }
+          hovered = i;
+          onMove(e);
+          syncTargets();
+        });
         li.addEventListener('pointerenter', (e) => {
-          if (e.pointerType !== 'touch') hovered = i;
+          if (e.pointerType === 'touch') return;
+          hovered = i;
           onMove(e);
           syncTargets();
         });
         li.addEventListener('pointermove', onMove);
-        li.addEventListener('pointerleave', () => {
+        li.addEventListener('pointerup', endTouchBrush);
+        li.addEventListener('pointercancel', endTouchBrush);
+        li.addEventListener('pointerleave', (e) => {
+          if (e.pointerType === 'touch') return;
           s.pointer = false;
           const [hx, hy] = homeOf(s);
           s.tx = hx; s.ty = hy;
@@ -11406,7 +11446,6 @@ if (document.readyState === 'loading') {
     // Floating Cursor Image Reveal Preview for #brands (Slide 1 & Slide 2)
     (function initBrandsFloatingImageReveal() {
       if (typeof window === 'undefined' || !roots.length) return;
-      const mq = window.matchMedia ? window.matchMedia('(min-width: 768px)') : { matches: true };
 
       const preview = document.createElement('div');
       preview.id = 'pel-floating-preview';
@@ -11430,6 +11469,7 @@ if (document.readyState === 'loading') {
       let activeRow = null;
       let revealTimer = 0;
       let hideTimer = 0;
+      let touchHideTimer = 0;
       let rafId = 0;
       let targetX = 0;
       let targetY = 0;
@@ -11451,12 +11491,21 @@ if (document.readyState === 'loading') {
         });
       }
 
-      function clampViewportCoords(x, y) {
+      function clampViewportCoords(x, y, isTouch) {
         const vw = window.innerWidth || 1280;
         const vh = window.innerHeight || 800;
+        const isMobile = vw <= 767;
+        const halfW = isMobile ? 94 : 155;
+        const topPad = isMobile ? 120 : 185;
+        const botPad = isMobile ? 120 : 190;
+        let ty = y;
+        if (isTouch) {
+          ty = y - 125;
+          if (ty < topPad + 48) ty = y + 125;
+        }
         return [
-          Math.max(155, Math.min(vw - 155, x)),
-          Math.max(185, Math.min(vh - 190, y))
+          Math.max(halfW, Math.min(vw - halfW, x)),
+          Math.max(topPad, Math.min(vh - botPad, ty))
         ];
       }
 
@@ -11482,6 +11531,7 @@ if (document.readyState === 'loading') {
       function hidePreview() {
         activeRow = null;
         if (revealTimer) { clearTimeout(revealTimer); revealTimer = 0; }
+        if (touchHideTimer) { clearTimeout(touchHideTimer); touchHideTimer = 0; }
         preview.dataset.visible = 'false';
         if (hideTimer) clearTimeout(hideTimer);
         hideTimer = setTimeout(() => {
@@ -11493,12 +11543,13 @@ if (document.readyState === 'loading') {
         }, 300);
       }
 
-      function showRowPreview(li, e) {
-        if (!mq.matches || (e && e.pointerType === 'touch')) return;
+      function showRowPreview(li, e, immediate) {
+        if (!li || !e) return;
         const src = li.getAttribute('data-hover-img');
         if (!src) return;
         preloadAll();
         if (hideTimer) { clearTimeout(hideTimer); hideTimer = 0; }
+        if (touchHideTimer) { clearTimeout(touchHideTimer); touchHideTimer = 0; }
 
         const fit = li.getAttribute('data-hover-fit') || 'cover';
         const sub = li.getAttribute('data-hover-sub') || '';
@@ -11513,7 +11564,10 @@ if (document.readyState === 'loading') {
         if (titleEl) titleEl.textContent = titleText;
         if (subEl) subEl.textContent = sub;
 
-        const [cx, cy] = clampViewportCoords(e.clientX, e.clientY);
+        const isTouch = e.pointerType === 'touch';
+        const clientX = typeof e.clientX === 'number' ? e.clientX : 195;
+        const clientY = typeof e.clientY === 'number' ? e.clientY : 300;
+        const [cx, cy] = clampViewportCoords(clientX, clientY, isTouch);
         targetX = cx;
         targetY = cy;
         if (!hasPos) {
@@ -11524,7 +11578,11 @@ if (document.readyState === 'loading') {
           hasPos = true;
         }
         preview.classList.add('is-mounted');
-        if (activeRow !== li) {
+        if (immediate) {
+          if (revealTimer) { clearTimeout(revealTimer); revealTimer = 0; }
+          activeRow = li;
+          preview.dataset.visible = 'true';
+        } else if (activeRow !== li) {
           activeRow = li;
           if (revealTimer) clearTimeout(revealTimer);
           revealTimer = setTimeout(() => {
@@ -11540,28 +11598,55 @@ if (document.readyState === 'loading') {
       roots.forEach((root) => {
         const listEl = root.querySelector('.pel-list');
         if (listEl) {
-          listEl.addEventListener('pointerleave', hidePreview);
+          listEl.addEventListener('pointerleave', (e) => {
+            if (e.pointerType !== 'touch') hidePreview();
+          });
         }
         root.querySelectorAll('.pel-row[data-hover-img]').forEach((li) => {
           const trigger = li.querySelector('.pel-trigger');
           if (!trigger) return;
-          trigger.addEventListener('pointerenter', (e) => showRowPreview(li, e));
+          trigger.addEventListener('pointerenter', (e) => {
+            if (e.pointerType !== 'touch') showRowPreview(li, e, false);
+          });
+          trigger.addEventListener('pointerdown', (e) => {
+            if (e.pointerType === 'touch') {
+              if (touchHideTimer) { clearTimeout(touchHideTimer); touchHideTimer = 0; }
+              showRowPreview(li, e, true);
+            }
+          });
           trigger.addEventListener('pointermove', (e) => {
-            if (!mq.matches || e.pointerType === 'touch') return;
+            const isTouch = e.pointerType === 'touch';
             if (activeRow !== li) {
-              showRowPreview(li, e);
+              showRowPreview(li, e, isTouch);
               return;
             }
-            const [cx, cy] = clampViewportCoords(e.clientX, e.clientY);
+            const [cx, cy] = clampViewportCoords(e.clientX, e.clientY, isTouch);
             targetX = cx;
             targetY = cy;
             kickFollow();
           });
-          trigger.addEventListener('pointerleave', () => {
-            if (activeRow === li) hidePreview();
+          const endTouch = (e) => {
+            if (e.pointerType === 'touch') {
+              if (touchHideTimer) clearTimeout(touchHideTimer);
+              touchHideTimer = setTimeout(() => {
+                touchHideTimer = 0;
+                if (activeRow === li) hidePreview();
+              }, 2400);
+            }
+          };
+          trigger.addEventListener('pointerup', endTouch);
+          trigger.addEventListener('pointercancel', endTouch);
+          trigger.addEventListener('pointerleave', (e) => {
+            if (e.pointerType !== 'touch' && activeRow === li) hidePreview();
           });
         });
       });
+
+      document.addEventListener('pointerdown', (e) => {
+        if (!e.target || !e.target.closest || !e.target.closest('#brands .pel-row[data-hover-img]')) {
+          hidePreview();
+        }
+      }, { passive: true });
 
       const brandsSec = document.getElementById('brands');
       if (brandsSec) {
@@ -11576,9 +11661,6 @@ if (document.readyState === 'loading') {
         }
       }
       window.addEventListener('blur', hidePreview);
-      if (mq.addEventListener) {
-        mq.addEventListener('change', () => { if (!mq.matches) hidePreview(); });
-      }
       window.__hideBrandsHoverPreview = hidePreview;
     })();
 

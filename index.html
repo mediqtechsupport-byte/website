@@ -22,7 +22,7 @@
 
   <!-- Preload hero image & brand wordmark for fast LCP & instant splash clarity -->
   <link rel="preload" as="image" href="assets/img/hero-products.jpg?v=3" />
-  <link rel="preload" as="image" href="assets/img/mediq-wordmark-only.png?v=105.00" />
+  <link rel="preload" as="image" href="assets/img/mediq-wordmark.svg?v=1.0" />
   <link rel="icon"
     href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%230a1d40%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%228%22 fill=%22none%22 stroke=%22%233aa0db%22 stroke-width=%222.5%22/%3E%3C/svg%3E" />
 
@@ -633,28 +633,80 @@
         #brands .pel-head {
           position: relative;
           z-index: 1;
+          display: grid;
+          grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+          align-items: end;
+          gap: 1rem clamp(1.5rem, 3.5vw, 3.5rem);
+          margin: 0 0 clamp(1.25rem, 2.4vw, 1.85rem);
+        }
+        #brands .pel-head-main {
           display: flex;
-          flex-wrap: wrap;
-          align-items: flex-end;
-          justify-content: space-between;
-          gap: 0.75rem 2rem;
-          margin: 0 0 clamp(0.85rem, 1.8vw, 1.4rem);
+          flex-direction: column;
+          gap: 0.55rem;
+          min-width: 0;
+        }
+        #brands .pel-eyebrow {
+          display: block;
+          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-size: 11px;
+          font-weight: 500;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: #72c5f8;
+          line-height: 1.4;
         }
         #brands .pel-title {
           margin: 0;
           font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-          font-size: clamp(1.85rem, 3.4vw, 3.1rem);
-          font-weight: 400;
+          font-size: clamp(1.85rem, 3.1vw, 2.85rem);
+          font-weight: 500;
           letter-spacing: -0.025em;
-          line-height: 1.04;
+          line-height: 1.1;
           color: #f4f7fb;
+          text-wrap: balance;
         }
         #brands .pel-intro {
           margin: 0;
-          max-width: 56ch;
-          font-size: clamp(0.84rem, 1.05vw, 0.96rem);
-          line-height: 1.48;
-          color: rgba(206, 224, 242, 0.88);
+          justify-self: end;
+          max-width: 54ch;
+          font-size: clamp(0.88rem, 1.02vw, 0.98rem);
+          line-height: 1.62;
+          color: rgba(206, 224, 242, 0.84);
+          text-wrap: pretty;
+        }
+        @media (max-width: 959px) {
+          #brands .pel-head {
+            grid-template-columns: minmax(0, 1fr);
+            align-items: start;
+            gap: 0.85rem;
+          }
+          #brands .pel-intro {
+            justify-self: start;
+            max-width: 62ch;
+          }
+        }
+        @media (max-width: 639px) {
+          #brands .pel-head {
+            gap: 0.65rem;
+            margin-bottom: 1rem;
+          }
+          #brands .pel-head-main {
+            gap: 0.45rem;
+          }
+          #brands .pel-eyebrow {
+            font-size: 10px;
+            letter-spacing: 0.14em;
+          }
+          #brands .pel-title {
+            font-size: clamp(23px, 6.4vw, 28px);
+            line-height: 1.14;
+            letter-spacing: -0.022em;
+          }
+          #brands .pel-intro {
+            font-size: 13.5px;
+            line-height: 1.58;
+            max-width: 100%;
+          }
         }
         #brands .pel-list {
           list-style: none;
@@ -793,9 +845,24 @@
           color: #72c5f8;
           line-height: 1.3;
         }
-        @media (max-width: 767px), (pointer: coarse) {
+        @media (max-width: 767px) {
           #pel-floating-preview {
-            display: none !important;
+            width: 172px;
+            height: 215px;
+          }
+          #pel-floating-preview .pel-float-card {
+            border-radius: 11px;
+          }
+          #pel-floating-preview .pel-float-caption {
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+          }
+          #pel-floating-preview .pel-float-title {
+            font-size: 11px;
+          }
+          #pel-floating-preview .pel-float-sub {
+            font-size: 8.5px;
           }
         }
         #brands .pel-trigger:focus-visible { outline: 2px solid #72c5f8; outline-offset: -2px; border-radius: 4px; }
@@ -4295,8 +4362,8 @@
       inset: 0;
       overflow: hidden;
       pointer-events: none;
-      -webkit-mask-image: url("assets/img/mediq-wordmark-only.png?v=105.00");
-      mask-image: url("assets/img/mediq-wordmark-only.png?v=105.00");
+      -webkit-mask-image: url("assets/img/mediq-wordmark.svg?v=1.0");
+      mask-image: url("assets/img/mediq-wordmark.svg?v=1.0");
       -webkit-mask-size: contain;
       mask-size: contain;
       -webkit-mask-repeat: no-repeat;
@@ -4466,7 +4533,7 @@
       <div class="pl-reticle-wrap" id="pl-reticle-wrap">
         <div class="pl-logo-core">
           <div class="pl-logo-wrap" id="pl-logo-wrap">
-            <img src="assets/img/mediq-wordmark-only.png?v=105.00"
+            <img src="assets/img/mediq-wordmark.svg?v=1.0"
               alt="MEDIQ Pharma and Medical Supplies Distribution"
               class="pl-logo-img" />
             <span class="pl-logo-sheen-mask" aria-hidden="true">
@@ -4492,9 +4559,18 @@
         aria-label="Main navigation">
 
         <!-- Left Brand Mark: Official MediQ Wordmark (Pure White on Transparent Background) -->
-        <a href="#hero" class="group flex items-center transition shrink-0" aria-label="MediQ Pharma Home">
-          <img src="assets/img/mediq-wordmark-only.png?v=105.00" alt="MEDIQ Pharma and Medical Supplies Distribution"
-            class="h-8 sm:h-9 xl:h-10 2xl:h-11 w-auto object-contain transition group-hover:opacity-90 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]" />
+        <a href="#hero" onclick="this.blur();" class="flex items-center shrink-0 outline-none focus:outline-none focus-visible:outline-none border-0 ring-0 focus:ring-0" style="outline:none!important;border:0!important;box-shadow:none!important;-webkit-tap-highlight-color:transparent;" aria-label="MediQ Pharma Home">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1792 552" fill="none" aria-hidden="true" class="h-9 sm:h-10 xl:h-10 2xl:h-11 w-auto block" style="outline:none!important;border:0!important;box-shadow:none!important;">
+            <g fill="#FFFFFF" shape-rendering="geometricPrecision">
+              <path d="M11 449L96.5 5L250 356L403.5 5L489 449H442.5L386.5 164L250 464L113.5 164L57.5 449H11Z"/>
+              <path d="M545 26H764V69H591V196H758V238H591V406H764V449H545V26Z"/>
+              <path fill-rule="evenodd" d="M845 26H948A211 211.5 0 0 1 948 449H845V26ZM891 69V406H948A165 168.5 0 0 0 948 69H891Z"/>
+              <path d="M1227 26H1273V449H1227V26Z"/>
+              <path fill-rule="evenodd" d="M1559 19A220 218.5 0 1 0 1559 456A220 218.5 0 1 0 1559 19ZM1559 62A174.5 175.5 0 1 1 1559 413A174.5 175.5 0 1 1 1559 62Z"/>
+              <path d="M1553 279H1612L1779 449H1720L1553 279Z"/>
+            </g>
+            <text x="14" y="534" textLength="1762" lengthAdjust="spacing" fill="#E6F0FA" font-family="Instrument Sans, Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="64" font-weight="600" letter-spacing="8" text-rendering="geometricPrecision">PHARMA AND MEDICAL SUPPLIES DISTRIBUTION</text>
+          </svg>
         </a>
 
         <!-- Center: MotionNavigationMenu (Sliding Highlight + Shared Morphing Viewport) -->
@@ -4654,7 +4730,7 @@
                     <a href="#about" data-slide-target="0" data-slot="navigation-menu-link"
                       class="motion-nav-featured flex min-h-44 flex-col justify-between rounded-[10px] p-4 text-left transition-colors">
                       <span class="block pt-0.5">
-                        <img src="assets/img/mediq-logo-white.png" alt="MEDIQ Pharma" class="h-7 w-auto object-contain object-left opacity-95" />
+                        <img src="assets/img/mediq-wordmark.svg?v=1.0" alt="MEDIQ Pharma" class="h-7 w-auto object-contain object-left opacity-95" />
                       </span>
                       <span class="space-y-1">
                         <span class="block text-sm font-semibold text-white">About MEDIQ Pharma</span>
@@ -8018,13 +8094,6 @@
             padding: 14px 16px 12px !important;
             gap: 6px !important;
           }
-          .at-detail-showcase-frame > div:first-of-type {
-            font-size: 8.5px !important;
-            letter-spacing: 0.08em !important;
-            gap: 6px !important;
-            flex-wrap: wrap !important;
-            margin-bottom: 4px !important;
-          }
           .at-detail-packshot-float {
             max-height: clamp(72px, 13svh, 96px) !important;
             margin-bottom: 8px !important;
@@ -8055,8 +8124,8 @@
           .at-work-back-spiral-btn {
             top: 10px !important;
             right: 14px !important;
-            padding: 6px 12px !important;
-            font-size: 9.5px !important;
+            padding: 5px 11px !important;
+            font-size: 10.5px !important;
           }
           .at-chat-wrapper {
             padding: 10px 14px 12px !important;
@@ -8382,31 +8451,33 @@
 
         .at-work-back-spiral-btn {
           position: absolute;
-          top: 20px;
-          right: 28px;
+          top: 16px;
+          right: 22px;
           z-index: 60;
           display: inline-flex;
           align-items: center;
-          gap: 8px;
-          padding: 9px 18px;
+          gap: 6px;
+          padding: 6px 12px;
           border-radius: 999px;
-          border: 1px solid rgba(255, 255, 255, 0.45);
-          background: rgba(6, 10, 22, 0.88);
-          backdrop-filter: blur(12px);
-          color: #ffffff;
-          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: 10.5px;
-          font-weight: 700;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
+          border: 1px solid rgba(255, 255, 255, 0.22);
+          background: transparent;
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
+          color: rgba(241, 245, 249, 0.88);
+          font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+          font-size: 11px;
+          font-weight: 400;
+          letter-spacing: 0.03em;
+          text-transform: none;
           pointer-events: auto;
           cursor: pointer;
-          transition: all 0.3s ease;
+          transition: all 0.25s ease;
         }
 
         .at-work-back-spiral-btn:hover {
-          border-color: var(--at-stage-accent, #00ffff);
-          color: var(--at-stage-accent, #00ffff);
+          border-color: rgba(114, 197, 248, 0.6);
+          background: rgba(255, 255, 255, 0.06);
+          color: #ffffff;
         }
 
         .at-work-back-spiral-btn.is-hidden {
@@ -8471,34 +8542,34 @@
 
               <!-- Executive Centered Hero Column (Commanding Display Scale + Symmetrical CTAs + Clinical Scope Bar) -->
               <div class="ih-hero-copy pointer-events-auto w-full max-w-5xl mx-auto relative z-20 !py-0 items-center text-center">
-                <p class="ih-eyebrow justify-center !gap-3.5 !text-[11.5px] sm:!text-[12.5px] !tracking-[0.22em]">
+                <p class="ih-eyebrow justify-center gap-3.5 text-[11.5px] sm:!text-[12.5px] tracking-[0.22em] sm:!tracking-[0.22em]">
                   <span class="hidden sm:inline-block h-px bg-gradient-to-r from-transparent to-sky/60 w-12"></span>
                   <span>OPHTHALMIC INNOVATIONS &nbsp;&bull;&nbsp; PRODUCT PORTFOLIO</span>
                   <span class="hidden sm:inline-block h-px bg-gradient-to-l from-transparent to-sky/60 w-12"></span>
                 </p>
 
                 <h2 id="products-title"
-                  class="ih-h1 prod-serif text-center !mt-5 !text-[38px] sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] !leading-[1.08] !tracking-[-0.03em] !font-normal">
+                  class="ih-h1 prod-serif text-center mt-5 text-[38px] sm:!mt-5 sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] leading-[1.08] sm:!leading-[1.08] tracking-[-0.03em] !font-normal">
                   Pioneering Optical &amp; <br class="hidden sm:inline" />Surgical <span class="text-[#72c5f8]">Solutions.</span>
                 </h2>
 
-                <p class="ih-lede ih-lead mx-auto text-center !mt-6 !max-w-[680px] !text-[15.5px] sm:!text-[17.5px] lg:!text-[18.5px] !leading-[1.68] !text-[#c8d8e8]">
+                <p class="ih-lede ih-lead mx-auto text-center mt-6 sm:!mt-6 max-w-[680px] sm:!max-w-[680px] text-[15.5px] sm:!text-[17.5px] lg:!text-[18.5px] leading-[1.68] sm:!leading-[1.68] text-[#c8d8e8]">
                   Established expertise in ophthalmic technologies. Exploring complementary medical devices, hospital
                   supplies, pharmaceutical and diagnostic opportunities, subject to applicable authorizations.
                 </p>
 
-                <div class="ih-hero-ctas justify-center !mt-9 !gap-4 sm:!gap-5">
+                <div class="ih-hero-ctas justify-center mt-6 sm:!mt-9 gap-2.5 sm:!gap-5">
                   <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(1);}"
-                    class="ih-btn-pill-primary min-w-0 lg:!min-w-[216px] !h-12 !px-7">
-                    <span>Explore Portfolio</span>
+                    class="ih-btn-pill-primary min-w-0 sm:!h-12 sm:!px-7 lg:!min-w-[216px]">
+                    <span>View Products</span>
                     <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M5 12h14" />
                       <path d="m13 6 6 6-6 6" />
                     </svg>
                   </button>
                   <a href="#contact" data-select-inquiry="Product Information"
-                    class="ih-btn-video-secondary group min-w-0 lg:!min-w-[216px] !h-12 !px-6 !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
-                    <span class="ih-play-circle !size-7 !border-[#72c5f8]/45">
+                    class="ih-btn-video-secondary group min-w-0 sm:!h-12 sm:!px-6 lg:!min-w-[216px] !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
+                    <span class="ih-play-circle sm:!size-7 !border-[#72c5f8]/45">
                       <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M7 17L17 7" />
                         <path d="M8 7h9v9" />
@@ -10567,7 +10638,7 @@
 
         <!-- 5. Floating Return Button when inspecting full 360° 3D Box Stage -->
         <button type="button" id="at-work-back-spiral-btn" class="at-work-back-spiral-btn is-hidden">
-          <span>&lt;- BACK TO CAROUSEL</span>
+          <span>&larr; Back</span>
         </button>
 
         <!-- 6. Bottom-Left "WHAT ARE YOU LOOKING FOR?" ChatDOM Terminal -->
@@ -11199,39 +11270,55 @@
           class="deck-slide absolute inset-x-0 top-20 bottom-0 w-full flex items-center justify-center transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10 overflow-y-auto lg:overflow-hidden"
           data-deck="brands" data-slide-index="0">
 
-          <!-- 3. Full-Bleed Right-Anchored 3D Humanoid + Spinning Globe Stage (Seamless Multi-Canvas 3D Blend) -->
+          <!-- 3. Full-Bleed Right-Anchored Clinical Ophthalmology Slit-Lamp Motion Stage (Zero-Lag Hardware Overlay Blend) -->
           <div id="brands-aller-silhouette-stage"
-            class="absolute inset-0 z-[5] overflow-hidden select-none"
-            style="-webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 20%, rgba(0,0,0,0.16) 29%, rgba(0,0,0,0.82) 38%, black 44%); mask-image: linear-gradient(to right, transparent 0%, transparent 20%, rgba(0,0,0,0.16) 29%, rgba(0,0,0,0.82) 38%, black 44%);">
-
-            <!-- Soft Ambient Radial Backlight Centered Behind the Humanoid & Globe -->
-            <div
-              class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_44%_54%_at_70%_50%,rgba(114,197,248,0.18)_0%,rgba(58,160,219,0.08)_46%,transparent_76%)] blur-2xl">
-            </div>
-
-            <!-- 3D WebGL Humanoid Bust + 88,000 Dispersing Particles + 3D Depth-Blended Holographic Globe -->
-            <canvas id="brands-aller-webgl-canvas" aria-hidden="true"
-              class="relative z-10 block w-full h-full transition-opacity duration-700 ease-out opacity-0"></canvas>
-
-            <!-- 2D Interactive ASCII Face Matrix Overlay Canvas -->
-            <canvas id="brands-aller-ascii-canvas" aria-hidden="true"
-              class="pointer-events-none absolute inset-0 z-20 block w-full h-full transition-opacity duration-700 ease-out opacity-0"></canvas>
-
-            <!-- 2D Transparent Hit-Layer & Micro-HUD Canvas Synced to the 3D Hand-Held Globe -->
-            <canvas id="brands-wireframe-globe-canvas"
-              aria-label="Interactive holographic globe spinning above a projector pedestal"
-              class="absolute inset-0 z-30 block w-full h-full transition-opacity duration-700 ease-out opacity-0"></canvas>
-
-            <!-- Gentle Peripheral Falloff Only at Extreme Edges (Zero Bottom/Left Crop Cutoff) -->
-            <div class="absolute inset-0 pointer-events-none z-[35]"
-              style="background: radial-gradient(ellipse 52% 62% at 72% 48%, transparent 56%, rgba(10,29,64,0.22) 82%, rgba(10,29,64,0.62) 100%), linear-gradient(to top, rgba(10,29,64,0.42) 0%, rgba(10,29,64,0.14) 8%, transparent 20%), linear-gradient(to bottom, rgba(10,29,64,0.42) 0%, transparent 12%);">
-            </div>
+            class="absolute inset-0 z-[5] overflow-hidden select-none pointer-events-none">
+            <video id="brands-slit-lamp-video"
+              src="assets/video/brands-slit-lamp-hero.mp4?v=3.0"
+              poster="assets/img/brands-hero-ophthalmologist.jpg?v=4.0"
+              autoplay loop muted playsinline preload="auto" disablePictureInPicture
+              aria-label="Ophthalmologist configuring a precision slit-lamp biomicroscope during an eye examination"
+              class="absolute inset-0 w-full h-full object-cover object-right select-none"
+              style="opacity: 0.90; transform: translate3d(0, 0, 0); backface-visibility: hidden;"></video>
+            <span aria-hidden="true" class="absolute inset-0 z-10 pointer-events-none"
+              style="background: linear-gradient(to right, #070b10 0%, #070b10 27%, rgba(7,11,16,0.94) 35%, rgba(7,11,16,0.72) 44%, rgba(7,11,16,0.34) 54%, rgba(7,11,16,0.10) 63%, transparent 72%), linear-gradient(to bottom, #070b10 0%, rgba(7,11,16,0.58) 10%, transparent 22%, transparent 78%, rgba(7,11,16,0.64) 91%, #070b10 100%), linear-gradient(to left, #070b10 0%, rgba(7,11,16,0.55) 4%, transparent 10%); transform: translate3d(0, 0, 0);"></span>
           </div>
-
-          <!-- 4. Text Readability Contrast Scrim (Soft Gradient, Transparent on Right Over Globe & Bust) -->
-          <div class="absolute inset-0 pointer-events-none z-[8]"
-            style="background: linear-gradient(to right, rgba(10,29,64,0.52) 0%, rgba(10,29,64,0.24) 34%, transparent 54%);">
-          </div>
+          <script>
+            (function () {
+              var v = document.getElementById('brands-slit-lamp-video');
+              if (!v) return;
+              v.muted = true;
+              v.defaultMuted = true;
+              v.loop = true;
+              v.playsInline = true;
+              v.defaultPlaybackRate = 0.88;
+              v.playbackRate = 0.88;
+              var isVisible = true;
+              var kick = function () {
+                if (window.innerWidth <= 1023 || !isVisible || document.hidden) return;
+                v.muted = true;
+                v.playbackRate = 0.88;
+                if (v.paused) {
+                  var p = v.play();
+                  if (p && typeof p.catch === 'function') p.catch(function () {});
+                }
+              };
+              v.addEventListener('loadeddata', kick);
+              v.addEventListener('canplay', kick);
+              document.addEventListener('visibilitychange', function () {
+                if (document.hidden) { v.pause(); } else { kick(); }
+              });
+              window.addEventListener('pageshow', kick);
+              if ('IntersectionObserver' in window) {
+                var sec = document.getElementById('brands') || v;
+                new IntersectionObserver(function (entries) {
+                  isVisible = entries.some(function (e) { return e.isIntersecting; });
+                  if (isVisible) { kick(); } else if (!v.paused) { v.pause(); }
+                }, { threshold: 0.05 }).observe(sec);
+              }
+              kick();
+            })();
+          </script>
 
           <div class="ih-shell relative z-20 w-full pointer-events-none">
             <div class="ih-hero !min-h-0 items-center">
@@ -11239,35 +11326,36 @@
               <!-- Left Copy Column: Exact Home & About Left Edge + Vertical Center Below Navbar -->
               <div class="ih-hero-copy pointer-events-auto max-w-2xl relative z-20 !py-0">
                 <p class="ih-eyebrow br-eyebrow">
+                  <span class="hidden sm:inline-block h-px bg-[#72c5f8]/65 w-7 mr-1 shrink-0"></span>
                   <span>GLOBAL HEALTHCARE PARTNERSHIPS &nbsp;&bull;&nbsp; OPHTHALMIC FOUNDATION</span>
-                  <span class="inline-block h-0.5 bg-sky/50 w-12 ml-1"></span>
                 </p>
 
-                <h2 id="brands-title" class="ih-h1 br-serif !font-normal">
+                <h2 id="brands-title"
+                  class="ih-h1 br-serif !font-normal !leading-[1.12] sm:!text-[42px] lg:!text-[46px] xl:!text-[52px]"
+                  style="text-wrap: balance;">
                   <span class="ih-h1-line">Bringing global</span>
                   <span class="ih-h1-line">medical technologies to</span>
-                  <span class="ih-h1-line">Philippine <span class="text-[#72c5f8]">institutions.</span></span>
+                  <span class="ih-h1-line"><span class="text-[#72c5f8]">Philippine institutions.</span></span>
                 </h2>
 
-                <p class="ih-lede br-lead">
-                  Beyond distribution, MEDIQ develops healthcare partnerships, builds product awareness and connects
-                  international medical technologies with Philippine institutions &mdash; anchored by our established
-                  specialty foundation in ophthalmology across importation and distribution, product marketing, sales and
-                  commercialization, market development, education, and quality and customer support.
+                <p class="ih-lede br-lead !max-w-[560px] !leading-[1.62]" style="text-wrap: pretty;">
+                  Beyond distribution, MEDIQ builds healthcare partnerships, product awareness, and local connections for
+                  international medical technologies &mdash; grounded in ophthalmology expertise.
                 </p>
 
                 <div class="ih-hero-ctas br-cta-row">
-                  <!-- Explore More -> Goes to Slide 1 (Principal Brands Portfolio) -->
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 1);}"
-                    class="inline-flex items-center justify-center h-12 px-8 rounded-md bg-[#3aa0db] hover:bg-[#72c5f8] text-[#0a1d40] text-[14.5px] font-bold tracking-[0.01em] shadow-[0_10px_28px_rgba(58,160,219,0.35)] border border-[#72c5f8]/50 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer lg:order-2">
-                    Explore More
-                  </button>
-
                   <!-- Partner with us -> Goes directly to Contact Info (#contact) -->
                   <a href="#contact"
-                    class="inline-flex items-center justify-center h-12 px-8 rounded-md border border-[#72c5f8]/35 bg-[#0a1d40]/80 hover:bg-[#72c5f8]/12 hover:border-[#72c5f8]/70 text-[#f4f7fb] text-[14.5px] font-semibold tracking-[0.01em] transition-all duration-200 hover:-translate-y-0.5 cursor-pointer lg:order-1">
-                    Partner with us
+                    class="inline-flex items-center justify-center gap-2 h-12 px-7 rounded-md bg-[#3aa0db] hover:bg-[#72c5f8] text-[#0a1d40] text-[14.5px] font-medium tracking-[0.01em] shadow-[0_10px_28px_rgba(58,160,219,0.32)] border border-[#72c5f8]/50 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer">
+                    <span>Partner with us</span>
+                    <span aria-hidden="true">&rarr;</span>
                   </a>
+
+                  <!-- Explore capabilities -> Goes to Slide 1 (Principal Brands Portfolio) -->
+                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 1);}"
+                    class="inline-flex items-center justify-center h-12 px-7 rounded-md border border-[#72c5f8]/35 bg-[#0a1d40]/75 hover:bg-[#72c5f8]/12 hover:border-[#72c5f8]/70 text-[#f4f7fb] text-[14.5px] font-normal tracking-[0.01em] transition-all duration-200 hover:-translate-y-0.5 cursor-pointer">
+                    Explore capabilities
+                  </button>
                 </div>
               </div>
 
@@ -11308,11 +11396,11 @@
           <section id="principal-pigment-ledger" class="pel-root relative z-20" aria-labelledby="pel-heading-principal">
             <div class="pel-wrap">
               <header class="pel-head">
-                <div class="flex w-full items-center justify-between gap-4">
-                  <span class="block font-mono text-[10.5px] uppercase tracking-[0.2em] text-[#72c5f8]">Brands &amp; Partners &middot; Principal Brands Portfolio</span>
+                <div class="pel-head-main">
+                  <span class="pel-eyebrow">Brands &amp; Partners &middot; Principal Brands Portfolio</span>
+                  <h3 id="pel-heading-principal" class="pel-title">Our Established Foundation<br><span class="text-[#72c5f8]">in Ophthalmic Distribution.</span></h3>
                 </div>
-                <h3 id="pel-heading-principal" class="pel-title">Our Established Foundation <span class="text-[#72c5f8]">in Ophthalmic Distribution.</span></h3>
-                <p class="pel-intro">Our Established Foundation: <strong class="font-semibold text-white">MEDIQ</strong> has established expertise in ophthalmology, including its exclusive Philippine distribution relationship for <strong class="font-semibold text-white">Rayner</strong> intraocular lenses from the United Kingdom.</p>
+                <p class="pel-intro"><strong class="font-semibold text-white">MEDIQ</strong> has established expertise in ophthalmology, including its exclusive Philippine distribution relationship for <strong class="font-semibold text-white">Rayner</strong> intraocular lenses from the United Kingdom.</p>
               </header>
 
               <ol class="pel-list">
@@ -11470,9 +11558,11 @@
           <section id="profiles-pigment-ledger" class="pel-root relative z-20" aria-labelledby="pel-heading-profiles">
             <div class="pel-wrap">
               <header class="pel-head">
-                <span class="block font-mono text-[10.5px] uppercase tracking-[0.2em] text-[#72c5f8]">Brands &amp; Partners &middot; Manufacturer &amp; Partnership Inquiry</span>
-                <h3 id="pel-heading-profiles" class="pel-title">Partner with MEDIQ <span class="text-[#72c5f8]">in Philippine Healthcare.</span></h3>
-                <p class="pel-intro">Partner with MEDIQ: responsible product marketing, institutional market development and dependable distribution for healthcare innovations in the Philippines &mdash; welcoming complementary medical devices, hospital supplies, pharmaceutical, and diagnostic principals subject to regulatory licensing and formal authorization.</p>
+                <div class="pel-head-main">
+                  <span class="pel-eyebrow">Brands &amp; Partners &middot; Manufacturer &amp; Partnership Inquiry</span>
+                  <h3 id="pel-heading-profiles" class="pel-title">Partner with MEDIQ<br><span class="text-[#72c5f8]">in Philippine Healthcare.</span></h3>
+                </div>
+                <p class="pel-intro">Responsible product marketing, institutional market development, and dependable distribution for healthcare innovations in the Philippines &mdash; welcoming complementary medical devices, hospital supplies, pharmaceutical, and diagnostic principals subject to regulatory licensing and formal authorization.</p>
               </header>
 
               <ol class="pel-list">
@@ -12498,25 +12588,25 @@
 
               <!-- Executive Centered Hero Column (Commanding Display Scale + Symmetrical CTAs + Clinical Scope Bar) -->
               <div class="ih-hero-copy pointer-events-auto w-full max-w-5xl mx-auto relative z-20 !py-0 items-center text-center">
-                <p class="ih-eyebrow justify-center !gap-3.5 !text-[11.5px] sm:!text-[12.5px] !tracking-[0.22em]">
+                <p class="ih-eyebrow justify-center gap-3.5 text-[11.5px] sm:!text-[12.5px] tracking-[0.22em] sm:!tracking-[0.22em]">
                   <span class="hidden sm:inline-block h-px bg-gradient-to-r from-transparent to-sky/60 w-12"></span>
                   <span>CLINICAL &amp; COMMERCIAL STEWARDSHIP &nbsp;&bull;&nbsp; SERVICES</span>
                   <span class="hidden sm:inline-block h-px bg-gradient-to-l from-transparent to-sky/60 w-12"></span>
                 </p>
 
                 <h2 id="distribution-title"
-                  class="ih-h1 srv-serif text-center !mt-5 !text-[38px] sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] !leading-[1.08] !tracking-[-0.03em] !font-normal">
+                  class="ih-h1 srv-serif text-center mt-5 text-[38px] sm:!mt-5 sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] leading-[1.08] sm:!leading-[1.08] tracking-[-0.03em] !font-normal">
                   Precision Support for <br class="hidden sm:inline" />Every Operating <span class="text-[#72c5f8]">Theatre.</span>
                 </h2>
 
-                <p class="ih-lede ih-lead mx-auto text-center !mt-6 !max-w-[680px] !text-[15.5px] sm:!text-[17.5px] lg:!text-[18.5px] !leading-[1.68] !text-[#c8d8e8]">
+                <p class="ih-lede ih-lead mx-auto text-center mt-6 sm:!mt-6 max-w-[680px] sm:!max-w-[680px] text-[15.5px] sm:!text-[17.5px] lg:!text-[18.5px] leading-[1.68] sm:!leading-[1.68] text-[#c8d8e8]">
                   From sourcing and distribution to strategic product marketing, institutional sales, professional
                   education and responsive customer support.
                 </p>
 
-                <div class="ih-hero-ctas justify-center !mt-9 !gap-4 sm:!gap-5">
+                <div class="ih-hero-ctas justify-center mt-6 sm:!mt-9 gap-2.5 sm:!gap-5">
                   <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 7);}"
-                    class="ih-btn-pill-primary min-w-0 lg:!min-w-[216px] !h-12 !px-7">
+                    class="ih-btn-pill-primary min-w-0 sm:!h-12 sm:!px-7 lg:!min-w-[216px]">
                     <span>Explore Services</span>
                     <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M5 12h14" />
@@ -12524,8 +12614,8 @@
                     </svg>
                   </button>
                   <a href="#contact" data-select-inquiry="Institutional Supply"
-                    class="ih-btn-video-secondary group min-w-0 lg:!min-w-[216px] !h-12 !px-6 !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
-                    <span class="ih-play-circle !size-7 !border-[#72c5f8]/45">
+                    class="ih-btn-video-secondary group min-w-0 sm:!h-12 sm:!px-6 lg:!min-w-[216px] !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
+                    <span class="ih-play-circle sm:!size-7 !border-[#72c5f8]/45">
                       <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M7 17L17 7" />
                         <path d="M8 7h9v9" />
@@ -12688,18 +12778,18 @@
 
               <!-- Executive Centered Hero Column (Commanding Display Scale + Symmetrical CTAs + Resource Scope Bar) -->
               <div class="ih-hero-copy pointer-events-auto w-full max-w-5xl mx-auto relative z-20 !py-0 items-center text-center">
-                <p class="ih-eyebrow justify-center !gap-3.5 !text-[11.5px] sm:!text-[12.5px] !tracking-[0.22em]">
+                <p class="ih-eyebrow justify-center gap-3.5 text-[11.5px] sm:!text-[12.5px] tracking-[0.22em] sm:!tracking-[0.22em]">
                   <span class="hidden sm:inline-block h-px bg-gradient-to-r from-transparent to-sky/60 w-12"></span>
                   <span>RESPONSIBLE INFORMATION HUB &nbsp;&bull;&nbsp; RESOURCES</span>
                   <span class="hidden sm:inline-block h-px bg-gradient-to-l from-transparent to-sky/60 w-12"></span>
                 </p>
 
                 <h2 id="resources-title"
-                  class="ih-h1 res-serif text-center !mt-5 !text-[38px] sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] !leading-[1.08] !tracking-[-0.03em] !font-normal">
+                  class="ih-h1 res-serif text-center mt-5 text-[38px] sm:!mt-5 sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] leading-[1.08] sm:!leading-[1.08] tracking-[-0.03em] !font-normal">
                   Corporate Literature &amp; <br class="hidden sm:inline" />Professional <span class="text-[#72c5f8]">Resources.</span>
                 </h2>
 
-                <p class="ih-lede ih-lead mx-auto text-center !mt-6 !max-w-[680px] !text-[15.5px] sm:!text-[17.5px] lg:!text-[18.5px] !leading-[1.68] !text-[#c8d8e8]">
+                <p class="ih-lede ih-lead mx-auto text-center mt-6 sm:!mt-6 max-w-[680px] sm:!max-w-[680px] text-[15.5px] sm:!text-[17.5px] lg:!text-[18.5px] leading-[1.68] sm:!leading-[1.68] text-[#c8d8e8]">
                   MEDIQ Resources: corporate profile, approved product materials, professional educational information
                   and official regulatory reference links.
                 </p>
@@ -12709,9 +12799,9 @@
                   Refer to original authorized authorities and product manufacturers.
                 </p>
 
-                <div class="ih-hero-ctas justify-center !mt-8 !gap-4 sm:!gap-5">
+                <div class="ih-hero-ctas justify-center mt-6 sm:!mt-8 gap-2.5 sm:!gap-5">
                   <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 3);}"
-                    class="ih-btn-pill-primary min-w-0 lg:!min-w-[232px] !h-12 !px-7">
+                    class="ih-btn-pill-primary min-w-0 sm:!h-12 sm:!px-7 lg:!min-w-[232px]">
                     <span>2026 Corporate Profile</span>
                     <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M5 12h14" />
@@ -12719,8 +12809,8 @@
                     </svg>
                   </button>
                   <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 1);}"
-                    class="ih-btn-video-secondary group min-w-0 lg:!min-w-[232px] !h-12 !px-6 !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
-                    <span class="ih-play-circle !size-7 !border-[#72c5f8]/45">
+                    class="ih-btn-video-secondary group min-w-0 sm:!h-12 sm:!px-6 lg:!min-w-[232px] !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
+                    <span class="ih-play-circle sm:!size-7 !border-[#72c5f8]/45">
                       <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M7 17L17 7" />
                         <path d="M8 7h9v9" />
@@ -13392,21 +13482,16 @@
                 <div class="lg:col-span-6 min-w-0 lg:pr-12 xl:pr-14 lg:border-r lg:border-[#72c5f8]/12 flex flex-col justify-between">
                   <div>
                     <div class="flex flex-wrap items-center gap-3.5 mb-5">
-                      <img src="assets/img/mediq-wordmark-only.png?v=105.00" alt="MEDIQ Pharma and Medical Supplies Distribution"
+                      <img src="assets/img/mediq-wordmark.svg?v=1.0" alt="MEDIQ Pharma and Medical Supplies Distribution"
                         class="h-7 sm:h-8 w-auto object-contain drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]" />
-                      <span class="inline-flex items-center gap-1.5 rounded-full border border-[#72c5f8]/25 bg-[#0a214a]/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#9ec5e6]">
-                        <span class="size-1.5 rounded-full bg-[#3aa0db]" aria-hidden="true"></span>
-                        Direct Desk
-                      </span>
                     </div>
                     <h2 id="contact-title"
-                      class="cnt-heading text-[34px] sm:text-[42px] xl:text-[46px] font-normal text-[#f4f7fb] leading-[1.10] max-w-[410px] mb-5">
-                      <span class="block">We are always ready</span>
-                      <span class="block">to help you and</span>
-                      <span class="block">answer your</span>
-                      <span class="block">questions</span>
+                      class="cnt-heading text-[30px] sm:text-[34px] xl:text-[38px] font-normal text-[#f4f7fb] leading-[1.16] tracking-[-0.025em] max-w-[520px] mb-4"
+                      style="text-wrap: balance;">
+                      We are always ready to help you and answer your questions
                     </h2>
-                    <p class="text-[13.5px] sm:text-[14px] leading-[1.65] tracking-[0.005em] text-[#9eb4cc] max-w-[445px] mb-8">
+                    <p class="text-[13.5px] sm:text-[14px] leading-[1.6] tracking-[0.005em] text-[#9eb4cc] max-w-[515px] mb-7"
+                      style="text-wrap: pretty;">
                       Connect with MEDIQ Pharma Inc. across hospital supply, our ophthalmic IOL portfolio, and institutional commercial partner teams.
                     </p>
                   </div>
@@ -13574,7 +13659,7 @@
       role="dialog" aria-modal="true" aria-labelledby="cfm-title">
       <div class="relative w-full max-w-[540px] overflow-hidden rounded-[24px] border border-[#72c5f8]/25 bg-[#071530]/95 shadow-[0_32px_90px_rgba(0,0,0,0.72)] text-[#f4f7fb]">
         <div class="flex items-center justify-between border-b border-[#72c5f8]/15 bg-[#051026]/90 px-6 py-4">
-          <img src="assets/img/mediq-wordmark-only.png?v=105.00" alt="MEDIQ Pharma" class="h-6 w-auto object-contain" />
+          <img src="assets/img/mediq-wordmark.svg?v=1.0" alt="MEDIQ Pharma" class="h-6 w-auto object-contain" />
           <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/35 bg-emerald-500/15 px-3 py-1 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-emerald-300">
             <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
             Confirmed
@@ -13638,7 +13723,7 @@
       <div class="w-full border-b border-[#72c5f8]/15">
         <div class="mx-auto flex w-full max-w-[1640px] flex-col sm:flex-row sm:items-end justify-between gap-4 px-6 sm:px-10 lg:px-16 pt-10 sm:pt-12 pb-6">
           <div>
-            <img src="assets/img/mediq-wordmark-only.png?v=105.00" alt="MEDIQ Pharma" class="h-6 sm:h-7 w-auto object-contain mb-3 drop-shadow-[0_2px_10px_rgba(0,0,0,0.4)]" />
+            <img src="assets/img/mediq-wordmark.svg?v=1.0" alt="MEDIQ Pharma" class="h-6 sm:h-7 w-auto object-contain mb-3" />
             <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[#72c5f8]/90 mb-2">
               Institutional Stewardship &amp; Directory
             </p>
@@ -14085,6 +14170,13 @@
     #products #products-devices-coming-soon {
       background-color: #0b0c0f !important;
       background-image: var(--mediq-halo-bg) !important;
+    }
+
+    /* Seamless dark clinical studio color-match for Brands Slide 0 slit-lamp motion stage */
+    #brands .deck-slide[data-slide-index="0"] {
+      background-color: #070b10 !important;
+      background-image:
+        radial-gradient(ellipse 62% 66% at 34% 52%, rgba(15, 31, 46, 0.34) 0%, rgba(10, 18, 28, 0.16) 54%, rgba(7, 11, 16, 0.98) 100%) !important;
     }
 
     /* ---------- Disable Opaque Wave Shaders & Non-Hero Smoke / Haze Overlays ---------- */
@@ -14604,6 +14696,11 @@
         margin-top: 0 !important;
         margin-bottom: 0 !important;
       }
+      #brands #brands-aller-silhouette-stage {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+      }
     }
     @media (max-width: 639px) {
       /* Subnavbar pills: cleaner fit + gentle right edge scroll fade instead of hard text chop */
@@ -14650,55 +14747,96 @@
         padding-bottom: 4px !important;
         overflow: visible !important;
       }
-      /* Side-by-side maximized CTA pills across Hero, Products, Services (#distribution), Resources & Brands on mobile */
-      #hero .ih-hero-ctas,
-      #products .ih-hero-ctas,
-      #distribution .ih-hero-ctas,
-      #resources .ih-hero-ctas,
-      #brands .br-cta-row {
+      /* Hero CTA pills preserved 100% locked; Products, Services (#distribution), Resources & Brands use sleek proportional flex pills on mobile */
+      #hero .ih-hero-ctas {
         display: grid !important;
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        grid-template-columns: minmax(0, 1.07fr) minmax(0, 0.93fr) !important;
         align-items: stretch !important;
         width: 100% !important;
-        gap: 10px !important;
+        gap: 8px !important;
+        margin-top: 16px !important;
+        margin-bottom: 0 !important;
+      }
+      #products .ih-hero-ctas,
+      #distribution .ih-hero-ctas,
+      #resources .ih-hero-ctas {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: auto !important;
+        max-width: 100% !important;
+        gap: 8px !important;
+        margin-top: 20px !important;
+        margin-bottom: 12px !important;
+      }
+      #brands .br-cta-row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        width: auto !important;
+        max-width: 100% !important;
+        gap: 8px !important;
         margin-top: 16px !important;
         margin-bottom: 16px !important;
       }
-      #hero .ih-hero-ctas {
-        grid-template-columns: minmax(0, 1.07fr) minmax(0, 0.93fr) !important;
-        gap: 8px !important;
-        margin-bottom: 0 !important;
-      }
-      #resources .ih-hero-ctas {
-        grid-template-columns: minmax(0, 1.09fr) minmax(0, 0.91fr) !important;
-      }
-      #hero .ih-btn-pill-primary,
-      #products .ih-btn-pill-primary,
-      #distribution .ih-btn-pill-primary,
-      #resources .ih-btn-pill-primary,
-      #brands .deck-slide[data-slide-index="0"] .br-cta-row > a,
-      #brands .deck-slide[data-slide-index="0"] .br-cta-row > button {
+      #hero .ih-btn-pill-primary {
         width: 100% !important;
         min-width: 0 !important;
         max-width: 100% !important;
         overflow: hidden !important;
+        height: 44px !important;
         min-height: 44px !important;
-        padding: 10px 8px !important;
-        font-size: clamp(10.2px, 2.68vw, 12px) !important;
+        max-height: 44px !important;
+        padding: 0 7px !important;
+        font-size: clamp(9.2px, 2.38vw, 10.6px) !important;
         letter-spacing: 0 !important;
         line-height: 1.15 !important;
+        gap: 4px !important;
+        justify-content: center !important;
+        border-radius: 9999px !important;
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
+      }
+      #products .ih-btn-pill-primary,
+      #distribution .ih-btn-pill-primary,
+      #resources .ih-btn-pill-primary {
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        flex: 0 1 auto !important;
+        overflow: hidden !important;
+        height: 36px !important;
+        min-height: 36px !important;
+        padding: 0 13px !important;
+        font-size: clamp(10.5px, 2.8vw, 11.5px) !important;
+        letter-spacing: 0.005em !important;
+        line-height: 1 !important;
         gap: 5px !important;
         justify-content: center !important;
         border-radius: 9999px !important;
         white-space: nowrap !important;
         box-sizing: border-box !important;
       }
-      #hero .ih-btn-pill-primary {
-        height: 44px !important;
-        max-height: 44px !important;
-        padding: 0 7px !important;
-        font-size: clamp(9.2px, 2.38vw, 10.6px) !important;
-        gap: 4px !important;
+      #brands .deck-slide[data-slide-index="0"] .br-cta-row > a,
+      #brands .deck-slide[data-slide-index="0"] .br-cta-row > button {
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        flex: 0 1 auto !important;
+        overflow: hidden !important;
+        height: 36px !important;
+        min-height: 36px !important;
+        padding: 0 15px !important;
+        font-size: clamp(10.5px, 2.8vw, 11.5px) !important;
+        letter-spacing: 0.005em !important;
+        line-height: 1 !important;
+        gap: 5px !important;
+        justify-content: center !important;
+        border-radius: 9999px !important;
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
       }
       #hero .ih-btn-pill-primary svg,
       #products .ih-btn-pill-primary svg,
@@ -14708,52 +14846,893 @@
         height: 12px !important;
         flex-shrink: 0 !important;
       }
-      #hero .ih-btn-video-secondary,
-      #products .ih-btn-video-secondary,
-      #distribution .ih-btn-video-secondary,
-      #resources .ih-btn-video-secondary {
+      #hero .ih-btn-video-secondary {
         width: 100% !important;
         min-width: 0 !important;
         max-width: 100% !important;
         overflow: hidden !important;
+        height: 44px !important;
         min-height: 44px !important;
-        padding: 8px 8px !important;
+        max-height: 44px !important;
+        padding: 0 7px !important;
         border-radius: 9999px !important;
         border: 1px solid rgba(114, 197, 248, 0.34) !important;
         background: rgba(10, 29, 64, 0.56) !important;
-        font-size: clamp(10.2px, 2.68vw, 12px) !important;
+        font-size: clamp(9.2px, 2.38vw, 10.6px) !important;
         font-weight: 400 !important;
         letter-spacing: 0 !important;
-        gap: 5px !important;
+        gap: 4px !important;
         justify-content: center !important;
         white-space: nowrap !important;
         box-sizing: border-box !important;
       }
-      #hero .ih-btn-video-secondary {
-        height: 44px !important;
-        max-height: 44px !important;
-        padding: 0 7px !important;
-        font-size: clamp(9.2px, 2.38vw, 10.6px) !important;
-        gap: 4px !important;
+      #products .ih-btn-video-secondary,
+      #distribution .ih-btn-video-secondary,
+      #resources .ih-btn-video-secondary {
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        flex: 0 1 auto !important;
+        overflow: hidden !important;
+        height: 36px !important;
+        min-height: 36px !important;
+        padding: 0 12px 0 8px !important;
+        border-radius: 9999px !important;
+        border: 1px solid rgba(114, 197, 248, 0.34) !important;
+        background: rgba(10, 29, 64, 0.56) !important;
+        font-size: clamp(10.5px, 2.8vw, 11.5px) !important;
+        font-weight: 400 !important;
+        letter-spacing: 0.005em !important;
+        line-height: 1 !important;
+        gap: 6px !important;
+        justify-content: center !important;
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
       }
       #products .ih-play-circle,
       #distribution .ih-play-circle,
       #resources .ih-play-circle {
         width: 18px !important;
         min-width: 18px !important;
+        max-width: 18px !important;
         height: 18px !important;
         min-height: 18px !important;
+        max-height: 18px !important;
         flex: 0 0 18px !important;
+        padding: 0 !important;
+        aspect-ratio: 1 / 1 !important;
+      }
+      #products .ih-play-circle svg,
+      #distribution .ih-play-circle svg,
+      #resources .ih-play-circle svg {
+        width: 10px !important;
+        height: 10px !important;
+        flex-shrink: 0 !important;
       }
       #brands .br-eyebrow > span.w-12 {
         display: none !important;
       }
       #brands #brands-aller-silhouette-stage {
-        opacity: 0.42 !important;
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+      }
+      /* Contact / Direct Inquiry Card: single-screen mobile layout (fits full card + Submit button in one mobile viewport) */
+      html:not(.mediq-subpage-locked) #contact,
+      html:not(.mediq-subpage-locked) #contact > div.relative.w-full.h-full {
+        min-height: 100svh !important;
+      }
+      html:not(.mediq-subpage-locked) #contact .deck-slide[data-slide-index="0"],
+      #contact .deck-slide[data-slide-index="0"] {
+        min-height: 100svh !important;
+        justify-content: center !important;
+        padding: 86px 14px 16px !important;
+        box-sizing: border-box !important;
+      }
+      #contact #contact-panel-form {
+        padding: 13px 14px !important;
+        border-radius: 18px !important;
+      }
+      #contact #contact-panel-form > .grid {
+        gap: 10px !important;
+      }
+      #contact #contact-panel-form > .grid > div:first-child > div:first-child > div:first-child {
+        gap: 8px !important;
+        margin-bottom: 6px !important;
+      }
+      #contact #contact-panel-form img[alt*="MEDIQ"] {
+        height: 17px !important;
+      }
+      #contact #contact-title {
+        font-size: clamp(17.5px, 4.7vw, 19.5px) !important;
+        line-height: 1.16 !important;
+        max-width: 100% !important;
+        margin-bottom: 4px !important;
+      }
+      #contact #contact-title + p {
+        font-size: 10.5px !important;
+        line-height: 1.35 !important;
+        margin-bottom: 8px !important;
+      }
+      /* 4 Contact details arranged in a sleek 2x2 grid (saves ~100px vertically) */
+      #contact #contact-panel-form > .grid > div:first-child > .border-t {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) !important;
+        column-gap: 10px !important;
+        row-gap: 0 !important;
+        font-size: 11px !important;
+      }
+      #contact #contact-panel-form > .grid > div:first-child > .border-t > div {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        gap: 2px !important;
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+        border-top-width: 0 !important;
+      }
+      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:nth-child(3),
+      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:nth-child(4) {
+        border-top: 1px solid rgba(114, 197, 248, 0.12) !important;
+        padding-bottom: 2px !important;
+      }
+      #contact #contact-panel-form > .grid > div:first-child > .border-t > div > span:first-child {
+        font-size: 9.5px !important;
+        line-height: 1.2 !important;
+      }
+      /* Keep Institutional desk cell clean & compact: label + single-line email pill */
+      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:first-child > div > div:first-child {
+        display: none !important;
+      }
+      #contact #contact-panel-form > .grid > div:first-child > .border-t a[href^="mailto:"] {
+        margin-top: 1px !important;
+        padding: 2px 7px !important;
+        font-size: 9.2px !important;
+        line-height: 1.25 !important;
+        white-space: nowrap !important;
+      }
+      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:nth-child(2) > div > div:first-child {
+        font-size: 10.5px !important;
+        line-height: 1.25 !important;
+      }
+      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:nth-child(2) > div > div:last-child {
+        font-size: 9.5px !important;
+        line-height: 1.25 !important;
+        margin-top: 1px !important;
+      }
+      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:nth-child(3) a[href^="tel:"] {
+        font-size: 11px !important;
+        line-height: 1.3 !important;
+      }
+      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:last-child .flex {
+        gap: 6px !important;
+        margin-top: 1px !important;
+      }
+      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:last-child .flex > a {
+        width: 24px !important;
+        height: 24px !important;
+      }
+      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:last-child .flex > a svg {
+        width: 11px !important;
+        height: 11px !important;
+      }
+      /* Right inquiry form pane: compact single-screen layout with 2-col Name/Org & 1-row topic pills */
+      #contact #contact-panel-form > .grid > div:last-child {
+        border-top: 1px solid rgba(114, 197, 248, 0.14) !important;
+        padding-top: 9px !important;
+      }
+      #contact #contact-panel-form > .grid > div:last-child > div:first-child {
+        margin-bottom: 7px !important;
+      }
+      #contact #contact-panel-form h3.cnt-heading {
+        font-size: 15.5px !important;
+        line-height: 1.15 !important;
+      }
+      #contact #contact-panel-form h3.cnt-heading + p {
+        margin-top: 2px !important;
+        font-size: 10.5px !important;
+        line-height: 1.32 !important;
+      }
+      #contact #quote-form {
+        gap: 7px !important;
+      }
+      #contact #quote-form > .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+      }
+      #contact .cnt-uline-input {
+        padding: 5px 0 !important;
+        font-size: 11.5px !important;
+        line-height: 1.3 !important;
+      }
+      #contact textarea#inq-message {
+        height: 34px !important;
+        min-height: 34px !important;
+      }
+      #contact #contact-topic-pills {
+        gap: 4.5px !important;
+        padding-top: 1px !important;
+      }
+      #contact #contact-topic-pills button {
+        padding: 3px 7.5px !important;
+        font-size: 9.4px !important;
+        line-height: 1.25 !important;
+      }
+      #contact label[for="inq-consent"] {
+        gap: 7px !important;
+        padding-top: 1px !important;
+      }
+      #contact #inq-consent {
+        width: 13px !important;
+        height: 13px !important;
+      }
+      #contact label[for="inq-consent"] span {
+        font-size: 9.5px !important;
+        line-height: 1.32 !important;
+      }
+      #contact #quote-form > div:last-child {
+        padding-top: 2px !important;
+        gap: 8px !important;
+      }
+      #contact button[type="submit"] {
+        height: 34px !important;
+        padding: 0 18px !important;
+        font-size: 11.5px !important;
+      }
+      #contact #form-feedback {
+        font-size: 10px !important;
+      }
+      /* Site Footer ("Contact Us" Directory + Copyright + Map): fits completely on ONE mobile page */
+      #footer-inner > div > div:nth-child(1) > div {
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+        padding: 12px 14px 10px !important;
+      }
+      #footer-inner > div > div:nth-child(1) img[alt*="MEDIQ"] {
+        display: none !important;
+      }
+      #footer-inner > div > div:nth-child(1) p.font-mono {
+        font-size: 8.5px !important;
+        letter-spacing: 0.16em !important;
+        margin-bottom: 2px !important;
+      }
+      #footer-inner #footer-heading {
+        font-size: 20px !important;
+        line-height: 1.15 !important;
+        margin-bottom: 3px !important;
+        transform: none !important;
+        opacity: 1 !important;
+      }
+      #footer-inner #footer-heading + p {
+        margin-top: 2px !important;
+        font-size: 10px !important;
+        line-height: 1.3 !important;
+      }
+      #footer-inner > div > div:nth-child(1) > div > div:last-child {
+        flex-direction: column !important;
+        align-items: flex-end !important;
+        gap: 6px !important;
+      }
+      #footer-inner > div > div:nth-child(1) a[href="#contact"] {
+        padding: 5px 10px !important;
+        font-size: 9px !important;
+        gap: 4px !important;
+        white-space: nowrap !important;
+      }
+      #footer-inner #footer-back-to-top {
+        width: 28px !important;
+        height: 28px !important;
+      }
+      #footer-inner #footer-back-to-top svg {
+        width: 12px !important;
+        height: 12px !important;
+      }
+      /* 4-column directory arranged as a compact 2x2 architectural bento grid */
+      #footer-inner > div > div:nth-child(2) > div.grid {
+        display: grid !important;
+        grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr) !important;
+        padding: 0 14px !important;
+      }
+      #footer-inner > div > div:nth-child(2) > div.grid > div {
+        padding-top: 9px !important;
+        padding-bottom: 9px !important;
+        justify-content: flex-start !important;
+      }
+      #footer-inner > div > div:nth-child(2) > div.grid > div:nth-child(odd) {
+        padding-left: 0 !important;
+        padding-right: 10px !important;
+        border-right: 1px solid rgba(114, 197, 248, 0.12) !important;
+      }
+      #footer-inner > div > div:nth-child(2) > div.grid > div:nth-child(even) {
+        padding-left: 10px !important;
+        padding-right: 0 !important;
+      }
+      #footer-inner > div > div:nth-child(2) > div.grid > div:nth-child(1),
+      #footer-inner > div > div:nth-child(2) > div.grid > div:nth-child(2) {
+        border-bottom: 1px solid rgba(114, 197, 248, 0.12) !important;
+      }
+      #footer-inner > div > div:nth-child(2) > div.grid > div:nth-child(3),
+      #footer-inner > div > div:nth-child(2) > div.grid > div:nth-child(4) {
+        border-bottom: 0 !important;
+      }
+      #footer-inner .grid h3 {
+        font-size: 9.5px !important;
+        letter-spacing: 0.12em !important;
+        line-height: 1.2 !important;
+      }
+      #footer-inner .grid > div > div:first-child > div:first-child {
+        margin-bottom: 5px !important;
+        column-gap: 5px !important;
+      }
+      #footer-inner .grid > div > div:first-child > div:first-child svg {
+        width: 13px !important;
+        height: 13px !important;
+      }
+      #footer-inner .grid > div:nth-child(1) p {
+        font-size: 9.8px !important;
+        line-height: 1.36 !important;
+      }
+      #footer-inner .grid > div:nth-child(1) > div:last-child {
+        margin-top: 6px !important;
+        padding-top: 5px !important;
+        font-size: 9px !important;
+        gap: 4px !important;
+      }
+      /* Hide redundant secondary blurbs inside cols 2-4 on mobile for clean 1-screen density */
+      #footer-inner .grid > div:nth-child(2) > div:last-child,
+      #footer-inner .grid > div:nth-child(3) > div:last-child,
+      #footer-inner .grid > div:nth-child(4) > div:last-child {
+        display: none !important;
+      }
+      #footer-inner .grid a,
+      #footer-inner .grid span.font-mono {
+        font-size: 9.5px !important;
+        line-height: 1.32 !important;
+      }
+      #footer-inner .grid > div:nth-child(2) a,
+      #footer-inner .grid > div:nth-child(3) span.block {
+        margin-top: 2px !important;
+      }
+      #footer-inner .grid > div:nth-child(2) a:first-child,
+      #footer-inner .grid > div:nth-child(3) span.block:first-child {
+        margin-top: 0 !important;
+      }
+      #footer-inner .grid > div:nth-child(4) .flex.flex-col {
+        gap: 3px !important;
+      }
+      #footer-inner .grid button[data-copy-text] {
+        width: 20px !important;
+        height: 20px !important;
+      }
+      #footer-inner .grid button[data-copy-text] svg {
+        width: 11px !important;
+        height: 11px !important;
+      }
+      /* Compact copyright bar */
+      #footer-inner > div > div:nth-child(3) > div {
+        padding: 7px 14px !important;
+        font-size: 9.5px !important;
+        line-height: 1.25 !important;
+      }
+      /* Compact interactive map height so full footer + map fit cleanly in 1 mobile page */
+      #footer-map-band #contact-map-wrap {
+        height: 185px !important;
+        width: 100% !important;
+      }
+      /* About Slide 1 (Who We Are / Mission / Vision) & Slide 2 (What We Do 01-06): Full-page flex-fill Dark Surgical Precision mobile layout (CSS-only, #about HTML 100% locked) */
+      #about #forge-about-sticky,
+      #about #wwd-forge-sticky {
+        background-color: #070b12 !important;
+        background-image: none !important;
+        justify-content: flex-start !important;
+      }
+      #about #forge-about-sticky > .relative.z-10,
+      #about #wwd-forge-sticky > .relative.z-10 {
+        padding: 12px 16px 14px !important;
+        height: 100% !important;
+        align-items: stretch !important;
+        overflow-y: auto !important;
+        scrollbar-width: none !important;
+      }
+      #about #forge-about-sticky > .relative.z-10::-webkit-scrollbar,
+      #about #wwd-forge-sticky > .relative.z-10::-webkit-scrollbar {
+        display: none !important;
+      }
+      #about #forge-about-sticky > .relative.z-10 > .grid,
+      #about #wwd-forge-sticky > .relative.z-10 > .grid {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100% !important;
+        min-height: 100% !important;
+        gap: 14px !important;
+        width: 100% !important;
+      }
+      #about #forge-about-sticky > .relative.z-10 > .grid > div:first-child,
+      #about #wwd-forge-sticky > .relative.z-10 > .grid > div:first-child {
+        flex: 1 1 0% !important;
+        min-height: 168px !important;
+        width: 100% !important;
+        display: flex !important;
+      }
+      #about #forge-about-sticky > .relative.z-10 > .grid > div:last-child,
+      #about #wwd-forge-sticky > .relative.z-10 > .grid > div:last-child {
+        flex: 0 0 auto !important;
+        width: 100% !important;
+      }
+      #about #forge-about-sticky .abt-forge-media-box,
+      #about #wwd-forge-sticky .abt-forge-media-box {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100% !important;
+        min-height: 168px !important;
+        max-height: none !important;
+        aspect-ratio: auto !important;
+        border-radius: 14px !important;
+        border: 1px solid rgba(255, 255, 255, 0.13) !important;
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.56) !important;
+        background: #0a1220 !important;
+      }
+      #about #forge-about-sticky .abt-forge-media-box video[data-forge-img="0"] {
+        transform: scale(1.0) !important;
+        object-position: center center !important;
+      }
+      /* Restore desktop centered MEDIQ + IOL composition inside full-height mobile Who We Are card (below top-left pill) */
+      #about #forge-about-sticky .forge-brand-stage .forge-brand-bg {
+        object-position: 50% 92% !important;
+      }
+      #about #forge-about-sticky .forge-brand-stage .forge-brand-scrim {
+        top: 0 !important;
+        bottom: auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        height: 58% !important;
+        background: linear-gradient(180deg, rgba(4, 10, 24, 0.72) 0%, rgba(6, 18, 42, 0.34) 68%, transparent 100%) !important;
+      }
+      #about #forge-about-sticky .forge-brand-stage .forge-brand-overlay {
+        top: 28px !important;
+        bottom: auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        padding: 0 16px !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        text-align: center !important;
+      }
+      #about #forge-about-sticky .forge-brand-stage .forge-brand-eyebrow {
+        font-size: 7px !important;
+        letter-spacing: 0.24em !important;
+        margin-bottom: 3px !important;
+      }
+      #about #forge-about-sticky .forge-brand-stage .forge-brand-logo {
+        width: 34% !important;
+        max-width: 118px !important;
+      }
+      #about #forge-about-sticky .forge-brand-stage .forge-brand-rule {
+        margin-top: 4px !important;
+        width: 38px !important;
+        background: linear-gradient(90deg, transparent, rgba(114, 197, 248, 0.72), transparent) !important;
+      }
+      #about #forge-about-sticky .forge-brand-stage .forge-brand-sub {
+        margin-top: 3px !important;
+        font-size: 6.8px !important;
+        letter-spacing: 0.2em !important;
+      }
+      #about #forge-about-sticky .abt-forge-media-box video[data-forge-img="1"],
+      #about #forge-about-sticky .abt-forge-media-box video[data-forge-img="2"],
+      #about #wwd-forge-sticky .abt-forge-media-box video[data-wwd-forge-img] {
+        transform: scale(1.0) !important;
+        object-position: center 14% !important;
+      }
+      #about #forge-about-sticky .abt-forge-media-box::before,
+      #about #wwd-forge-sticky .abt-forge-media-box::before {
+        content: attr(data-mobile-banner) !important;
+        position: absolute !important;
+        top: 10px !important;
+        left: 10px !important;
+        right: auto !important;
+        max-width: calc(100% - 20px) !important;
+        z-index: 12 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        padding: 5px 13px !important;
+        border-radius: 9999px !important;
+        background: transparent !important;
+        backdrop-filter: blur(6px) !important;
+        -webkit-backdrop-filter: blur(6px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.30) !important;
+        box-shadow: none !important;
+        text-shadow: 0 1px 8px rgba(0, 0, 0, 0.82), 0 0 3px rgba(0, 0, 0, 0.55) !important;
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif !important;
+        font-size: 12px !important;
+        line-height: 1.2 !important;
+        letter-spacing: 0.01em !important;
+        color: #f8fafc !important;
+        pointer-events: none !important;
+      }
+      #about #forge-about-sticky .abt-forge-media-box > button,
+      #about #wwd-forge-sticky .abt-forge-media-box > button {
+        display: inline-flex !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: 10px !important;
+        translate: -50% 0 !important;
+        transform: none !important;
+        padding: 4.5px 11px !important;
+        border-radius: 999px !important;
+        background: transparent !important;
+        backdrop-filter: blur(6px) !important;
+        -webkit-backdrop-filter: blur(6px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.30) !important;
+        box-shadow: none !important;
+        text-shadow: 0 1px 6px rgba(0, 0, 0, 0.65) !important;
+        font-size: 8.5px !important;
+        letter-spacing: 0.16em !important;
+        color: rgba(241, 245, 249, 0.94) !important;
+      }
+      #about #forge-about-sticky .forge-panels-stack,
+      #about #wwd-forge-sticky .forge-panels-stack {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        align-items: start !important;
+      }
+      #about #forge-about-sticky .forge-text-panel:not(.is-active),
+      #about #wwd-forge-sticky .forge-text-panel:not(.is-active) {
+        position: absolute !important;
+        inset: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+      }
+      #about #forge-about-sticky .forge-text-panel h2,
+      #about #wwd-forge-sticky .forge-text-panel h3 {
+        display: none !important;
+      }
+      #about #forge-about-sticky .forge-text-panel p,
+      #about #wwd-forge-sticky .forge-text-panel p {
+        font-size: 12.5px !important;
+        line-height: 1.48 !important;
+        color: rgba(232, 240, 248, 0.88) !important;
+        max-width: 100% !important;
+        margin-bottom: 10px !important;
+        text-wrap: pretty !important;
+      }
+      #about #forge-about-sticky [data-forge-panel="0"] p:first-of-type {
+        font-size: 11.8px !important;
+        line-height: 1.44 !important;
+        margin-bottom: 8px !important;
+      }
+      #about #forge-about-sticky .forge-text-panel p:nth-of-type(2) {
+        background: #0d1523 !important;
+        border: 1px solid rgba(255, 255, 255, 0.09) !important;
+        border-left: 2.5px solid #5caee6 !important;
+        border-radius: 10px !important;
+        padding: 8px 11px !important;
+        font-size: 11.2px !important;
+        line-height: 1.42 !important;
+        color: rgba(226, 232, 240, 0.85) !important;
+        margin-bottom: 10px !important;
+      }
+      #about #forge-about-sticky [data-forge-panel="1"] p,
+      #about #forge-about-sticky [data-forge-panel="2"] p,
+      #about #wwd-forge-sticky .forge-text-panel p {
+        background: #0d1523 !important;
+        border: 1px solid rgba(255, 255, 255, 0.09) !important;
+        border-left: 2.5px solid #5caee6 !important;
+        border-radius: 10px !important;
+        padding: 10px 12px !important;
+        font-size: 12.5px !important;
+        line-height: 1.48 !important;
+        margin-bottom: 11px !important;
+      }
+      /* Unified Swiss 2x2 Architectural Crosshair Specification Matrix (01-04) */
+      #about #forge-about-sticky .forge-text-panel > .grid,
+      #about #wwd-forge-sticky .forge-text-panel > .grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 1px !important;
+        background: rgba(255, 255, 255, 0.11) !important;
+        border: 1px solid rgba(255, 255, 255, 0.11) !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+        counter-reset: clinical-spec !important;
+      }
+      #about #forge-about-sticky .forge-text-panel > .grid > div,
+      #about #wwd-forge-sticky .forge-text-panel > .grid > div {
+        counter-increment: clinical-spec !important;
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        justify-content: space-between !important;
+        gap: 6px !important;
+        padding: 9px 10px !important;
+        background: #0b121e !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        min-height: 64px !important;
+        color: rgba(241, 245, 249, 0.94) !important;
+      }
+      #about #forge-about-sticky [data-forge-panel="0"] > .grid > div {
+        min-height: 58px !important;
+        padding: 8px 9px !important;
+        gap: 5px !important;
+      }
+      #about #forge-about-sticky .forge-text-panel > .grid > div::before,
+      #about #wwd-forge-sticky .forge-text-panel > .grid > div::before {
+        content: "0" counter(clinical-spec) !important;
+        position: absolute !important;
+        top: 8px !important;
+        left: 10px !important;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+        font-size: 9px !important;
+        letter-spacing: 0.08em !important;
+        color: rgba(148, 163, 184, 0.62) !important;
+      }
+      #about #forge-about-sticky .forge-text-panel > .grid > div > span:first-child,
+      #about #wwd-forge-sticky .forge-text-panel > .grid > div > span:first-child {
+        align-self: flex-end !important;
+        width: 20px !important;
+        height: 20px !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        color: #7ab8e0 !important;
+        padding: 0 !important;
+      }
+      #about #forge-about-sticky .forge-text-panel > .grid > div > span:first-child svg,
+      #about #wwd-forge-sticky .forge-text-panel > .grid > div > span:first-child svg {
+        width: 15px !important;
+        height: 15px !important;
+      }
+      #about #forge-about-sticky .forge-text-panel > .grid > div > span:last-child,
+      #about #wwd-forge-sticky .forge-text-panel > .grid > div > span:last-child {
+        display: block !important;
+        width: 100% !important;
+        text-align: left !important;
+        font-size: 11.2px !important;
+        line-height: 1.3 !important;
+        color: rgba(241, 245, 249, 0.94) !important;
+      }
+      #about #forge-about-sticky [data-forge-panel="0"] > .grid > div > span:last-child {
+        font-size: 10.6px !important;
+        line-height: 1.26 !important;
+      }
+      /* Keep bottom ticker hidden on mobile so full balanced layout fits cleanly */
+      #about #forge-about-sticky .abt-ticker-strip,
+      #about #wwd-forge-sticky .abt-ticker-strip {
+        display: none !important;
+      }
+      /* About Slides 3 & 4 (Our Foundation & Core Values): Airy Goldilocks spacing, unified Inter font & identical text scale */
+      html body #about #about-sec-foundation,
+      html body #about #about-sec-foundation *,
+      html body #about #about-sec-values,
+      html body #about #about-sec-values * {
+        font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+        font-weight: 400 !important;
+        font-style: normal !important;
+      }
+      #about #about-sec-foundation,
+      #about #about-sec-values {
+        min-height: calc(100svh - 128px) !important;
+        height: auto !important;
+        background-color: #070b12 !important;
+        background-image: none !important;
+        justify-content: flex-start !important;
+      }
+      #about #about-sec-foundation > .ih-shell.abt-subpage-shell,
+      #about #about-sec-values > .ih-shell.abt-subpage-shell {
+        padding: 26px 20px 26px !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+      }
+      /* Our Foundation (Slide 3) */
+      #about #about-sec-foundation .fnd-grid {
+        gap: 0 !important;
+        width: 100% !important;
+      }
+      #about #about-sec-foundation .fnd-copy {
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 0 !important;
+      }
+      #about #about-sec-foundation .fnd-copy > .ih-eyebrow,
+      #about #about-sec-foundation .fnd-copy > .ih-eyebrow span:first-child {
+        font-size: 10px !important;
+        line-height: 1.2 !important;
+        letter-spacing: 0.16em !important;
+        color: #72c5f8 !important;
+        margin-bottom: 0 !important;
+      }
+      #about #about-sec-foundation #fnd-heading {
+        font-size: clamp(22px, 5.8vw, 25px) !important;
+        line-height: 1.14 !important;
+        letter-spacing: -0.02em !important;
+        color: #f8fafc !important;
+        margin-top: 10px !important;
+      }
+      #about #about-sec-foundation #fnd-heading > span:last-child {
+        color: #72c5f8 !important;
+      }
+      #about #about-sec-foundation #fnd-lead {
+        font-size: 12.5px !important;
+        line-height: 1.56 !important;
+        color: rgba(226, 236, 248, 0.86) !important;
+        margin-top: 10px !important;
+        max-width: 100% !important;
+      }
+      #about #about-sec-foundation .fnd-copy > .grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        grid-auto-rows: 1fr !important;
+        gap: 11px !important;
+        margin-top: 18px !important;
+        max-width: 100% !important;
+      }
+      #about #about-sec-foundation .fnd-copy > .grid > div {
+        padding: 15px 14px !important;
+        min-height: 148px !important;
+        border-radius: 12px !important;
+        background: #0b121e !important;
+        border: 1px solid rgba(255, 255, 255, 0.10) !important;
+        box-shadow: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+      }
+      #about #about-sec-foundation .fnd-copy > .grid > div .font-mono {
+        font-size: 10.5px !important;
+        line-height: 1 !important;
+        letter-spacing: 0.08em !important;
+        color: #72c5f8 !important;
+        margin-bottom: 8px !important;
+      }
+      #about #about-sec-foundation .fnd-copy > .grid > div h3 {
+        font-size: 13.5px !important;
+        line-height: 1.24 !important;
+        letter-spacing: -0.02em !important;
+        color: #f8fafc !important;
+        margin-bottom: 7px !important;
+      }
+      #about #about-sec-foundation .fnd-copy > .grid > div p {
+        font-size: 11px !important;
+        line-height: 1.46 !important;
+        color: rgba(196, 210, 228, 0.84) !important;
+      }
+      #about #about-sec-foundation .fnd-copy > blockquote {
+        margin-top: 16px !important;
+        padding: 13px 14px !important;
+        font-size: 11.8px !important;
+        line-height: 1.54 !important;
+        color: rgba(218, 229, 242, 0.88) !important;
+        background: #0d1523 !important;
+        border: 1px solid rgba(255, 255, 255, 0.09) !important;
+        border-left: 2.5px solid #5caee6 !important;
+        border-radius: 10px !important;
+        max-width: 100% !important;
+      }
+      /* Our Core Values (Slide 4) */
+      #about #about-sec-values .cv-split-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 18px !important;
+        width: 100% !important;
+      }
+      #about #about-sec-values .cv-split-grid > div:first-child {
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+      #about #about-sec-values .cv-eyebrow-row {
+        gap: 8px !important;
+        align-items: center !important;
+      }
+      #about #about-sec-values .cv-eyebrow-line {
+        width: 18px !important;
+        height: 2px !important;
+      }
+      #about #about-sec-values .cv-eyebrow-label {
+        font-size: 10px !important;
+        line-height: 1.2 !important;
+        letter-spacing: 0.16em !important;
+        color: #72c5f8 !important;
+      }
+      #about #about-sec-values .cv-headline {
+        font-size: clamp(22px, 5.8vw, 25px) !important;
+        line-height: 1.14 !important;
+        letter-spacing: -0.02em !important;
+        color: #f8fafc !important;
+        margin-top: 10px !important;
+      }
+      #about #about-sec-values .cv-shimmer-phrase {
+        color: #72c5f8 !important;
+        -webkit-text-fill-color: #72c5f8 !important;
+        background: none !important;
+        animation: none !important;
+      }
+      #about #about-sec-values .cv-intro {
+        font-size: 12.5px !important;
+        line-height: 1.56 !important;
+        color: rgba(226, 236, 248, 0.86) !important;
+        margin-top: 10px !important;
+        max-width: 100% !important;
+      }
+      #about #about-sec-values .cv-cards-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        grid-auto-rows: 1fr !important;
+        gap: 11px !important;
+        width: 100% !important;
+      }
+      #about #about-sec-values .cv-card-slot {
+        display: flex !important;
+        height: 100% !important;
+      }
+      #about #about-sec-values .cv-card {
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 98px !important;
+        padding: 13px 13px !important;
+        border-radius: 12px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        gap: 10px !important;
+        background: #0b121e !important;
+        border: 1px solid rgba(255, 255, 255, 0.10) !important;
+        box-shadow: none !important;
+      }
+      #about #about-sec-values .cv-card-top {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        margin-bottom: 0 !important;
+      }
+      #about #about-sec-values .cv-card-icon {
+        width: 26px !important;
+        height: 26px !important;
+        border-radius: 7px !important;
+        animation: none !important;
+      }
+      #about #about-sec-values .cv-card-icon svg {
+        width: 14px !important;
+        height: 14px !important;
+      }
+      #about #about-sec-values .cv-card-num {
+        font-size: 10.5px !important;
+        line-height: 1 !important;
+        letter-spacing: 0.08em !important;
+        color: #72c5f8 !important;
+        padding-top: 0 !important;
+      }
+      #about #about-sec-values .cv-card-body {
+        margin-top: 0 !important;
+      }
+      #about #about-sec-values .cv-card-title {
+        font-size: 13.5px !important;
+        line-height: 1.24 !important;
+        letter-spacing: -0.02em !important;
+        color: #f8fafc !important;
+        margin-bottom: 4px !important;
+      }
+      #about #about-sec-values .cv-card-desc {
+        font-size: 11px !important;
+        line-height: 1.44 !important;
+        color: rgba(196, 210, 228, 0.84) !important;
+        margin-top: 0 !important;
       }
       /* Prevent Active Theory ChatDOM overlay from overlapping RayOne Galaxy card on mobile */
       #products #at-products-work-stage:not(.is-detail-open):not(.is-3d-box-mode) #at-work-viewport {
-        transform: translateY(-76px) scale(0.84) !important;
+        transform: translateY(-76px) !important;
         transform-origin: center center !important;
       }
       #products #at-products-work-stage #at-chat-wrapper {
@@ -14769,6 +15748,19 @@
         font-size: 9.5px !important;
         line-height: 1.3 !important;
         margin: 1.5px 0 1.5px 2px !important;
+      }
+      /* Hero Lifespan Eye Video Clips (Mobile): Keep exact original centered full-bleed Hero layout, gently bring eyes into subtle backdrop */
+      #hero #hero-eye-lifespan-container {
+        opacity: 0.50 !important;
+        -webkit-mask-image: radial-gradient(ellipse 88% 58% at 60% 34%, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.52) 48%, transparent 82%) !important;
+        mask-image: radial-gradient(ellipse 88% 58% at 60% 34%, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.52) 48%, transparent 82%) !important;
+      }
+      #hero #hero-eye-lifespan-container .hero-eye-slide {
+        background-position: 65% 36% !important;
+      }
+      #hero #hero-eye-lifespan-container .hero-eye-video-layer {
+        object-fit: cover !important;
+        object-position: 65% 36% !important;
       }
       #hero .ih-play-circle {
         width: 18px !important;
@@ -14787,16 +15779,205 @@
         flex-shrink: 0 !important;
       }
       #about .about-go-next {
-        min-height: 42px !important;
-        padding: 10px 20px !important;
-        font-size: 13px !important;
-        letter-spacing: 0.01em !important;
-        line-height: 1.15 !important;
+        width: auto !important;
+        height: 36px !important;
+        min-height: 36px !important;
+        padding: 0 15px !important;
+        font-size: clamp(10.5px, 2.8vw, 11.5px) !important;
+        letter-spacing: 0.005em !important;
+        line-height: 1 !important;
+        gap: 5px !important;
+        white-space: nowrap !important;
       }
-      #resources .ih-lead,
+      #about .about-go-next svg {
+        width: 12px !important;
+        height: 12px !important;
+        flex-shrink: 0 !important;
+      }
+      /* Unified Mobile Editorial Format (Matches Brands Slide 0 Left-Aligned Reference): About Intro, Products, Services, Resources */
+      html body #about #about-sec-who-we-are > div:first-child,
+      html body #about #about-sec-who-we-are > div:first-child *,
+      html body #products .product-slide[data-product-index="0"],
+      html body #products .product-slide[data-product-index="0"] *,
+      html body #distribution .deck-slide[data-slide-index="0"],
+      html body #distribution .deck-slide[data-slide-index="0"] *,
+      html body #resources .deck-slide[data-slide-index="0"],
+      html body #resources .deck-slide[data-slide-index="0"] * {
+        font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+        font-weight: 400 !important;
+        font-style: normal !important;
+      }
+      #about #about-sec-who-we-are > div:first-child > div:first-child {
+        padding: 28px 20px 32px !important;
+        align-items: flex-start !important;
+        text-align: left !important;
+      }
+      #products .product-slide[data-product-index="0"] .ih-shell,
+      #distribution .deck-slide[data-slide-index="0"] .ih-shell,
+      #resources .deck-slide[data-slide-index="0"] .ih-shell {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+      }
+      #products .product-slide[data-product-index="0"] .ih-hero,
+      #distribution .deck-slide[data-slide-index="0"] .ih-hero,
+      #resources .deck-slide[data-slide-index="0"] .ih-hero {
+        justify-items: start !important;
+      }
+      #products .product-slide[data-product-index="0"] .ih-hero-copy,
+      #distribution .deck-slide[data-slide-index="0"] .ih-hero-copy,
+      #resources .deck-slide[data-slide-index="0"] .ih-hero-copy {
+        align-items: flex-start !important;
+        text-align: left !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+      #about #about-sec-who-we-are > div:first-child .abt-eyebrow,
+      #products .product-slide[data-product-index="0"] .ih-eyebrow,
+      #distribution .deck-slide[data-slide-index="0"] .ih-eyebrow,
+      #resources .deck-slide[data-slide-index="0"] .ih-eyebrow {
+        font-size: 9.5px !important;
+        letter-spacing: 0.14em !important;
+        line-height: 1.38 !important;
+        color: #72c5f8 !important;
+        max-width: 100% !important;
+        margin-bottom: 0 !important;
+        justify-content: flex-start !important;
+        text-align: left !important;
+      }
+      html body #about #about-sec-who-we-are > div:first-child h2,
+      html body #about #about-sec-who-we-are > div:first-child h2 *,
+      html body #products #products-title,
+      html body #products #products-title *,
+      html body #distribution #distribution-title,
+      html body #distribution #distribution-title *,
+      html body #resources #resources-title,
+      html body #resources #resources-title * {
+        font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+        font-feature-settings: "ss01" !important;
+      }
+      html body #about #about-sec-who-we-are > div:first-child h2,
+      html body #products #products-title,
+      html body #distribution #distribution-title,
+      html body #resources #resources-title {
+        font-size: clamp(27px, 7.2vw, 31px) !important;
+        line-height: 1.15 !important;
+        letter-spacing: -0.022em !important;
+        margin-top: 10px !important;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+        max-width: 100% !important;
+        text-align: left !important;
+        text-wrap: balance !important;
+        color: #f8fafc !important;
+      }
+      html body #about #about-sec-who-we-are > div:first-child h2 em,
+      html body #products #products-title span[class*="text-[#72c5f8]"],
+      html body #distribution #distribution-title span[class*="text-[#72c5f8]"],
+      html body #resources #resources-title span[class*="text-[#72c5f8]"] {
+        color: #72c5f8 !important;
+        -webkit-text-fill-color: #72c5f8 !important;
+        background: none !important;
+        animation: none !important;
+      }
+      html body #about #about-sec-who-we-are > div:first-child .abt-body,
+      html body #products .product-slide[data-product-index="0"] .ih-lead,
+      html body #distribution .deck-slide[data-slide-index="0"] .ih-lead,
+      html body #resources .deck-slide[data-slide-index="0"] .ih-lead {
+        font-size: 13px !important;
+        line-height: 1.56 !important;
+        letter-spacing: 0 !important;
+        color: rgba(218, 229, 242, 0.90) !important;
+        margin-top: 10px !important;
+        margin-bottom: 0 !important;
+        max-width: 100% !important;
+        margin-inline: 0 !important;
+        text-align: left !important;
+        text-wrap: pretty !important;
+      }
+      html body #about #about-sec-who-we-are > div:first-child .abt-body strong {
+        display: inline !important;
+        color: #f8fafc !important;
+      }
+      html body #resources .deck-slide[data-slide-index="0"] .ih-lead + p {
+        font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+        font-size: 10.5px !important;
+        line-height: 1.48 !important;
+        letter-spacing: 0.01em !important;
+        color: rgba(148, 178, 210, 0.82) !important;
+        max-width: 100% !important;
+        margin-top: 8px !important;
+        margin-inline: 0 !important;
+        text-align: left !important;
+        text-wrap: pretty !important;
+      }
+      #about #about-sec-who-we-are > div:first-child button {
+        margin-top: 18px !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 8px !important;
+      }
+      #products .product-slide[data-product-index="0"] .ih-hero-ctas,
+      #distribution .deck-slide[data-slide-index="0"] .ih-hero-ctas,
+      #resources .deck-slide[data-slide-index="0"] .ih-hero-ctas {
+        justify-content: flex-start !important;
+        align-items: center !important;
+        gap: 8px !important;
+        margin-top: 16px !important;
+        margin-bottom: 16px !important;
+      }
+      #products .product-slide[data-product-index="0"] .ih-btn-pill-primary,
+      #distribution .deck-slide[data-slide-index="0"] .ih-btn-pill-primary,
+      #resources .deck-slide[data-slide-index="0"] .ih-btn-pill-primary {
+        background: #3aa0db !important;
+        border: 1px solid rgba(114, 197, 248, 0.50) !important;
+        color: #0a1d40 !important;
+        box-shadow: 0 8px 22px rgba(58, 160, 219, 0.28) !important;
+        padding: 0 15px !important;
+        height: 36px !important;
+        min-height: 36px !important;
+        font-size: clamp(10.5px, 2.8vw, 11.5px) !important;
+      }
+      #products .product-slide[data-product-index="0"] .ih-btn-pill-primary svg,
+      #distribution .deck-slide[data-slide-index="0"] .ih-btn-pill-primary svg,
+      #resources .deck-slide[data-slide-index="0"] .ih-btn-pill-primary svg {
+        color: #0a1d40 !important;
+        stroke: #0a1d40 !important;
+      }
+      #products .product-slide[data-product-index="0"] .ih-btn-video-secondary,
+      #distribution .deck-slide[data-slide-index="0"] .ih-btn-video-secondary,
+      #resources .deck-slide[data-slide-index="0"] .ih-btn-video-secondary {
+        background: rgba(10, 29, 64, 0.56) !important;
+        border: 1px solid rgba(114, 197, 248, 0.34) !important;
+        color: #f4f7fb !important;
+        padding: 0 15px !important;
+        height: 36px !important;
+        min-height: 36px !important;
+        font-size: clamp(10.5px, 2.8vw, 11.5px) !important;
+      }
+      #products .product-slide[data-product-index="0"] .ih-play-circle,
+      #distribution .deck-slide[data-slide-index="0"] .ih-play-circle,
+      #resources .deck-slide[data-slide-index="0"] .ih-play-circle {
+        display: none !important;
+      }
+      #resources .ih-lead {
+        margin-top: 10px !important;
+        margin-bottom: 0 !important;
+      }
+      #brands #brands-title {
+        font-size: clamp(27px, 7.2vw, 31px) !important;
+        line-height: 1.15 !important;
+        text-wrap: balance !important;
+      }
+      #brands #brands-title .ih-h1-line {
+        display: block !important;
+      }
       #brands .br-lead {
         margin-top: 10px !important;
         margin-bottom: 0 !important;
+        font-size: 13px !important;
+        line-height: 1.56 !important;
+        max-width: 100% !important;
+        text-wrap: pretty !important;
       }
       #products .lottici-index-row,
       #distribution .lottici-index-row,
@@ -15049,8 +16230,8 @@
         padding-top: 2px;
       }
       #srv-book-carousel-slide .bc-mobile-paper {
-        background: #f7f9fc;
-        color: #0a1d40;
+        background: transparent;
+        color: #f4f7fb;
         padding: 18px 18px 22px;
         flex: 1;
         display: flex;
@@ -15062,11 +16243,11 @@
         justify-content: space-between;
         padding-bottom: 10px;
         margin-bottom: 4px;
-        border-bottom: 1px solid rgba(10, 29, 64, 0.18);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
         font-size: 10.5px;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: #2563a6;
+        color: #72c5f8;
         font-weight: 700;
       }
       #srv-book-carousel-slide .bc-mobile-cards {
@@ -15076,7 +16257,7 @@
       }
       #srv-book-carousel-slide .bc-mobile-card {
         border: 0;
-        border-bottom: 1px solid rgba(10, 29, 64, 0.12);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         background: transparent;
         border-radius: 0;
         padding: 13px 0;
@@ -15091,13 +16272,13 @@
         letter-spacing: 0.1em;
       }
       #srv-book-carousel-slide .bc-mobile-card__code {
-        color: #2c7be5;
+        color: #72c5f8;
         font-weight: 700;
         white-space: nowrap;
         flex-shrink: 0;
       }
       #srv-book-carousel-slide .bc-mobile-card__tag {
-        color: #5b779b;
+        color: #8ba5c4;
         font-weight: 600;
         text-transform: uppercase;
         text-align: right;
@@ -15124,13 +16305,13 @@
         font-size: 15.5px;
         line-height: 1.28;
         font-weight: 700;
-        color: #0a1d40;
+        color: #ffffff;
       }
       #srv-book-carousel-slide .bc-mobile-card__desc {
         margin: 0;
         font-size: 13px;
         line-height: 1.48;
-        color: #2b486d;
+        color: #b4c8de;
       }
       #srv-book-carousel-slide .bc-mobile-nav {
         display: flex;
@@ -15143,7 +16324,7 @@
         border-top: 1px solid rgba(255, 255, 255, 0.12);
       }
       #srv-book-carousel-slide .bc-mobile-nav--paper {
-        border-top-color: rgba(10, 29, 64, 0.14);
+        border-top-color: rgba(255, 255, 255, 0.12);
         margin-top: 16px;
       }
       #srv-book-carousel-slide .bc-mobile-nav .bc-spread-navbtn {
@@ -15158,9 +16339,9 @@
         color: #e2ecf7 !important;
       }
       #srv-book-carousel-slide .bc-mobile-nav--paper .bc-spread-navbtn {
-        border-color: rgba(10, 29, 64, 0.18) !important;
-        background: #ffffff !important;
-        color: #0a1d40 !important;
+        border-color: rgba(114, 197, 248, 0.24) !important;
+        background: rgba(14, 28, 56, 0.9) !important;
+        color: #e2ecf7 !important;
       }
       #srv-book-carousel-slide .bc-mobile-nav .bc-spread-inquire {
         flex: 1 1 auto;
@@ -15556,14 +16737,14 @@
   <script src="assets/js/foundation-logo-data.js?v=1.00" defer></script>
   <script src="assets/js/foundation-particles-gl.js?v=4.64" defer></script>
   <script src="assets/js/foundation-vr-scene.js?v=1.03" defer></script>
-  <script src="assets/js/main.js?v=388.47" defer></script>
+  <script src="assets/js/main.js?v=388.51" defer></script>
   <script src="assets/js/motion-navbar.js?v=1.00" defer></script>
   <script src="assets/js/galaxy-delivery-3d.js?v=14.41" defer></script>
   <script src="assets/js/about-route-globe.js?v=9.01" defer></script>
   <script src="assets/js/aller-silhouette.js?v=11.60" defer></script>
   <script src="assets/js/core-values-monument.js?v=16.00" defer></script>
-  <script src="assets/js/products-warp-carousel.js?v=1.06" defer></script>
-  <script src="assets/js/products-active-theory.js?v=11.12" defer></script>
+  <script src="assets/js/products-warp-carousel.js?v=1.08" defer></script>
+  <script src="assets/js/products-active-theory.js?v=11.14" defer></script>
   <script src="assets/js/services-liquid-text.js?v=1.04" defer></script>
   <script src="assets/js/news-coverflow.js?v=1.04" defer></script>
   <script src="assets/js/services-3d-backdrop.js?v=2.01" defer></script>

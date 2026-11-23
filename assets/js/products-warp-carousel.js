@@ -102,7 +102,23 @@
     marigold: makeBoxPreset('#1c0f01', '#4f2c05', '#b86c11', '#eea236', '#ffe3a6', '#f59e0b'),
     gold: makeBoxPreset('#1c1502', '#4f3b06', '#ad8210', '#ecc434', '#fff0a8', '#eab308'),
     emerald: makeBoxPreset('#011c15', '#034030', '#047d5e', '#07ad83', '#85f7d9', '#10b981'),
-    amethyst: makeBoxPreset('#150924', '#381959', '#6e3f99', '#9561c7', '#dfc2ff', '#a855f7')
+    amethyst: makeBoxPreset('#150924', '#381959', '#6e3f99', '#9561c7', '#dfc2ff', '#a855f7'),
+    obsidian: makeBoxPreset('#04060a', '#0a0e16', '#151d2b', '#222e42', '#475569', '#64748b'),
+    pearl: {
+      lightCard: true,
+      numeral: ['#0f172a', '#334155'],
+      accent: '#94a3b8',
+      glow: '#cbd5e1',
+      mesh: [
+        '#e8eef5', '#f1f5f9', '#f8fafc', '#ffffff', '#f8fafc', '#eef3f8',
+        '#eef3f8', '#f8fafc', '#ffffff', '#ffffff', '#f8fafc', '#e6edf5',
+        '#f1f5f9', '#ffffff', '#ffffff', '#f8fafc', '#e8eef6', '#dce5f0',
+        '#f4f7fb', '#ffffff', '#f8fafc', '#eef3f9', '#dfe8f2', '#d3dfec',
+        '#eef3f8', '#f8fafc', '#f1f5f9', '#e2ebf4', '#d5e0ec', '#c8d6e6',
+        '#e6edf5', '#eef3f8', '#e6edf5', '#dce5f0', '#d0dce9', '#c4d3e3',
+        '#dde6f0', '#e6edf5', '#e2ebf4', '#d8e3ef', '#ccd9e8', '#c0cfe0'
+      ]
+    }
   };
 
   window.MEDIQ_WARP_MESH_PRESETS = MESH_PRESETS;
@@ -362,14 +378,18 @@
     const k = w / CW;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, w, h);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     paintMesh(ctx, w, h, card.mesh);
     ctx.setTransform(k, 0, 0, k, 0, 0);
     ctx.textBaseline = 'alphabetic';
     const white = [255, 255, 255];
+    const isLight = !!card.lightCard;
+    const ink = isLight ? [15, 23, 42] : white;
     const accent = parseColor(card.accent || '#7fe8ff');
 
     // Subtle crisp glass inner rim
-    ctx.strokeStyle = 'rgba(255,255,255,0.16)';
+    ctx.strokeStyle = isLight ? 'rgba(15, 23, 42, 0.14)' : 'rgba(255,255,255,0.16)';
     ctx.lineWidth = 1.2;
     ctx.beginPath();
     if (ctx.roundRect) {
@@ -382,14 +402,14 @@
     // Top-left 2-line title + footer
     const small = sizeForCap(ctx, 400, family, 7.9, 'H');
     ctx.font = fontStr(400, small, family);
-    ctx.fillStyle = rgba(white, 0.92);
+    ctx.fillStyle = rgba(ink, isLight ? 0.94 : 0.92);
     const lines = (card.title || '').split('\n');
     lines.slice(0, 2).forEach((ln, i) => ctx.fillText(ln, 17, 37 + i * 14));
 
     if (card.codeTag) {
       ctx.save();
       ctx.font = fontStr(500, 7.2, '"IBM Plex Mono", ui-monospace, SFMono-Regular, monospace');
-      ctx.fillStyle = rgba(white, 0.56);
+      ctx.fillStyle = rgba(ink, isLight ? 0.66 : 0.56);
       ctx.textAlign = 'right';
       ctx.fillText(card.codeTag, CW - 16, 35);
       ctx.restore();
@@ -397,7 +417,7 @@
 
     if (card.footer) {
       ctx.font = fontStr(400, small, family);
-      ctx.fillStyle = rgba(white, 0.88);
+      ctx.fillStyle = rgba(ink, 0.88);
       ctx.fillText(card.footer, 17, 295);
     }
 
@@ -408,8 +428,8 @@
     const inqH = 21;
     const inqR = 10.5;
     ctx.save();
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.14)';
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.34)';
+    ctx.fillStyle = isLight ? 'rgba(15, 23, 42, 0.08)' : 'rgba(255, 255, 255, 0.14)';
+    ctx.strokeStyle = isLight ? 'rgba(15, 23, 42, 0.28)' : 'rgba(255, 255, 255, 0.34)';
     ctx.lineWidth = 1;
     ctx.beginPath();
     if (ctx.roundRect) {
@@ -421,7 +441,7 @@
     ctx.stroke();
     const inqSize = sizeForCap(ctx, 500, family, 6.8, 'H');
     ctx.font = fontStr(500, inqSize, family);
-    ctx.fillStyle = rgba(white, 0.96);
+    ctx.fillStyle = rgba(ink, 0.96);
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('Inquire', inqX + inqW / 2, inqY + inqH / 2 + 0.5);
@@ -432,12 +452,14 @@
     if (boxImg && boxImg.complete && boxImg.naturalWidth > 0) {
       const boxCx = CW * 0.5;
       const boxCy = 166;
-      const halo = ctx.createRadialGradient(boxCx, boxCy, 8, boxCx, boxCy, 108);
-      halo.addColorStop(0, rgba(accent, 0.28));
-      halo.addColorStop(0.55, rgba(accent, 0.08));
-      halo.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = halo;
-      ctx.fillRect(10, 62, CW - 20, 212);
+      if (!isLight) {
+        const halo = ctx.createRadialGradient(boxCx, boxCy, 8, boxCx, boxCy, 108);
+        halo.addColorStop(0, rgba(accent, 0.28));
+        halo.addColorStop(0.55, rgba(accent, 0.08));
+        halo.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = halo;
+        ctx.fillRect(10, 62, CW - 20, 212);
+      }
 
       const maxW = 214;
       const maxH = 174;
@@ -455,8 +477,8 @@
       ctx.translate(boxCx, shadowY);
       ctx.scale(1, shadowRy / shadowRx);
       const sg = ctx.createRadialGradient(0, 0, 0, 0, 0, shadowRx);
-      sg.addColorStop(0, 'rgba(2, 6, 18, 0.46)');
-      sg.addColorStop(0.65, 'rgba(2, 6, 18, 0.16)');
+      sg.addColorStop(0, isLight ? 'rgba(15, 23, 42, 0.28)' : 'rgba(2, 6, 18, 0.46)');
+      sg.addColorStop(0.65, isLight ? 'rgba(15, 23, 42, 0.10)' : 'rgba(2, 6, 18, 0.16)');
       sg.addColorStop(1, 'rgba(2, 6, 18, 0)');
       ctx.fillStyle = sg;
       ctx.beginPath();
@@ -723,8 +745,9 @@ vec4 shadeCard(vec4 pose, vec2 ps, float fx, float fy, out float depth){
   float cov = clamp(0.5 - d / edgeFp, 0.0, 1.0) * fade;
   if (cov <= 0.0) return vec4(0.0);
   vec2 uv = vec2(s / CW + 0.5, 0.5 - y / CH);
-  vec2 gx = vec2(fs / CW, 0.0) * (1.0 + 5.0 * sideBlur);
-  vec2 gy = vec2(0.0, fyc / CH) * (1.0 + 5.0 * sideBlur);
+  float gradScale = mix(0.62, 1.0 + 5.0 * sideBlur, smoothstep(0.0, 0.12, sideBlur));
+  vec2 gx = vec2(fs / CW, 0.0) * gradScale;
+  vec2 gy = vec2(0.0, fyc / CH) * gradScale;
   vec4 tex = textureGrad(uTex, vec3(uv, pose.w), gx, gy);
   if (sideBlur > 0.005) {
     vec2 br = vec2(0.021, 0.0168) * sideBlur;
@@ -1176,12 +1199,12 @@ void main(){
 
     function resize() {
       const r = container.getBoundingClientRect();
-      const baseDpr = window.innerWidth < 1024 ? 1.15 : 1.35;
+      const baseDpr = window.innerWidth < 1024 ? 3.0 : 2.0;
       let dpr = Math.min(window.devicePixelRatio || 1, baseDpr);
       const cssW = r.width || window.innerWidth;
       const cssH = r.height || (window.innerHeight - 128);
-      if (cssW * cssH * dpr * dpr > 2600000) {
-        dpr = Math.max(1.0, Math.sqrt(2600000 / Math.max(1, cssW * cssH)));
+      if (cssW * cssH * dpr * dpr > 4800000) {
+        dpr = Math.max(1.0, Math.sqrt(4800000 / Math.max(1, cssW * cssH)));
       }
       const nextW = Math.max(2, Math.round(cssW * dpr));
       const nextH = Math.max(2, Math.round(cssH * dpr));
@@ -1192,8 +1215,8 @@ void main(){
         canvas.height = H;
         restDrawn = false;
       }
-      unit = Math.min(W / (cssW < 640 ? 450 : 720), H / 440);
-      const want = Math.min(640, Math.max(256, Math.round(CW * unit * 1.05)));
+      unit = Math.min(W / (cssW < 640 ? 468 : 720), H / 440);
+      const want = Math.min(1280, Math.max(768, Math.round(CW * unit * 1.35)));
       if (list.length && (want !== texW || !lastUploadedSignature)) paintAll(want);
     }
 
@@ -1435,7 +1458,7 @@ void main(){
 
     container.addEventListener('pointermove', (e) => {
       const r = container.getBoundingClientRect();
-      const stageW = r.width < 640 ? 450 : 720;
+      const stageW = r.width < 640 ? 468 : 720;
       const unitCss = Math.min((r.width || 1) / stageW, (r.height || 1) / 440);
       if (L.mode !== 'drag') {
         const uHover = (e.clientX - r.left - r.width / 2) / Math.max(0.01, unitCss);
@@ -1462,7 +1485,7 @@ void main(){
       if (!L.moved) {
         L.mode = 'rest';
         const r = container.getBoundingClientRect();
-        const stageW = r.width < 640 ? 450 : 720;
+        const stageW = r.width < 640 ? 468 : 720;
         const unitCss = Math.min((r.width || 1) / stageW, (r.height || 1) / 440);
         const u = (e.clientX - r.left - r.width / 2) / Math.max(0.01, unitCss);
         if (u > 148) {
