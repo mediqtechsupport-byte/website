@@ -1,24 +1,43 @@
 /**
- * MEDIQ Global Action Search Bar & Command Palette (⌘K)
- * Inspired by 21st.dev Action Search Bar + Command Menu.
- * Connects directly to every section, About slide, Product catalog item,
- * 3D Service Book volume, Brand profile/brochure, Resource page, News card,
- * and Contact inquiry form across the site.
+ * MEDIQ Minimal Inline Search Bar with Suggestions Dropdown (⌘K / /)
+ * Clean, understated search experience with:
+ *  - Inline search input, search icon, bare clear button & soft focus glow
+ *  - Recent searches (localStorage persisted) with individual remove (×) & Clear
+ *  - Curated Trending suggestions
+ *  - Live filtering & crisp text match emphasis across all MEDIQ destinations
+ *  - Distinct monochrome icons per suggestion type
+ *  - Click-outside, Escape, Arrow/Enter navigation & mobile top search bar
  */
 (function initMediqGlobalSearch() {
   'use strict';
 
-  const CATEGORIES = ['All', 'Sections', 'Products', 'Services', 'Brands', 'Resources', 'News', 'About', 'Contact'];
+  const RECENTS_KEY = 'mediq_recent_searches_v1';
+  const MAX_RECENTS = 6;
 
-  const CAT_COLORS = {
-    Sections: '#72c5f8',
-    About: '#34d399',
-    Products: '#38bdf8',
-    Services: '#9bd8ff',
-    Brands: '#fbbf24',
-    Resources: '#a78bfa',
-    News: '#c5a880',
-    Contact: '#fb7185',
+  const DEFAULT_RECENTS = [
+    { id: 'prod-rayone-galaxy', query: 'RayOne Galaxy', category: 'Products' },
+    { id: 'prod-ophteis-30', query: 'Ophteis Bio 3.0', category: 'Products' },
+    { id: 'srv-shelf', query: 'Services Book Library', category: 'Services' },
+  ];
+
+  const TRENDING_CONFIG = [
+    { itemId: 'prod-rayone-galaxy', label: 'RayOne Galaxy' },
+    { itemId: 'prod-rayone-emv', label: 'RayOne EMV' },
+    { itemId: 'prod-ophteis-30', label: 'Ophteis Bio 3.0' },
+    { itemId: 'brd-principals', label: 'Rayner UK' },
+    { itemId: 'srv-shelf', label: 'Services Book Library' },
+    { itemId: 'cnt-supply', label: 'Hospital Inquiries' },
+  ];
+
+  const SINGULAR_CAT = {
+    Products: 'Product',
+    Services: 'Service',
+    Brands: 'Brand',
+    Resources: 'Resource',
+    News: 'News',
+    About: 'About',
+    Contact: 'Contact',
+    Sections: 'Section',
   };
 
   function escapeHtml(str) {
@@ -26,7 +45,36 @@
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function escapeRegExp(str) {
+    return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function highlightMatches(text, tokens) {
+    const raw = String(text || '');
+    if (!tokens || !tokens.length) return escapeHtml(raw);
+    const cleaned = tokens.map((t) => escapeRegExp(t)).filter(Boolean);
+    if (!cleaned.length) return escapeHtml(raw);
+
+    const re = new RegExp(`(${cleaned.join('|')})`, 'gi');
+    let out = '';
+    let last = 0;
+    let match;
+    while ((match = re.exec(raw)) !== null) {
+      if (match.index > last) {
+        out += escapeHtml(raw.slice(last, match.index));
+      }
+      out += `<mark class="mqs-hl">${escapeHtml(match[0])}</mark>`;
+      last = match.index + match[0].length;
+      if (match[0].length === 0) break;
+    }
+    if (last < raw.length) {
+      out += escapeHtml(raw.slice(last));
+    }
+    return out;
   }
 
   function scrollToId(id) {
@@ -247,6 +295,26 @@
 
     // --- PRODUCTS: SUBPAGES + ALL ITEMS ---
     {
+      id: 'prod-rayone-galaxy',
+      category: 'Products',
+      code: 'RAO605G',
+      title: 'RayOne Galaxy — Spiral Full-Range IOL',
+      desc: 'New non-diffractive spiral optic with continuous full range of vision & 0% light loss',
+      tag: 'Spiral IOL',
+      keywords: ['galaxy', 'spiral', 'rayone', 'full range', 'non-diffractive', 'rao605g', 'new', '2026', 'latest'],
+      run: () => jumpToProduct(1, 'rayone-galaxy'),
+    },
+    {
+      id: 'prod-rayone-galaxy-toric',
+      category: 'Products',
+      code: 'RAO615X',
+      title: 'Galaxy Toric — Spiral Astigmatic IOL',
+      desc: 'Galaxy spiral full-range optics with Anti-Vaulting Haptic toric alignment',
+      tag: 'Spiral Toric',
+      keywords: ['galaxy toric', 'spiral toric', 'astigmatism', 'rao615x', 'cylinder', 'galaxy', 'toric'],
+      run: () => jumpToProduct(1, 'rayone-galaxy-toric'),
+    },
+    {
       id: 'prod-cat-iol',
       category: 'Products',
       code: 'CAT 01',
@@ -263,7 +331,7 @@
       title: 'RayOne EMV — Enhanced Monovision IOL',
       desc: 'Up to 1.5 D extended depth of focus co-developed with Prof. Graham Barrett',
       tag: '1.5 D EDoF',
-      keywords: ['emv', 'rayone', 'barrett', 'monovision', 'rao200e', 'galaxy', 'spiral'],
+      keywords: ['emv', 'rayone', 'barrett', 'monovision', 'rao200e', 'edof'],
       run: () => jumpToProduct(1, 'rayone-emv'),
     },
     {
@@ -401,7 +469,7 @@
       category: 'Products',
       code: 'CAT 04',
       title: 'Product Catalogs & Clinical Monographs',
-      desc: 'A-constants, Barret EMV monographs, Ophteis & AEON clinical dossiers',
+      desc: 'A-constants, Barrett EMV monographs, Ophteis & AEON clinical dossiers',
       tag: 'Monographs',
       keywords: ['catalog', 'monograph', 'a-constants', 'nomogram', 'dossier'],
       run: () => jumpToProduct(4),
@@ -648,357 +716,583 @@
     },
   ];
 
-  const MIME_MAP = {
-    Sections: 'section/page',
-    About: 'text/overview',
-    Products: 'clinical/iol',
-    Services: '3d/atrium',
-    Brands: 'partner/profile',
-    Resources: 'application/pdf',
-    News: 'editorial/event',
-    Contact: 'desk/inquiry',
+  const ITEM_MAP = Object.create(null);
+  ITEMS.forEach((it) => {
+    ITEM_MAP[it.id] = it;
+  });
+
+  // Clean 15px monochrome icons per suggestion / category type
+  const TYPE_ICONS = {
+    recent: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>',
+    trending: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>',
+    Products: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5-9.5-6.5-9.5-6.5Z"/><circle cx="12" cy="12" r="3"/></svg>',
+    Services: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.5A2.5 2.5 0 0 1 4.5 2H11v19H4.5A2.5 2.5 0 0 0 2 23.5V4.5Z"/><path d="M22 4.5A2.5 2.5 0 0 0 19.5 2H13v19h6.5a2.5 2.5 0 0 1 2.5 2.5V4.5Z"/></svg>',
+    Brands: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="5.5"/><path d="m8.2 13.4-1.2 8.1 5-2.7 5 2.7-1.2-8.1"/></svg>',
+    Resources: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>',
+    News: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>',
+    About: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="15.5 8.5 13.5 13.5 8.5 15.5 10.5 10.5 15.5 8.5"/></svg>',
+    Contact: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>',
+    Sections: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 12 12 17 22 12"/><polyline points="2 17 12 22 22 17"/></svg>',
   };
 
-  function getItemUri(item) {
-    const catSlug = (item.category || 'page').toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    return `mediq://${catSlug}/${item.id || 'view'}`;
+  function getTypeIcon(kind) {
+    return TYPE_ICONS[kind] || TYPE_ICONS.Sections;
   }
 
-  const ICONS = {
-    Sections: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>',
-    About: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
-    Products: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M10 12a1 1 0 0 0-1 1v1a1 1 0 0 1-1 1 1 1 0 0 1 1 1v1a1 1 0 0 0 1 1"/><path d="M14 18a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1 1 1 0 0 1-1-1v-1a1 1 0 0 0-1-1"/></svg>',
-    Services: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>',
-    Brands: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>',
-    Resources: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
-    News: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>',
-    Contact: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M10 12a1 1 0 0 0-1 1v1a1 1 0 0 1-1 1 1 1 0 0 1 1 1v1a1 1 0 0 0 1 1"/><path d="M14 18a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1 1 1 0 0 1-1-1v-1a1 1 0 0 0-1-1"/></svg>',
-  };
+  function loadRecents() {
+    try {
+      const raw = window.localStorage.getItem(RECENTS_KEY);
+      if (raw === null) {
+        window.localStorage.setItem(RECENTS_KEY, JSON.stringify(DEFAULT_RECENTS));
+        return DEFAULT_RECENTS.slice();
+      }
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed
+        .filter((r) => r && typeof r.query === 'string' && r.query.trim())
+        .slice(0, MAX_RECENTS);
+    } catch (_) {
+      return DEFAULT_RECENTS.slice();
+    }
+  }
+
+  function saveRecents(list) {
+    try {
+      window.localStorage.setItem(RECENTS_KEY, JSON.stringify(list.slice(0, MAX_RECENTS)));
+    } catch (_) {}
+  }
 
   function injectStyles() {
     if (document.getElementById('mediq-search-styles')) return;
     const style = document.createElement('style');
     style.id = 'mediq-search-styles';
     style.textContent = `
-      @keyframes mqsFadeIn { from { opacity: 0; } to { opacity: 1; } }
-      #mediq-search-modal {
-        position: fixed;
-        inset: 0;
-        z-index: 9999;
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        padding: clamp(32px, 8vh, 88px) 16px 24px;
-        background: rgba(3, 9, 22, 0.72);
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
-        opacity: 0;
-        pointer-events: none;
+      @keyframes mqsMenuIn {
+        from { opacity: 0; transform: translateY(-4px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      #mediq-search-wrap {
+        position: relative;
         font-family: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
-        transition: opacity 180ms ease-out;
       }
-      #mediq-search-modal.is-open {
-        opacity: 1;
-        pointer-events: auto;
-      }
-      /* Mirrors McpResourceList gap-3 flex-col container */
-      #mediq-search-panel {
-        width: 100%;
-        max-width: 672px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        animation: mqsFadeIn 180ms ease-out;
-        transform: translateY(-6px);
-        transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
-      }
-      #mediq-search-modal.is-open #mediq-search-panel {
-        transform: translateY(0);
-      }
-      /* Mirrors McpResourceList separated compact Input bar (rounded 16px) */
-      .mqs-input-row {
+
+      #mediq-search-wrap .mqs-bar {
+        position: relative;
         display: flex;
         align-items: center;
-        gap: 10px;
-        height: 40px;
-        padding: 0 12px;
-        border-radius: 16px;
+        gap: 8px;
+        width: 220px;
+        height: 36px;
+        padding: 0 10px 0 11px;
+        border-radius: 10px;
         border: 1px solid rgba(255, 255, 255, 0.14);
-        background: rgba(7, 19, 43, 0.92);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
-        transition: border-color 150ms ease, box-shadow 150ms ease;
+        background: rgba(10, 19, 38, 0.85);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+        transition:
+          border-color 160ms ease,
+          box-shadow 180ms ease,
+          background-color 160ms ease;
       }
-      .mqs-input-row:focus-within {
-        border-color: rgba(114, 197, 248, 0.55);
-        box-shadow: 0 0 0 2px rgba(114, 197, 248, 0.2), 0 10px 32px rgba(0, 0, 0, 0.5);
+
+      @media (min-width: 1536px) {
+        #mediq-search-wrap .mqs-bar {
+          width: 242px;
+        }
       }
-      #mediq-search-input {
+
+      @media (min-width: 640px) and (max-width: 1023px) {
+        #mediq-search-wrap .mqs-bar {
+          width: 240px;
+        }
+      }
+
+      #mediq-search-wrap .mqs-bar:hover {
+        border-color: rgba(255, 255, 255, 0.24);
+        background: rgba(12, 22, 44, 0.92);
+      }
+
+      #mediq-search-wrap .mqs-bar:focus-within,
+      #mediq-search-wrap.is-open .mqs-bar {
+        border-color: rgba(125, 196, 250, 0.58);
+        background: rgba(12, 23, 46, 0.97);
+        box-shadow:
+          0 0 0 3px rgba(114, 197, 248, 0.14),
+          0 8px 24px rgba(0, 0, 0, 0.42);
+      }
+
+      #mediq-search-wrap .mqs-search-icon {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        color: rgba(148, 163, 184, 0.78);
+        transition: color 160ms ease;
+        pointer-events: none;
+      }
+
+      #mediq-search-wrap .mqs-bar:focus-within .mqs-search-icon,
+      #mediq-search-wrap.is-open .mqs-search-icon {
+        color: #93c5fd;
+      }
+
+      #mediq-search-wrap .mqs-input {
         flex: 1;
         min-width: 0;
-        background: transparent;
+        height: 100%;
+        padding: 0;
         border: 0;
-        outline: none;
-        color: #f4f7fb;
-        font-family: "Inter", "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+        outline: none !important;
+        box-shadow: none !important;
+        background: transparent;
+        color: #f1f5f9;
         font-size: 13px;
         font-weight: 400;
       }
-      #mediq-search-input::placeholder {
-        color: rgba(203, 213, 225, 0.48);
+
+      #mediq-search-wrap .mqs-input::placeholder {
+        color: rgba(148, 163, 184, 0.58);
       }
-      /* Mirrors McpResourceList unified surface + rounded-[20px] + divide-border */
-      .mqs-surface-card {
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        background: rgba(8, 21, 47, 0.94);
-        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65);
-        overflow: hidden;
-      }
-      .mqs-cats {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        padding: 8px 14px;
-        overflow-x: auto;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(5, 14, 34, 0.7);
-        scrollbar-width: none;
-      }
-      .mqs-cats::-webkit-scrollbar { display: none; }
-      .mqs-cat-btn {
-        flex-shrink: 0;
-        border-radius: 9999px;
-        border: 1px solid transparent;
-        background: transparent;
-        color: rgba(203, 213, 225, 0.65);
-        padding: 3px 10px;
-        font-size: 11px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 140ms ease;
-      }
-      .mqs-cat-btn:hover {
-        color: #f8fafc;
-        background: rgba(255, 255, 255, 0.06);
-      }
-      .mqs-cat-btn.is-active {
-        border-color: rgba(255, 255, 255, 0.2);
-        background: rgba(255, 255, 255, 0.09);
-        color: #ffffff;
-        font-weight: 600;
-      }
-      #mediq-search-results {
-        max-height: min(410px, 56vh);
-        overflow-y: auto;
-        overscroll-behavior: contain;
-        scrollbar-width: thin;
-        scrollbar-color: rgba(148, 163, 184, 0.25) transparent;
-      }
-      #mediq-search-results::-webkit-scrollbar { width: 5px; }
-      #mediq-search-results::-webkit-scrollbar-track { background: transparent; }
-      #mediq-search-results::-webkit-scrollbar-thumb {
-        background: rgba(148, 163, 184, 0.25);
-        border-radius: 9999px;
-      }
-      .mqs-row {
-        display: flex;
-        width: 100%;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 12px 16px;
-        text-align: left;
-        border: 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        background: transparent;
-        cursor: pointer;
-        color: #f4f7fb;
-        transition: background 140ms ease;
-      }
-      .mqs-row:last-child {
-        border-bottom: 0;
-      }
-      .mqs-row:hover {
-        background: rgba(255, 255, 255, 0.045);
-      }
-      .mqs-row.is-selected {
-        background: rgba(255, 255, 255, 0.075);
-      }
-      .mqs-row-icon {
-        display: inline-flex;
-        margin-top: 2px;
-        flex-shrink: 0;
-        color: rgba(148, 163, 184, 0.78);
-      }
-      .mqs-row.is-selected .mqs-row-icon {
-        color: #72c5f8;
-      }
-      .mqs-row-main {
-        min-width: 0;
-        flex: 1;
-      }
-      .mqs-row-title {
-        font-size: 13.5px;
-        font-weight: 500;
-        line-height: 1.3;
-        color: #f8fafc;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .mqs-row-uri {
-        margin-top: 1px;
-        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 11.5px;
-        line-height: 1.35;
-        color: rgba(158, 180, 204, 0.76);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .mqs-row-desc {
-        margin-top: 4px;
-        font-size: 11.5px;
-        line-height: 1.45;
-        color: rgba(203, 213, 225, 0.56);
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-      .mqs-row-meta {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 3px;
-        flex-shrink: 0;
-      }
-      .mqs-mime {
-        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 10.5px;
-        color: rgba(158, 180, 204, 0.58);
-      }
-      .mqs-size {
-        font-size: 10.5px;
-        font-variant-numeric: tabular-nums;
-        color: rgba(158, 180, 204, 0.52);
-      }
-      .mqs-badge {
-        display: inline-flex;
-        align-items: center;
-        border-radius: 9999px;
-        border: 1px solid rgba(255, 255, 255, 0.16);
-        padding: 1px 8px;
-        font-size: 10.5px;
-        font-weight: 600;
-        color: rgba(226, 232, 240, 0.85);
-      }
-      .mqs-row.is-selected .mqs-badge {
-        border-color: rgba(114, 197, 248, 0.45);
-        color: #72c5f8;
-      }
-      .mqs-footer {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        padding: 9px 16px;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(4, 12, 29, 0.85);
-        font-size: 11px;
-        color: rgba(203, 213, 225, 0.55);
-      }
-      .mqs-kbd {
+
+      #mediq-search-wrap .mqs-clear {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 2px 6px;
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        color: rgba(148, 163, 184, 0.72);
+        cursor: pointer;
+        transition: color 140ms ease, background-color 140ms ease;
+      }
+
+      #mediq-search-wrap .mqs-clear:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #ffffff;
+      }
+
+      #mediq-search-wrap .mqs-clear svg {
+        width: 12px;
+        height: 12px;
+      }
+
+      #mediq-search-wrap .mqs-clear[hidden],
+      #mediq-search-wrap .mqs-dropdown[hidden] {
+        display: none !important;
+      }
+
+      #mediq-search-wrap .mqs-kbd {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        min-width: 19px;
+        height: 19px;
+        padding: 0 5px;
+        flex-shrink: 0;
         border-radius: 5px;
-        border: 1px solid rgba(255, 255, 255, 0.14);
-        background: rgba(255, 255, 255, 0.05);
-        color: rgba(226, 232, 240, 0.82);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.04);
+        color: rgba(148, 163, 184, 0.7);
         font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
         font-size: 10px;
-        line-height: 1.1;
+        line-height: 1;
+        pointer-events: none;
+      }
+
+      @media (min-width: 1280px) {
+        #mediq-search-wrap:not(.has-value):not(.is-open) .mqs-shortcut-hint {
+          display: inline-flex;
+        }
+      }
+
+      #mediq-search-wrap .mqs-mobile-close {
+        display: none;
+        flex-shrink: 0;
+        border: 0;
+        background: transparent;
+        padding: 4px 6px;
+        color: rgba(148, 163, 184, 0.85);
+        font-size: 12.5px;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      #mediq-search-wrap .mqs-mobile-close:hover {
+        color: #ffffff;
+      }
+
+      /* Clean flat minimal dropdown panel */
+      #mediq-search-dropdown {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        width: min(356px, calc(100vw - 24px));
+        z-index: 95;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        background: rgba(11, 19, 36, 0.97);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        overflow: hidden;
+        animation: mqsMenuIn 140ms ease-out;
+      }
+
+      @media (max-width: 639px) {
+        #mediq-search-wrap:not(.is-mobile-open) {
+          display: none;
+        }
+        #mediq-search-wrap.is-mobile-open {
+          display: block;
+          position: fixed;
+          top: 18px;
+          left: 12px;
+          right: 12px;
+          z-index: 95;
+        }
+        #mediq-search-wrap.is-mobile-open .mqs-bar {
+          width: 100%;
+          height: 44px;
+          padding: 0 10px 0 12px;
+          border-radius: 12px;
+        }
+        #mediq-search-wrap.is-mobile-open .mqs-input {
+          font-size: 14px;
+        }
+        #mediq-search-wrap.is-mobile-open .mqs-mobile-close {
+          display: inline-flex;
+          align-items: center;
+        }
+        #mediq-search-wrap.is-mobile-open #mediq-search-dropdown {
+          top: calc(100% + 8px);
+          left: 0;
+          right: 0;
+          width: 100%;
+        }
+      }
+
+      #mediq-search-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 48;
+        background: rgba(2, 7, 18, 0.56);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+      }
+
+      #mediq-search-backdrop[hidden] {
+        display: none !important;
+      }
+
+      #mediq-search-results {
+        max-height: min(390px, calc(100vh - 140px));
+        padding: 6px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(148, 163, 184, 0.22) transparent;
+      }
+
+      @media (max-width: 639px) {
+        #mediq-search-results {
+          max-height: min(400px, calc(100dvh - 150px));
+        }
+      }
+
+      #mediq-search-results::-webkit-scrollbar {
+        width: 5px;
+      }
+      #mediq-search-results::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      #mediq-search-results::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, 0.22);
+        border-radius: 9999px;
+      }
+
+      .mqs-section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 10px 4px;
+        font-size: 11px;
+        font-weight: 500;
+        color: rgba(148, 163, 184, 0.72);
+      }
+
+      .mqs-section-divider {
+        margin-top: 6px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+      }
+
+      .mqs-section-title {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .mqs-clear-all-btn {
+        border: 0;
+        background: transparent;
+        padding: 2px 4px;
+        border-radius: 5px;
+        font-size: 11px;
+        font-weight: 400;
+        color: rgba(148, 163, 184, 0.65);
+        cursor: pointer;
+        transition: color 140ms ease;
+      }
+
+      .mqs-clear-all-btn:hover {
+        color: #f1f5f9;
+      }
+
+      .mqs-group-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+
+      .mqs-recent-row {
+        display: flex;
+        align-items: center;
+        height: 36px;
+        border-radius: 8px;
+        transition: background-color 120ms ease;
+      }
+
+      .mqs-recent-row:hover,
+      .mqs-recent-row.is-selected {
+        background: rgba(255, 255, 255, 0.07);
+      }
+
+      .mqs-recent-main {
+        flex: 1;
+        min-width: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 6px 0 10px;
+        border: 0;
+        background: transparent;
+        text-align: left;
+        color: #e2e8f0;
+        cursor: pointer;
+      }
+
+      .mqs-recent-remove {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        margin-right: 4px;
+        flex-shrink: 0;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        color: rgba(148, 163, 184, 0.55);
+        cursor: pointer;
+        transition: color 120ms ease, background-color 120ms ease;
+      }
+
+      .mqs-recent-remove:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #f8fafc;
+      }
+
+      .mqs-recent-remove svg {
+        width: 12px;
+        height: 12px;
+      }
+
+      .mqs-row {
+        display: flex;
+        width: 100%;
+        height: 36px;
+        align-items: center;
+        gap: 10px;
+        padding: 0 10px;
+        border: 0;
+        border-radius: 8px;
+        text-align: left;
+        background: transparent;
+        color: #e2e8f0;
+        cursor: pointer;
+        transition: background-color 120ms ease;
+      }
+
+      .mqs-row:hover,
+      .mqs-row.is-selected {
+        background: rgba(255, 255, 255, 0.07);
+      }
+
+      .mqs-icon-glyph {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        color: rgba(148, 163, 184, 0.72);
+        transition: color 120ms ease;
+      }
+
+      .mqs-row:hover .mqs-icon-glyph,
+      .mqs-row.is-selected .mqs-icon-glyph,
+      .mqs-recent-row:hover .mqs-icon-glyph,
+      .mqs-recent-row.is-selected .mqs-icon-glyph {
+        color: #e2e8f0;
+      }
+
+      .mqs-row-label {
+        flex: 1;
+        min-width: 0;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.25;
+        color: rgba(226, 232, 240, 0.92);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .mqs-row:hover .mqs-row-label,
+      .mqs-row.is-selected .mqs-row-label,
+      .mqs-recent-row:hover .mqs-row-label,
+      .mqs-recent-row.is-selected .mqs-row-label {
+        color: #ffffff;
+      }
+
+      .mqs-hl {
+        background: transparent;
+        color: #ffffff;
+        font-weight: 600;
+      }
+
+      .mqs-row-type {
+        flex-shrink: 0;
+        font-size: 11px;
+        font-weight: 400;
+        color: rgba(148, 163, 184, 0.55);
+      }
+
+      .mqs-empty {
+        padding: 20px 12px;
+        text-align: center;
+        font-size: 12.5px;
+        color: rgba(148, 163, 184, 0.78);
       }
     `;
     document.head.appendChild(style);
   }
 
   function buildSearchUi() {
-    if (document.getElementById('mediq-search-modal')) return;
-    injectStyles();
-
-    const modal = document.createElement('div');
-    modal.id = 'mediq-search-modal';
-    modal.setAttribute('role', 'dialog');
-    modal.setAttribute('aria-modal', 'true');
-    modal.setAttribute('aria-label', 'Search MEDIQ website');
-
-    modal.innerHTML = `
-      <div id="mediq-search-panel">
-        <div class="mqs-input-row">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(158,180,204,0.85)" stroke-width="1.8" style="flex-shrink:0">
-            <circle cx="11" cy="11" r="7.5"/><path d="m20.5 20.5-4.1-4.1" stroke-linecap="round"/>
-          </svg>
-          <input id="mediq-search-input" type="text" autocomplete="off" spellcheck="false"
-            placeholder="Filter by URI or name…" />
-          <button id="mediq-search-clear" type="button" aria-label="Clear filter"
-            style="display:none;background:transparent;border:0;color:rgba(203,213,225,0.75);font-size:13px;line-height:1;padding:2px 6px;cursor:pointer;">&times;</button>
-          <button id="mediq-search-close" type="button" aria-label="Close search" class="mqs-kbd" style="cursor:pointer;">ESC</button>
-        </div>
-        <div class="mqs-surface-card">
-          <div class="mqs-cats" id="mediq-search-cats"></div>
-          <div id="mediq-search-results" role="listbox"></div>
-          <div class="mqs-footer">
-            <span><span class="mqs-kbd">↑</span> <span class="mqs-kbd">↓</span> navigate &middot; <span class="mqs-kbd">↵</span> open destination</span>
-            <span id="mediq-search-count">0 destinations</span>
-          </div>
-        </div>
-      </div>
-    `;
-
-    document.body.appendChild(modal);
-
+    const wrap = document.getElementById('mediq-search-wrap');
     const inputEl = document.getElementById('mediq-search-input');
     const clearBtn = document.getElementById('mediq-search-clear');
-    const closeBtn = document.getElementById('mediq-search-close');
-    const catsWrap = document.getElementById('mediq-search-cats');
+    const mobileCloseBtn = document.getElementById('mediq-search-mobile-close');
+    const dropdown = document.getElementById('mediq-search-dropdown');
+    const mobileTrigger = document.getElementById('mediq-search-trigger');
+    if (!wrap || !inputEl || !clearBtn || !dropdown) return;
+
+    injectStyles();
+
+    let backdrop = document.getElementById('mediq-search-backdrop');
+    if (!backdrop) {
+      backdrop = document.createElement('div');
+      backdrop.id = 'mediq-search-backdrop';
+      backdrop.setAttribute('hidden', '');
+      document.body.appendChild(backdrop);
+    }
+
+    dropdown.innerHTML = `<div id="mediq-search-results"></div>`;
     const resultsWrap = document.getElementById('mediq-search-results');
-    const countEl = document.getElementById('mediq-search-count');
 
     let isOpen = false;
     let query = '';
-    let activeCat = 'All';
     let selectedIdx = 0;
-    let filtered = [];
+    let recents = loadRecents();
+    let navActions = [];
+
+    function syncControlsState() {
+      const hasVal = query.length > 0;
+      wrap.classList.toggle('has-value', hasVal);
+      wrap.classList.toggle('is-open', isOpen);
+      inputEl.setAttribute('aria-expanded', String(isOpen));
+      clearBtn.hidden = !hasVal;
+      dropdown.hidden = !isOpen;
+      const isMobileOpen = wrap.classList.contains('is-mobile-open');
+      backdrop.hidden = !(isOpen && isMobileOpen);
+    }
+
+    function addRecent(itemOrQuery, customLabel) {
+      let entry;
+      if (typeof itemOrQuery === 'string') {
+        const cleaned = itemOrQuery.trim();
+        if (!cleaned) return;
+        entry = { id: null, query: cleaned, category: 'Sections' };
+      } else if (itemOrQuery) {
+        entry = {
+          id: itemOrQuery.id,
+          query: customLabel || itemOrQuery.title,
+          category: itemOrQuery.category,
+        };
+      }
+      if (!entry) return;
+      const qLow = entry.query.toLowerCase();
+      recents = recents.filter(
+        (r) => r.query.toLowerCase() !== qLow && !(entry.id && r.id === entry.id)
+      );
+      recents.unshift(entry);
+      if (recents.length > MAX_RECENTS) recents = recents.slice(0, MAX_RECENTS);
+      saveRecents(recents);
+    }
+
+    function removeRecentAt(idx) {
+      if (idx < 0 || idx >= recents.length) return;
+      recents.splice(idx, 1);
+      saveRecents(recents);
+      renderResults();
+      inputEl.focus({ preventScroll: true });
+    }
+
+    function clearAllRecents() {
+      recents = [];
+      saveRecents(recents);
+      renderResults();
+      inputEl.focus({ preventScroll: true });
+    }
 
     function scoreItem(item, qTokens) {
       if (!qTokens.length) return 1;
-      const uriL = getItemUri(item).toLowerCase();
       const titleL = item.title.toLowerCase();
       const codeL = item.code.toLowerCase();
       const descL = item.desc.toLowerCase();
       const catL = item.category.toLowerCase();
       const kwL = (item.keywords || []).join(' ').toLowerCase();
-      const full = `${uriL} ${titleL} ${codeL} ${descL} ${catL} ${kwL}`;
+      const full = `${titleL} ${codeL} ${descL} ${catL} ${kwL}`;
 
       let score = 0;
       for (let i = 0; i < qTokens.length; i++) {
         const tok = qTokens[i];
         if (!full.includes(tok)) return 0;
-        if (uriL.includes(tok)) score += 11;
-        else if (titleL.startsWith(tok) || codeL === tok) score += 10;
-        else if (titleL.includes(tok)) score += 6;
-        else if (kwL.includes(tok)) score += 4;
+        if (titleL.startsWith(tok) || codeL === tok) score += 12;
+        else if (titleL.includes(tok)) score += 7;
+        else if (kwL.includes(tok)) score += 5;
+        else if (codeL.includes(tok)) score += 4;
         else score += 2;
       }
       return score;
     }
 
-    function computeFiltered() {
+    function computeFiltered(catFilter) {
       const tokens = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
-      const pool = activeCat === 'All' ? ITEMS : ITEMS.filter((it) => it.category === activeCat);
+      const pool = catFilter ? ITEMS.filter((it) => it.category === catFilter) : ITEMS;
       if (!tokens.length) return pool.slice();
       return pool
         .map((it) => ({ item: it, score: scoreItem(it, tokens) }))
@@ -1007,168 +1301,366 @@
         .map((r) => r.item);
     }
 
-    function executeItem(item) {
+    function runItem(item, saveToRecent = true, displayLabel) {
       if (!item) return;
-      closeSearch();
+      if (saveToRecent) addRecent(item, displayLabel);
+      closeSearch({ blur: true });
       try {
         item.run();
       } catch (_) {}
     }
 
-    function renderCats() {
-      catsWrap.innerHTML = CATEGORIES.map(
-        (cat) =>
-          `<button type="button" class="mqs-cat-btn${cat === activeCat ? ' is-active' : ''}" data-mqs-cat="${cat}">${cat}</button>`
-      ).join('');
-      catsWrap.querySelectorAll('[data-mqs-cat]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          activeCat = btn.getAttribute('data-mqs-cat') || 'All';
-          selectedIdx = 0;
-          renderCats();
-          renderResults();
-          inputEl.focus();
-        });
-      });
+    function runRecent(entry) {
+      if (!entry) return;
+      if (entry.id && ITEM_MAP[entry.id]) {
+        runItem(ITEM_MAP[entry.id], true, entry.query);
+        return;
+      }
+      query = entry.query;
+      inputEl.value = entry.query;
+      selectedIdx = 0;
+      renderResults();
+      syncControlsState();
+      inputEl.focus({ preventScroll: true });
+    }
+
+    function buildRecentRowHtml(entry, realIdx, navIdx, tokens) {
+      const isSel = navIdx === selectedIdx;
+      const typeLabel = SINGULAR_CAT[entry.category] || '';
+      return `
+        <div class="mqs-recent-row${isSel ? ' is-selected' : ''}" data-mqs-nav-row="${navIdx}">
+          <button type="button" role="option" id="mqs-opt-${navIdx}" aria-selected="${isSel}"
+            class="mqs-recent-main" data-mqs-nav-idx="${navIdx}" data-recent-idx="${realIdx}">
+            <span class="mqs-icon-glyph" aria-hidden="true">${getTypeIcon('recent')}</span>
+            <span class="mqs-row-label">${highlightMatches(entry.query, tokens)}</span>
+            ${typeLabel ? `<span class="mqs-row-type">${escapeHtml(typeLabel)}</span>` : ''}
+          </button>
+          <button type="button" class="mqs-recent-remove" data-mqs-remove-recent="${realIdx}"
+            aria-label="Remove ${escapeHtml(entry.query)} from recent searches" title="Remove">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+            </svg>
+          </button>
+        </div>
+      `;
+    }
+
+    function buildItemRowHtml(item, navIdx, tokens, customLabel) {
+      const isSel = navIdx === selectedIdx;
+      const typeLabel = SINGULAR_CAT[item.category] || item.category;
+      const labelText = customLabel || item.title;
+      return `
+        <button type="button" role="option" id="mqs-opt-${navIdx}" aria-selected="${isSel}"
+          class="mqs-row${isSel ? ' is-selected' : ''}" data-mqs-nav-row="${navIdx}" data-mqs-nav-idx="${navIdx}">
+          <span class="mqs-icon-glyph" aria-hidden="true">${getTypeIcon(item.category)}</span>
+          <span class="mqs-row-label">${highlightMatches(labelText, tokens)}</span>
+          <span class="mqs-row-type">${escapeHtml(typeLabel)}</span>
+        </button>
+      `;
     }
 
     function renderResults() {
-      filtered = computeFiltered();
-      if (selectedIdx >= filtered.length) selectedIdx = Math.max(0, filtered.length - 1);
-      countEl.textContent = `${filtered.length} ${filtered.length === 1 ? 'destination' : 'destinations'}`;
-      clearBtn.style.display = query.length ? 'inline-block' : 'none';
+      const trimmed = query.trim();
+      const tokens = trimmed.toLowerCase().split(/\s+/).filter(Boolean);
 
-      if (!filtered.length) {
-        resultsWrap.innerHTML = `
-          <div style="padding:36px 16px;text-align:center;color:rgba(246,242,234,0.55);font-size:13px;">
-            No matches for &ldquo;${escapeHtml(query)}&rdquo;. Try searching <span style="color:#72c5f8">RayOne</span>, <span style="color:#72c5f8">Ophteis</span>, <span style="color:#72c5f8">Book</span>, <span style="color:#72c5f8">APVRS</span>, or <span style="color:#72c5f8">FDA</span>.
-          </div>
-        `;
-        return;
+      navActions = [];
+      let html = '';
+
+      if (!tokens.length) {
+        if (recents.length > 0) {
+          html += `
+            <div class="mqs-section-head">
+              <span>Recent</span>
+              <button type="button" class="mqs-clear-all-btn" id="mqs-clear-all-recents">Clear</button>
+            </div>
+            <div class="mqs-group-list">
+          `;
+          recents.forEach((entry, rIdx) => {
+            const navIdx = navActions.length;
+            navActions.push({ type: 'recent', entry });
+            html += buildRecentRowHtml(entry, rIdx, navIdx, []);
+          });
+          html += `</div>`;
+        }
+
+        const trendingEntries = TRENDING_CONFIG
+          .map((cfg) => ({ item: ITEM_MAP[cfg.itemId], label: cfg.label }))
+          .filter((t) => Boolean(t.item));
+
+        if (trendingEntries.length > 0) {
+          html += `
+            <div class="mqs-section-head${recents.length > 0 ? ' mqs-section-divider' : ''}">
+              <span class="mqs-section-title">${getTypeIcon('trending')}<span>Trending</span></span>
+            </div>
+            <div class="mqs-group-list">
+          `;
+          trendingEntries.forEach(({ item, label }) => {
+            const navIdx = navActions.length;
+            navActions.push({ type: 'item', item, label });
+            html += buildItemRowHtml(item, navIdx, [], label);
+          });
+          html += `</div>`;
+        }
+      } else {
+        const filtered = computeFiltered();
+        const matchingRecents = recents
+          .map((entry, realIdx) => ({ entry, realIdx }))
+          .filter(({ entry }) => {
+            const hay = `${entry.query} ${entry.category || ''}`.toLowerCase();
+            return tokens.every((tok) => hay.includes(tok));
+          });
+
+        if (matchingRecents.length > 0) {
+          html += `
+            <div class="mqs-section-head"><span>Recent</span></div>
+            <div class="mqs-group-list">
+          `;
+          matchingRecents.forEach(({ entry, realIdx }) => {
+            const navIdx = navActions.length;
+            navActions.push({ type: 'recent', entry });
+            html += buildRecentRowHtml(entry, realIdx, navIdx, tokens);
+          });
+          html += `</div>`;
+        }
+
+        if (filtered.length > 0) {
+          html += `
+            <div class="mqs-section-head${matchingRecents.length > 0 ? ' mqs-section-divider' : ''}">
+              <span>Suggestions</span>
+            </div>
+            <div class="mqs-group-list">
+          `;
+          filtered.forEach((item) => {
+            const navIdx = navActions.length;
+            navActions.push({ type: 'item', item });
+            html += buildItemRowHtml(item, navIdx, tokens, null);
+          });
+          html += `</div>`;
+        } else {
+          html += `<div class="mqs-empty">No results for &ldquo;${escapeHtml(trimmed)}&rdquo;</div>`;
+        }
       }
 
-      resultsWrap.innerHTML = filtered
-        .map((item, idx) => {
-          const isSel = idx === selectedIdx;
-          const uri = getItemUri(item);
-          const mime = MIME_MAP[item.category] || 'application/octet-stream';
-          return `
-            <button type="button" role="option" aria-selected="${isSel}" data-mqs-idx="${idx}"
-              class="mqs-row${isSel ? ' is-selected' : ''}">
-              <span class="mqs-row-icon" aria-hidden="true">${ICONS[item.category] || ICONS.Sections}</span>
-              <div class="mqs-row-main">
-                <div class="mqs-row-title">${escapeHtml(item.title)}</div>
-                <div class="mqs-row-uri" title="${escapeHtml(uri)}">${escapeHtml(uri)}</div>
-                <div class="mqs-row-desc">${escapeHtml(item.desc)}</div>
-              </div>
-              <div class="mqs-row-meta">
-                <span class="mqs-mime">${escapeHtml(mime)}</span>
-                <span class="mqs-size">${escapeHtml(item.code)}</span>
-                <span class="mqs-badge">${escapeHtml(item.category)}</span>
-              </div>
-            </button>
-          `;
-        })
-        .join('');
+      if (selectedIdx >= navActions.length) {
+        selectedIdx = Math.max(0, navActions.length - 1);
+      }
 
-      resultsWrap.querySelectorAll('.mqs-row').forEach((row) => {
-        row.addEventListener('mouseenter', () => {
-          const next = Number(row.getAttribute('data-mqs-idx'));
+      resultsWrap.innerHTML = html;
+      syncSelectionDom();
+
+      const clearAllBtn = document.getElementById('mqs-clear-all-recents');
+      if (clearAllBtn) {
+        clearAllBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          clearAllRecents();
+        });
+      }
+
+      resultsWrap.querySelectorAll('[data-mqs-remove-recent]').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const idx = Number(btn.getAttribute('data-mqs-remove-recent'));
+          if (!Number.isNaN(idx)) removeRecentAt(idx);
+        });
+      });
+
+      resultsWrap.querySelectorAll('[data-mqs-nav-idx]').forEach((el) => {
+        el.addEventListener('mouseenter', () => {
+          const next = Number(el.getAttribute('data-mqs-nav-idx'));
           if (!Number.isNaN(next) && next !== selectedIdx) {
-            const prevRow = resultsWrap.querySelector(`.mqs-row[data-mqs-idx="${selectedIdx}"]`);
-            if (prevRow) {
-              prevRow.classList.remove('is-selected');
-              prevRow.setAttribute('aria-selected', 'false');
-            }
             selectedIdx = next;
-            row.classList.add('is-selected');
-            row.setAttribute('aria-selected', 'true');
+            syncSelectionDom();
           }
         });
-        row.addEventListener('click', () => {
-          const idx = Number(row.getAttribute('data-mqs-idx'));
-          executeItem(filtered[idx]);
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const idx = Number(el.getAttribute('data-mqs-nav-idx'));
+          const act = navActions[idx];
+          if (!act) return;
+          if (act.type === 'recent') runRecent(act.entry);
+          else runItem(act.item, true, act.label);
         });
       });
     }
 
-    function openSearch(presetCategory) {
-      if (typeof presetCategory === 'string' && CATEGORIES.includes(presetCategory)) {
-        activeCat = presetCategory;
+    function syncSelectionDom() {
+      resultsWrap.querySelectorAll('[data-mqs-nav-row]').forEach((row) => {
+        const idx = Number(row.getAttribute('data-mqs-nav-row'));
+        const active = idx === selectedIdx;
+        row.classList.toggle('is-selected', active);
+        const opt = row.hasAttribute('role') ? row : row.querySelector('[role="option"]');
+        if (opt) opt.setAttribute('aria-selected', String(active));
+      });
+      if (navActions.length > 0 && isOpen) {
+        inputEl.setAttribute('aria-activedescendant', `mqs-opt-${selectedIdx}`);
+      } else {
+        inputEl.removeAttribute('aria-activedescendant');
+      }
+    }
+
+    function openSearch(presetQuery) {
+      if (typeof window.__closeMediqMobileMenu === 'function') {
+        window.__closeMediqMobileMenu();
+      }
+      if (typeof presetQuery === 'string' && presetQuery.trim()) {
+        query = presetQuery.trim();
+        inputEl.value = query;
+      }
+      if (window.matchMedia('(max-width: 639px)').matches) {
+        wrap.classList.add('is-mobile-open');
       }
       isOpen = true;
       selectedIdx = 0;
-      renderCats();
+      recents = loadRecents();
       renderResults();
-      modal.classList.add('is-open');
-      setTimeout(() => inputEl.focus(), 20);
+      syncControlsState();
+      inputEl.focus({ preventScroll: true });
     }
 
-    function closeSearch() {
+    function closeSearch(opts = {}) {
+      if (!isOpen && !wrap.classList.contains('is-mobile-open')) return;
       isOpen = false;
-      modal.classList.remove('is-open');
+      wrap.classList.remove('is-mobile-open');
+      syncControlsState();
+      if (opts.blur && document.activeElement === inputEl) {
+        inputEl.blur();
+      }
     }
+
+    inputEl.addEventListener('focus', () => {
+      if (!isOpen) {
+        isOpen = true;
+        selectedIdx = 0;
+        recents = loadRecents();
+        renderResults();
+        syncControlsState();
+      }
+    });
+
+    inputEl.addEventListener('click', () => {
+      if (!isOpen) {
+        isOpen = true;
+        selectedIdx = 0;
+        recents = loadRecents();
+        renderResults();
+        syncControlsState();
+      }
+    });
 
     inputEl.addEventListener('input', () => {
       query = inputEl.value;
       selectedIdx = 0;
+      if (!isOpen) isOpen = true;
       renderResults();
+      syncControlsState();
     });
 
-    clearBtn.addEventListener('click', () => {
+    clearBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       query = '';
       inputEl.value = '';
       selectedIdx = 0;
+      if (!isOpen) isOpen = true;
       renderResults();
-      inputEl.focus();
+      syncControlsState();
+      inputEl.focus({ preventScroll: true });
     });
 
-    closeBtn.addEventListener('click', closeSearch);
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeSearch();
-    });
-    modal.addEventListener('wheel', (e) => e.stopPropagation(), { passive: true });
-
-    modal.addEventListener('keydown', (e) => {
-      if (!isOpen) return;
-      if (e.key === 'Escape') {
+    if (mobileCloseBtn) {
+      mobileCloseBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        closeSearch();
+        closeSearch({ blur: true });
+      });
+    }
+
+    backdrop.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      closeSearch({ blur: true });
+    });
+
+    wrap.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (isOpen || wrap.classList.contains('is-mobile-open')) {
+          e.preventDefault();
+          e.stopPropagation();
+          closeSearch({ blur: true });
+        }
         return;
       }
       if (e.key === 'ArrowDown') {
         e.preventDefault();
         e.stopPropagation();
-        if (!filtered.length) return;
-        selectedIdx = (selectedIdx + 1) % filtered.length;
-        renderResults();
-        resultsWrap.querySelector(`.mqs-row[data-mqs-idx="${selectedIdx}"]`)?.scrollIntoView({ block: 'nearest' });
+        if (!isOpen) {
+          openSearch();
+          return;
+        }
+        if (!navActions.length) return;
+        selectedIdx = (selectedIdx + 1) % navActions.length;
+        syncSelectionDom();
+        resultsWrap.querySelector(`[data-mqs-nav-row="${selectedIdx}"]`)?.scrollIntoView({ block: 'nearest' });
         return;
       }
       if (e.key === 'ArrowUp') {
         e.preventDefault();
         e.stopPropagation();
-        if (!filtered.length) return;
-        selectedIdx = (selectedIdx - 1 + filtered.length) % filtered.length;
-        renderResults();
-        resultsWrap.querySelector(`.mqs-row[data-mqs-idx="${selectedIdx}"]`)?.scrollIntoView({ block: 'nearest' });
+        if (!isOpen || !navActions.length) return;
+        selectedIdx = (selectedIdx - 1 + navActions.length) % navActions.length;
+        syncSelectionDom();
+        resultsWrap.querySelector(`[data-mqs-nav-row="${selectedIdx}"]`)?.scrollIntoView({ block: 'nearest' });
         return;
       }
-      if (e.key === 'Enter' && filtered[selectedIdx]) {
+      if (e.key === 'Enter' && isOpen) {
         e.preventDefault();
         e.stopPropagation();
-        executeItem(filtered[selectedIdx]);
+        const act = navActions[selectedIdx];
+        if (act) {
+          if (act.type === 'recent') runRecent(act.entry);
+          else runItem(act.item, true, act.label);
+        } else if (query.trim()) {
+          addRecent(query.trim());
+          renderResults();
+        }
       }
     });
+
+    dropdown.addEventListener('wheel', (e) => e.stopPropagation(), { passive: true });
+
+    document.addEventListener('pointerdown', (e) => {
+      if (!isOpen && !wrap.classList.contains('is-mobile-open')) return;
+      const target = e.target;
+      if (target instanceof Node && wrap.contains(target)) return;
+      if (mobileTrigger && target instanceof Node && mobileTrigger.contains(target)) return;
+      closeSearch({ blur: true });
+    });
+
+    document.addEventListener('focusin', (e) => {
+      if (!isOpen) return;
+      const target = e.target;
+      if (target instanceof Node && !wrap.contains(target) && target !== mobileTrigger) {
+        closeSearch({ blur: false });
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (!window.matchMedia('(max-width: 639px)').matches && wrap.classList.contains('is-mobile-open')) {
+        wrap.classList.remove('is-mobile-open');
+        syncControlsState();
+      }
+    }, { passive: true });
 
     window.addEventListener('keydown', (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        if (isOpen) closeSearch();
+        if (isOpen) closeSearch({ blur: true });
         else openSearch();
         return;
       }
-      if (!isOpen && e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      if (e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey) {
         const tag = (e.target && e.target.tagName) || '';
         if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT' && !e.target?.isContentEditable) {
           e.preventDefault();
@@ -1180,12 +1672,18 @@
     document.querySelectorAll('[data-mediq-search-open]').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
-        openSearch();
+        e.stopPropagation();
+        if (wrap.classList.contains('is-mobile-open')) {
+          closeSearch({ blur: true });
+        } else {
+          openSearch();
+        }
       });
     });
 
+    syncControlsState();
     window.__openMediqSearch = openSearch;
-    window.__closeMediqSearch = closeSearch;
+    window.__closeMediqSearch = () => closeSearch({ blur: true });
   }
 
   if (document.readyState === 'loading') {

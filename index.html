@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap"
     rel="stylesheet" />
 
   <!-- Preload hero image & brand wordmark for fast LCP & instant splash clarity -->
@@ -231,9 +231,7 @@
     html body .font-serif *,
     html body .med-tab-label,
     html body .med-ghost-word,
-    html body .bc-spread-title,
     html body .bc-cover-title,
-    html body .bc-paper-card__title,
     html body .sv-box3d__spine-code,
     html body .sv-box3d__spine-name {
       font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
@@ -296,15 +294,6 @@
     html body #brands .pel-role,
     html body #brands .pel-status,
     html body .med-tab-num,
-    html body .bc-spread-volnum,
-    html body .bc-spread-highlights__kicker,
-    html body .bc-spread-badge,
-    html body .bc-spread-navbtn,
-    html body .bc-spread-inquire,
-    html body .bc-page-kicker,
-    html body .bc-page-ref,
-    html body .bc-paper-card__code,
-    html body .bc-paper-card__tag,
     html body .bc-cover-num,
     html body .bc-cover-cta,
     html body .bc-zoom-pct,
@@ -332,11 +321,13 @@
         width: 13px !important;
         height: 13px !important;
       }
-      #mediq-search-trigger {
-        padding-left: 0.65rem !important;
-        padding-right: 0.65rem !important;
-        font-size: 11.5px !important;
-        gap: 0.4rem !important;
+      #mediq-search-wrap .mqs-bar {
+        width: 198px;
+      }
+    }
+    @media (min-width: 1024px) and (max-width: 1279px) {
+      #mediq-search-wrap .mqs-bar {
+        width: 172px;
       }
     }
 
@@ -3181,12 +3172,9 @@
         justify-content: center !important;
       }
 
-      /* About Slide 0 (Our Purpose) Mobile: Full-bleed Philippines map as atmospheric background behind vertically centered copy (matching Home & Brands) */
+      /* About Slide 0 (Our Purpose) Mobile: disable pointer events on canvas & keep map tooltips desktop-only */
       html:not(.mediq-subpage-locked) #about #about-interactive-stage .route-world-canvas {
-        opacity: 0.55 !important;
         pointer-events: none !important;
-        -webkit-mask-image: radial-gradient(ellipse 96% 88% at 52% 52%, rgba(0, 0, 0, 0.96) 42%, rgba(0, 0, 0, 0.50) 80%, transparent 100%) !important;
-        mask-image: radial-gradient(ellipse 96% 88% at 52% 52%, rgba(0, 0, 0, 0.96) 42%, rgba(0, 0, 0, 0.50) 80%, transparent 100%) !important;
       }
 
       html:not(.mediq-subpage-locked) #about #about-interactive-stage .route-world-tooltip {
@@ -3211,15 +3199,39 @@
         padding-bottom: var(--mob-pad-bot) !important;
       }
 
-      /* Hide empty desktop spacer column in #hero & soften eye radial backdrop */
+      /* Hide empty desktop spacer column in #hero & extend eye visual seamlessly top-to-bottom */
       #hero .ih-art-lens-stage {
         display: none !important;
       }
 
       #hero #hero-eye-lifespan-container {
-        opacity: 0.44;
-        -webkit-mask-image: radial-gradient(circle at 78% 24%, rgba(0, 0, 0, 0.85) 0%, transparent 72%) !important;
-        mask-image: radial-gradient(circle at 78% 24%, rgba(0, 0, 0, 0.85) 0%, transparent 72%) !important;
+        opacity: 0.30 !important;
+        filter: brightness(0.66) contrast(1.06) saturate(0.68) !important;
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+      }
+
+      #hero #hero-eye-lifespan-container > div[style*="rgba(10,29,64"] {
+        background: rgba(5, 13, 30, 0.24) !important;
+      }
+
+      #hero #hero-interactive-stage > div[style*="rgba(10,29,64,0.55)"] {
+        background: linear-gradient(
+          to bottom,
+          rgba(5, 13, 30, 0.40) 0%,
+          rgba(5, 13, 30, 0.68) 28%,
+          rgba(5, 13, 30, 0.74) 54%,
+          rgba(5, 13, 30, 0.62) 72%,
+          rgba(5, 13, 30, 0.34) 100%
+        ) !important;
+      }
+
+      #hero .ih-hero-copy {
+        text-shadow: 0 2px 18px rgba(3, 9, 22, 0.92), 0 1px 4px rgba(3, 9, 22, 0.96);
+      }
+
+      #hero .ih-lede {
+        color: #eef4fc !important;
       }
 
       html:not(.mediq-subpage-locked) #contact,
@@ -4967,136 +4979,229 @@
           </div>
         </div>
 
-        <!-- Right side: Global Action Search Bar Trigger + Mobile burger -->
+        <!-- Right side: Inline Search Bar with Suggestions Dropdown + Mobile controls -->
         <div class="flex items-center gap-2.5 shrink-0">
           <button id="mediq-search-trigger" type="button" data-mediq-search-open
-            aria-label="Filter by URI or name" title="Filter resources &amp; pages"
-            class="group inline-flex h-8 items-center gap-2 rounded-2xl border border-white/[0.14] bg-[#071530]/80 px-3 text-[12px] font-normal leading-none tracking-[0.02em] text-[#d6e2ef] backdrop-blur-md transition-all duration-200 hover:border-[#72c5f8]/45 hover:bg-[#0b2046]/90 hover:text-white hover:shadow-[0_6px_18px_rgba(0,0,0,0.34)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72c5f8]/35 cursor-pointer shrink-0">
-            <svg class="size-3.5 shrink-0 text-[#8fb0d3] transition-colors group-hover:text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            aria-label="Open search" title="Search MEDIQ (⌘K or /)"
+            class="sm:hidden inline-flex size-9 items-center justify-center rounded-full border border-white/[0.16] bg-[#071530]/85 text-[#d6e2ef] backdrop-blur-md transition-all duration-200 hover:border-[#72c5f8]/55 hover:bg-[#0b2046]/95 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72c5f8]/40 cursor-pointer shrink-0">
+            <svg class="size-4 text-[#8fb0d3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" aria-hidden="true">
               <circle cx="11" cy="11" r="7.5" />
               <path d="m20.5 20.5-4.1-4.1" stroke-linecap="round" />
             </svg>
-            <span class="hidden sm:inline font-normal text-[#9eb4cc] group-hover:text-white">Filter resources…</span>
           </button>
+
+          <div id="mediq-search-wrap" class="mqs-wrap">
+            <div id="mediq-search-bar" class="mqs-bar">
+              <svg class="mqs-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" aria-hidden="true">
+                <circle cx="11" cy="11" r="7.5" />
+                <path d="m20.5 20.5-4.1-4.1" stroke-linecap="round" />
+              </svg>
+              <input id="mediq-search-input" class="mqs-input" type="text" autocomplete="off" spellcheck="false"
+                role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="mediq-search-dropdown"
+                aria-label="Search lenses, services, brands, and resources"
+                placeholder="Search lenses, docs…" />
+              <button id="mediq-search-clear" class="mqs-clear" type="button" aria-label="Clear search" title="Clear search" hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+              <kbd class="mqs-kbd mqs-shortcut-hint" aria-hidden="true">/</kbd>
+              <button id="mediq-search-mobile-close" class="mqs-mobile-close" type="button" aria-label="Close search">Cancel</button>
+            </div>
+            <div id="mediq-search-dropdown" class="mqs-dropdown" role="listbox" aria-label="Search suggestions" hidden></div>
+          </div>
+
           <button id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false"
             aria-controls="mobile-menu"
-            class="group -mr-2 grid lg:hidden size-10 place-items-center rounded-full text-cream transition hover:bg-white/10">
-            <span class="relative block h-3 w-6">
-              <span
-                class="burger-line absolute right-0 top-0 h-[1.5px] w-6 bg-current transition-all duration-300"></span>
-              <span
-                class="burger-line absolute bottom-0 right-0 h-[1.5px] w-4 bg-current transition-all duration-300 group-hover:w-6"></span>
+            class="mob-burger-btn -mr-1.5 inline-flex lg:hidden size-10 items-center justify-center rounded-full border border-white/[0.12] bg-[#071530]/75 text-cream backdrop-blur-md transition-all duration-200 hover:border-[#72c5f8]/50 hover:bg-[#0b2046]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72c5f8]/45 cursor-pointer">
+            <span class="hb-box" aria-hidden="true">
+              <span class="hb-line hb-line--top"></span>
+              <span class="hb-line hb-line--mid"></span>
+              <span class="hb-line hb-line--bot"></span>
             </span>
           </button>
         </div>
       </nav>
     </div>
 
-    <!-- Mobile / tablet menu (Oceanic Cobalt Gradient Navigation Card) -->
+    <!-- Mobile / tablet menu (Animated Height Expansion + Staggered Slide-In Navigation Card) -->
     <div id="mobile-menu"
-      class="pointer-events-none fixed inset-0 top-20 bg-[#040914]/72 p-3 opacity-0 backdrop-blur-md transition-opacity duration-300 sm:p-5 lg:hidden">
+      class="mob-menu-backdrop pointer-events-none fixed inset-0 top-20 p-3 sm:p-5 lg:hidden">
       <div id="mobile-panel"
         style="background: radial-gradient(125% 85% at 8% 0%, rgba(56, 189, 248, 0.24) 0%, rgba(37, 99, 235, 0.12) 44%, transparent 74%), radial-gradient(95% 75% at 96% 100%, rgba(58, 160, 219, 0.18) 0%, transparent 65%), linear-gradient(156deg, rgba(16, 42, 88, 0.97) 0%, rgba(10, 24, 52, 0.98) 54%, rgba(6, 12, 26, 0.99) 100%);"
-        class="relative mx-auto max-w-md overflow-hidden -translate-y-2 max-h-[82vh] overflow-y-auto rounded-xl border border-[#72c5f8]/25 px-5 py-4 text-[#f4f7fb] shadow-[0_24px_64px_rgba(0,0,0,0.82)] backdrop-blur-xl transition-all duration-300">
-        <div class="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#72c5f8]/70 to-transparent" aria-hidden="true"></div>
+        class="mob-menu-shell relative mx-auto max-w-md overflow-hidden rounded-2xl border border-[#72c5f8]/25 text-[#f4f7fb] shadow-[0_24px_64px_rgba(0,0,0,0.82)] backdrop-blur-xl">
+        <div class="mob-panel-clip">
+          <div class="mob-panel-body relative">
+            <div class="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#72c5f8]/70 to-transparent" aria-hidden="true"></div>
 
-        <div class="flex items-center justify-between pb-3 border-b border-[#72c5f8]/15">
-          <span class="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-[#72c5f8]">Navigation</span>
-          <span class="font-mono text-[9.5px] uppercase tracking-[0.18em] text-[#9eb4cc]/65">01 &ndash; 08</span>
-        </div>
+            <div class="flex items-center justify-between px-2 pb-2.5 border-b border-[#72c5f8]/15">
+              <span class="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-[#72c5f8]">Navigation</span>
+              <span class="font-mono text-[9.5px] uppercase tracking-[0.18em] text-[#9eb4cc]/65">01 &ndash; 08</span>
+            </div>
 
-        <ul class="divide-y divide-[#72c5f8]/[0.10]">
-          <li>
-            <a href="#top" class="mobile-link group flex items-center justify-between py-3 transition-colors">
-              <span class="flex items-baseline gap-3.5 min-w-0">
-                <span class="w-5 shrink-0 font-mono text-[11px] tabular-nums text-[#72c5f8]/65 group-hover:text-[#72c5f8]">01</span>
-                <span class="font-serif text-[17.5px] font-medium tracking-[-0.015em] text-[#f4f7fb] group-hover:text-white">Home</span>
-              </span>
-              <span class="text-[11px] text-[#9eb4cc]/65 group-hover:text-white/85 truncate ml-3">Overview</span>
-            </a>
-          </li>
-          <li>
-            <a href="#about" class="mobile-link group flex items-center justify-between py-3 transition-colors">
-              <span class="flex items-baseline gap-3.5 min-w-0">
-                <span class="w-5 shrink-0 font-mono text-[11px] tabular-nums text-[#72c5f8]/65 group-hover:text-[#72c5f8]">02</span>
-                <span class="font-serif text-[17.5px] font-medium tracking-[-0.015em] text-[#f4f7fb] group-hover:text-white">About MEDIQ</span>
-              </span>
-              <span class="text-[11px] text-[#9eb4cc]/65 group-hover:text-white/85 truncate ml-3">Purpose &amp; Quality</span>
-            </a>
-          </li>
-          <li>
-            <a href="#products" class="mobile-link group flex items-center justify-between py-3 transition-colors">
-              <span class="flex items-baseline gap-3.5 min-w-0">
-                <span class="w-5 shrink-0 font-mono text-[11px] tabular-nums text-[#72c5f8]/65 group-hover:text-[#72c5f8]">03</span>
-                <span class="font-serif text-[17.5px] font-medium tracking-[-0.015em] text-[#f4f7fb] group-hover:text-white">Products</span>
-              </span>
-              <span class="text-[11px] text-[#9eb4cc]/65 group-hover:text-white/85 truncate ml-3">IOLs &amp; OVDs</span>
-            </a>
-          </li>
-          <li>
-            <a href="#brands" data-deck-target="brands:0" class="mobile-link group flex items-center justify-between py-3 transition-colors">
-              <span class="flex items-baseline gap-3.5 min-w-0">
-                <span class="w-5 shrink-0 font-mono text-[11px] tabular-nums text-[#72c5f8]/65 group-hover:text-[#72c5f8]">04</span>
-                <span class="font-serif text-[17.5px] font-medium tracking-[-0.015em] text-[#f4f7fb] group-hover:text-white">Brands &amp; Partners</span>
-              </span>
-              <span class="text-[11px] text-[#9eb4cc]/65 group-hover:text-white/85 truncate ml-3">Rayner UK</span>
-            </a>
-          </li>
-          <li>
-            <a href="#distribution" data-deck-target="services:0" class="mobile-link group flex items-center justify-between py-3 transition-colors">
-              <span class="flex items-baseline gap-3.5 min-w-0">
-                <span class="w-5 shrink-0 font-mono text-[11px] tabular-nums text-[#72c5f8]/65 group-hover:text-[#72c5f8]">05</span>
-                <span class="font-serif text-[17.5px] font-medium tracking-[-0.015em] text-[#f4f7fb] group-hover:text-white">Services</span>
-              </span>
-              <span class="text-[11px] text-[#9eb4cc]/65 group-hover:text-white/85 truncate ml-3">Distribution</span>
-            </a>
-          </li>
-          <li>
-            <a href="#resources" data-deck-target="resources:0" class="mobile-link group flex items-center justify-between py-3 transition-colors">
-              <span class="flex items-baseline gap-3.5 min-w-0">
-                <span class="w-5 shrink-0 font-mono text-[11px] tabular-nums text-[#72c5f8]/65 group-hover:text-[#72c5f8]">06</span>
-                <span class="font-serif text-[17.5px] font-medium tracking-[-0.015em] text-[#f4f7fb] group-hover:text-white">Resources</span>
-              </span>
-              <span class="text-[11px] text-[#9eb4cc]/65 group-hover:text-white/85 truncate ml-3">Documentation</span>
-            </a>
-          </li>
-          <li>
-            <a href="#activities" data-deck-target="news:0" class="mobile-link group flex items-center justify-between py-3 transition-colors">
-              <span class="flex items-baseline gap-3.5 min-w-0">
-                <span class="w-5 shrink-0 font-mono text-[11px] tabular-nums text-[#72c5f8]/65 group-hover:text-[#72c5f8]">07</span>
-                <span class="font-serif text-[17.5px] font-medium tracking-[-0.015em] text-[#f4f7fb] group-hover:text-white">News &amp; Events</span>
-              </span>
-              <span class="text-[11px] text-[#9eb4cc]/65 group-hover:text-white/85 truncate ml-3">Updates</span>
-            </a>
-          </li>
-          <li>
-            <a href="#contact" data-deck-target="contact:0" class="mobile-link group flex items-center justify-between py-3 transition-colors">
-              <span class="flex items-baseline gap-3.5 min-w-0">
-                <span class="w-5 shrink-0 font-mono text-[11px] tabular-nums text-[#72c5f8]/65 group-hover:text-[#72c5f8]">08</span>
-                <span class="font-serif text-[17.5px] font-medium tracking-[-0.015em] text-[#f4f7fb] group-hover:text-white">Contact Us</span>
-              </span>
-              <span class="text-[11px] text-[#9eb4cc]/65 group-hover:text-white/85 truncate ml-3">Philippines HQ</span>
-            </a>
-          </li>
-        </ul>
+            <ul class="mt-2 flex flex-col gap-0.5">
+              <li class="mob-nav-item" style="--stagger:0">
+                <a href="#top" class="mobile-link mob-item-link group">
+                  <span class="mob-item-icon" data-mob-icon="home" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                      <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                  </span>
+                  <span class="mob-item-text">
+                    <span class="mob-item-title">Home</span>
+                    <span class="mob-item-sub">Overview &amp; Intraocular Optics</span>
+                  </span>
+                  <svg class="mob-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </a>
+              </li>
+              <li class="mob-nav-item" style="--stagger:1">
+                <a href="#about" class="mobile-link mob-item-link group">
+                  <span class="mob-item-icon" data-mob-icon="about" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="9" />
+                      <polygon points="15.5 8.5 13.5 13.5 8.5 15.5 10.5 10.5 15.5 8.5" />
+                    </svg>
+                  </span>
+                  <span class="mob-item-text">
+                    <span class="mob-item-title">About MEDIQ</span>
+                    <span class="mob-item-sub">Purpose, Mission &amp; Quality</span>
+                  </span>
+                  <svg class="mob-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </a>
+              </li>
+              <li class="mob-nav-item" style="--stagger:2">
+                <a href="#products" class="mobile-link mob-item-link group">
+                  <span class="mob-item-icon" data-mob-icon="products" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5-9.5-6.5-9.5-6.5Z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  </span>
+                  <span class="mob-item-text">
+                    <span class="mob-item-title">Products</span>
+                    <span class="mob-item-sub">RayOne IOLs, Ophteis &amp; AEON</span>
+                  </span>
+                  <svg class="mob-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </a>
+              </li>
+              <li class="mob-nav-item" style="--stagger:3">
+                <a href="#brands" data-deck-target="brands:0" class="mobile-link mob-item-link group">
+                  <span class="mob-item-icon" data-mob-icon="brands" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="8.5" r="5.5" />
+                      <path d="m8.2 13.4-1.2 8.1 5-2.7 5 2.7-1.2-8.1" />
+                    </svg>
+                  </span>
+                  <span class="mob-item-text">
+                    <span class="mob-item-title">Brands &amp; Partners</span>
+                    <span class="mob-item-sub">Exclusive Rayner UK Alliance</span>
+                  </span>
+                  <svg class="mob-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </a>
+              </li>
+              <li class="mob-nav-item" style="--stagger:4">
+                <a href="#distribution" data-deck-target="services:0" class="mobile-link mob-item-link group">
+                  <span class="mob-item-icon" data-mob-icon="services" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M2 4.5A2.5 2.5 0 0 1 4.5 2H11v19H4.5A2.5 2.5 0 0 0 2 23.5V4.5Z" />
+                      <path d="M22 4.5A2.5 2.5 0 0 0 19.5 2H13v19h6.5a2.5 2.5 0 0 1 2.5 2.5V4.5Z" />
+                    </svg>
+                  </span>
+                  <span class="mob-item-text">
+                    <span class="mob-item-title">Services</span>
+                    <span class="mob-item-sub">3D Commercial &amp; Regulatory Library</span>
+                  </span>
+                  <svg class="mob-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </a>
+              </li>
+              <li class="mob-nav-item" style="--stagger:5">
+                <a href="#resources" data-deck-target="resources:0" class="mobile-link mob-item-link group">
+                  <span class="mob-item-icon" data-mob-icon="resources" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                      <polyline points="14 2 14 8 20 8" />
+                      <line x1="8" y1="13" x2="16" y2="13" />
+                      <line x1="8" y1="17" x2="13" y2="17" />
+                    </svg>
+                  </span>
+                  <span class="mob-item-text">
+                    <span class="mob-item-title">Resources</span>
+                    <span class="mob-item-sub">Literature &amp; FDA Documentation</span>
+                  </span>
+                  <svg class="mob-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </a>
+              </li>
+              <li class="mob-nav-item" style="--stagger:6">
+                <a href="#activities" data-deck-target="news:0" class="mobile-link mob-item-link group">
+                  <span class="mob-item-icon" data-mob-icon="news" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <rect width="18" height="18" x="3" y="4" rx="2" />
+                      <line x1="16" x2="16" y1="2" y2="6" />
+                      <line x1="8" x2="8" y1="2" y2="6" />
+                      <line x1="3" x2="21" y1="10" y2="10" />
+                    </svg>
+                  </span>
+                  <span class="mob-item-text">
+                    <span class="mob-item-title">News &amp; Events</span>
+                    <span class="mob-item-sub">APVRS Symposia &amp; Briefings</span>
+                  </span>
+                  <svg class="mob-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </a>
+              </li>
+              <li class="mob-nav-item" style="--stagger:7">
+                <a href="#contact" data-deck-target="contact:0" class="mobile-link mob-item-link group">
+                  <span class="mob-item-icon" data-mob-icon="contact" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <rect width="20" height="16" x="2" y="4" rx="2" />
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
+                  </span>
+                  <span class="mob-item-text">
+                    <span class="mob-item-title">Contact Us</span>
+                    <span class="mob-item-sub">Philippines HQ &amp; Inquiries</span>
+                  </span>
+                  <svg class="mob-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </a>
+              </li>
+            </ul>
 
-        <div class="mt-2 grid grid-cols-2 gap-2.5 border-t border-[#72c5f8]/15 pt-3.5">
-          <a href="#contact"
-            style="background: linear-gradient(135deg, #72c5f8 0%, #3aa0db 48%, #2563eb 100%);"
-            class="mobile-link flex items-center justify-center gap-1.5 rounded-lg border border-[#93d5ff]/45 px-3 py-2.5 text-[12px] font-semibold tracking-[0.02em] text-white shadow-[0_8px_22px_rgba(58,160,219,0.28)] transition hover:brightness-110">
-            Send Inquiry
-            <svg class="size-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M4 12 12 4M5 4h7v7" />
-            </svg>
-          </a>
-          <a href="https://mediqvision.com/mobile/index.html" target="_blank" rel="noopener noreferrer"
-            style="background: linear-gradient(135deg, rgba(16, 39, 82, 0.88) 0%, rgba(10, 22, 48, 0.92) 100%);"
-            class="mobile-link flex items-center justify-center gap-1.5 rounded-lg border border-[#72c5f8]/25 px-3 py-2.5 text-[11.5px] font-medium tracking-[0.02em] text-[#f4f7fb] transition hover:border-[#72c5f8]/50">
-            Product Catalog
-            <svg class="size-3.5 text-[#72c5f8]/80" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M4 12 12 4M5 4h7v7" />
-            </svg>
-          </a>
+            <div class="mob-nav-item mt-2.5 grid grid-cols-2 gap-2.5 border-t border-[#72c5f8]/15 px-1 pt-3" style="--stagger:8">
+              <a href="#contact"
+                style="background: linear-gradient(135deg, #72c5f8 0%, #3aa0db 48%, #2563eb 100%);"
+                class="mobile-link flex items-center justify-center gap-1.5 rounded-xl border border-[#93d5ff]/45 px-3 py-2.5 text-[12px] font-semibold tracking-[0.02em] text-white shadow-[0_8px_22px_rgba(58,160,219,0.28)] transition hover:brightness-110 active:scale-[0.98]">
+                Send Inquiry
+                <svg class="size-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M4 12 12 4M5 4h7v7" />
+                </svg>
+              </a>
+              <a href="https://mediqvision.com/mobile/index.html" target="_blank" rel="noopener noreferrer"
+                style="background: linear-gradient(135deg, rgba(16, 39, 82, 0.88) 0%, rgba(10, 22, 48, 0.92) 100%);"
+                class="mobile-link flex items-center justify-center gap-1.5 rounded-xl border border-[#72c5f8]/25 px-3 py-2.5 text-[11.5px] font-medium tracking-[0.02em] text-[#f4f7fb] transition hover:border-[#72c5f8]/50 active:scale-[0.98]">
+                Product Catalog
+                <svg class="size-3.5 text-[#72c5f8]/80" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M4 12 12 4M5 4h7v7" />
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -8540,82 +8645,56 @@
       <div class="relative w-full h-full overflow-hidden">
 
         <!-- ========================================================================= -->
-        <!-- SLIDE 0: PRODUCTS LANDING PAGE (Executive Centered Clinical Showcase)     -->
+        <!-- SLIDE 0: PRODUCTS LANDING PAGE (Minimal Centered Executive Showcase)      -->
         <!-- ========================================================================= -->
         <div
-          class="product-slide absolute inset-x-0 top-20 bottom-0 w-full flex items-center justify-center overflow-y-auto lg:overflow-hidden transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10"
+          class="product-slide mq-zen-landing absolute inset-x-0 top-20 bottom-0 w-full flex items-center justify-center overflow-y-auto lg:overflow-hidden transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10"
           data-product-index="0">
-          <div class="ih-shell relative z-10 w-full">
-            <div class="ih-hero !min-h-0 !grid-cols-1 items-center justify-items-center">
+          <div class="mq-zen-wrap">
+            <p class="mq-zen-eyebrow">
+              <span class="mq-zen-rule" aria-hidden="true"></span>
+              <span>OPHTHALMIC INNOVATIONS &nbsp;&bull;&nbsp; PRODUCT PORTFOLIO</span>
+              <span class="mq-zen-rule" aria-hidden="true"></span>
+            </p>
 
-              <!-- Executive Centered Hero Column (Commanding Display Scale + Symmetrical CTAs + Clinical Scope Bar) -->
-              <div class="ih-hero-copy pointer-events-auto w-full max-w-5xl mx-auto relative z-20 !py-0 items-center text-center">
-                <p class="ih-eyebrow justify-center gap-3.5 text-[11.5px] sm:!text-[12.5px] tracking-[0.22em] sm:!tracking-[0.22em]">
-                  <span class="hidden sm:inline-block h-px bg-gradient-to-r from-transparent to-sky/60 w-12"></span>
-                  <span>OPHTHALMIC INNOVATIONS &nbsp;&bull;&nbsp; PRODUCT PORTFOLIO</span>
-                  <span class="hidden sm:inline-block h-px bg-gradient-to-l from-transparent to-sky/60 w-12"></span>
-                </p>
+            <h2 id="products-title" class="mq-zen-title">
+              Pioneering Optical &amp; <br />Surgical <span class="mq-zen-accent">Solutions.</span>
+            </h2>
 
-                <h2 id="products-title"
-                  class="ih-h1 prod-serif text-center mt-5 text-[38px] sm:!mt-5 sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] leading-[1.08] sm:!leading-[1.08] tracking-[-0.03em] !font-normal">
-                  Pioneering Optical &amp; <br class="hidden sm:inline" />Surgical <span class="text-[#72c5f8]">Solutions.</span>
-                </h2>
+            <p class="mq-zen-sub">
+              Established expertise in ophthalmic technologies. Exploring complementary medical devices, hospital supplies, pharmaceutical and diagnostic opportunities, subject to applicable authorizations.
+            </p>
 
-                <p class="ih-lede ih-lead mx-auto text-center mt-6 sm:!mt-6 max-w-[680px] sm:!max-w-[680px] text-[15.5px] sm:!text-[17.5px] lg:!text-[18.5px] leading-[1.68] sm:!leading-[1.68] text-[#c8d8e8]">
-                  Established expertise in ophthalmic technologies. Exploring complementary medical devices, hospital
-                  supplies, pharmaceutical and diagnostic opportunities, subject to applicable authorizations.
-                </p>
+            <div class="mq-zen-actions">
+              <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(1);}" class="mq-zen-btn mq-zen-btn--primary">
+                <span>View Products</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" />
+                </svg>
+              </button>
+              <a href="#contact" data-select-inquiry="Product Information" class="mq-zen-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M7 17L17 7" />
+                  <path d="M8 7h9v9" />
+                </svg>
+                <span>Request Product Info</span>
+              </a>
+            </div>
 
-                <div class="ih-hero-ctas justify-center mt-6 sm:!mt-9 gap-2.5 sm:!gap-5">
-                  <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(1);}"
-                    class="ih-btn-pill-primary min-w-0 sm:!h-12 sm:!px-7 lg:!min-w-[216px]">
-                    <span>View Products</span>
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M5 12h14" />
-                      <path d="m13 6 6 6-6 6" />
-                    </svg>
-                  </button>
-                  <a href="#contact" data-select-inquiry="Product Information"
-                    class="ih-btn-video-secondary group min-w-0 sm:!h-12 sm:!px-6 lg:!min-w-[216px] !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
-                    <span class="ih-play-circle sm:!size-7 !border-[#72c5f8]/45">
-                      <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                    <span>Request Product Info</span>
-                  </a>
-                </div>
-
-                <!-- Quiet Architectural Clinical Scope Strip (Non-button Executive Anchor for Wide Screens) -->
-                <div class="hidden sm:grid grid-cols-3 w-full max-w-4xl mx-auto mt-14 pt-8 border-t border-[#72c5f8]/15 divide-x divide-[#72c5f8]/15 text-center">
-                  <div class="px-5">
-                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
-                      Established Specialty
-                    </p>
-                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
-                      Rayner IOLs &amp; Ophthalmic OVDs
-                    </p>
-                  </div>
-                  <div class="px-5">
-                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
-                      Clinical Assurance
-                    </p>
-                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
-                      Authorized Sourcing &amp; Compendia
-                    </p>
-                  </div>
-                  <div class="px-5">
-                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
-                      Future Pipeline
-                    </p>
-                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
-                      Devices, Hospital &amp; Diagnostics
-                    </p>
-                  </div>
-                </div>
-              </div>
-
+            <div class="mq-zen-strip">
+              <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(1);}" class="mq-zen-strip-item">
+                <span class="mq-zen-strip-kicker">Established Specialty</span>
+                <span class="mq-zen-strip-val">Rayner IOLs &amp; Ophthalmic OVDs</span>
+              </button>
+              <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(4);}" class="mq-zen-strip-item">
+                <span class="mq-zen-strip-kicker">Clinical Assurance</span>
+                <span class="mq-zen-strip-val">Authorized Sourcing &amp; Compendia</span>
+              </button>
+              <button type="button" onclick="if(window.goToProductSlide){window.goToProductSlide(3);}" class="mq-zen-strip-item">
+                <span class="mq-zen-strip-kicker">Future Pipeline</span>
+                <span class="mq-zen-strip-val">Devices, Hospital &amp; Diagnostics</span>
+              </button>
             </div>
           </div>
         </div>
@@ -11275,122 +11354,53 @@
         <!-- SLIDE 0: BRANDS & PARTNERS MAIN LANDING PAGE                              -->
         <!-- ========================================================================= -->
         <div
-          class="deck-slide absolute inset-x-0 top-20 bottom-0 w-full flex items-center justify-center transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10 overflow-y-auto lg:overflow-hidden"
+          class="deck-slide mq-zen-landing absolute inset-x-0 top-20 bottom-0 w-full flex items-center justify-center transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10 overflow-y-auto lg:overflow-hidden"
           data-deck="brands" data-slide-index="0">
+          <div class="mq-zen-wrap">
+            <p class="mq-zen-eyebrow">
+              <span class="mq-zen-rule" aria-hidden="true"></span>
+              <span>GLOBAL HEALTHCARE PARTNERSHIPS &nbsp;&bull;&nbsp; BRANDS &amp; PARTNERS</span>
+              <span class="mq-zen-rule" aria-hidden="true"></span>
+            </p>
 
-          <!-- 3. Full-Bleed Right-Anchored Clinical Ophthalmology Slit-Lamp Motion Stage (Zero-Lag Hardware Overlay Blend) -->
-          <div id="brands-aller-silhouette-stage"
-            class="absolute inset-0 z-[5] overflow-hidden select-none pointer-events-none">
-            <video id="brands-slit-lamp-video"
-              src="assets/video/brands-slit-lamp-hero.mp4?v=3.0"
-              poster="assets/img/brands-hero-ophthalmologist.jpg?v=4.0"
-              autoplay loop muted playsinline preload="auto" disablePictureInPicture
-              aria-label="Ophthalmologist configuring a precision slit-lamp biomicroscope during an eye examination"
-              class="absolute inset-0 w-full h-full object-cover object-right select-none"
-              style="opacity: 0.90; transform: translate3d(0, 0, 0); backface-visibility: hidden;"></video>
-            <span aria-hidden="true" class="absolute inset-0 z-10 pointer-events-none"
-              style="background: linear-gradient(to right, #070b10 0%, #070b10 27%, rgba(7,11,16,0.94) 35%, rgba(7,11,16,0.72) 44%, rgba(7,11,16,0.34) 54%, rgba(7,11,16,0.10) 63%, transparent 72%), linear-gradient(to bottom, #070b10 0%, rgba(7,11,16,0.58) 10%, transparent 22%, transparent 78%, rgba(7,11,16,0.64) 91%, #070b10 100%), linear-gradient(to left, #070b10 0%, rgba(7,11,16,0.55) 4%, transparent 10%); transform: translate3d(0, 0, 0);"></span>
-          </div>
-          <script>
-            (function () {
-              var v = document.getElementById('brands-slit-lamp-video');
-              if (!v) return;
-              v.muted = true;
-              v.defaultMuted = true;
-              v.loop = true;
-              v.playsInline = true;
-              v.defaultPlaybackRate = 0.88;
-              v.playbackRate = 0.88;
-              var isVisible = true;
-              var kick = function () {
-                if (window.innerWidth <= 1023 || !isVisible || document.hidden) return;
-                v.muted = true;
-                v.playbackRate = 0.88;
-                if (v.paused) {
-                  var p = v.play();
-                  if (p && typeof p.catch === 'function') p.catch(function () {});
-                }
-              };
-              v.addEventListener('loadeddata', kick);
-              v.addEventListener('canplay', kick);
-              document.addEventListener('visibilitychange', function () {
-                if (document.hidden) { v.pause(); } else { kick(); }
-              });
-              window.addEventListener('pageshow', kick);
-              if ('IntersectionObserver' in window) {
-                var sec = document.getElementById('brands') || v;
-                new IntersectionObserver(function (entries) {
-                  isVisible = entries.some(function (e) { return e.isIntersecting; });
-                  if (isVisible) { kick(); } else if (!v.paused) { v.pause(); }
-                }, { threshold: 0.05 }).observe(sec);
-              }
-              kick();
-            })();
-          </script>
+            <h2 id="brands-title" class="mq-zen-title">
+              Bringing Global Medical <br />to Philippine <span class="mq-zen-accent">Institutions.</span>
+            </h2>
 
-          <div class="ih-shell relative z-20 w-full pointer-events-none">
-            <div class="ih-hero !min-h-0 items-center">
+            <p class="mq-zen-sub">
+              Beyond distribution, MEDIQ builds healthcare partnerships, product awareness, and local connections for international medical technologies &mdash; grounded in ophthalmology expertise.
+            </p>
 
-              <!-- Left Copy Column: Exact Home & About Left Edge + Vertical Center Below Navbar -->
-              <div class="ih-hero-copy pointer-events-auto max-w-2xl relative z-20 !py-0">
-                <p class="ih-eyebrow br-eyebrow">
-                  <span class="hidden sm:inline-block h-px bg-[#72c5f8]/65 w-7 mr-1 shrink-0"></span>
-                  <span>GLOBAL HEALTHCARE PARTNERSHIPS &nbsp;&bull;&nbsp; OPHTHALMIC FOUNDATION</span>
-                </p>
+            <div class="mq-zen-actions">
+              <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 1);}" class="mq-zen-btn mq-zen-btn--primary">
+                <span>Explore Brands</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" />
+                </svg>
+              </button>
+              <a href="#contact" data-select-inquiry="Partnership" class="mq-zen-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M7 17L17 7" />
+                  <path d="M8 7h9v9" />
+                </svg>
+                <span>Partner With Us</span>
+              </a>
+            </div>
 
-                <h2 id="brands-title"
-                  class="ih-h1 br-serif !font-normal !leading-[1.12] sm:!text-[42px] lg:!text-[46px] xl:!text-[52px]"
-                  style="text-wrap: balance;">
-                  <span class="ih-h1-line">Bringing global</span>
-                  <span class="ih-h1-line">medical technologies to</span>
-                  <span class="ih-h1-line"><span class="text-[#72c5f8]">Philippine institutions.</span></span>
-                </h2>
-
-                <p class="ih-lede br-lead !max-w-[560px] !leading-[1.62]" style="text-wrap: pretty;">
-                  Beyond distribution, MEDIQ builds healthcare partnerships, product awareness, and local connections for
-                  international medical technologies &mdash; grounded in ophthalmology expertise.
-                </p>
-
-                <div class="ih-hero-ctas br-cta-row">
-                  <!-- Partner with us -> Goes directly to Contact Info (#contact) -->
-                  <a href="#contact"
-                    class="inline-flex items-center justify-center gap-2 h-12 px-7 rounded-md bg-[#3aa0db] hover:bg-[#72c5f8] text-[#0a1d40] text-[14.5px] font-medium tracking-[0.01em] shadow-[0_10px_28px_rgba(58,160,219,0.32)] border border-[#72c5f8]/50 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer">
-                    <span>Partner with us</span>
-                    <span aria-hidden="true">&rarr;</span>
-                  </a>
-
-                  <!-- Explore capabilities -> Goes to Slide 1 (Principal Brands Portfolio) -->
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 1);}"
-                    class="inline-flex items-center justify-center h-12 px-7 rounded-md border border-[#72c5f8]/35 bg-[#0a1d40]/75 hover:bg-[#72c5f8]/12 hover:border-[#72c5f8]/70 text-[#f4f7fb] text-[14.5px] font-normal tracking-[0.01em] transition-all duration-200 hover:-translate-y-0.5 cursor-pointer">
-                    Explore capabilities
-                  </button>
-                </div>
-              </div>
-
-              <!-- Mobile / Tablet Only Services-Style Hairline Index Rows (Desktop keeps open globe stage) -->
-              <div class="lg:hidden w-full pointer-events-auto relative z-20">
-                <div class="border-t border-[#72c5f8]/15">
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 1);}"
-                    class="lottici-index-row w-full py-3 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <span class="br-serif min-w-0 flex-1 pr-1 text-[17px] font-semibold text-[#dce7f5] group-hover:text-white transition-colors">Principal Brands</span>
-                    <span class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">01</span>
-                  </button>
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 2);}"
-                    class="lottici-index-row w-full py-3 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <span class="br-serif min-w-0 flex-1 pr-1 text-[17px] font-semibold text-[#dce7f5] group-hover:text-white transition-colors">Brand Profiles &amp; Authorizations</span>
-                    <span class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">02</span>
-                  </button>
-                  <a href="assets/brochure/RayOne-EMV-Platform-Brochure-2024_2.2.pdf" download="RayOne EMV Platform Brochure 2024_2.2.pdf"
-                    class="lottici-index-row w-full py-3 border-b border-[#72c5f8]/15 flex items-center justify-between gap-4 text-left group cursor-pointer transition-colors hover:bg-[#72c5f8]/[0.03]">
-                    <span class="br-serif min-w-0 flex-1 pr-1 text-[17px] font-semibold text-[#dce7f5] group-hover:text-white transition-colors">Downloadable Brochures</span>
-                    <span class="inline-flex items-center gap-2 shrink-0 text-[12px] font-mono tracking-wider text-[#5d8bb8] group-hover:text-[#72c5f8] transition-colors">03</span>
-                  </a>
-                </div>
-              </div>
-
-              <!-- Right Column Spacer (Matches Home #hero & About Slide 0) -->
-              <div class="hidden lg:block pointer-events-none"></div>
-
+            <div class="mq-zen-strip">
+              <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 1);}" class="mq-zen-strip-item">
+                <span class="mq-zen-strip-kicker">Principal Brands</span>
+                <span class="mq-zen-strip-val">Rayner UK Exclusive IOL Distribution</span>
+              </button>
+              <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('brands', 2);}" class="mq-zen-strip-item">
+                <span class="mq-zen-strip-kicker">Brand Profiles</span>
+                <span class="mq-zen-strip-val">Authorizations &amp; Clinical Scope</span>
+              </button>
+              <a href="assets/brochure/RayOne-EMV-Platform-Brochure-2024_2.2.pdf" download="RayOne EMV Platform Brochure 2024_2.2.pdf" class="mq-zen-strip-item">
+                <span class="mq-zen-strip-kicker">Product Literature</span>
+                <span class="mq-zen-strip-val">Downloadable Approved Brochures</span>
+              </a>
             </div>
           </div>
         </div>
@@ -11916,35 +11926,36 @@
           display: none !important;
         }
         #srv-book-carousel-slide .bc-book-top-close {
-          width: calc(24px * var(--bc-page-scale, 1));
-          height: calc(24px * var(--bc-page-scale, 1));
-          border: 1px solid rgba(114, 197, 248, 0.45);
+          width: calc(18px * var(--bc-page-scale, 1));
+          height: calc(18px * var(--bc-page-scale, 1));
+          border: 1px solid rgba(25, 35, 52, 0.16);
           border-radius: 50%;
-          background: rgba(10, 29, 64, 0.92);
-          color: #f4f7fb;
+          background: transparent;
+          color: rgba(25, 35, 52, 0.56);
           display: inline-flex;
           align-items: center;
           justify-content: center;
           padding: 0;
           cursor: pointer;
-          box-shadow: 0 4px 12px rgba(10, 29, 64, 0.25);
-          transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+          box-shadow: none;
+          transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
           flex-shrink: 0;
         }
         #srv-book-carousel-slide .bc-book-top-close:hover {
-          transform: scale(1.1);
-          background: #0e3a72;
-          border-color: #72c5f8;
+          transform: scale(1.08);
+          background: #142642;
+          border-color: #142642;
+          color: #faf6ee;
         }
         #srv-book-carousel-slide .bc-book-top-close svg {
-          width: calc(10px * var(--bc-page-scale, 1));
-          height: calc(10px * var(--bc-page-scale, 1));
+          width: calc(8px * var(--bc-page-scale, 1));
+          height: calc(8px * var(--bc-page-scale, 1));
           display: block;
         }
         #srv-book-carousel-slide .bc-page-toprow-right {
           display: inline-flex;
           align-items: center;
-          gap: calc(8px * var(--bc-page-scale, 1));
+          gap: calc(6px * var(--bc-page-scale, 1));
         }
         #srv-book-carousel-slide .bc-zoom-btn {
           width: 28px;
@@ -12106,30 +12117,42 @@
           height: 100%;
           top: 0;
           left: 0;
-          background: #f3f7fd;
+          background-color: #f7f2e8;
           transform: rotateY(180deg) translateZ(1px);
-          background-image: linear-gradient(to left, rgba(10, 29, 64, 0.28) 0%, rgba(10, 29, 64, 0.08) 9%, rgba(0, 0, 0, 0) 22%);
-          border: 1px solid rgba(186, 214, 245, 0.72);
-          border-left: 3px solid #0e2d5c;
-          border-radius: 6px 2px 2px 6px;
-          box-shadow: inset 12px 0 24px rgba(10, 29, 64, 0.05), 0 24px 48px rgba(2, 8, 22, 0.45);
+          background-image:
+            linear-gradient(to left, rgba(24, 18, 12, 0.34) 0%, rgba(24, 18, 12, 0.14) 5%, rgba(24, 18, 12, 0.04) 13%, rgba(0, 0, 0, 0) 24%),
+            linear-gradient(to bottom, #faf6ee 0%, #f7f1e6 58%, #f1eadc 100%);
+          border: 1px solid rgba(25, 35, 52, 0.18);
+          border-left: 4px solid #0e2240;
+          border-radius: 5px 1px 1px 5px;
+          box-shadow:
+            inset 2px 0 0 #e7dfd0,
+            inset 4px 0 0 #d6cbb7,
+            inset 6px 0 0 #f2ece0,
+            inset -14px 0 22px rgba(24, 18, 12, 0.07),
+            0 26px 56px rgba(2, 8, 22, 0.56);
           box-sizing: border-box;
           display: block;
-        }
-        #srv-book-carousel-slide .bc-inside {
-          background-color: #f7f5f0;
-          border-left-color: #142a4f;
         }
         #srv-book-carousel-slide .bc-page {
           width: calc(var(--bc-open-w, 284px) - 4px);
           height: calc(100% - 4px);
           top: 2px;
           left: 2px;
-          background: #f7f5f0;
-          background-image: linear-gradient(to right, rgba(10, 29, 64, 0.22) 0%, rgba(10, 29, 64, 0.05) 9%, rgba(0, 0, 0, 0) 22%);
+          background-color: #f7f2e8;
+          background-image:
+            linear-gradient(to right, rgba(24, 18, 12, 0.30) 0%, rgba(24, 18, 12, 0.11) 5%, rgba(24, 18, 12, 0.03) 13%, rgba(0, 0, 0, 0) 24%),
+            linear-gradient(to bottom, #faf6ee 0%, #f7f1e6 58%, #f1eadc 100%);
           box-sizing: border-box;
-          border-right: 2px solid #0e2d5c;
-          box-shadow: inset -6px 0 14px rgba(10, 29, 64, 0.05), 0 24px 48px rgba(2, 8, 22, 0.45);
+          border-top: 1px solid rgba(25, 35, 52, 0.14);
+          border-bottom: 1px solid rgba(25, 35, 52, 0.14);
+          border-right: 4px solid #0e2240;
+          box-shadow:
+            inset -2px 0 0 #e7dfd0,
+            inset -4px 0 0 #d6cbb7,
+            inset -6px 0 0 #f2ece0,
+            inset 14px 0 20px rgba(24, 18, 12, 0.06),
+            0 26px 56px rgba(2, 8, 22, 0.56);
           border-radius: 1px 5px 5px 1px;
           display: block;
         }
@@ -12143,133 +12166,166 @@
         #srv-book-carousel-slide .bc-wrapper.is-book-open .bc-page {
           user-select: text;
         }
+        #srv-book-carousel-slide .bc-book-italic {
+          font-style: italic !important;
+        }
 
-        /* Left Inner Page (.bc-inside-spread — Swiss Editorial Printed Monograph) */
+        /* Left Inner Page (.bc-inside-spread — Printed Clinical Hardcover Monograph Verso) */
         #srv-book-carousel-slide .bc-inside-spread {
           width: 100%;
           height: 100%;
-          padding: calc(15px * var(--bc-page-scale, 1)) calc(18px * var(--bc-page-scale, 1)) calc(13px * var(--bc-page-scale, 1)) calc(18px * var(--bc-page-scale, 1));
+          padding: calc(12px * var(--bc-page-scale, 1)) calc(18px * var(--bc-page-scale, 1)) calc(10px * var(--bc-page-scale, 1)) calc(21px * var(--bc-page-scale, 1));
           display: flex;
           flex-direction: column;
           box-sizing: border-box;
           text-align: left;
-          color: #102442;
+          font-family: "Newsreader", Georgia, "Times New Roman", serif;
+          color: #192334;
           overflow: hidden;
         }
-        #srv-book-carousel-slide .bc-spread-topbar {
+        #srv-book-carousel-slide .bc-running-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 8px;
-          padding-bottom: calc(5px * var(--bc-page-scale, 1));
+          min-height: calc(16px * var(--bc-page-scale, 1));
+          padding-bottom: calc(4px * var(--bc-page-scale, 1));
           margin-bottom: calc(8px * var(--bc-page-scale, 1));
-          border-bottom: 1px solid rgba(10, 29, 64, 0.14);
+          border-bottom: 1px solid rgba(25, 35, 52, 0.13);
         }
-        #srv-book-carousel-slide .bc-spread-eyebrow,
-        #srv-book-carousel-slide .bc-spread-folio {
-          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(7.4px * var(--bc-page-scale, 1));
+        #srv-book-carousel-slide .bc-running-label {
+          font-family: "Newsreader", Georgia, serif;
+          font-size: calc(6.9px * var(--bc-page-scale, 1));
+          font-weight: 500;
           letter-spacing: 0.16em;
           text-transform: uppercase;
-          color: #4b6587;
-          font-weight: 400;
+          color: #627185;
+          font-variant: small-caps;
         }
-        #srv-book-carousel-slide .bc-spread-heading {
-          display: flex;
-          align-items: baseline;
-          gap: calc(8px * var(--bc-page-scale, 1));
+        #srv-book-carousel-slide .bc-chapter-opener {
+          margin-bottom: calc(6px * var(--bc-page-scale, 1));
         }
-        #srv-book-carousel-slide .bc-spread-volnum {
-          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(15px * var(--bc-page-scale, 1));
-          font-weight: 400;
-          line-height: 1;
-          color: #2c6db8;
-          flex-shrink: 0;
+        #srv-book-carousel-slide .bc-chapter-kicker {
+          display: block;
+          font-family: "Newsreader", Georgia, serif;
+          font-size: calc(7.1px * var(--bc-page-scale, 1));
+          font-weight: 500;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: #365780;
+          margin-bottom: calc(2px * var(--bc-page-scale, 1));
         }
         #srv-book-carousel-slide .bc-spread-title {
-          font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-          font-size: calc(14.5px * var(--bc-page-scale, 1));
-          font-weight: 400;
-          line-height: 1.18;
-          letter-spacing: -0.02em;
-          color: #0d213f;
+          font-family: "Newsreader", Georgia, "Times New Roman", serif;
+          font-size: calc(14.8px * var(--bc-page-scale, 1));
+          font-weight: 500;
+          line-height: 1.14;
+          letter-spacing: -0.015em;
+          color: #111d30;
           margin: 0;
         }
-        #srv-book-carousel-slide .bc-spread-rule {
-          width: calc(26px * var(--bc-page-scale, 1));
+        #srv-book-carousel-slide .bc-spread-ornament {
+          display: flex;
+          align-items: center;
+          gap: calc(6px * var(--bc-page-scale, 1));
+          margin: calc(5px * var(--bc-page-scale, 1)) 0 calc(6px * var(--bc-page-scale, 1));
+        }
+        #srv-book-carousel-slide .bc-spread-rule-line {
           height: 1px;
-          background: rgba(16, 42, 82, 0.35);
-          margin: calc(6px * var(--bc-page-scale, 1)) 0;
+          width: calc(28px * var(--bc-page-scale, 1));
+          background: rgba(25, 35, 52, 0.25);
+        }
+        #srv-book-carousel-slide .bc-spread-fleuret {
+          font-size: calc(7px * var(--bc-page-scale, 1));
+          line-height: 1;
+          color: #365780;
+          opacity: 0.72;
         }
         #srv-book-carousel-slide .bc-spread-sub {
-          font-size: calc(9.2px * var(--bc-page-scale, 1));
-          line-height: 1.44;
-          color: #364e6e;
-          margin: 0 0 calc(8px * var(--bc-page-scale, 1));
+          font-family: "Newsreader", Georgia, serif;
+          font-size: calc(8.9px * var(--bc-page-scale, 1));
+          line-height: 1.43;
+          color: #2c3849;
+          margin: 0 0 calc(7px * var(--bc-page-scale, 1));
+        }
+        #srv-book-carousel-slide .bc-spread-sub::first-letter {
+          float: left;
+          font-family: "Newsreader", Georgia, serif;
+          font-size: calc(23px * var(--bc-page-scale, 1));
+          font-weight: 600;
+          line-height: 0.84;
+          padding-right: calc(4px * var(--bc-page-scale, 1));
+          padding-top: calc(1.5px * var(--bc-page-scale, 1));
+          color: #122a4e;
         }
         #srv-book-carousel-slide .bc-spread-figure {
-          margin: 0 0 calc(8px * var(--bc-page-scale, 1));
+          margin: 0 0 calc(6px * var(--bc-page-scale, 1));
           padding: 0;
+          flex-shrink: 0;
         }
-        #srv-book-carousel-slide .bc-spread-thumb {
+        #srv-book-carousel-slide .bc-spread-plate {
           position: relative;
           width: 100%;
-          height: calc(56px * var(--bc-page-scale, 1));
-          border-radius: 0;
-          overflow: hidden;
-          border: 1px solid rgba(10, 29, 64, 0.16);
+          aspect-ratio: 16 / 9;
+          max-height: calc(134px * var(--bc-page-scale, 1));
+          padding: 2.5px;
+          background: #fffdf8;
+          border: 1px solid rgba(25, 35, 52, 0.18);
+          box-shadow: 0 3px 10px rgba(15, 23, 42, 0.11);
+          box-sizing: border-box;
         }
-        #srv-book-carousel-slide .bc-spread-thumb img {
+        #srv-book-carousel-slide .bc-spread-plate-media {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          isolation: isolate;
+          background: #0d1d38;
+        }
+        #srv-book-carousel-slide .bc-spread-poster,
+        #srv-book-carousel-slide .bc-spread-video {
+          position: absolute;
+          inset: 0;
           width: 100%;
           height: 100%;
           object-fit: cover;
           display: block;
         }
+        #srv-book-carousel-slide .bc-spread-video {
+          opacity: 0;
+          transform: translateZ(0.1px);
+          transition: opacity 0.32s ease;
+          pointer-events: none;
+        }
+        #srv-book-carousel-slide .bc-spread-plate.is-video-playing .bc-spread-video {
+          opacity: 1;
+        }
+        @media (max-width: 767px) {
+          #srv-book-carousel-slide .bc-spread-video {
+            display: none !important;
+          }
+        }
         #srv-book-carousel-slide .bc-spread-caption {
-          margin-top: calc(3.5px * var(--bc-page-scale, 1));
-          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(6.8px * var(--bc-page-scale, 1));
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          color: #5a7394;
+          margin-top: calc(4px * var(--bc-page-scale, 1));
+          font-family: "Newsreader", Georgia, serif;
+          font-size: calc(7.5px * var(--bc-page-scale, 1));
+          line-height: 1.3;
+          color: #536175;
         }
-        #srv-book-carousel-slide .bc-spread-highlights {
-          border: none;
-          border-top: 1px solid rgba(10, 29, 64, 0.16);
-          background: transparent;
-          border-radius: 0;
-          padding: calc(7px * var(--bc-page-scale, 1)) 0 0 0;
-          margin-bottom: auto;
-          box-shadow: none;
+        #srv-book-carousel-slide .bc-spread-notes {
+          border-top: 1px solid rgba(25, 35, 52, 0.14);
+          padding-top: calc(5px * var(--bc-page-scale, 1));
+          margin-top: auto;
+          margin-bottom: calc(6px * var(--bc-page-scale, 1));
         }
-        #srv-book-carousel-slide .bc-spread-highlights__head {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 6px;
-          padding-bottom: calc(4px * var(--bc-page-scale, 1));
-          margin-bottom: calc(4px * var(--bc-page-scale, 1));
-          border-bottom: 1px solid rgba(10, 29, 64, 0.08);
-        }
-        #srv-book-carousel-slide .bc-spread-highlights__kicker {
-          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        #srv-book-carousel-slide .bc-spread-notes__head {
+          font-family: "Newsreader", Georgia, serif;
           font-size: calc(7px * var(--bc-page-scale, 1));
-          font-weight: 400;
+          font-weight: 600;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: #365780;
-        }
-        #srv-book-carousel-slide .bc-spread-badge {
-          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(6.6px * var(--bc-page-scale, 1));
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: #5b7494;
-          background: transparent;
-          padding: 0;
-          border-radius: 0;
-          white-space: nowrap;
+          color: #4c5d73;
+          margin-bottom: calc(3px * var(--bc-page-scale, 1));
         }
         #srv-book-carousel-slide .bc-spread-highlight-list {
           list-style: none;
@@ -12277,165 +12333,164 @@
           padding: 0;
           display: flex;
           flex-direction: column;
-          gap: calc(4px * var(--bc-page-scale, 1));
+          gap: calc(2.5px * var(--bc-page-scale, 1));
         }
         #srv-book-carousel-slide .bc-spread-highlight-item {
           display: flex;
           align-items: baseline;
-          gap: calc(6px * var(--bc-page-scale, 1));
-          font-size: calc(8.6px * var(--bc-page-scale, 1));
-          line-height: 1.32;
-          color: #203b60;
-          font-weight: 400;
+          gap: calc(5px * var(--bc-page-scale, 1));
+          font-family: "Newsreader", Georgia, serif;
+          font-size: calc(8.1px * var(--bc-page-scale, 1));
+          line-height: 1.28;
+          color: #2d3b4e;
         }
         #srv-book-carousel-slide .bc-spread-dash {
-          color: #5b7b9e;
+          color: #63748a;
           flex-shrink: 0;
-          font-size: calc(8.4px * var(--bc-page-scale, 1));
         }
-        #srv-book-carousel-slide .bc-spread-nav {
-          display: flex;
+        #srv-book-carousel-slide .bc-folio-bar {
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
           align-items: center;
-          justify-content: space-between;
           gap: 6px;
-          padding-top: calc(7px * var(--bc-page-scale, 1));
-          border-top: 1px solid rgba(10, 29, 64, 0.14);
-          margin-top: calc(8px * var(--bc-page-scale, 1));
-        }
-        #srv-book-carousel-slide .bc-spread-navbtn {
-          padding: calc(3.5px * var(--bc-page-scale, 1)) calc(6px * var(--bc-page-scale, 1));
-          border-radius: 0;
-          border: 1px solid rgba(10, 29, 64, 0.2);
-          background: transparent;
-          color: #102442;
-          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(8px * var(--bc-page-scale, 1));
-          font-weight: 400;
-          letter-spacing: 0.08em;
-          cursor: pointer;
-          transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
-        }
-        #srv-book-carousel-slide .bc-spread-navbtn:hover {
-          background: #102442;
-          color: #f7f5f0;
-          border-color: #102442;
-        }
-        #srv-book-carousel-slide .bc-spread-inquire {
-          padding: calc(4px * var(--bc-page-scale, 1)) calc(11px * var(--bc-page-scale, 1));
-          border-radius: 2px;
-          border: 1px solid #102442;
-          background: #102442;
-          color: #f7f5f0;
-          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          padding-top: calc(5px * var(--bc-page-scale, 1));
+          border-top: 1px solid rgba(25, 35, 52, 0.12);
+          font-family: "Newsreader", Georgia, serif;
           font-size: calc(7.8px * var(--bc-page-scale, 1));
-          font-weight: 400;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          cursor: pointer;
-          transition: background 0.18s ease, border-color 0.18s ease;
+          color: #556377;
         }
-        #srv-book-carousel-slide .bc-spread-inquire:hover {
-          background: #235591;
-          border-color: #235591;
+        #srv-book-carousel-slide .bc-folio-num {
+          font-variant-numeric: oldstyle-nums;
+          font-size: calc(8.4px * var(--bc-page-scale, 1));
+          font-weight: 500;
+          color: #192334;
+          letter-spacing: 0.04em;
+        }
+        #srv-book-carousel-slide .bc-folio-link {
+          background: transparent;
+          border: 0;
+          padding: 0;
+          font-family: "Newsreader", Georgia, serif;
+          font-size: calc(7.6px * var(--bc-page-scale, 1));
+          color: #365780;
+          cursor: pointer;
+          transition: color 0.16s ease;
+        }
+        #srv-book-carousel-slide .bc-folio-link--left {
+          justify-self: start;
+        }
+        #srv-book-carousel-slide .bc-folio-link--right {
+          justify-self: end;
+        }
+        #srv-book-carousel-slide .bc-folio-link:hover {
+          color: #0e2240;
+          text-decoration: underline;
+          text-underline-offset: 2px;
         }
 
-        /* Right Paper Page (.bc-page-spread — Swiss Editorial Hairline Ledger) */
+        /* Right Paper Page (.bc-page-spread — Typeset Recto Deliverable Sections) */
         #srv-book-carousel-slide .bc-page-spread {
           width: 100%;
           height: 100%;
-          padding: calc(15px * var(--bc-page-scale, 1)) calc(17px * var(--bc-page-scale, 1)) calc(13px * var(--bc-page-scale, 1)) calc(20px * var(--bc-page-scale, 1));
+          padding: calc(12px * var(--bc-page-scale, 1)) calc(21px * var(--bc-page-scale, 1)) calc(10px * var(--bc-page-scale, 1)) calc(18px * var(--bc-page-scale, 1));
           display: flex;
           flex-direction: column;
           box-sizing: border-box;
           text-align: left;
-          color: #102442;
+          font-family: "Newsreader", Georgia, "Times New Roman", serif;
+          color: #192334;
           overflow: hidden;
         }
-        #srv-book-carousel-slide .bc-page-toprow {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding-bottom: calc(5px * var(--bc-page-scale, 1));
-          margin-bottom: calc(4px * var(--bc-page-scale, 1));
-          border-bottom: 1px solid rgba(10, 29, 64, 0.14);
+        #srv-book-carousel-slide .bc-running-chapter {
+          font-family: "Newsreader", Georgia, serif;
+          font-size: calc(8px * var(--bc-page-scale, 1));
+          color: #536275;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: calc(205px * var(--bc-page-scale, 1));
         }
-        #srv-book-carousel-slide .bc-page-kicker {
-          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(7.4px * var(--bc-page-scale, 1));
-          letter-spacing: 0.16em;
+        #srv-book-carousel-slide .bc-recto-kicker {
+          font-family: "Newsreader", Georgia, serif;
+          font-size: calc(7.2px * var(--bc-page-scale, 1));
+          font-weight: 600;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
           color: #365780;
-          font-weight: 400;
+          margin-bottom: calc(5px * var(--bc-page-scale, 1));
         }
-        #srv-book-carousel-slide .bc-page-ref {
-          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(7.4px * var(--bc-page-scale, 1));
-          letter-spacing: 0.14em;
-          color: #5b7494;
-        }
-        #srv-book-carousel-slide .bc-paper-cards {
+        #srv-book-carousel-slide .bc-book-entries {
           flex: 1 1 auto;
-          display: grid;
-          grid-template-rows: repeat(4, minmax(0, 1fr));
-          gap: 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
           min-height: 0;
         }
-        #srv-book-carousel-slide .bc-paper-card {
-          border: none;
-          border-bottom: 1px solid rgba(10, 29, 64, 0.13);
-          background: transparent;
-          border-radius: 0;
-          padding: calc(6px * var(--bc-page-scale, 1)) 0;
-          display: grid;
-          grid-template-columns: calc(20px * var(--bc-page-scale, 1)) minmax(0, 1fr);
-          gap: calc(6px * var(--bc-page-scale, 1));
-          align-content: center;
-          box-shadow: none;
+        #srv-book-carousel-slide .bc-book-entry {
+          padding: calc(5px * var(--bc-page-scale, 1)) 0;
+          border-bottom: 1px solid rgba(25, 35, 52, 0.09);
         }
-        #srv-book-carousel-slide .bc-paper-card:last-child {
+        #srv-book-carousel-slide .bc-book-entry:last-child {
           border-bottom: none;
         }
-        #srv-book-carousel-slide .bc-paper-card__idx {
-          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(8px * var(--bc-page-scale, 1));
-          letter-spacing: 0.1em;
-          color: #3669a3;
-          padding-top: calc(1.5px * var(--bc-page-scale, 1));
+        #srv-book-carousel-slide .bc-book-entry__head {
+          display: flex;
+          align-items: baseline;
+          gap: calc(5px * var(--bc-page-scale, 1));
+          margin-bottom: calc(2px * var(--bc-page-scale, 1));
         }
-        #srv-book-carousel-slide .bc-paper-card__main {
-          min-width: 0;
+        #srv-book-carousel-slide .bc-book-entry__sec {
+          font-family: "Newsreader", Georgia, serif;
+          font-size: calc(8.4px * var(--bc-page-scale, 1));
+          font-weight: 500;
+          color: #566e8d;
+          flex-shrink: 0;
         }
-        #srv-book-carousel-slide .bc-paper-card__meta {
+        #srv-book-carousel-slide .bc-book-entry__title {
+          font-family: "Newsreader", Georgia, "Times New Roman", serif;
+          font-size: calc(10.6px * var(--bc-page-scale, 1));
+          font-weight: 600;
+          line-height: 1.18;
+          color: #132238;
+          margin: 0;
+        }
+        #srv-book-carousel-slide .bc-book-entry__desc {
+          font-family: "Newsreader", Georgia, serif;
+          font-size: calc(8.7px * var(--bc-page-scale, 1));
+          line-height: 1.44;
+          color: #303d4f;
+          margin: 0;
+        }
+        #srv-book-carousel-slide .bc-book-colophon {
+          margin-top: calc(6px * var(--bc-page-scale, 1));
+          padding-top: calc(6px * var(--bc-page-scale, 1));
+          margin-bottom: calc(6px * var(--bc-page-scale, 1));
+          border-top: 1px solid rgba(25, 35, 52, 0.11);
           display: flex;
           align-items: baseline;
           justify-content: space-between;
-          gap: 6px;
-          margin-bottom: calc(2.5px * var(--bc-page-scale, 1));
+          gap: 8px;
         }
-        #srv-book-carousel-slide .bc-paper-card__title {
-          font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-          font-size: calc(10.8px * var(--bc-page-scale, 1));
-          font-weight: 400;
-          line-height: 1.22;
-          color: #0d213f;
-          margin: 0;
+        #srv-book-carousel-slide .bc-book-colophon-note {
+          font-family: "Newsreader", Georgia, serif;
+          font-size: calc(7.6px * var(--bc-page-scale, 1));
+          color: #5d6c80;
         }
-        #srv-book-carousel-slide .bc-paper-card__tag {
-          font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: calc(6.4px * var(--bc-page-scale, 1));
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: #637c9c;
+        #srv-book-carousel-slide .bc-book-colophon-cta {
           background: transparent;
+          border: 0;
           padding: 0;
-          border-radius: 0;
+          font-family: "Newsreader", Georgia, serif;
+          font-size: calc(7.9px * var(--bc-page-scale, 1));
+          font-weight: 600;
+          color: #163a6b;
+          text-decoration: underline;
+          text-underline-offset: 2px;
+          cursor: pointer;
           white-space: nowrap;
-          flex-shrink: 0;
         }
-        #srv-book-carousel-slide .bc-paper-card__desc {
-          font-size: calc(8.8px * var(--bc-page-scale, 1));
-          line-height: 1.38;
-          color: #425b7d;
-          margin: 0;
+        #srv-book-carousel-slide .bc-book-colophon-cta:hover {
+          color: #0b1c36;
         }
 
         #srv-book-carousel-slide .bc-cover-img {
@@ -12589,79 +12644,53 @@
         <!-- SLIDE 0: SERVICES LANDING PAGE (Executive Centered Clinical Showcase)     -->
         <!-- ========================================================================= -->
         <div
-          class="deck-slide absolute inset-x-0 top-20 bottom-0 w-full flex items-center justify-center overflow-y-auto lg:overflow-hidden transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10"
+          class="deck-slide mq-zen-landing absolute inset-x-0 top-20 bottom-0 w-full flex items-center justify-center overflow-y-auto lg:overflow-hidden transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10"
           data-deck="services" data-slide-index="0">
-          <div class="ih-shell relative z-10 w-full">
-            <div class="ih-hero !min-h-0 !grid-cols-1 items-center justify-items-center">
+          <div class="mq-zen-wrap">
+            <p class="mq-zen-eyebrow">
+              <span class="mq-zen-rule" aria-hidden="true"></span>
+              <span>CLINICAL &amp; COMMERCIAL STEWARDSHIP &nbsp;&bull;&nbsp; SERVICES</span>
+              <span class="mq-zen-rule" aria-hidden="true"></span>
+            </p>
 
-              <!-- Executive Centered Hero Column (Commanding Display Scale + Symmetrical CTAs + Clinical Scope Bar) -->
-              <div class="ih-hero-copy pointer-events-auto w-full max-w-5xl mx-auto relative z-20 !py-0 items-center text-center">
-                <p class="ih-eyebrow justify-center gap-3.5 text-[11.5px] sm:!text-[12.5px] tracking-[0.22em] sm:!tracking-[0.22em]">
-                  <span class="hidden sm:inline-block h-px bg-gradient-to-r from-transparent to-sky/60 w-12"></span>
-                  <span>CLINICAL &amp; COMMERCIAL STEWARDSHIP &nbsp;&bull;&nbsp; SERVICES</span>
-                  <span class="hidden sm:inline-block h-px bg-gradient-to-l from-transparent to-sky/60 w-12"></span>
-                </p>
+            <h2 id="distribution-title" class="mq-zen-title">
+              Precision Support for <br />Every Operating <span class="mq-zen-accent">Theatre.</span>
+            </h2>
 
-                <h2 id="distribution-title"
-                  class="ih-h1 srv-serif text-center mt-5 text-[38px] sm:!mt-5 sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] leading-[1.08] sm:!leading-[1.08] tracking-[-0.03em] !font-normal">
-                  Precision Support for <br class="hidden sm:inline" />Every Operating <span class="text-[#72c5f8]">Theatre.</span>
-                </h2>
+            <p class="mq-zen-sub">
+              From sourcing and distribution to strategic product marketing, institutional sales, professional education, and responsive customer support.
+            </p>
 
-                <p class="ih-lede ih-lead mx-auto text-center mt-6 sm:!mt-6 max-w-[680px] sm:!max-w-[680px] text-[15.5px] sm:!text-[17.5px] lg:!text-[18.5px] leading-[1.68] sm:!leading-[1.68] text-[#c8d8e8]">
-                  From sourcing and distribution to strategic product marketing, institutional sales, professional
-                  education and responsive customer support.
-                </p>
+            <div class="mq-zen-actions">
+              <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 7);}" class="mq-zen-btn mq-zen-btn--primary">
+                <span>Explore Services</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" />
+                </svg>
+              </button>
+              <a href="#contact" data-select-inquiry="Institutional Supply" class="mq-zen-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M7 17L17 7" />
+                  <path d="M8 7h9v9" />
+                </svg>
+                <span>Institutional Inquiry</span>
+              </a>
+            </div>
 
-                <div class="ih-hero-ctas justify-center mt-6 sm:!mt-9 gap-2.5 sm:!gap-5">
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 7);}"
-                    class="ih-btn-pill-primary min-w-0 sm:!h-12 sm:!px-7 lg:!min-w-[216px]">
-                    <span>Explore Services</span>
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M5 12h14" />
-                      <path d="m13 6 6 6-6 6" />
-                    </svg>
-                  </button>
-                  <a href="#contact" data-select-inquiry="Institutional Supply"
-                    class="ih-btn-video-secondary group min-w-0 sm:!h-12 sm:!px-6 lg:!min-w-[216px] !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
-                    <span class="ih-play-circle sm:!size-7 !border-[#72c5f8]/45">
-                      <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                    <span>Institutional Inquiry</span>
-                  </a>
-                </div>
-
-                <!-- Quiet Architectural Service Pillars Strip (Non-button Executive Anchor for Wide Screens) -->
-                <div class="hidden sm:grid grid-cols-3 w-full max-w-4xl mx-auto mt-14 pt-8 border-t border-[#72c5f8]/15 divide-x divide-[#72c5f8]/15 text-center">
-                  <div class="px-5">
-                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
-                      Supply &amp; Logistics
-                    </p>
-                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
-                      Importation &amp; National Supply
-                    </p>
-                  </div>
-                  <div class="px-5">
-                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
-                      Commercialization
-                    </p>
-                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
-                      Marketing, Sales &amp; Market Growth
-                    </p>
-                  </div>
-                  <div class="px-5">
-                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
-                      Clinical Continuity
-                    </p>
-                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
-                      Education &amp; Quality Support
-                    </p>
-                  </div>
-                </div>
-              </div>
-
+            <div class="mq-zen-strip">
+              <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 7);}" class="mq-zen-strip-item">
+                <span class="mq-zen-strip-kicker">Supply &amp; Logistics</span>
+                <span class="mq-zen-strip-val">Importation &amp; National Supply</span>
+              </button>
+              <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 7);}" class="mq-zen-strip-item">
+                <span class="mq-zen-strip-kicker">Commercialization</span>
+                <span class="mq-zen-strip-val">Marketing, Sales &amp; Market Growth</span>
+              </button>
+              <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('services', 7);}" class="mq-zen-strip-item">
+                <span class="mq-zen-strip-kicker">Clinical Continuity</span>
+                <span class="mq-zen-strip-val">Education &amp; Quality Support</span>
+              </button>
             </div>
           </div>
         </div>
@@ -12779,85 +12808,58 @@
         <!-- SLIDE 0: RESOURCES LANDING PAGE (Executive Centered Information Hub)      -->
         <!-- ========================================================================= -->
         <div
-          class="deck-slide absolute inset-x-0 top-20 bottom-0 w-full flex items-center justify-center overflow-y-auto lg:overflow-hidden transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10"
+          class="deck-slide mq-zen-landing absolute inset-x-0 top-20 bottom-0 w-full flex items-center justify-center overflow-y-auto lg:overflow-hidden transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10"
           data-deck="resources" data-slide-index="0">
-          <div class="ih-shell relative z-10 w-full">
-            <div class="ih-hero !min-h-0 !grid-cols-1 items-center justify-items-center">
+          <div class="mq-zen-wrap">
+            <p class="mq-zen-eyebrow">
+              <span class="mq-zen-rule" aria-hidden="true"></span>
+              <span>RESPONSIBLE INFORMATION HUB &nbsp;&bull;&nbsp; RESOURCES</span>
+              <span class="mq-zen-rule" aria-hidden="true"></span>
+            </p>
 
-              <!-- Executive Centered Hero Column (Commanding Display Scale + Symmetrical CTAs + Resource Scope Bar) -->
-              <div class="ih-hero-copy pointer-events-auto w-full max-w-5xl mx-auto relative z-20 !py-0 items-center text-center">
-                <p class="ih-eyebrow justify-center gap-3.5 text-[11.5px] sm:!text-[12.5px] tracking-[0.22em] sm:!tracking-[0.22em]">
-                  <span class="hidden sm:inline-block h-px bg-gradient-to-r from-transparent to-sky/60 w-12"></span>
-                  <span>RESPONSIBLE INFORMATION HUB &nbsp;&bull;&nbsp; RESOURCES</span>
-                  <span class="hidden sm:inline-block h-px bg-gradient-to-l from-transparent to-sky/60 w-12"></span>
-                </p>
+            <h2 id="resources-title" class="mq-zen-title">
+              Corporate Literature &amp; <br />Professional <span class="mq-zen-accent">Resources.</span>
+            </h2>
 
-                <h2 id="resources-title"
-                  class="ih-h1 res-serif text-center mt-5 text-[38px] sm:!mt-5 sm:!text-[52px] lg:!text-[62px] xl:!text-[70px] leading-[1.08] sm:!leading-[1.08] tracking-[-0.03em] !font-normal">
-                  Corporate Literature &amp; <br class="hidden sm:inline" />Professional <span class="text-[#72c5f8]">Resources.</span>
-                </h2>
+            <p class="mq-zen-sub">
+              MEDIQ Resources: corporate profile, approved product materials, professional educational information, and official regulatory reference links.
+            </p>
 
-                <p class="ih-lede ih-lead mx-auto text-center mt-6 sm:!mt-6 max-w-[680px] sm:!max-w-[680px] text-[15.5px] sm:!text-[17.5px] lg:!text-[18.5px] leading-[1.68] sm:!leading-[1.68] text-[#c8d8e8]">
-                  MEDIQ Resources: corporate profile, approved product materials, professional educational information
-                  and official regulatory reference links.
-                </p>
-
-                <p class="mt-3.5 mx-auto text-center text-[12px] leading-[1.55] font-mono tracking-wide text-[#7ea3c8] max-w-[660px]">
-                  Informational reference only &bull; MEDIQ does not issue binding medical or statutory FDA advice.
-                  Refer to original authorized authorities and product manufacturers.
-                </p>
-
-                <div class="ih-hero-ctas justify-center mt-6 sm:!mt-8 gap-2.5 sm:!gap-5">
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 3);}"
-                    class="ih-btn-pill-primary min-w-0 sm:!h-12 sm:!px-7 lg:!min-w-[232px]">
-                    <span>2026 Corporate Profile</span>
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M5 12h14" />
-                      <path d="m13 6 6 6-6 6" />
-                    </svg>
-                  </button>
-                  <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 1);}"
-                    class="ih-btn-video-secondary group min-w-0 sm:!h-12 sm:!px-6 lg:!min-w-[232px] !rounded-full !border !border-[#72c5f8]/35 !bg-[#0a1d40]/65 hover:!border-[#72c5f8]/75 hover:!bg-[#72c5f8]/10 !justify-center !transition-all !duration-300">
-                    <span class="ih-play-circle sm:!size-7 !border-[#72c5f8]/45">
-                      <svg class="size-3.5 text-[#72c5f8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7" />
-                        <path d="M8 7h9v9" />
-                      </svg>
-                    </span>
-                    <span>Approved Materials</span>
-                  </button>
-                </div>
-
-                <!-- Quiet Architectural Resource Scope Strip (Non-button Executive Anchor for Wide Screens) -->
-                <div class="hidden sm:grid grid-cols-3 w-full max-w-4xl mx-auto mt-12 pt-8 border-t border-[#72c5f8]/15 divide-x divide-[#72c5f8]/15 text-center">
-                  <div class="px-5">
-                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
-                      Corporate Profile
-                    </p>
-                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
-                      2026 Vision, Mission &amp; Approach
-                    </p>
-                  </div>
-                  <div class="px-5">
-                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
-                      Clinical Documents
-                    </p>
-                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
-                      Approved IFUs &amp; Product Materials
-                    </p>
-                  </div>
-                  <div class="px-5">
-                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8]">
-                      Regulatory Reference
-                    </p>
-                    <p class="mt-1.5 text-[13.5px] lg:text-[14.5px] font-medium text-[#dce8f5]">
-                      FDA PH, DOH &amp; Source Links
-                    </p>
-                  </div>
-                </div>
-              </div>
-
+            <div class="mq-zen-actions">
+              <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 3);}" class="mq-zen-btn mq-zen-btn--primary">
+                <span>2026 Corporate Profile</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" />
+                </svg>
+              </button>
+              <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 1);}" class="mq-zen-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M7 17L17 7" />
+                  <path d="M8 7h9v9" />
+                </svg>
+                <span>Approved Materials</span>
+              </button>
             </div>
+
+            <div class="mq-zen-strip">
+              <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 3);}" class="mq-zen-strip-item">
+                <span class="mq-zen-strip-kicker">Corporate Profile</span>
+                <span class="mq-zen-strip-val">2026 Vision, Mission &amp; Approach</span>
+              </button>
+              <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 1);}" class="mq-zen-strip-item">
+                <span class="mq-zen-strip-kicker">Clinical Documents</span>
+                <span class="mq-zen-strip-val">Approved IFUs &amp; Product Materials</span>
+              </button>
+              <button type="button" onclick="if(window.goToDeckSlide){window.goToDeckSlide('resources', 4);}" class="mq-zen-strip-item">
+                <span class="mq-zen-strip-kicker">Regulatory Reference</span>
+                <span class="mq-zen-strip-val">FDA PH, DOH &amp; Source Links</span>
+              </button>
+            </div>
+
+            <p class="mq-zen-footnote">
+              Informational reference only &bull; MEDIQ does not issue binding medical or statutory FDA advice.
+            </p>
           </div>
         </div>
 
@@ -13395,25 +13397,120 @@
           -webkit-font-smoothing: antialiased;
         }
 
-        #contact .cnt-uline-input {
+        #contact .cnt-label {
+          display: block;
+          font-size: 11.5px;
+          font-weight: 500;
+          letter-spacing: 0.01em;
+          color: rgba(186, 208, 232, 0.84);
+          margin-bottom: 5px;
+        }
+
+        #contact .cnt-field {
           width: 100%;
-          border: 0;
-          border-bottom: 1px solid rgba(114, 197, 248, 0.28);
-          background: transparent;
-          padding: 11px 0;
-          font-size: 14.5px;
-          color: #f6f2ea;
-          border-radius: 0;
-          transition: border-color 180ms ease;
+          border: 1px solid rgba(114, 197, 248, 0.22);
+          background: rgba(5, 14, 34, 0.72);
+          padding: 9.5px 12.5px;
+          font-size: 13.5px;
+          line-height: 1.35;
+          color: #f4f7fb;
+          border-radius: 10px;
+          box-sizing: border-box;
+          transition: border-color 160ms ease, box-shadow 180ms ease, background-color 160ms ease;
         }
 
-        #contact .cnt-uline-input::placeholder {
-          color: rgba(182, 212, 238, 0.56);
+        #contact .cnt-field::placeholder {
+          color: rgba(148, 175, 206, 0.52);
         }
 
-        #contact .cnt-uline-input:focus {
+        #contact .cnt-field:focus {
           outline: none;
-          border-bottom-color: #72c5f8;
+          border-color: rgba(114, 197, 248, 0.78);
+          background: rgba(8, 22, 50, 0.92);
+          box-shadow: 0 0 0 3px rgba(114, 197, 248, 0.14);
+        }
+
+        #contact .cnt-select {
+          -webkit-appearance: none !important;
+          -moz-appearance: none !important;
+          appearance: none !important;
+          padding-right: 36px;
+          cursor: pointer;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2393c5fd' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 12px center;
+          background-size: 15px 15px;
+        }
+        #contact .cnt-select::-ms-expand {
+          display: none;
+        }
+
+        #contact .cnt-select option {
+          background-color: #071530;
+          color: #f4f7fb;
+        }
+
+        #contact .cnt-seg-bar {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 4px;
+          padding: 4px;
+          border-radius: 11px;
+          border: 1px solid rgba(114, 197, 248, 0.18);
+          background: rgba(4, 11, 28, 0.72);
+        }
+
+        #contact .cnt-seg-btn {
+          border: 1px solid transparent;
+          border-radius: 8px;
+          background: transparent;
+          padding: 7px 8px;
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 1.2;
+          color: #9eb4cc;
+          text-align: center;
+          white-space: nowrap;
+          cursor: pointer;
+          transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+        }
+
+        #contact .cnt-seg-btn:hover {
+          color: #ffffff;
+        }
+
+        #contact .cnt-seg-btn.is-active {
+          border-color: rgba(114, 197, 248, 0.45);
+          background: rgba(20, 56, 112, 0.85);
+          color: #ffffff;
+          font-weight: 600;
+          box-shadow: 0 2px 10px rgba(2, 6, 18, 0.35);
+        }
+
+        #contact .cnt-desk-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          padding: 13px 0;
+          border-top: 1px solid rgba(114, 197, 248, 0.12);
+        }
+
+        #contact .cnt-desk-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 34px;
+          height: 34px;
+          flex-shrink: 0;
+          border-radius: 10px;
+          border: 1px solid rgba(114, 197, 248, 0.22);
+          background: rgba(11, 30, 68, 0.65);
+          color: #72c5f8;
+        }
+
+        #contact .cnt-desk-icon svg {
+          width: 15px;
+          height: 15px;
         }
 
         #contact #inq-consent {
@@ -13479,178 +13576,212 @@
           data-deck="contact" data-slide-index="0">
           <div class="relative z-20 w-full max-w-[1260px] mx-auto">
 
-            <!-- Unified Editorial Glass Card (Matches Single-Card Two-Pane Contact Architecture) -->
+            <!-- Clean Doctor-First Order & Institutional Inquiry Card -->
             <div id="contact-panel-form"
-              class="relative overflow-hidden rounded-[28px] bg-[#071530]/92 backdrop-blur-sm border border-[#72c5f8]/20 shadow-[0_32px_90px_rgba(3,10,24,0.62)] p-7 sm:p-10 lg:px-14 lg:py-11">
+              class="relative overflow-hidden rounded-[24px] bg-[#071530]/92 backdrop-blur-sm border border-[#72c5f8]/20 shadow-[0_32px_90px_rgba(3,10,24,0.62)] p-5 sm:p-8 lg:px-11 lg:py-8">
               <div class="pointer-events-none absolute inset-x-16 top-0 h-px bg-gradient-to-r from-transparent via-[#72c5f8]/45 to-transparent" aria-hidden="true"></div>
 
-              <div class="grid grid-cols-1 lg:grid-cols-12 gap-9 lg:gap-0 items-stretch">
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-7 lg:gap-0 items-start">
 
-                <!-- Left Pane: Brand Eyebrow, Display Headline, Narrative & Hairline Details Rows -->
-                <div class="lg:col-span-6 min-w-0 lg:pr-12 xl:pr-14 lg:border-r lg:border-[#72c5f8]/12 flex flex-col justify-between">
-                  <div>
-                    <div class="flex flex-wrap items-center gap-3.5 mb-5">
-                      <img src="assets/img/mediq-wordmark.svg?v=1.0" alt="MEDIQ Pharma and Medical Supplies Distribution"
-                        class="h-7 sm:h-8 w-auto object-contain drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]" />
-                    </div>
-                    <h2 id="contact-title"
-                      class="cnt-heading text-[30px] sm:text-[34px] xl:text-[38px] font-normal text-[#f4f7fb] leading-[1.16] tracking-[-0.025em] max-w-[520px] mb-4"
-                      style="text-wrap: balance;">
-                      We are always ready to help you and answer your questions
-                    </h2>
-                    <p class="text-[13.5px] sm:text-[14px] leading-[1.6] tracking-[0.005em] text-[#9eb4cc] max-w-[515px] mb-7"
-                      style="text-wrap: pretty;">
-                      Connect with MEDIQ Pharma Inc. across hospital supply, our ophthalmic IOL portfolio, and institutional commercial partner teams.
+                <!-- Form Column: Shown FIRST on mobile so doctors immediately access clean ordering -->
+                <div class="order-1 lg:order-2 lg:col-span-7 min-w-0 lg:pl-10 xl:pl-12">
+                  <div class="mb-2.5 sm:mb-4">
+                    <p class="font-mono text-[10px] sm:text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8] mb-0.5 sm:mb-1">Order &amp; Inquiry</p>
+                    <h3 class="cnt-heading text-[19px] sm:text-[25px] font-semibold text-[#f4f7fb] leading-tight">Order or inquire with MEDIQ</h3>
+                    <p class="hidden sm:block mt-1 text-[13px] leading-[1.45] text-[#9eb4cc]">
+                      Select your product and clinic details. Our team replies via email or Viber.
                     </p>
                   </div>
 
-                  <!-- 4 Hairline-Separated Key-Value Rows -->
-                  <div class="border-t border-[#72c5f8]/12 divide-y divide-[#72c5f8]/12 text-[13px]">
-                    <div class="grid grid-cols-1 sm:grid-cols-[135px_1fr] gap-1 sm:gap-4 py-3.5 items-start">
-                      <span class="text-[#7e9aba]">Institutional desk</span>
+                  <form id="quote-form" action="https://formsubmit.co/mediqtechsupport@gmail.com" method="POST" class="flex flex-col gap-3.5" novalidate>
+                    <input type="hidden" name="_subject" value="MEDIQ Pharma — New Website Inquiry" />
+                    <input type="hidden" name="_template" value="table" />
+                    <input type="hidden" name="_autoresponse" value="Thank you for contacting MEDIQ Pharma and Medical Supplies Distribution Inc. We have received your message and our Commercial & Technical Support team will reply shortly. Direct channels: Viber / Mobile +63 945 795 4365 | Telegram t.me/mediqpharma | Email mediqtechsupport@gmail.com" />
+                    <input type="hidden" id="inq-subject" name="subject" value="IOL portfolio" />
+
+                    <!-- Clean 3-Option Segmented Selector -->
+                    <div id="contact-topic-pills" class="cnt-seg-bar" role="group" aria-label="Inquiry topic">
+                      <button type="button" data-contact-topic="IOL portfolio" aria-pressed="true" class="cnt-seg-btn is-active">
+                        Product Order
+                      </button>
+                      <button type="button" data-contact-topic="Hospital supply" aria-pressed="false" class="cnt-seg-btn">
+                        Hospital Supply
+                      </button>
+                      <button type="button" data-contact-topic="Partnership" aria-pressed="false" class="cnt-seg-btn">
+                        Partnership
+                      </button>
+                    </div>
+
+                    <!-- Product / Lens Selector -->
+                    <div>
+                      <label for="inq-product" class="cnt-label">Product / Portfolio</label>
+                      <select id="inq-product" name="product" class="cnt-field cnt-select appearance-none">
+                        <option value="RayOne Galaxy — Spiral Full-Range IOL">RayOne Galaxy (Spiral IOL)</option>
+                        <option value="Galaxy Toric — Spiral Astigmatic IOL">Galaxy Toric (Spiral IOL)</option>
+                        <option value="RayOne EMV — Enhanced Monovision IOL">RayOne EMV (1.5 D EDoF)</option>
+                        <option value="RayOne Trifocal / Trifocal Toric IOL">RayOne Trifocal / Toric</option>
+                        <option value="RayOne Aspheric / Hydrophobic Monofocal">RayOne Aspheric / Hydrophobic</option>
+                        <option value="Sulcoflex Supplementary IOL">Sulcoflex Supplementary IOL</option>
+                        <option value="Ophteis Bio 3.0 / 1.8 / Max OVD">Ophteis Bio 3.0 / 1.8 / Max</option>
+                        <option value="AEON Preservative-Free Eye Drops">AEON Eye Drops</option>
+                        <option value="Institutional Supply">Institutional Supply</option>
+                        <option value="Marketing/Partnership">Marketing / Partnership</option>
+                        <option value="Education">Professional Education</option>
+                        <option value="General Inquiry">Multiple / General Inquiry</option>
+                      </select>
+                    </div>
+
+                    <!-- Doctor / Clinic -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                       <div>
-                        <div class="font-medium text-[#f4f7fb]">Direct Inquiry Console</div>
+                        <label for="inq-name" class="cnt-label">Doctor / Full Name <span class="text-[#72c5f8]">*</span></label>
+                        <input id="inq-name" name="name" type="text" required placeholder="Dr. Juan Dela Cruz" class="cnt-field" />
+                      </div>
+                      <div>
+                        <label for="inq-clinic" class="cnt-label">Hospital / Clinic <span class="text-[#72c5f8]">*</span></label>
+                        <input id="inq-clinic" name="clinic" type="text" required placeholder="Eye Center or Hospital" class="cnt-field" />
+                      </div>
+                    </div>
+
+                    <!-- Email / Viber -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                      <div>
+                        <label for="inq-email" class="cnt-label">Email <span class="text-[#72c5f8]">*</span></label>
+                        <input id="inq-email" name="email" type="email" required placeholder="doctor@clinic.ph" class="cnt-field" />
+                      </div>
+                      <div>
+                        <label for="inq-phone" class="cnt-label">Mobile / Viber</label>
+                        <input id="inq-phone" name="phone" type="tel" placeholder="09XX XXX XXXX" class="cnt-field" />
+                      </div>
+                    </div>
+
+                    <!-- Order Details -->
+                    <div>
+                      <label for="inq-message" class="cnt-label">Order Details / Notes</label>
+                      <textarea id="inq-message" name="message" rows="2"
+                        placeholder="Diopter, quantity, or notes..."
+                        class="cnt-field resize-none"></textarea>
+                    </div>
+
+                    <label for="inq-consent" class="flex items-start gap-2 pt-0.5 cursor-pointer">
+                      <input id="inq-consent" name="consent" type="checkbox" required class="mt-0.5 shrink-0" />
+                      <span class="text-[12px] leading-[1.4] text-[#9eb4cc]">
+                        I agree to MEDIQ using my contact details to respond under the Philippine Data Privacy Act.
+                      </span>
+                    </label>
+
+                    <div class="pt-0.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
+                      <button type="submit"
+                        class="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-[#4da8f0] hover:bg-[#70beff] text-[#041022] font-semibold text-[14px] px-7 py-3 shadow-[0_8px_24px_rgba(77,168,240,0.32)] cursor-pointer transition-colors">
+                        <span>Submit Order Inquiry</span>
+                      </button>
+                      <p id="form-feedback" class="text-[11px] text-[#7e9aba] text-center sm:text-right">Direct reply via Email or Viber</p>
+                    </div>
+
+                    <!-- Single-row mobile quick contact bar (stays cleanly on one mobile screen) -->
+                    <div class="cnt-mobile-quickbar lg:hidden grid grid-cols-3 gap-1.5 pt-2 mt-0.5 border-t border-[#72c5f8]/12">
+                      <a href="tel:+639457954365"
+                        class="inline-flex items-center justify-center gap-1 rounded-lg border border-[#72c5f8]/22 bg-[#0a214a]/65 py-1.5 px-1 text-[11px] font-medium text-[#dce8f5] hover:border-[#72c5f8]/55 hover:text-white transition-colors">
+                        <svg class="size-3 text-[#72c5f8] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                        </svg>
+                        <span>Call</span>
+                      </a>
+                      <a href="viber://chat?number=%2B639457954365"
+                        class="inline-flex items-center justify-center gap-1 rounded-lg border border-[#72c5f8]/22 bg-[#0a214a]/65 py-1.5 px-1 text-[11px] font-medium text-[#dce8f5] hover:border-[#72c5f8]/55 hover:text-white transition-colors">
+                        <svg class="size-3 text-[#72c5f8] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                        </svg>
+                        <span>Viber</span>
+                      </a>
+                      <a href="mailto:mediqtechsupport@gmail.com"
+                        class="inline-flex items-center justify-center gap-1 rounded-lg border border-[#72c5f8]/22 bg-[#0a214a]/65 py-1.5 px-1 text-[11px] font-medium text-[#dce8f5] hover:border-[#72c5f8]/55 hover:text-white transition-colors">
+                        <svg class="size-3 text-[#72c5f8] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                          <rect x="2" y="4" width="20" height="16" rx="2" />
+                          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                        </svg>
+                        <span>Email</span>
+                      </a>
+                    </div>
+                  </form>
+                </div>
+
+                <!-- Calm Direct Desk Column: Shown on Desktop (>= 1024px) left column only -->
+                <div class="hidden lg:flex order-2 lg:order-1 lg:col-span-5 min-w-0 lg:pr-10 xl:pr-12 lg:border-r lg:border-[#72c5f8]/12 flex-col justify-between">
+                  <div class="hidden lg:block mb-6">
+                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8] mb-2">Direct Clinical Desk</p>
+                    <h2 id="contact-title"
+                      class="cnt-heading text-[30px] xl:text-[34px] font-normal text-[#f4f7fb] leading-[1.16] tracking-[-0.025em] mb-3"
+                      style="text-wrap: balance;">
+                      We are always ready to help you and answer your questions
+                    </h2>
+                    <p class="text-[13.5px] leading-[1.58] text-[#9eb4cc]" style="text-wrap: pretty;">
+                      Connect directly with MEDIQ Pharma Inc. for urgent surgical lens reservations, hospital allocations, or product documentation.
+                    </p>
+                  </div>
+
+                  <p class="lg:hidden font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#72c5f8] mb-1">
+                    Need immediate assistance?
+                  </p>
+
+                  <div>
+                    <div class="cnt-desk-row">
+                      <span class="cnt-desk-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                        </svg>
+                      </span>
+                      <div class="min-w-0 flex-1">
+                        <div class="text-[11px] text-[#7e9aba]">Call or Viber</div>
+                        <a href="tel:+639457954365" class="mt-0.5 block font-mono text-[14px] font-medium text-[#f4f7fb] hover:text-[#72c5f8] transition-colors">
+                          0945 795 4365
+                        </a>
+                        <div class="mt-2 flex flex-wrap gap-2">
+                          <a href="tel:+639457954365"
+                            class="inline-flex items-center rounded-lg border border-[#72c5f8]/25 bg-[#0a214a]/70 px-2.5 py-1 text-[11px] font-medium text-[#dce8f5] hover:border-[#72c5f8]/55 hover:text-white transition-colors">
+                            Call
+                          </a>
+                          <a href="viber://chat?number=%2B639457954365"
+                            class="inline-flex items-center rounded-lg border border-[#72c5f8]/25 bg-[#0a214a]/70 px-2.5 py-1 text-[11px] font-medium text-[#dce8f5] hover:border-[#72c5f8]/55 hover:text-white transition-colors">
+                            Message on Viber
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="cnt-desk-row">
+                      <span class="cnt-desk-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="2" y="4" width="20" height="16" rx="2" />
+                          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                        </svg>
+                      </span>
+                      <div class="min-w-0 flex-1">
+                        <div class="text-[11px] text-[#7e9aba]">Email Support Desk</div>
                         <a href="mailto:mediqtechsupport@gmail.com"
-                          class="mt-1 inline-flex items-center gap-1.5 rounded-full border border-[#72c5f8]/25 bg-[#0a214a]/70 px-2.5 py-0.5 font-mono text-[11.5px] text-[#72c5f8] hover:border-[#72c5f8]/60 hover:text-white transition-colors">
+                          class="mt-0.5 inline-block break-all text-[13.5px] font-medium text-[#9bd8ff] hover:text-white transition-colors">
                           mediqtechsupport@gmail.com
                         </a>
                       </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-[135px_1fr] gap-1 sm:gap-4 py-3.5 items-start">
-                      <span class="text-[#7e9aba]">Location</span>
-                      <div>
-                        <div class="font-medium text-[#f4f7fb]">Marikina &mdash; Pasig, Metro Manila</div>
-                        <div class="text-[12.5px] text-[#7e9aba] mt-0.5">Serving Luzon, Visayas and Mindanao</div>
-                      </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-[135px_1fr] gap-1 sm:gap-4 py-3.5 items-center">
-                      <span class="text-[#7e9aba]">Mobile</span>
-                      <div>
-                        <a href="tel:+639457954365"
-                          class="font-mono text-[#f4f7fb] underline underline-offset-4 decoration-[#72c5f8]/40 hover:text-[#72c5f8] transition-colors">
-                          0945 795 4365
-                        </a>
-                      </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-[135px_1fr] gap-2 sm:gap-4 pt-3.5 items-center">
-                      <span class="text-[#7e9aba]">Connect</span>
-                      <div class="flex items-center gap-3 text-[#dbeafe]">
-                        <!-- Viber -->
-                        <a href="viber://chat?number=%2B639457954365" aria-label="MEDIQ on Viber (+63 945 795 4365)" title="Viber: 0945 795 4365"
-                          class="flex size-8 items-center justify-center rounded-full border border-[#72c5f8]/20 bg-[#0b1f44]/70 hover:border-[#72c5f8]/55 hover:text-[#72c5f8] transition-colors">
-                          <svg class="size-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                            <path d="M12.2 2C6.88 2 3 5.45 3 10.22c0 2.74 1.24 4.96 3.24 6.38v3.18c0 .44.52.68.85.39l2.75-2.38c.76.17 1.56.26 2.36.26 5.32 0 8.8-3.27 8.8-7.83S17.52 2 12.2 2Zm3.95 11.42c-.3.84-1.48 1.54-2.16 1.62-.58.07-1.31.12-4.23-1.1-3.56-1.48-5.82-5.06-6-5.3-.17-.24-1.43-1.9-1.43-3.63 0-1.72.89-2.56 1.25-2.92.3-.3.79-.44 1.26-.44.15 0 .29.01.41.01.36.02.54.04.78.61.3.71 1.02 2.49 1.11 2.67.09.18.18.42.06.66-.11.24-.2.35-.38.55-.18.21-.35.37-.53.6-.16.2-.35.42-.14.79.21.37.94 1.54 2.02 2.49 1.39 1.24 2.52 1.63 2.94 1.8.3.12.66.09.89-.15.29-.3.65-.8 1.01-1.3.26-.35.58-.4.93-.27.35.12 2.2 1.04 2.58 1.23.38.19.63.28.72.44.09.16.09.92-.21 1.76Z"/>
-                          </svg>
-                        </a>
-                        <!-- Telegram -->
-                        <a href="https://t.me/mediqpharma" target="_blank" rel="noopener noreferrer" aria-label="MEDIQ on Telegram" title="Telegram: @mediqpharma"
-                          class="flex size-8 items-center justify-center rounded-full border border-[#72c5f8]/20 bg-[#0b1f44]/70 hover:border-[#72c5f8]/55 hover:text-[#72c5f8] transition-colors">
-                          <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="m22 2-7 20-4-9-9-4Z" />
-                            <path d="M22 2 11 13" />
-                          </svg>
-                        </a>
-                        <!-- Mobile Phone -->
-                        <a href="tel:+639457954365" aria-label="Call MEDIQ Mobile 0945 795 4365" title="Mobile: 0945 795 4365"
-                          class="flex size-8 items-center justify-center rounded-full border border-[#72c5f8]/20 bg-[#0b1f44]/70 hover:border-[#72c5f8]/55 hover:text-[#72c5f8] transition-colors">
-                          <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                          </svg>
-                        </a>
-                        <!-- Email -->
-                        <a href="mailto:mediqtechsupport@gmail.com" aria-label="Email mediqtechsupport@gmail.com" title="Email: mediqtechsupport@gmail.com"
-                          class="flex size-8 items-center justify-center rounded-full border border-[#72c5f8]/20 bg-[#0b1f44]/70 hover:border-[#72c5f8]/55 hover:text-[#72c5f8] transition-colors">
-                          <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <rect x="2" y="4" width="20" height="16" rx="2" />
-                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                          </svg>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Right Pane: Minimalist Inquiry Form with Topic Pills & Direct Dispatch -->
-                <div class="lg:col-span-6 min-w-0 lg:pl-12 xl:pl-14 flex flex-col justify-center">
-                  <div class="mb-6">
-                    <h3 class="cnt-heading text-[24px] sm:text-[26px] font-semibold text-[#f4f7fb] leading-tight">Get in touch</h3>
-                    <p class="mt-2 text-[13.5px] leading-[1.55] text-[#9eb4cc] max-w-[440px]">
-                      Tell us what your institution needs: product inquiries, supply requirements, or partnership goals.
-                    </p>
-                  </div>
-
-                  <form id="quote-form" action="https://formsubmit.co/mediqtechsupport@gmail.com" method="POST" class="flex flex-col gap-5" novalidate>
-                    <input type="hidden" name="_subject" value="MEDIQ Pharma — New Website Inquiry" />
-                    <input type="hidden" name="_template" value="table" />
-                    <input type="hidden" name="_autoresponse" value="Thank you for contacting MEDIQ Pharma and Medical Supplies Distribution Inc. We have received your message and our Commercial & Technical Support team will reply shortly. Direct channels: Viber / Mobile +63 945 795 4365 | Telegram t.me/mediqpharma | Email mediqtechsupport@gmail.com" />
-                    <input type="hidden" id="inq-subject" name="subject" value="Hospital supply" />
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
-                      <div>
-                        <label for="inq-name" class="sr-only">Full name *</label>
-                        <input id="inq-name" name="name" type="text" required placeholder="Full name *"
-                          class="cnt-uline-input" />
-                      </div>
-                      <div>
-                        <label for="inq-clinic" class="sr-only">Organization / clinic *</label>
-                        <input id="inq-clinic" name="clinic" type="text" required
-                          placeholder="Organization / clinic *" class="cnt-uline-input" />
-                      </div>
-                    </div>
-
-                    <!-- Work Email Field (Inquiries dispatch automatically to mediqtechsupport@gmail.com) -->
-                    <div>
-                      <label for="inq-email" class="sr-only">Work email *</label>
-                      <input id="inq-email" name="email" type="email" required
-                        placeholder="Work email *"
-                        class="cnt-uline-input" />
-                    </div>
-
-                    <!-- Selectable Inquiry Topic Pills -->
-                    <div id="contact-topic-pills" class="flex flex-wrap items-center gap-2 pt-0.5" role="group" aria-label="Inquiry topic">
-                      <button type="button" data-contact-topic="Hospital supply" aria-pressed="true"
-                        class="rounded-full border border-[#72c5f8]/65 bg-[#123568]/80 px-3.5 py-1.5 text-[11.5px] font-medium text-white shadow-[0_0_16px_rgba(58,160,219,0.22)] transition-colors cursor-pointer">
-                        Hospital supply
-                      </button>
-                      <button type="button" data-contact-topic="IOL portfolio" aria-pressed="false"
-                        class="rounded-full border border-[#72c5f8]/22 bg-[#0a1d40]/60 px-3.5 py-1.5 text-[11.5px] font-medium text-[#9eb4cc] hover:border-[#72c5f8]/50 hover:text-white transition-colors cursor-pointer">
-                        IOL portfolio
-                      </button>
-                      <button type="button" data-contact-topic="Partnership" aria-pressed="false"
-                        class="rounded-full border border-[#72c5f8]/22 bg-[#0a1d40]/60 px-3.5 py-1.5 text-[11.5px] font-medium text-[#9eb4cc] hover:border-[#72c5f8]/50 hover:text-white transition-colors cursor-pointer">
-                        Partnership
-                      </button>
-                      <button type="button" data-contact-topic="Something else" aria-pressed="false"
-                        class="rounded-full border border-[#72c5f8]/22 bg-[#0a1d40]/60 px-3.5 py-1.5 text-[11.5px] font-medium text-[#9eb4cc] hover:border-[#72c5f8]/50 hover:text-white transition-colors cursor-pointer">
-                        Something else
-                      </button>
-                    </div>
-
-                    <div>
-                      <label for="inq-message" class="sr-only">Message</label>
-                      <textarea id="inq-message" name="message" rows="2"
-                        placeholder="Message"
-                        class="cnt-uline-input resize-none"></textarea>
-                    </div>
-
-                    <label for="inq-consent" class="flex items-start gap-2.5 pt-0.5 cursor-pointer">
-                      <input id="inq-consent" name="consent" type="checkbox" required class="mt-0.5 shrink-0" />
-                      <span class="text-[11.5px] leading-[1.45] text-[#9eb4cc]">
-                        I agree to MEDIQ using my business contact details to respond, in line with the Philippine Data Privacy Act.
+                    <div class="cnt-desk-row">
+                      <span class="cnt-desk-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                          <circle cx="12" cy="10" r="3" />
+                        </svg>
                       </span>
-                    </label>
-
-                    <div class="pt-2 flex flex-wrap items-center justify-between gap-4">
-                      <button type="submit"
-                        class="inline-flex items-center justify-center rounded-full bg-[#4da8f0] hover:bg-[#70beff] text-[#041022] font-semibold text-[13.5px] px-7 py-3 shadow-[0_0_28px_rgba(77,168,240,0.45)] cursor-pointer transition-colors">
-                        <span>Send message</span>
-                      </button>
-                      <p id="form-feedback" class="text-[11.5px] text-[#7e9aba]">PH National Commercial Desk</p>
+                      <div class="min-w-0 flex-1">
+                        <div class="text-[11px] text-[#7e9aba]">Philippines HQ</div>
+                        <div class="mt-0.5 text-[13.5px] font-medium text-[#f4f7fb]">Marikina &mdash; Pasig, Metro Manila</div>
+                        <div class="text-[12px] text-[#7e9aba] mt-0.5">
+                          Serving Luzon, Visayas &amp; Mindanao &middot;
+                          <a href="https://t.me/mediqpharma" target="_blank" rel="noopener noreferrer" class="text-[#9bd8ff] hover:text-white underline underline-offset-2">Telegram @mediqpharma</a>
+                        </div>
+                      </div>
                     </div>
-                  </form>
+                  </div>
                 </div>
 
               </div>
@@ -14039,15 +14170,11 @@
     #site-header #mobile-menu {
       background: rgba(3, 8, 20, 0.78) !important;
     }
-    #site-header #mediq-search-trigger,
-    #site-header button.rounded-2xl {
-      background: linear-gradient(135deg, rgba(10, 28, 64, 0.88) 0%, rgba(5, 14, 34, 0.94) 100%) !important;
-      border: 1px solid rgba(114, 197, 248, 0.20) !important;
-      color: #e6f0fb !important;
-      box-shadow: 0 4px 16px rgba(2, 6, 18, 0.48) !important;
-    }
-    #site-header button.rounded-2xl span {
-      color: rgba(203, 224, 245, 0.88) !important;
+    #site-header #mediq-search-trigger {
+      background: linear-gradient(135deg, rgba(10, 28, 64, 0.88) 0%, rgba(5, 14, 34, 0.94) 100%);
+      border: 1px solid rgba(114, 197, 248, 0.22);
+      color: #e6f0fb;
+      box-shadow: 0 4px 16px rgba(2, 6, 18, 0.48);
     }
     #page-dots-nav .page-dot-pill {
       background: rgba(255, 255, 255, 0.28) !important;
@@ -14679,9 +14806,212 @@
     #site-header #mobile-menu {
       top: 5rem !important;
       z-index: 50 !important;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none !important;
+      transition: opacity 250ms ease, visibility 0s linear 320ms;
     }
-    #site-header #mobile-menu.opacity-0.pointer-events-none {
-      visibility: hidden !important;
+    #site-header #mobile-menu.is-menu-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto !important;
+      transition: opacity 220ms ease, visibility 0s linear 0s;
+    }
+
+    /* Animated 3-bar Hamburger -> X button */
+    #site-header .hb-box {
+      position: relative;
+      display: block;
+      width: 18px;
+      height: 14px;
+    }
+    #site-header .hb-line {
+      position: absolute;
+      left: 0;
+      width: 18px;
+      height: 1.75px;
+      border-radius: 9999px;
+      background: currentColor;
+      transform-origin: center;
+      transition:
+        transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 180ms ease,
+        width 220ms ease;
+    }
+    #site-header .hb-line--top { top: 0; }
+    #site-header .hb-line--mid { top: 6px; width: 13px; }
+    #site-header .hb-line--bot { top: 12px; }
+    #site-header #menu-toggle:hover .hb-line--mid { width: 18px; }
+    #site-header #menu-toggle[aria-expanded="true"] {
+      border-color: rgba(114, 197, 248, 0.65);
+      background: rgba(12, 36, 78, 0.94);
+      color: #72c5f8;
+      box-shadow: 0 0 0 3px rgba(114, 197, 248, 0.16), 0 8px 20px rgba(2, 6, 18, 0.55);
+    }
+    #site-header #menu-toggle[aria-expanded="true"] .hb-line--top {
+      transform: translateY(6px) rotate(45deg);
+    }
+    #site-header #menu-toggle[aria-expanded="true"] .hb-line--mid {
+      opacity: 0;
+      width: 18px;
+      transform: scaleX(0);
+    }
+    #site-header #menu-toggle[aria-expanded="true"] .hb-line--bot {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+
+    /* Smooth Grid Height Expansion & Staggered Slide-In for Mobile Menu */
+    #site-header #mobile-menu > #mobile-panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transform: translateY(-8px) scale(0.985);
+      transform-origin: top center;
+      transition:
+        grid-template-rows 360ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 240ms ease,
+        transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    #site-header #mobile-menu.is-menu-open > #mobile-panel {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    #site-header .mob-panel-clip {
+      min-height: 0;
+      overflow: hidden;
+    }
+    #site-header .mob-panel-body {
+      max-height: calc(100dvh - 6.5rem);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 14px 12px 14px;
+    }
+    #site-header .mob-nav-item {
+      opacity: 0;
+      transform: translate3d(-18px, 6px, 0);
+      transition: opacity 150ms ease, transform 180ms ease;
+      transition-delay: 0ms;
+    }
+    #site-header #mobile-menu.is-menu-open .mob-nav-item {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+      transition:
+        opacity 320ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+      transition-delay: calc(55ms + var(--stagger, 0) * 40ms);
+    }
+    #site-header .mob-item-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 48px;
+      padding: 7px 10px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+    }
+    #site-header .mob-item-link:hover,
+    #site-header .mob-item-link:focus-visible {
+      background: rgba(114, 197, 248, 0.10);
+      border-color: rgba(114, 197, 248, 0.22);
+      outline: none;
+    }
+    #site-header .mob-item-link:active {
+      transform: scale(0.985);
+      background: rgba(114, 197, 248, 0.16);
+    }
+    #site-header .mob-item-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      border: 1px solid rgba(114, 197, 248, 0.22);
+      background: rgba(56, 189, 248, 0.10);
+      color: #72c5f8;
+    }
+    #site-header .mob-item-icon svg {
+      width: 15px;
+      height: 15px;
+    }
+    #site-header .mob-item-icon[data-mob-icon="about"] {
+      border-color: rgba(52, 211, 153, 0.24);
+      background: rgba(52, 211, 153, 0.10);
+      color: #6ee7b7;
+    }
+    #site-header .mob-item-icon[data-mob-icon="products"] {
+      border-color: rgba(56, 189, 248, 0.28);
+      background: rgba(56, 189, 248, 0.12);
+      color: #38bdf8;
+    }
+    #site-header .mob-item-icon[data-mob-icon="brands"] {
+      border-color: rgba(251, 191, 36, 0.26);
+      background: rgba(251, 191, 36, 0.11);
+      color: #fcd34d;
+    }
+    #site-header .mob-item-icon[data-mob-icon="services"] {
+      border-color: rgba(129, 140, 248, 0.28);
+      background: rgba(129, 140, 248, 0.12);
+      color: #a5b4fc;
+    }
+    #site-header .mob-item-icon[data-mob-icon="resources"] {
+      border-color: rgba(167, 139, 250, 0.26);
+      background: rgba(167, 139, 250, 0.11);
+      color: #c4b5fd;
+    }
+    #site-header .mob-item-icon[data-mob-icon="news"] {
+      border-color: rgba(212, 184, 140, 0.26);
+      background: rgba(212, 184, 140, 0.11);
+      color: #e5cca6;
+    }
+    #site-header .mob-item-icon[data-mob-icon="contact"] {
+      border-color: rgba(251, 113, 133, 0.26);
+      background: rgba(251, 113, 133, 0.11);
+      color: #fda4af;
+    }
+    #site-header .mob-item-text {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      flex: 1;
+    }
+    #site-header .mob-item-title {
+      font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+      font-size: 14.5px;
+      font-weight: 600;
+      line-height: 1.25;
+      color: #f4f7fb;
+    }
+    #site-header .mob-item-sub {
+      font-size: 11px;
+      line-height: 1.3;
+      color: rgba(158, 180, 204, 0.74);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #site-header .mob-item-chevron {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+      color: rgba(143, 176, 211, 0.55);
+      transition: transform 180ms ease, color 180ms ease;
+    }
+    #site-header .mob-item-link:hover .mob-item-chevron {
+      color: #72c5f8;
+      transform: translateX(3px);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #site-header #mobile-menu,
+      #site-header #mobile-menu > #mobile-panel,
+      #site-header .mob-nav-item,
+      #site-header .hb-line {
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+      }
     }
     @media (max-width: 1023px) {
       /* Prevent rapid sub-tab switching overlap AND fix flexbox justify-center top-clipping on scrollable subpages */
@@ -14925,171 +15255,73 @@
         visibility: hidden !important;
         pointer-events: none !important;
       }
-      /* Contact / Direct Inquiry Card: single-screen mobile layout (fits full card + Submit button in one mobile viewport) */
+      /* Contact / Order & Inquiry Card: fits completely on ONE single mobile screen */
       html:not(.mediq-subpage-locked) #contact,
       html:not(.mediq-subpage-locked) #contact > div.relative.w-full.h-full {
+        height: auto !important;
         min-height: 100svh !important;
       }
       html:not(.mediq-subpage-locked) #contact .deck-slide[data-slide-index="0"],
       #contact .deck-slide[data-slide-index="0"] {
         min-height: 100svh !important;
         justify-content: center !important;
-        padding: 86px 14px 16px !important;
+        padding: 84px 12px 14px !important;
         box-sizing: border-box !important;
       }
       #contact #contact-panel-form {
-        padding: 13px 14px !important;
+        padding: 14px 14px !important;
         border-radius: 18px !important;
       }
-      #contact #contact-panel-form > .grid {
-        gap: 10px !important;
-      }
-      #contact #contact-panel-form > .grid > div:first-child > div:first-child > div:first-child {
-        gap: 8px !important;
-        margin-bottom: 6px !important;
-      }
-      #contact #contact-panel-form img[alt*="MEDIQ"] {
-        height: 17px !important;
-      }
-      #contact #contact-title {
-        font-size: clamp(17.5px, 4.7vw, 19.5px) !important;
-        line-height: 1.16 !important;
-        max-width: 100% !important;
-        margin-bottom: 4px !important;
-      }
-      #contact #contact-title + p {
-        font-size: 10.5px !important;
-        line-height: 1.35 !important;
-        margin-bottom: 8px !important;
-      }
-      /* 4 Contact details arranged in a sleek 2x2 grid (saves ~100px vertically) */
-      #contact #contact-panel-form > .grid > div:first-child > .border-t {
-        display: grid !important;
-        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) !important;
-        column-gap: 10px !important;
-        row-gap: 0 !important;
-        font-size: 11px !important;
-      }
-      #contact #contact-panel-form > .grid > div:first-child > .border-t > div {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        justify-content: flex-start !important;
-        gap: 2px !important;
-        padding-top: 6px !important;
-        padding-bottom: 6px !important;
-        border-top-width: 0 !important;
-      }
-      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:nth-child(3),
-      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:nth-child(4) {
-        border-top: 1px solid rgba(114, 197, 248, 0.12) !important;
-        padding-bottom: 2px !important;
-      }
-      #contact #contact-panel-form > .grid > div:first-child > .border-t > div > span:first-child {
-        font-size: 9.5px !important;
-        line-height: 1.2 !important;
-      }
-      /* Keep Institutional desk cell clean & compact: label + single-line email pill */
-      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:first-child > div > div:first-child {
-        display: none !important;
-      }
-      #contact #contact-panel-form > .grid > div:first-child > .border-t a[href^="mailto:"] {
-        margin-top: 1px !important;
-        padding: 2px 7px !important;
-        font-size: 9.2px !important;
-        line-height: 1.25 !important;
-        white-space: nowrap !important;
-      }
-      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:nth-child(2) > div > div:first-child {
-        font-size: 10.5px !important;
-        line-height: 1.25 !important;
-      }
-      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:nth-child(2) > div > div:last-child {
-        font-size: 9.5px !important;
-        line-height: 1.25 !important;
-        margin-top: 1px !important;
-      }
-      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:nth-child(3) a[href^="tel:"] {
-        font-size: 11px !important;
-        line-height: 1.3 !important;
-      }
-      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:last-child .flex {
-        gap: 6px !important;
-        margin-top: 1px !important;
-      }
-      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:last-child .flex > a {
-        width: 24px !important;
-        height: 24px !important;
-      }
-      #contact #contact-panel-form > .grid > div:first-child > .border-t > div:last-child .flex > a svg {
-        width: 11px !important;
-        height: 11px !important;
-      }
-      /* Right inquiry form pane: compact single-screen layout with 2-col Name/Org & 1-row topic pills */
-      #contact #contact-panel-form > .grid > div:last-child {
-        border-top: 1px solid rgba(114, 197, 248, 0.14) !important;
-        padding-top: 9px !important;
-      }
-      #contact #contact-panel-form > .grid > div:last-child > div:first-child {
-        margin-bottom: 7px !important;
-      }
-      #contact #contact-panel-form h3.cnt-heading {
-        font-size: 15.5px !important;
-        line-height: 1.15 !important;
-      }
-      #contact #contact-panel-form h3.cnt-heading + p {
-        margin-top: 2px !important;
-        font-size: 10.5px !important;
-        line-height: 1.32 !important;
-      }
       #contact #quote-form {
-        gap: 7px !important;
+        gap: 8px !important;
       }
-      #contact #quote-form > .grid {
+      #contact #quote-form > .grid:not(.cnt-mobile-quickbar) {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 10px !important;
+        gap: 8px !important;
       }
-      #contact .cnt-uline-input {
-        padding: 5px 0 !important;
-        font-size: 11.5px !important;
-        line-height: 1.3 !important;
+      #contact #quote-form > .cnt-mobile-quickbar {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 6px !important;
+      }
+      #contact .cnt-label {
+        font-size: 10.5px !important;
+        margin-bottom: 3px !important;
+      }
+      #contact .cnt-field {
+        font-size: 13px !important;
+        padding: 8px 10px !important;
+        border-radius: 9px !important;
+      }
+      #contact .cnt-select {
+        padding-right: 32px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
       }
       #contact textarea#inq-message {
-        height: 34px !important;
-        min-height: 34px !important;
+        height: 44px !important;
+        min-height: 44px !important;
+        padding: 7px 10px !important;
       }
-      #contact #contact-topic-pills {
-        gap: 4.5px !important;
-        padding-top: 1px !important;
+      #contact .cnt-seg-bar {
+        padding: 3px !important;
       }
-      #contact #contact-topic-pills button {
-        padding: 3px 7.5px !important;
-        font-size: 9.4px !important;
-        line-height: 1.25 !important;
-      }
-      #contact label[for="inq-consent"] {
-        gap: 7px !important;
-        padding-top: 1px !important;
-      }
-      #contact #inq-consent {
-        width: 13px !important;
-        height: 13px !important;
+      #contact .cnt-seg-btn {
+        font-size: 11px !important;
+        padding: 6px 4px !important;
       }
       #contact label[for="inq-consent"] span {
-        font-size: 9.5px !important;
-        line-height: 1.32 !important;
-      }
-      #contact #quote-form > div:last-child {
-        padding-top: 2px !important;
-        gap: 8px !important;
+        font-size: 10.5px !important;
+        line-height: 1.3 !important;
       }
       #contact button[type="submit"] {
-        height: 34px !important;
-        padding: 0 18px !important;
-        font-size: 11.5px !important;
+        padding: 10px 16px !important;
+        font-size: 13px !important;
       }
       #contact #form-feedback {
-        font-size: 10px !important;
+        font-size: 10.5px !important;
+        margin-top: -2px !important;
       }
       /* Site Footer ("Contact Us" Directory + Copyright + Map): fits completely on ONE mobile page */
       #footer-inner > div > div:nth-child(1) > div {
@@ -15340,26 +15572,26 @@
       #about #wwd-forge-sticky .abt-forge-media-box::before {
         content: attr(data-mobile-banner) !important;
         position: absolute !important;
-        top: 10px !important;
-        left: 10px !important;
+        top: 8px !important;
+        left: 8px !important;
         right: auto !important;
-        max-width: calc(100% - 20px) !important;
+        max-width: calc(100% - 16px) !important;
         z-index: 12 !important;
         display: inline-flex !important;
         align-items: center !important;
-        padding: 5px 13px !important;
+        padding: 3px 9px !important;
         border-radius: 9999px !important;
-        background: transparent !important;
-        backdrop-filter: blur(6px) !important;
-        -webkit-backdrop-filter: blur(6px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.30) !important;
+        background: rgba(6, 15, 34, 0.14) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
         box-shadow: none !important;
-        text-shadow: 0 1px 8px rgba(0, 0, 0, 0.82), 0 0 3px rgba(0, 0, 0, 0.55) !important;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45) !important;
         font-family: 'Plus Jakarta Sans', 'Inter', sans-serif !important;
-        font-size: 12px !important;
+        font-size: 10.5px !important;
         line-height: 1.2 !important;
         letter-spacing: 0.01em !important;
-        color: #f8fafc !important;
+        color: rgba(248, 250, 252, 0.72) !important;
         pointer-events: none !important;
       }
       #about #forge-about-sticky .abt-forge-media-box > button,
@@ -15739,18 +15971,38 @@
         line-height: 1.3 !important;
         margin: 1.5px 0 1.5px 2px !important;
       }
-      /* Hero Lifespan Eye Video Clips (Mobile): Keep exact original centered full-bleed Hero layout, gently bring eyes into subtle backdrop */
+      /* Hero Lifespan Eye Video Clips (Mobile): Full-bleed edge-to-edge top to bottom with strong uniform text-band scrim */
       #hero #hero-eye-lifespan-container {
-        opacity: 0.50 !important;
-        -webkit-mask-image: radial-gradient(ellipse 88% 58% at 60% 34%, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.52) 48%, transparent 82%) !important;
-        mask-image: radial-gradient(ellipse 88% 58% at 60% 34%, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.52) 48%, transparent 82%) !important;
+        opacity: 0.32 !important;
+        filter: brightness(0.66) contrast(1.06) saturate(0.68) !important;
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
       }
       #hero #hero-eye-lifespan-container .hero-eye-slide {
-        background-position: 65% 36% !important;
+        background-position: 64% 48% !important;
+        background-size: cover !important;
       }
       #hero #hero-eye-lifespan-container .hero-eye-video-layer {
         object-fit: cover !important;
-        object-position: 65% 36% !important;
+        object-position: 64% 48% !important;
+      }
+      #hero #hero-eye-lifespan-container > div[style*="rgba(10,29,64"] {
+        background: rgba(5, 13, 30, 0.24) !important;
+      }
+      #hero #hero-interactive-stage > div[style*="rgba(10,29,64,0.55)"] {
+        background: linear-gradient(
+          to bottom,
+          rgba(5, 13, 30, 0.40) 0%,
+          rgba(5, 13, 30, 0.68) 28%,
+          rgba(5, 13, 30, 0.76) 54%,
+          rgba(5, 13, 30, 0.64) 72%,
+          rgba(5, 13, 30, 0.34) 100%
+        ) !important;
+      }
+      #hero .ih-btn-video-secondary {
+        background: rgba(6, 16, 36, 0.72) !important;
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
       }
       #hero .ih-play-circle {
         width: 18px !important;
@@ -16094,6 +16346,7 @@
       #srv-book-carousel-slide .bc-mobile-close-btn {
         width: 32px !important;
         height: 32px !important;
+        color: #e2e8f0 !important;
         border-color: rgba(255, 255, 255, 0.16) !important;
         background: transparent !important;
       }
@@ -16128,14 +16381,19 @@
       }
       #srv-book-carousel-slide .bc-mobile-banner {
         position: relative;
-        height: 128px;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        height: auto;
+        max-height: 240px;
         overflow: hidden;
+        background: #060f22;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       }
       #srv-book-carousel-slide .bc-mobile-banner img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        object-position: center top;
         display: block;
       }
       #srv-book-carousel-slide .bc-mobile-hero {
@@ -16273,10 +16531,6 @@
         text-transform: uppercase;
         text-align: right;
       }
-      /* About Purpose mobile: lift foreground copy slightly above Luzon & archpelago map */
-      #about .about-slide[data-index="0"] {
-        padding-bottom: clamp(104px, 16svh, 148px) !important;
-      }
       /* Products mobile chat bar compact so enlarged carousel has generous vertical room */
       #products .at-chat-wrapper {
         padding: 0.75rem 1rem !important;
@@ -16386,6 +16640,23 @@
     /* Mobile About Up/Down stage stepper pill (hidden on desktop >= 1024px) */
     .abt-mobile-stepper {
       display: none;
+    }
+    @media (max-width: 767px), (max-width: 1023px) and (orientation: portrait) {
+      html:not(.mediq-subpage-locked) #about .about-slide[data-index="0"] {
+        justify-content: center !important;
+        align-items: stretch !important;
+        padding-top: var(--mob-pad-top) !important;
+        padding-bottom: clamp(32px, 6svh, 56px) !important;
+      }
+      html:not(.mediq-subpage-locked) #about #about-interactive-stage .route-world-canvas {
+        opacity: 0.74 !important;
+        pointer-events: none !important;
+        -webkit-mask-image: radial-gradient(ellipse 96% 90% at 58% 52%, rgba(0, 0, 0, 0.96) 44%, rgba(0, 0, 0, 0.54) 82%, transparent 100%) !important;
+        mask-image: radial-gradient(ellipse 96% 90% at 58% 52%, rgba(0, 0, 0, 0.96) 44%, rgba(0, 0, 0, 0.54) 82%, transparent 100%) !important;
+      }
+      html:not(.mediq-subpage-locked) #about .about-slide[data-index="0"] .ih-hero-copy {
+        text-shadow: 0 2px 18px rgba(4, 11, 26, 0.88), 0 1px 4px rgba(4, 11, 26, 0.95);
+      }
     }
     @media (max-width: 1023px) {
       #about #forge-about-sticky .abt-forge-media-box > button,
@@ -16600,6 +16871,7 @@
 
     /* 6. Slow drifting aurora glow behind the centered landing pages */
     #products .product-slide[data-product-index="0"].mq-land-host::after,
+    #brands .deck-slide[data-slide-index="0"].mq-land-host::after,
     #distribution .deck-slide[data-slide-index="0"].mq-land-host::after,
     #resources .deck-slide[data-slide-index="0"].mq-land-host::after {
       content: "";
@@ -16621,6 +16893,387 @@
       .mq-land-host *::before,
       .mq-land-host *::after {
         animation: none !important;
+      }
+    }
+  </style>
+  <style id="mq-zen-landing-styles">
+    /* ============== MINIMAL ZEN LANDING DESIGN (Products, Brands & Partners, Services, Resources Slide 0) ============== */
+    html body #products .product-slide[data-product-index="0"].mq-zen-landing,
+    html body #brands .deck-slide[data-slide-index="0"].mq-zen-landing,
+    html body #distribution .deck-slide[data-slide-index="0"].mq-zen-landing,
+    html body #resources .deck-slide[data-slide-index="0"].mq-zen-landing {
+      background-color: #0b0c0f !important;
+      background-image: var(--mediq-halo-bg) !important;
+    }
+
+    /* Restore landing motion choreography across .mq-zen-landing pages */
+    html.mq-land-js .mq-zen-landing:not(.mq-land-in) .mq-zen-wrap > * {
+      opacity: 0;
+    }
+    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > * {
+      animation: mqLandRise 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    }
+    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > .mq-zen-eyebrow { animation-delay: 40ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > h2.mq-zen-title { animation-delay: 140ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > p.mq-zen-sub { animation-delay: 360ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > .mq-zen-actions { animation-delay: 480ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > .mq-zen-strip { animation-delay: 600ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > p.mq-zen-footnote { animation-delay: 700ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-strip > .mq-zen-strip-item {
+      animation: mqLandRise 0.8s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    }
+    html body .mq-zen-landing.mq-land-in .mq-zen-strip > .mq-zen-strip-item:nth-child(1) { animation-delay: 680ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-strip > .mq-zen-strip-item:nth-child(2) { animation-delay: 760ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-strip > .mq-zen-strip-item:nth-child(3) { animation-delay: 840ms; }
+
+    section.page-snap-section .mq-zen-landing .mq-zen-wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 clamp(20px, 5vw, 48px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      z-index: 20;
+    }
+
+    html body #products .mq-zen-landing .mq-zen-eyebrow,
+    html body #brands .mq-zen-landing .mq-zen-eyebrow,
+    html body #distribution .mq-zen-landing .mq-zen-eyebrow,
+    html body #resources .mq-zen-landing .mq-zen-eyebrow {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 14px !important;
+      font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+      font-size: 11px !important;
+      font-weight: 500 !important;
+      font-style: normal !important;
+      letter-spacing: 0.22em !important;
+      line-height: 1.4 !important;
+      text-transform: uppercase !important;
+      color: rgba(148, 200, 240, 0.88) !important;
+      text-align: center !important;
+      margin: 0 !important;
+    }
+
+    .mq-zen-landing .mq-zen-rule {
+      display: inline-block;
+      width: 38px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.16);
+      flex-shrink: 0;
+      transform-origin: left center;
+      animation: mqEyebrowLine 3.6s ease-in-out infinite;
+    }
+    .mq-zen-landing .mq-zen-rule:first-child {
+      transform-origin: right center;
+    }
+
+    html body #products #products-title.mq-zen-title,
+    html body #products #products-title.mq-zen-title *,
+    html body #brands #brands-title.mq-zen-title,
+    html body #brands #brands-title.mq-zen-title *,
+    html body #distribution #distribution-title.mq-zen-title,
+    html body #distribution #distribution-title.mq-zen-title *,
+    html body #resources #resources-title.mq-zen-title,
+    html body #resources #resources-title.mq-zen-title * {
+      font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+      font-weight: 400 !important;
+      font-style: normal !important;
+      font-feature-settings: "ss01" !important;
+    }
+
+    html body #products #products-title.mq-zen-title,
+    html body #brands #brands-title.mq-zen-title,
+    html body #distribution #distribution-title.mq-zen-title,
+    html body #resources #resources-title.mq-zen-title {
+      font-size: clamp(38px, 5.2vw, 66px) !important;
+      line-height: 1.10 !important;
+      letter-spacing: -0.025em !important;
+      color: #ffffff !important;
+      text-align: center !important;
+      margin: 22px auto 0 !important;
+      max-width: 920px !important;
+      padding: 0 !important;
+      text-wrap: balance !important;
+    }
+
+    html body #products #products-title.mq-zen-title .mq-zen-accent,
+    html body #brands #brands-title.mq-zen-title .mq-zen-accent,
+    html body #distribution #distribution-title.mq-zen-title .mq-zen-accent,
+    html body #resources #resources-title.mq-zen-title .mq-zen-accent,
+    html body #products #products-title.mq-zen-title span[class*="text-[#72c5f8]"],
+    html body #brands #brands-title.mq-zen-title span[class*="text-[#72c5f8]"],
+    html body #distribution #distribution-title.mq-zen-title span[class*="text-[#72c5f8]"],
+    html body #resources #resources-title.mq-zen-title span[class*="text-[#72c5f8]"] {
+      display: inline-block !important;
+      font-weight: 400 !important;
+      background: linear-gradient(90deg, #72c5f8 0%, #72c5f8 30%, #e0f2fe 45%, #ffffff 50%, #e0f2fe 55%, #72c5f8 70%, #72c5f8 100%) !important;
+      background-size: 200% 100% !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      animation: mqAccentShimmer 5.2s linear infinite;
+    }
+
+    html body .mq-zen-landing.mq-land-host.mq-land-in h2.mq-zen-title .mq-zen-accent.mq-title-accent {
+      will-change: transform, opacity, filter, background-position;
+      animation:
+        mqAccentShimmer 5.2s linear infinite,
+        mqWordIn 0.72s cubic-bezier(0.22, 1, 0.36, 1) calc(80ms + var(--wi, 5) * 65ms) backwards,
+        mqAccentWave 4.8s ease-in-out calc(920ms + var(--wi, 5) * 165ms) infinite !important;
+    }
+
+    html body #products .mq-zen-landing p.mq-zen-sub,
+    html body #brands .mq-zen-landing p.mq-zen-sub,
+    html body #distribution .mq-zen-landing p.mq-zen-sub,
+    html body #resources .mq-zen-landing p.mq-zen-sub {
+      font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+      font-weight: 400 !important;
+      font-style: normal !important;
+      font-size: 16px !important;
+      line-height: 1.66 !important;
+      letter-spacing: 0 !important;
+      color: rgba(168, 178, 192, 0.86) !important;
+      text-align: center !important;
+      max-width: 620px !important;
+      margin: 22px auto 0 !important;
+      text-wrap: pretty !important;
+    }
+
+    .mq-zen-landing .mq-zen-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 32px;
+    }
+
+    html body #products .mq-zen-landing .mq-zen-btn,
+    html body #brands .mq-zen-landing .mq-zen-btn,
+    html body #distribution .mq-zen-landing .mq-zen-btn,
+    html body #resources .mq-zen-landing .mq-zen-btn {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 9px !important;
+      height: 44px !important;
+      min-height: 44px !important;
+      padding: 0 24px !important;
+      border-radius: 9999px !important;
+      background: rgba(10, 22, 48, 0.72) !important;
+      border: 1px solid rgba(114, 197, 248, 0.22) !important;
+      color: #f8fafc !important;
+      font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      font-style: normal !important;
+      letter-spacing: 0.12em !important;
+      text-transform: uppercase !important;
+      white-space: nowrap !important;
+      cursor: pointer !important;
+      text-decoration: none !important;
+      box-shadow: none !important;
+      transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease !important;
+    }
+
+    html body #products .mq-zen-landing .mq-zen-btn.mq-zen-btn--primary,
+    html body #brands .mq-zen-landing .mq-zen-btn.mq-zen-btn--primary,
+    html body #distribution .mq-zen-landing .mq-zen-btn.mq-zen-btn--primary,
+    html body #resources .mq-zen-landing .mq-zen-btn.mq-zen-btn--primary {
+      border-color: rgba(114, 197, 248, 0.34) !important;
+    }
+
+    html body #products .mq-zen-landing .mq-zen-btn:hover,
+    html body #brands .mq-zen-landing .mq-zen-btn:hover,
+    html body #distribution .mq-zen-landing .mq-zen-btn:hover,
+    html body #resources .mq-zen-landing .mq-zen-btn:hover {
+      background: rgba(16, 36, 74, 0.88) !important;
+      border-color: rgba(114, 197, 248, 0.58) !important;
+      color: #ffffff !important;
+      transform: translateY(-1px) !important;
+    }
+
+    .mq-zen-landing .mq-zen-btn svg {
+      width: 13px !important;
+      height: 13px !important;
+      flex-shrink: 0 !important;
+      color: rgba(226, 232, 240, 0.82) !important;
+      stroke: currentColor !important;
+    }
+    .mq-zen-landing.mq-land-in .mq-zen-btn--primary svg {
+      animation: mqArrowNudge 3.2s ease-in-out infinite;
+    }
+
+    .mq-zen-landing .mq-zen-strip {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      max-width: 1060px;
+      margin: clamp(44px, 7.5vh, 80px) auto 0;
+      padding-top: clamp(24px, 4vh, 36px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+    }
+    .mq-zen-landing .mq-zen-strip::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 30%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(114, 197, 248, 0.95), rgba(224, 242, 254, 1), rgba(114, 197, 248, 0.95), transparent);
+      box-shadow: 0 0 10px rgba(114, 197, 248, 0.7);
+      pointer-events: none;
+      animation: mqStripBeam 6.5s ease-in-out infinite;
+    }
+
+    .mq-zen-landing .mq-zen-strip-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      background: transparent;
+      border: 0;
+      padding: 4px 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    html body #products .mq-zen-landing .mq-zen-strip-kicker,
+    html body #brands .mq-zen-landing .mq-zen-strip-kicker,
+    html body #distribution .mq-zen-landing .mq-zen-strip-kicker,
+    html body #resources .mq-zen-landing .mq-zen-strip-kicker {
+      font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+      font-size: 10px !important;
+      font-weight: 600 !important;
+      font-style: normal !important;
+      letter-spacing: 0.16em !important;
+      text-transform: uppercase !important;
+      color: rgba(114, 197, 248, 0.92) !important;
+      margin: 0 !important;
+    }
+
+    html body #products .mq-zen-landing .mq-zen-strip-val,
+    html body #brands .mq-zen-landing .mq-zen-strip-val,
+    html body #distribution .mq-zen-landing .mq-zen-strip-val,
+    html body #resources .mq-zen-landing .mq-zen-strip-val {
+      font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+      font-size: 13.5px !important;
+      font-weight: 400 !important;
+      font-style: normal !important;
+      line-height: 1.45 !important;
+      color: rgba(232, 238, 246, 0.92) !important;
+      margin: 6px 0 0 !important;
+      transition: color 0.2s ease;
+    }
+
+    .mq-zen-landing .mq-zen-strip-item:hover .mq-zen-strip-val {
+      color: #ffffff !important;
+    }
+
+    html body #resources .mq-zen-landing p.mq-zen-footnote {
+      font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+      margin: 18px auto 0 !important;
+      max-width: 640px !important;
+      font-size: 10.5px !important;
+      font-weight: 400 !important;
+      line-height: 1.5 !important;
+      color: rgba(148, 163, 184, 0.56) !important;
+      text-align: center !important;
+    }
+
+    @media (max-width: 639px) {
+      html body #products .product-slide[data-product-index="0"].mq-zen-landing,
+      html body #brands .deck-slide[data-slide-index="0"].mq-zen-landing,
+      html body #distribution .deck-slide[data-slide-index="0"].mq-zen-landing,
+      html body #resources .deck-slide[data-slide-index="0"].mq-zen-landing {
+        justify-content: center !important;
+        padding-top: clamp(82px, 10.5svh, 96px) !important;
+        padding-bottom: clamp(22px, 3.5svh, 34px) !important;
+      }
+
+      section.page-snap-section .mq-zen-landing .mq-zen-wrap {
+        padding: 0 20px !important;
+      }
+
+      html body #products .mq-zen-landing .mq-zen-eyebrow,
+      html body #brands .mq-zen-landing .mq-zen-eyebrow,
+      html body #distribution .mq-zen-landing .mq-zen-eyebrow,
+      html body #resources .mq-zen-landing .mq-zen-eyebrow {
+        font-size: 9.5px !important;
+        letter-spacing: 0.16em !important;
+        gap: 10px !important;
+      }
+
+      .mq-zen-landing .mq-zen-rule {
+        width: 18px !important;
+      }
+
+      html body #products #products-title.mq-zen-title,
+      html body #brands #brands-title.mq-zen-title,
+      html body #distribution #distribution-title.mq-zen-title,
+      html body #resources #resources-title.mq-zen-title {
+        font-size: clamp(28px, 7.6vw, 36px) !important;
+        line-height: 1.1 !important;
+        margin-top: 14px !important;
+      }
+
+      html body #products .mq-zen-landing p.mq-zen-sub,
+      html body #brands .mq-zen-landing p.mq-zen-sub,
+      html body #distribution .mq-zen-landing p.mq-zen-sub,
+      html body #resources .mq-zen-landing p.mq-zen-sub {
+        font-size: 13px !important;
+        line-height: 1.56 !important;
+        margin-top: 14px !important;
+        max-width: 340px !important;
+      }
+
+      .mq-zen-landing .mq-zen-actions {
+        margin-top: 22px !important;
+        gap: 10px !important;
+        flex-wrap: nowrap !important;
+      }
+
+      html body #products .mq-zen-landing .mq-zen-btn,
+      html body #brands .mq-zen-landing .mq-zen-btn,
+      html body #distribution .mq-zen-landing .mq-zen-btn,
+      html body #resources .mq-zen-landing .mq-zen-btn {
+        height: 38px !important;
+        min-height: 38px !important;
+        padding: 0 14px !important;
+        font-size: 9.5px !important;
+        letter-spacing: 0.08em !important;
+        gap: 6px !important;
+      }
+
+      .mq-zen-landing .mq-zen-strip {
+        margin-top: 26px !important;
+        padding-top: 20px !important;
+        grid-template-columns: 1fr !important;
+        gap: 13px !important;
+      }
+
+      html body #products .mq-zen-landing .mq-zen-strip-kicker,
+      html body #brands .mq-zen-landing .mq-zen-strip-kicker,
+      html body #distribution .mq-zen-landing .mq-zen-strip-kicker,
+      html body #resources .mq-zen-landing .mq-zen-strip-kicker {
+        font-size: 9.5px !important;
+      }
+
+      html body #products .mq-zen-landing .mq-zen-strip-val,
+      html body #brands .mq-zen-landing .mq-zen-strip-val,
+      html body #distribution .mq-zen-landing .mq-zen-strip-val,
+      html body #resources .mq-zen-landing .mq-zen-strip-val {
+        font-size: 12.5px !important;
+        margin-top: 3px !important;
       }
     }
   </style>
@@ -16646,7 +17299,7 @@
           children.forEach(function (child) {
             if (child.nodeType === 1) {
               var cls = child.getAttribute('class') || '';
-              if (cls.indexOf('text-[#72c5f8]') !== -1) {
+              if (cls.indexOf('text-[#72c5f8]') !== -1 || cls.indexOf('mq-zen-accent') !== -1) {
                 child.classList.add('mq-title-accent');
                 child.style.setProperty('--wi', String(wordIdx++));
                 return;
@@ -16794,20 +17447,20 @@
   <script src="assets/js/foundation-logo-data.js?v=1.00" defer></script>
   <script src="assets/js/foundation-particles-gl.js?v=4.64" defer></script>
   <script src="assets/js/foundation-vr-scene.js?v=1.03" defer></script>
-  <script src="assets/js/main.js?v=388.53" defer></script>
+  <script src="assets/js/main.js?v=388.56" defer></script>
   <script src="assets/js/motion-navbar.js?v=1.00" defer></script>
   <script src="assets/js/galaxy-delivery-3d.js?v=14.41" defer></script>
-  <script src="assets/js/about-route-globe.js?v=9.01" defer></script>
+  <script src="assets/js/about-route-globe.js?v=9.03" defer></script>
   <script src="assets/js/aller-silhouette.js?v=11.60" defer></script>
   <script src="assets/js/core-values-monument.js?v=16.00" defer></script>
   <script src="assets/js/products-warp-carousel.js?v=1.09" defer></script>
-  <script src="assets/js/products-active-theory.js?v=11.15" defer></script>
+  <script src="assets/js/products-active-theory.js?v=11.16" defer></script>
   <script src="assets/js/services-liquid-text.js?v=1.04" defer></script>
   <script src="assets/js/news-coverflow.js?v=1.04" defer></script>
   <script src="assets/js/services-3d-backdrop.js?v=2.01" defer></script>
   <script src="assets/js/services-book-character.js?v=1.00" defer></script>
-  <script src="assets/js/services-book-carousel.js?v=1.17" defer></script>
-  <script src="assets/js/site-search.js?v=3.01" defer></script>
+  <script src="assets/js/services-book-carousel.js?v=2.00" defer></script>
+  <script src="assets/js/site-search.js?v=4.01" defer></script>
   <script src="assets/js/contact-map.js?v=2.00" defer></script>
   <script>
     window.handleMediqNewsletterSubmit = function (event, formEl) {

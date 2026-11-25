@@ -51,32 +51,28 @@
   const menu = document.getElementById('mobile-menu');
   const panel = document.getElementById('mobile-panel');
   const searchTriggerBtn = document.getElementById('mediq-search-trigger');
-  const lines = toggle ? toggle.querySelectorAll('.burger-line') : [];
 
   const setMenu = (open) => {
     if (!toggle || !menu || !panel) return;
+    if (open && typeof window.__closeMediqSearch === 'function') {
+      window.__closeMediqSearch();
+    }
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    menu.classList.toggle('opacity-0', !open);
+    menu.classList.toggle('is-menu-open', open);
     menu.classList.toggle('pointer-events-none', !open);
-    panel.classList.toggle('-translate-y-3', !open);
     if (searchTriggerBtn) {
       searchTriggerBtn.classList.toggle('max-lg:opacity-0', open);
       searchTriggerBtn.classList.toggle('max-lg:pointer-events-none', open);
     }
     root.classList.toggle('overflow-hidden', open);
-    if (lines.length >= 2) {
-      lines[0].style.transform = open ? 'translateY(5px) rotate(45deg)' : '';
-      lines[1].style.transform = open ? 'translateY(-5px) rotate(-45deg)' : '';
-      lines[1].style.width = open ? '1.5rem' : '';
-    }
   };
   window.__closeMediqMobileMenu = () => setMenu(false);
 
   if (toggle && menu) {
     toggle.addEventListener('click', (e) => {
       e.stopPropagation();
-      const isCurrentlyOpen = toggle.getAttribute('aria-expanded') === 'true' && !menu.classList.contains('pointer-events-none');
+      const isCurrentlyOpen = toggle.getAttribute('aria-expanded') === 'true' && menu.classList.contains('is-menu-open');
       setMenu(!isCurrentlyOpen);
     });
     menu.addEventListener('click', (e) => {
@@ -1353,9 +1349,7 @@
       topicButtons.forEach((b) => {
         const isSel = b === btn;
         b.setAttribute('aria-pressed', isSel ? 'true' : 'false');
-        b.className = isSel
-          ? 'rounded-full border border-[#72c5f8]/65 bg-[#123568]/80 px-3.5 py-1.5 text-[11.5px] font-medium text-white shadow-[0_0_16px_rgba(58,160,219,0.22)] transition-colors cursor-pointer'
-          : 'rounded-full border border-[#72c5f8]/22 bg-[#0a1d40]/60 px-3.5 py-1.5 text-[11.5px] font-medium text-[#9eb4cc] hover:border-[#72c5f8]/50 hover:text-white transition-colors cursor-pointer';
+        b.classList.toggle('is-active', isSel);
       });
     };
 
@@ -1382,6 +1376,8 @@
       const name = quoteForm.querySelector('#inq-name')?.value.trim();
       const clinic = quoteForm.querySelector('#inq-clinic')?.value.trim();
       const email = quoteForm.querySelector('#inq-email')?.value.trim();
+      const phoneVal = quoteForm.querySelector('#inq-phone')?.value.trim() || '';
+      const productVal = productSelect ? productSelect.value.trim() : (quoteForm.querySelector('#inq-product')?.value.trim() || '');
       const subjectVal = quoteForm.querySelector('#inq-subject')?.value.trim();
       const messageVal = quoteForm.querySelector('#inq-message')?.value.trim() || '';
       const consent = quoteForm.querySelector('#inq-consent');
@@ -1389,7 +1385,7 @@
 
       if (!name || !clinic || !email) {
         setFeedbackWithMailto(
-          'Please complete your Full Name, Organization/Institution, and Email.',
+          'Please complete your Full Name, Hospital / Clinic, and Email.',
           'text-ray'
         );
         return;
@@ -1402,7 +1398,10 @@
         return;
       }
 
-      const selected = subjectVal || (productSelect ? productSelect.value : '') || selectedInquiryTopic;
+      const selectedTopic = subjectVal || selectedInquiryTopic;
+      const selected = productVal
+        ? (selectedTopic ? `${selectedTopic} · ${productVal}` : productVal)
+        : (selectedTopic || 'General Institutional Inquiry');
       const referenceId = 'MQ-' + String(Date.now()).slice(-6);
       const submittedAt = new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila', dateStyle: 'medium', timeStyle: 'short' });
       const emailSubject = selected
@@ -1413,7 +1412,9 @@
         `Name: ${name}\n` +
         `Organization / Clinic: ${clinic}\n` +
         `Sender Email: ${email}\n` +
-        `Subject: ${selected || 'General Institutional Inquiry'}\n\n` +
+        `Mobile / Viber: ${phoneVal || 'Not provided'}\n` +
+        `Product / Lens: ${productVal || 'Not specified'}\n` +
+        `Topic: ${selectedTopic || 'General Institutional Inquiry'}\n\n` +
         `Message:\n${messageVal || '(No additional message provided)'}\n`;
       const mailtoHref =
         `mailto:${TARGET_EMAIL}?subject=${encodeURIComponent(emailSubject)}` +
@@ -1436,10 +1437,15 @@
           contact_name: name,
           organization: clinic,
           email_address: email,
-          inquiry_topic: selected || 'General Institutional Inquiry',
+          mobile_viber: phoneVal || 'Not provided',
+          product: productVal || 'Not specified',
+          inquiry_topic: selected,
           reference: referenceId,
           submitted_at: submittedAt,
-          message: messageVal || '(No additional message provided)',
+          message:
+            (phoneVal ? `Mobile / Viber: ${phoneVal}\n` : '') +
+            (productVal ? `Product / Lens: ${productVal}\n\n` : '') +
+            (messageVal || '(No additional message provided)'),
           subject: emailSubject,
           from_name: 'MEDIQ Pharma Inc.',
           to_email: TARGET_EMAIL,
@@ -1506,7 +1512,9 @@
                 Contact_Name: name,
                 Organization: clinic,
                 Email_Address: email,
-                Inquiry_Topic: selected || 'General Institutional Inquiry',
+                Mobile_Viber: phoneVal || 'Not provided',
+                Product_Portfolio: productVal || 'Not specified',
+                Inquiry_Topic: selected,
                 Message: messageVal || '(No additional message provided)',
                 email,
                 _replyto: email,
@@ -11595,6 +11603,19 @@ if (document.readyState === 'loading') {
       const titleEl = preview.querySelector('.pel-float-title');
       const subEl = preview.querySelector('.pel-float-sub');
 
+      if (imgEl) {
+        imgEl.addEventListener('error', () => {
+          const baseSrc = imgEl.dataset.baseSrc || '';
+          if (!baseSrc || imgEl.dataset.retried === '1') return;
+          imgEl.dataset.retried = '1';
+          setTimeout(() => {
+            if (imgEl.dataset.baseSrc === baseSrc) {
+              imgEl.src = baseSrc + (baseSrc.includes('?') ? '&' : '?') + 'r=' + Date.now();
+            }
+          }, 300);
+        });
+      }
+
       let activeRow = null;
       let revealTimer = 0;
       let hideTimer = 0;
@@ -11685,9 +11706,17 @@ if (document.readyState === 'loading') {
         const nameNode = li.querySelector('.pel-name');
         const titleText = nameNode ? nameNode.textContent.replace(/\*$/, '').trim() : '';
 
-        if (imgEl.getAttribute('src') !== src) {
-          imgEl.src = src;
-          imgEl.alt = titleText || sub;
+        if (imgEl) {
+          const failedPrevious = imgEl.dataset.baseSrc === src && imgEl.complete && imgEl.naturalWidth === 0;
+          if (imgEl.dataset.baseSrc !== src) {
+            imgEl.dataset.baseSrc = src;
+            imgEl.dataset.retried = '0';
+            imgEl.src = src;
+          } else if (failedPrevious) {
+            imgEl.dataset.retried = '1';
+            imgEl.src = src + (src.includes('?') ? '&' : '?') + 'r=' + Date.now();
+          }
+          imgEl.alt = '';
         }
         preview.dataset.fit = fit;
         if (titleEl) titleEl.textContent = titleText;

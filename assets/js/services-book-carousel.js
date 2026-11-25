@@ -17,6 +17,9 @@
   const SERVICE_BOOKS = [
     {
       num: '01',
+      roman: 'I',
+      versoPage: 2,
+      rectoPage: 3,
       shortTitle: 'Importation & Distribution',
       title: 'Strategic Importation & Distribution',
       badge: 'AUTHORIZED CHANNEL • PH SUPPLY',
@@ -36,6 +39,9 @@
       rotZ: 0,
       isMain: true,
       img: 'assets/img/book-01-importation.jpg?v=1.0',
+      poster: 'assets/img/pillars/wwd_01_video_poster.jpg',
+      video: 'assets/video/wwd-01-distribution.mp4',
+      figureCaption: 'Fig. 1.1 — MediQ Philippines specialists inspecting lot-controlled surgical inventory.',
       slideIndex: 1,
       cards: [
         {
@@ -66,6 +72,9 @@
     },
     {
       num: '02',
+      roman: 'II',
+      versoPage: 4,
+      rectoPage: 5,
       shortTitle: 'Product Marketing',
       title: 'Product Marketing & Brand Development',
       badge: 'PRINCIPAL BRAND STEWARDSHIP',
@@ -85,6 +94,9 @@
       rotZ: -1.5,
       isMain: false,
       img: 'assets/img/book-02-product-marketing.jpg?v=1.0',
+      poster: 'assets/img/pillars/wwd_02_video_poster.jpg',
+      video: 'assets/video/wwd-02-marketing.mp4',
+      figureCaption: 'Fig. 2.1 — MediQ brand leadership advancing clinical awareness across Philippine institutions.',
       slideIndex: 2,
       cards: [
         {
@@ -115,6 +127,9 @@
     },
     {
       num: '03',
+      roman: 'III',
+      versoPage: 6,
+      rectoPage: 7,
       shortTitle: 'Sales & Commercialization',
       title: 'Sales, Promotion & Commercialization',
       badge: 'NATIONAL INSTITUTIONAL COVERAGE',
@@ -134,6 +149,9 @@
       rotZ: 1.2,
       isMain: false,
       img: 'assets/img/book-03-sales.jpg?v=1.0',
+      poster: 'assets/img/pillars/wwd_03_video_poster.jpg',
+      video: 'assets/video/wwd-03-sales.mp4',
+      figureCaption: 'Fig. 3.1 — Commercial specialists presenting authorized ophthalmic solutions in Metro Manila.',
       slideIndex: 3,
       cards: [
         {
@@ -164,6 +182,9 @@
     },
     {
       num: '04',
+      roman: 'IV',
+      versoPage: 8,
+      rectoPage: 9,
       shortTitle: 'Market Development',
       title: 'Market Development',
       badge: 'REGULATORY & CHANNEL EXPANSION',
@@ -183,6 +204,9 @@
       rotZ: -2,
       isMain: false,
       img: 'assets/img/book-04-market-development.jpg?v=1.0',
+      poster: 'assets/img/pillars/wwd_06_video_poster.jpg',
+      video: 'assets/video/wwd-06-relationships.mp4',
+      figureCaption: 'Fig. 4.1 — Executive partnership alignment expanding ophthalmic access across the Philippines.',
       slideIndex: 4,
       cards: [
         {
@@ -213,6 +237,9 @@
     },
     {
       num: '05',
+      roman: 'V',
+      versoPage: 10,
+      rectoPage: 11,
       shortTitle: 'Professional Education',
       title: 'Professional Education',
       badge: 'SCIENTIFIC & PRODUCT TRAINING',
@@ -232,6 +259,9 @@
       rotZ: 1.5,
       isMain: false,
       img: 'assets/img/book-05-education.jpg?v=1.0',
+      poster: 'assets/img/pillars/wwd_05_video_poster.jpg',
+      video: 'assets/video/wwd-05-education.mp4',
+      figureCaption: 'Fig. 5.1 — Filipino ophthalmologists attending a MediQ scientific symposium and forum.',
       slideIndex: 5,
       cards: [
         {
@@ -262,6 +292,9 @@
     },
     {
       num: '06',
+      roman: 'VI',
+      versoPage: 12,
+      rectoPage: 13,
       shortTitle: 'Quality & Customer Support',
       title: 'Quality & Customer Support',
       badge: 'TRACEABILITY & AFTER-SALES',
@@ -281,6 +314,9 @@
       rotZ: -1,
       isMain: true,
       img: 'assets/img/book-06-quality.jpg?v=1.0',
+      poster: 'assets/img/pillars/wwd_04_video_poster.jpg',
+      video: 'assets/video/wwd-04-quality.mp4',
+      figureCaption: 'Fig. 6.1 — Quality assurance inspection and batch traceability verification in Manila.',
       slideIndex: 6,
       cards: [
         {
@@ -324,31 +360,35 @@
     const bgTint = book.color || '#0e2d5c';
     const prevIdx = (idx - 1 + SERVICE_BOOKS.length) % SERVICE_BOOKS.length;
     const nextIdx = (idx + 1) % SERVICE_BOOKS.length;
+    const chapterNum = idx + 1;
+    const chapterRoman = book.roman || String(chapterNum);
+    const prevRoman = SERVICE_BOOKS[prevIdx].roman || SERVICE_BOOKS[prevIdx].num;
+    const nextRoman = SERVICE_BOOKS[nextIdx].roman || SERVICE_BOOKS[nextIdx].num;
+    const versoPage = book.versoPage || chapterNum * 2;
+    const rectoPage = book.rectoPage || chapterNum * 2 + 1;
+    const posterSrc = book.poster || book.img || '';
+
     const highlightsHtml = (book.highlights || [])
       .map(
         (h) => `
           <li class="bc-spread-highlight-item">
-            <span class="bc-spread-dash" aria-hidden="true">&mdash;</span>
+            <span class="bc-spread-dash" aria-hidden="true">&middot;</span>
             <span>${escapeHtml(h)}</span>
           </li>`
       )
       .join('');
-    const cardsHtml = book.cards
-      .map((c, ci) => {
-        const idxNum = String(ci + 1).padStart(2, '0');
-        const tagLabel = c.tag || c.code || '';
-        return `
-          <div class="bc-paper-card">
-            <div class="bc-paper-card__idx" aria-hidden="true">${idxNum}</div>
-            <div class="bc-paper-card__main">
-              <div class="bc-paper-card__meta">
-                <h4 class="bc-paper-card__title">${escapeHtml(c.title)}</h4>
-                <span class="bc-paper-card__tag">${escapeHtml(tagLabel)}</span>
-              </div>
-              <p class="bc-paper-card__desc">${escapeHtml(c.desc)}</p>
+
+    const entriesHtml = book.cards
+      .map(
+        (c, ci) => `
+          <article class="bc-book-entry">
+            <div class="bc-book-entry__head">
+              <span class="bc-book-entry__sec">&sect; ${chapterNum}.${ci + 1}</span>
+              <h4 class="bc-book-entry__title">${escapeHtml(c.title)}</h4>
             </div>
-          </div>`;
-      })
+            <p class="bc-book-entry__desc">${escapeHtml(c.desc)}</p>
+          </article>`
+      )
       .join('');
 
     return `
@@ -368,49 +408,57 @@
             </div>
             <div class="bc-face bc-inside" style="width:${BASE_OPEN_W}px;">
               <div class="bc-inside-spread">
-                <div class="bc-spread-topbar">
-                  <span class="bc-spread-eyebrow">MEDIQ SERVICES</span>
-                  <span class="bc-spread-folio">VOL. ${escapeHtml(book.num)}</span>
+                <div class="bc-running-header">
+                  <span class="bc-running-label">MediQ Clinical Monograph</span>
+                  <span class="bc-running-label">Chapter ${escapeHtml(chapterRoman)}</span>
                 </div>
-                <div class="bc-spread-heading">
-                  <span class="bc-spread-volnum">${escapeHtml(book.num)}</span>
+                <header class="bc-chapter-opener">
+                  <span class="bc-chapter-kicker">Chapter ${escapeHtml(chapterRoman)}</span>
                   <h3 class="bc-spread-title">${escapeHtml(book.title)}</h3>
+                </header>
+                <div class="bc-spread-ornament" aria-hidden="true">
+                  <span class="bc-spread-rule-line"></span>
+                  <span class="bc-spread-fleuret">&loz;</span>
+                  <span class="bc-spread-rule-line"></span>
                 </div>
-                <div class="bc-spread-rule"></div>
                 <p class="bc-spread-sub">${escapeHtml(book.subtitle)}</p>
                 ${
-                  book.img
-                    ? `<figure class="bc-spread-figure"><div class="bc-spread-thumb"><img src="${escapeHtml(book.img)}" alt="${escapeHtml(book.title)}" loading="lazy" /></div><figcaption class="bc-spread-caption">PLATE ${escapeHtml(book.num)} &mdash; ${escapeHtml(book.badge || 'MEDIQ SOP')}</figcaption></figure>`
+                  posterSrc
+                    ? `<figure class="bc-spread-figure"><div class="bc-spread-plate"><div class="bc-spread-plate-media"><img class="bc-spread-poster" src="${escapeHtml(posterSrc)}" alt="${escapeHtml(book.title)}" loading="lazy" />${book.video ? `<video class="bc-spread-video" data-video-src="${escapeHtml(book.video)}" poster="${escapeHtml(posterSrc)}" muted loop playsinline preload="none" aria-hidden="true"></video>` : ''}</div></div><figcaption class="bc-spread-caption bc-book-italic">${escapeHtml(book.figureCaption || ('Fig. ' + chapterNum + '.1 — ' + (book.shortTitle || book.title)))}</figcaption></figure>`
                     : ''
                 }
-                <div class="bc-spread-highlights">
-                  <div class="bc-spread-highlights__head">
-                    <span class="bc-spread-highlights__kicker">KEY SCOPE &amp; STANDARDS</span>
-                    <span class="bc-spread-badge">${escapeHtml(book.inquiry || 'Services')}</span>
-                  </div>
+                <div class="bc-spread-notes">
+                  <div class="bc-spread-notes__head">Key Standards</div>
                   <ul class="bc-spread-highlight-list">${highlightsHtml}</ul>
                 </div>
-                <div class="bc-spread-nav">
-                  <button type="button" class="bc-spread-navbtn" data-book-jump="${prevIdx}">&larr; ${escapeHtml(SERVICE_BOOKS[prevIdx].num)}</button>
-                  <button type="button" class="bc-spread-inquire" data-book-inquiry="${escapeHtml(book.inquiry || 'Institutional Supply')}">Inquire &rarr;</button>
-                  <button type="button" class="bc-spread-navbtn" data-book-jump="${nextIdx}">${escapeHtml(SERVICE_BOOKS[nextIdx].num)} &rarr;</button>
-                </div>
+                <footer class="bc-folio-bar">
+                  <button type="button" class="bc-folio-link bc-folio-link--left" data-book-jump="${prevIdx}">&lsaquo; Ch. ${escapeHtml(prevRoman)}</button>
+                  <span class="bc-folio-num">${versoPage}</span>
+                  <button type="button" class="bc-folio-link bc-folio-link--right" data-book-inquiry="${escapeHtml(book.inquiry || 'Institutional Supply')}">Inquire</button>
+                </footer>
               </div>
             </div>
           </div>
 
           <div class="bc-face bc-page" style="transform:translateZ(${sW / 2 - 1}px);">
             <div class="bc-page-spread">
-              <div class="bc-page-toprow">
-                <span class="bc-page-kicker">CORE DELIVERABLES</span>
-                <div class="bc-page-toprow-right">
-                  <span class="bc-page-ref">P. ${escapeHtml(book.num)}</span>
-                  <button type="button" class="bc-book-top-close" aria-label="Close service book">
-                    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2l10 10M12 2L2 12"/></svg>
-                  </button>
-                </div>
+              <div class="bc-running-header">
+                <span class="bc-running-chapter bc-book-italic">${escapeHtml(book.shortTitle || book.title)}</span>
+                <button type="button" class="bc-book-top-close" aria-label="Close service book">
+                  <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 2l10 10M12 2L2 12"/></svg>
+                </button>
               </div>
-              <div class="bc-paper-cards">${cardsHtml}</div>
+              <div class="bc-recto-kicker">Scope &amp; Deliverables</div>
+              <div class="bc-book-entries">${entriesHtml}</div>
+              <div class="bc-book-colophon">
+                <span class="bc-book-colophon-note bc-book-italic">Authorized Philippine documentation</span>
+                <button type="button" class="bc-book-colophon-cta" data-book-inquiry="${escapeHtml(book.inquiry || 'Institutional Supply')}">Request dossier &rarr;</button>
+              </div>
+              <footer class="bc-folio-bar">
+                <span aria-hidden="true"></span>
+                <span class="bc-folio-num">${rectoPage}</span>
+                <button type="button" class="bc-folio-link bc-folio-link--right" data-book-jump="${nextIdx}">Ch. ${escapeHtml(nextRoman)} &rsaquo;</button>
+              </footer>
             </div>
           </div>
 
@@ -681,7 +729,7 @@
             <button type="button" role="tab" aria-selected="false" data-mob-tab="deliverables" class="bc-mobile-tab">Deliverables (0${cards.length})</button>
           </div>
           <div class="bc-mobile-pane bc-mobile-pane--overview">
-            ${book.img ? `<div class="bc-mobile-banner"><img src="${escapeHtml(book.img)}" alt="${escapeHtml(book.title)}" loading="lazy" /></div>` : ''}
+            ${(book.poster || book.img) ? `<div class="bc-mobile-banner"><img src="${escapeHtml(book.poster || book.img)}" alt="${escapeHtml(book.title)}" loading="lazy" /></div>` : ''}
             <div class="bc-mobile-hero">
               <div class="bc-spread-heading">
                 <span class="bc-spread-volnum">${escapeHtml(book.num)}</span>
@@ -731,6 +779,63 @@
       `;
     }
 
+    const desktopVideoMq = window.matchMedia('(min-width: 768px)');
+    const isDesktopWebview = () => desktopVideoMq.matches;
+
+    function syncSpreadVideos(openedIdx) {
+      const canPlay = isDesktopWebview() && openedIdx >= 0;
+      wrappers.forEach((wrapper, k) => {
+        const plate = wrapper.querySelector('.bc-spread-plate');
+        const video = wrapper.querySelector('.bc-spread-video');
+        if (!video) return;
+
+        if (canPlay && k === openedIdx) {
+          const targetSrc = video.getAttribute('data-video-src') || '';
+          if (!targetSrc) return;
+          if (video.dataset.videoBound !== '1') {
+            video.dataset.videoBound = '1';
+            video.addEventListener('playing', () => {
+              if (state.opened === k && isDesktopWebview() && plate) {
+                plate.classList.add('is-video-playing');
+              }
+            });
+            video.addEventListener('error', () => {
+              if (plate) plate.classList.remove('is-video-playing');
+            });
+          }
+          if (video.getAttribute('src') !== targetSrc) {
+            if (plate) plate.classList.remove('is-video-playing');
+            video.src = targetSrc;
+          }
+          video.muted = true;
+          video.defaultMuted = true;
+          video.loop = true;
+          video.playsInline = true;
+          const p = video.play();
+          if (p && typeof p.catch === 'function') p.catch(() => {});
+        } else {
+          if (plate) plate.classList.remove('is-video-playing');
+          try {
+            video.pause();
+          } catch (_) {}
+          if (video.hasAttribute('src')) {
+            video.removeAttribute('src');
+            try {
+              video.load();
+            } catch (_) {}
+          }
+        }
+      });
+    }
+
+    desktopVideoMq.addEventListener('change', (e) => {
+      if (!e.matches) {
+        syncSpreadVideos(-1);
+      } else if (state.opened !== -1) {
+        syncSpreadVideos(state.opened);
+      }
+    });
+
     function openBookSpread(idx) {
       const clamped = clamp(idx);
       if (!SERVICE_BOOKS[clamped]) return;
@@ -748,11 +853,13 @@
       wrappers.forEach((el, k) => {
         el.classList.toggle('is-book-open', k === clamped);
       });
+      syncSpreadVideos(clamped);
     }
 
     function closeBookSpread() {
       state.opened = -1;
       setBookZoom(1.0);
+      syncSpreadVideos(-1);
       syncMobileReader(-1);
       slide.classList.remove('is-reading-open');
       if (closeBtn) closeBtn.classList.remove('visible');

@@ -1001,6 +1001,23 @@
     const preferredTopic = activeSubpage === 1 ? 'IOL portfolio' : 'Hospital supply';
     const topicBtn = document.querySelector(`#contact-topic-pills button[data-contact-topic="${preferredTopic}"]`);
     if (topicBtn) topicBtn.click();
+    const prodSel = document.getElementById('inq-product');
+    if (prodSel && prodSel.options && cleanTitle) {
+      const titleLow = cleanTitle.toLowerCase();
+      let matchedVal = '';
+      for (let i = 0; i < prodSel.options.length; i++) {
+        const optVal = prodSel.options[i].value || '';
+        const optLow = optVal.toLowerCase();
+        if (optLow.includes(titleLow) || (titleLow.includes('trifocal') && optLow.includes('trifocal')) || (titleLow.includes('aspheric') && optLow.includes('aspheric')) || (titleLow.includes('hydrophobic') && optLow.includes('hydrophobic')) || (titleLow.includes('sulcoflex') && optLow.includes('sulcoflex')) || (titleLow.includes('ophteis') && optLow.includes('ophteis')) || (titleLow.includes('aeon') && optLow.includes('aeon'))) {
+          matchedVal = optVal;
+          break;
+        }
+      }
+      if (matchedVal) {
+        prodSel.value = matchedVal;
+        prodSel.dispatchEvent(new Event('change'));
+      }
+    }
     const subj = document.getElementById('inq-subject');
     if (subj) {
       subj.value = `Product Inquiry: ${cleanTitle}${codePart}`;

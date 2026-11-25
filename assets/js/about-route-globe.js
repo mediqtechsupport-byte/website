@@ -156,10 +156,31 @@
     var t0 = performance.now();
     var mouse = { x: -999, y: -999, active: false };
     var activePins = [];
-    var copyBottomPx = 0;
+    var copyBox = null;
 
     function isPortraitMobile() {
       return W < 768 || (W < 1024 && H > W);
+    }
+
+    function measureCopyBox() {
+      copyBox = null;
+      if (!isPortraitMobile()) return;
+      var hostSlide = container.closest('.about-slide');
+      var copyEl = hostSlide ? hostSlide.querySelector('.ih-hero-copy') : null;
+      if (copyEl) {
+        var contRect = container.getBoundingClientRect();
+        var copyRect = copyEl.getBoundingClientRect();
+        if (copyRect.height > 40) {
+          copyBox = {
+            left: copyRect.left - contRect.left,
+            top: copyRect.top - contRect.top,
+            right: copyRect.right - contRect.left,
+            bottom: copyRect.bottom - contRect.top,
+            width: copyRect.width,
+            height: copyRect.height
+          };
+        }
+      }
     }
 
     function resize() {
@@ -168,20 +189,7 @@
       H = container.clientHeight || 700;
       canvas.width = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
-
-      // Measure actual mobile copy/CTA bottom so Philippines map sits cleanly below with zero overlap
-      copyBottomPx = 0;
-      if (isPortraitMobile()) {
-        var hostSlide = container.closest('.about-slide');
-        var copyEl = hostSlide ? hostSlide.querySelector('.ih-hero-copy') : null;
-        if (copyEl) {
-          var contRect = container.getBoundingClientRect();
-          var copyRect = copyEl.getBoundingClientRect();
-          if (copyRect.height > 40) {
-            copyBottomPx = Math.max(0, copyRect.bottom - contRect.top);
-          }
-        }
-      }
+      measureCopyBox();
     }
 
     // Full-Bleed Edge-to-Edge World Coordinate Projection (aspect-safe Asia-Pacific crop on portrait mobile!)
@@ -205,14 +213,14 @@
     }
 
     // Centered Philippines Bounding Box
-    // - Portrait mobile/tablet: full-height atmospheric background framing the vertically centered typography
+    // - Portrait mobile/tablet: full-height atmospheric background framing vertically centered typography, nudged right
     // - Desktop: centered in the right-side zone between text and right border
     function getPHBox() {
       if (isPortraitMobile()) {
-        var wMob = Math.min(W * 1.08, H * 0.62);
-        var hMob = Math.min(H * 0.86, wMob / 0.68);
+        var wMob = Math.min(W * 1.06, H * 0.60);
+        var hMob = Math.min(H * 0.84, wMob / 0.68);
         wMob = hMob * 0.68;
-        var xMob = (W - wMob) * 0.5 - W * 0.03;
+        var xMob = (W - wMob) * 0.5 + W * 0.11;
         var yMob = (H - hMob) * 0.52;
         return {
           x: xMob,
@@ -246,6 +254,10 @@
 
       var t = (now - t0) / 1000;
       activePins = [];
+      var mobMode = isPortraitMobile();
+      if (mobMode && !copyBox) {
+        measureCopyBox();
+      }
       var phBox = getPHBox();
 
       // Regional & nationwide hub positions
@@ -258,7 +270,6 @@
       // =======================================================================
       // 1. EDGE-TO-EDGE WORLD MAP (All 258 Countries, Aspect-Safe on Mobile)
       // =======================================================================
-      var mobMode = isPortraitMobile();
       var dotSize = mobMode ? 1.15 : Math.max(1.15, Math.min(1.85, W / 950));
 
       ctx.fillStyle = mobMode ? "rgba(114, 197, 248, 0.14)" : THEME.worldDot;
@@ -368,18 +379,10 @@
       }
 
       // =======================================================================
-      // 3. SOFT BACKDROP VIGNETTE UNDER TYPOGRAPHY
-      // Softens any flight lines passing behind the text to ensure 100% legibility
+      // 3. SOFT BACKDROP VIGNETTE UNDER TYPOGRAPHY (Desktop)
+      // On desktop, apply a subtle radial legibility vignette under left typography.
       // =======================================================================
-      if (mobMode) {
-        // Gentle radial readability halo behind centered mobile typography while keeping atmospheric map alive
-        var mobScrim = ctx.createRadialGradient(W * 0.44, H * 0.48, 20, W * 0.44, H * 0.48, Math.max(W * 0.85, H * 0.42));
-        mobScrim.addColorStop(0, "rgba(11, 12, 15, 0.56)");
-        mobScrim.addColorStop(0.55, "rgba(11, 12, 15, 0.30)");
-        mobScrim.addColorStop(1, "rgba(11, 12, 15, 0)");
-        ctx.fillStyle = mobScrim;
-        ctx.fillRect(0, 0, W, H);
-      } else {
+      if (!mobMode) {
         var textVignette = ctx.createRadialGradient(W * 0.22, H * 0.50, 40, W * 0.22, H * 0.50, Math.max(W * 0.44, 480));
         textVignette.addColorStop(0, "rgba(11, 12, 15, 0.58)");
         textVignette.addColorStop(0.55, "rgba(11, 12, 15, 0.34)");
@@ -392,23 +395,24 @@
       }
 
       // =======================================================================
-      // 4. PROMINENT PHILIPPINES ARCHIPELAGO MAP (Centered in Right Zone)
+      // 4. PROMINENT PHILIPPINES ARCHIPELAGO MAP (Background on Mobile / Right Zone on Desktop)
       // =======================================================================
       // 4A. Luminous Nebula Aura behind the Philippines
       var phCenterX = phBox.x + phBox.w * 0.52;
       var phCenterY = phBox.y + phBox.h * 0.52;
-      var phAura = ctx.createRadialGradient(phCenterX, phCenterY, 30, phCenterX, phCenterY, Math.max(phBox.w, phBox.h) * 0.68);
-      phAura.addColorStop(0, "rgba(58, 160, 219, 0.22)");
-      phAura.addColorStop(0.55, "rgba(20, 53, 112, 0.14)");
+      var phAuraRadius = Math.max(phBox.w, phBox.h) * (mobMode ? 0.60 : 0.68);
+      var phAura = ctx.createRadialGradient(phCenterX, phCenterY, 30, phCenterX, phCenterY, phAuraRadius);
+      phAura.addColorStop(0, mobMode ? "rgba(58, 160, 219, 0.18)" : "rgba(58, 160, 219, 0.22)");
+      phAura.addColorStop(0.55, mobMode ? "rgba(20, 53, 112, 0.12)" : "rgba(20, 53, 112, 0.14)");
       phAura.addColorStop(1, "transparent");
       ctx.fillStyle = phAura;
       ctx.beginPath();
-      ctx.arc(phCenterX, phCenterY, Math.max(phBox.w, phBox.h) * 0.68, 0, Math.PI * 2);
+      ctx.arc(phCenterX, phCenterY, phAuraRadius, 0, Math.PI * 2);
       ctx.fill();
 
       // 4B. Authentic Island Boundaries (Luzon, Visayas, Mindanao, Palawan)
-      ctx.fillStyle = THEME.phIslandFill;
-      ctx.strokeStyle = THEME.phIslandStroke;
+      ctx.fillStyle = mobMode ? "rgba(58, 160, 219, 0.08)" : THEME.phIslandFill;
+      ctx.strokeStyle = mobMode ? "rgba(114, 197, 248, 0.28)" : THEME.phIslandStroke;
       ctx.lineWidth = 1.0;
       for (var r = 0; r < PH_ISLANDS.length; r++) {
         var island = PH_ISLANDS[r];
@@ -426,7 +430,7 @@
       }
 
       // 4C. 3D Mesh Polygon Connections (Vecteezy #46019119 style)
-      ctx.strokeStyle = THEME.phMeshEdge;
+      ctx.strokeStyle = mobMode ? "rgba(58, 160, 219, 0.14)" : THEME.phMeshEdge;
       ctx.lineWidth = 0.75;
       ctx.beginPath();
       for (var e = 0; e < PH_EDGES.length; e++) {
@@ -441,8 +445,10 @@
       ctx.stroke();
 
       // 4D. Glowing Blue Dots across Philippine Archipelago
-      var phDotRadius = Math.max(1.2, Math.min(1.8, phBox.w / 220));
-      ctx.fillStyle = THEME.phDot;
+      var phDotRadius = mobMode
+        ? Math.max(1.15, Math.min(1.6, phBox.w / 185))
+        : Math.max(1.2, Math.min(1.8, phBox.w / 220));
+      ctx.fillStyle = mobMode ? "rgba(130, 206, 252, 0.56)" : THEME.phDot;
       ctx.beginPath();
       for (var n = 0; n < PH_DOTS.length; n++) {
         var pd = PH_DOTS[n];
@@ -475,7 +481,7 @@
         var cx = (p1.x + p2.x) * 0.5 - (dy / len) * bend;
         var cy = (p1.y + p2.y) * 0.5 + (dx / len) * bend;
 
-        ctx.strokeStyle = "rgba(114, 197, 248, 0.34)";
+        ctx.strokeStyle = mobMode ? "rgba(114, 197, 248, 0.22)" : "rgba(114, 197, 248, 0.34)";
         ctx.lineWidth = 1.1;
         ctx.beginPath();
         ctx.moveTo(p1.x, p1.y);
@@ -515,20 +521,23 @@
 
         // Animated Staggered Sonar Ring
         var ring = (t * (isPrimary ? 1.85 : 1.15) + p * 0.19) % 1;
+        var sonarBase = isPrimary ? (mobMode ? 3.5 : 4) : (mobMode ? 2.1 : 2.4);
+        var sonarSpan = isPrimary ? (mobMode ? 13 : 16) : (mobMode ? 8 : 10);
         ctx.globalAlpha = (1 - ring) * (isPrimary ? 0.75 : 0.42);
         ctx.strokeStyle = hub.color;
         ctx.lineWidth = isPrimary ? 1.4 : 1.0;
         ctx.beginPath();
-        ctx.arc(pt.x, pt.y, (isPrimary ? 4 : 2.4) + ring * (isPrimary ? 16 : 10), 0, Math.PI * 2);
+        ctx.arc(pt.x, pt.y, sonarBase + ring * sonarSpan, 0, Math.PI * 2);
         ctx.stroke();
         ctx.globalAlpha = 1;
 
         // Glowing Pin Beacon
+        var pinRadius = isPrimary ? (mobMode ? 3.8 : 4.5) : (mobMode ? 2.2 : 2.7);
         ctx.fillStyle = hub.color;
         ctx.shadowColor = "#72c5f8";
         ctx.shadowBlur = isPrimary ? 10 : 6;
         ctx.beginPath();
-        ctx.arc(pt.x, pt.y, isPrimary ? 4.5 : 2.7, 0, Math.PI * 2);
+        ctx.arc(pt.x, pt.y, pinRadius, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
 
@@ -550,6 +559,31 @@
           ctx.fillText(hub.name, labelX, labelY);
           ctx.restore();
         }
+      }
+
+      // =======================================================================
+      // 6. MOBILE COPY READABILITY FEATHER (Applied AFTER map so dots & lines
+      //    softly recede behind the foreground text while staying continuous)
+      // =======================================================================
+      if (mobMode) {
+        var cxHalo = copyBox ? (copyBox.left + copyBox.width * 0.44) : (W * 0.44);
+        var cyHalo = copyBox ? (copyBox.top + copyBox.height * 0.46) : (H * 0.46);
+        var rxHalo = copyBox ? Math.max(W * 0.56, copyBox.width * 0.68) : (W * 0.62);
+        var ryHalo = copyBox ? Math.max(150, copyBox.height * 0.68) : (H * 0.24);
+        ctx.save();
+        ctx.globalCompositeOperation = "destination-out";
+        ctx.translate(cxHalo, cyHalo);
+        ctx.scale(1, ryHalo / rxHalo);
+        var textHalo = ctx.createRadialGradient(0, 0, rxHalo * 0.12, 0, 0, rxHalo);
+        textHalo.addColorStop(0, "rgba(0, 0, 0, 0.78)");
+        textHalo.addColorStop(0.58, "rgba(0, 0, 0, 0.52)");
+        textHalo.addColorStop(0.84, "rgba(0, 0, 0, 0.18)");
+        textHalo.addColorStop(1, "rgba(0, 0, 0, 0)");
+        ctx.fillStyle = textHalo;
+        ctx.beginPath();
+        ctx.arc(0, 0, rxHalo, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
       }
 
       ctx.globalAlpha = 1;
@@ -628,6 +662,16 @@
       if (shouldTick()) draw(performance.now());
     });
     ro.observe(container);
+    var hostSlideEl = container.closest('.about-slide');
+    var heroCopyEl = hostSlideEl ? hostSlideEl.querySelector('.ih-hero-copy') : null;
+    if (heroCopyEl) ro.observe(heroCopyEl);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () {
+        if (!alive) return;
+        resize();
+        if (shouldTick()) draw(performance.now());
+      });
+    }
 
     var aboutSec = document.getElementById('about') || container;
     if ('IntersectionObserver' in window && aboutSec) {
@@ -644,12 +688,16 @@
       sectionInView = true;
     }
 
-    var slideEl = container.closest('.about-slide');
+    var slideEl = hostSlideEl || container.closest('.about-slide');
     if (slideEl) {
       var obs = new MutationObserver(function () {
         var isVis = !slideEl.classList.contains('opacity-0') && slideEl.classList.contains('opacity-100');
         if (isVis !== visible) {
           visible = isVis;
+          if (visible) {
+            resize();
+            if (shouldTick()) draw(performance.now());
+          }
           syncRun();
         }
       });
