@@ -8950,6 +8950,10 @@ function initProductsDeckController() {
     window.__productsDeckCurrentIndex = idx;
     prodEdgeAccum = 0;
 
+    if (currentIndex >= 1 && prodSec) {
+      prodSec.classList.add('mediq-subpage-active-host');
+    }
+
     slides.forEach((slide, i) => {
       slide.classList.remove('opacity-100', 'pointer-events-auto', 'translate-x-0', 'z-10', 'opacity-0', 'pointer-events-none', '-translate-x-12', 'translate-x-12', 'z-0');
       if (i === currentIndex) {
@@ -11101,6 +11105,10 @@ if (document.readyState === 'loading') {
       window.__setServicesBookCarouselActive(wantsBookshelf, bookFocusIdx);
     }
 
+    if (isSubpage && sec) {
+      sec.classList.add('mediq-subpage-active-host');
+    }
+
     slides.forEach((slide, i) => {
       slide.classList.remove(
         'opacity-100', 'pointer-events-auto', 'translate-x-0', 'z-10',
@@ -12385,9 +12393,18 @@ if (document.readyState === 'loading') {
     pageVeilTimer = setTimeout(() => {
       pageVeilTimer = null;
       window.scrollTo({ top: destY, left: 0, behavior: 'instant' });
+      if (targetSec) {
+        for (let i = 0; i < sections.length; i++) {
+          sections[i].classList.toggle('is-page-active', sections[i] === targetSec);
+        }
+      }
       if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll(destY);
-      if (targetSec && typeof window.__revealLandingHost === 'function') {
-        window.__revealLandingHost(targetSec);
+      if (targetSec) {
+        if (typeof window.__replayLandingHost === 'function') {
+          window.__replayLandingHost(targetSec);
+        } else if (typeof window.__revealLandingHost === 'function') {
+          window.__revealLandingHost(targetSec);
+        }
       }
 
       const stageEl = (destIdx !== -1 && innerStages[destIdx])
@@ -12408,15 +12425,137 @@ if (document.readyState === 'loading') {
           }
         };
         stageEl.addEventListener('animationend', clearStage, { once: true });
-        pageVeilCleanTimer = setTimeout(clearStage, 440);
+        pageVeilCleanTimer = setTimeout(clearStage, 480);
       }
 
       requestAnimationFrame(() => {
         veil.classList.remove('is-entering');
       });
-    }, 150);
+    }, 120);
     return true;
   }
+
+  // Lightweight Desktop One-Step Page Wheel Stepper (zero per-frame scroll loop, zero mid-section header clip)
+  let wheelStepLockUntil = 0;
+  let wheelAccum = 0;
+  let lastWheelTs = 0;
+  let prevAbsDy = 0;
+  let inertiaWaitNewGesture = false;
+
+  function isInsideBlockingOverlay(target) {
+    if (window.__mediqSplashActive) return true;
+    if (typeof window.__isAnyMediqSubpageOpen === 'function' && window.__isAnyMediqSubpageOpen()) return true;
+    if (document.documentElement.classList.contains('mediq-subpage-locked')) return true;
+
+    const brochureModal = document.getElementById('brochure-modal');
+    if (brochureModal && brochureModal.classList.contains('opacity-100')) return true;
+    const wwdModal = document.getElementById('wwd-modal');
+    if (wwdModal && !wwdModal.hidden && wwdModal.style.display !== 'none' && wwdModal.classList.contains('opacity-100')) {
+      return true;
+    }
+    const contactModal = document.getElementById('contact-confirmation-modal');
+    if (contactModal && !contactModal.classList.contains('hidden')) return true;
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenu && !mobileMenu.classList.contains('pointer-events-none')) return true;
+
+    if (target && typeof target.closest === 'function') {
+      if (target.closest('#brochure-modal.opacity-100, #wwd-modal.opacity-100, #contact-confirmation-modal:not(.hidden), #mediq-search-modal.is-open, #mediq-search-results, #mobile-menu:not(.pointer-events-none)')) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function getCurrentSectionIndex(sy) {
+    if (!sectionOffsets.length) return 0;
+    const footerIdx = sections.length - 1;
+    const footerStopY = Math.min(maxScroll, sectionOffsets[footerIdx]);
+    if (sy >= footerStopY - 12) return footerIdx;
+
+    let bestIdx = 0;
+    let bestDist = Infinity;
+    for (let i = 0; i < sectionOffsets.length; i++) {
+      const targetY = i === footerIdx ? footerStopY : sectionOffsets[i];
+      const d = Math.abs(sy - targetY);
+      if (d < bestDist) {
+        bestDist = d;
+        bestIdx = i;
+      }
+    }
+    return bestIdx;
+  }
+
+  window.addEventListener('wheel', (e) => {
+    if (window.innerWidth < 1024) return;
+    if (e.ctrlKey || e.metaKey || e.defaultPrevented) return;
+    if (isInsideBlockingOverlay(e.target)) return;
+
+    const curVh = window.innerHeight || 1;
+    if (!sectionOffsets.length || Math.abs(vh - curVh) > 2) {
+      measureSections();
+    }
+
+    const rawDy = e.deltaMode === 1 ? e.deltaY * 36 : e.deltaY;
+    if (Math.abs(rawDy) < 1) return;
+
+    const footerIdx = sections.length - 1;
+    const footerStopY = Math.min(maxScroll, sectionOffsets[footerIdx] || maxScroll);
+    if (window.scrollY >= footerStopY - 6) {
+      if (rawDy > 0) return;
+      if (rawDy < 0 && window.scrollY > footerStopY + 6) return;
+    }
+
+    const contactSlide = e.target && typeof e.target.closest === 'function'
+      ? e.target.closest('#contact .deck-slide[data-slide-index="0"]')
+      : null;
+    if (contactSlide && contactSlide.scrollHeight > contactSlide.clientHeight + 8) {
+      if (rawDy > 0 && contactSlide.scrollTop + contactSlide.clientHeight < contactSlide.scrollHeight - 4) return;
+      if (rawDy < 0 && contactSlide.scrollTop > 4) return;
+    }
+
+    e.preventDefault();
+
+    const now = performance.now();
+    const gapMs = now - lastWheelTs;
+    lastWheelTs = now;
+    const absDy = Math.abs(rawDy);
+
+    if (now < wheelStepLockUntil) {
+      prevAbsDy = absDy;
+      return;
+    }
+    if (inertiaWaitNewGesture) {
+      if (gapMs > 140 || absDy > prevAbsDy * 1.2 + 8) {
+        inertiaWaitNewGesture = false;
+      } else {
+        prevAbsDy = absDy;
+        return;
+      }
+    }
+
+    if (gapMs > 220 || (wheelAccum > 0 && rawDy < 0) || (wheelAccum < 0 && rawDy > 0)) {
+      wheelAccum = 0;
+    }
+    wheelAccum += rawDy;
+    prevAbsDy = absDy;
+
+    if (Math.abs(wheelAccum) >= 38) {
+      const dir = wheelAccum > 0 ? 1 : -1;
+      wheelAccum = 0;
+      measureSections();
+      const curIdx = getCurrentSectionIndex(window.scrollY);
+      const nextIdx = Math.max(0, Math.min(sections.length - 1, curIdx + dir));
+      if (nextIdx === curIdx) return;
+
+      wheelStepLockUntil = now + 540;
+      inertiaWaitNewGesture = true;
+      const destSec = sections[nextIdx];
+      const destY = Math.max(0, Math.min(maxScroll, sectionOffsets[nextIdx]));
+      if (!playSimplePageTransition(destY, dir, destSec, nextIdx)) {
+        window.scrollTo({ top: destY, left: 0, behavior: 'smooth' });
+      }
+    }
+  }, { passive: false });
 
   // Programmatic transition API for navbar links, dropdowns, CTAs, and page indicator dots
   window.grailScrollTo = function(targetElOrY) {

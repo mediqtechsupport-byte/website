@@ -529,9 +529,21 @@
 
     #about-subpage-scroll,
     #iol-scroll-container,
-    .product-slide,
-    .deck-slide {
+    .product-slide:not([data-product-index="0"]),
+    .deck-slide:not([data-slide-index="0"]) {
       overscroll-behavior-y: contain;
+    }
+
+    .product-slide[data-product-index="0"],
+    .deck-slide[data-slide-index="0"] {
+      overscroll-behavior-y: auto;
+    }
+
+    section.page-snap-section:not(.mediq-subpage-active-host) .product-slide:not([data-product-index="0"]),
+    section.page-snap-section:not(.mediq-subpage-active-host) .deck-slide:not([data-slide-index="0"]) {
+      display: none !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
     }
 
     .deck-slide:not([data-slide-index="0"]) {
@@ -590,6 +602,17 @@
     .product-slide.opacity-0.pointer-events-none,
     .deck-slide.opacity-0.pointer-events-none {
       contain: layout style;
+    }
+
+    .product-slide.opacity-0.pointer-events-none,
+    .deck-slide.opacity-0.pointer-events-none {
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    .product-slide.opacity-0.pointer-events-none *,
+    .deck-slide.opacity-0.pointer-events-none * {
+      pointer-events: none !important;
     }
 
     
@@ -7665,7 +7688,13 @@
         }
 
         .at-work-stage.is-hidden {
+          display: none !important;
           opacity: 0 !important;
+          pointer-events: none !important;
+          visibility: hidden !important;
+        }
+
+        .at-work-stage.is-hidden * {
           pointer-events: none !important;
           visibility: hidden !important;
         }
@@ -16651,11 +16680,11 @@
   <!-- ============== LANDING PAGE MICRO-ANIMATIONS (About, Products, Brands, Services, Resources — Slide 0) ============== -->
   <style id="mq-landing-motion">
     @keyframes mqLandRise {
-      0% { opacity: 0; transform: translate3d(0, 10px, 0); }
+      0% { opacity: 0; transform: translate3d(0, 18px, 0); }
       100% { opacity: 1; transform: translate3d(0, 0, 0); }
     }
     @keyframes mqWordIn {
-      0% { opacity: 0; transform: translate3d(0, 14px, 0); }
+      0% { opacity: 0; transform: translate3d(0, 20px, 0); }
       100% { opacity: 1; transform: translate3d(0, 0, 0); }
     }
     @keyframes mqWordWave {
@@ -16789,27 +16818,27 @@
       opacity: 0;
     }
     .mq-land-host.mq-land-in .ih-hero-copy > * {
-      animation: mqLandRise 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+      animation: mqLandRise 0.62s cubic-bezier(0.22, 1, 0.36, 1) backwards;
     }
-    .mq-land-host.mq-land-in .ih-hero-copy > .ih-eyebrow { animation-delay: 40ms; }
-    .mq-land-host.mq-land-in .ih-hero-copy > h2 { animation-delay: 140ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > .ih-eyebrow { animation-delay: 30ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > h2 { animation-delay: 95ms; }
     .mq-land-host.mq-land-in .ih-hero-copy > h2 .ih-h1-line {
       display: block;
-      animation: mqLandRise 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+      animation: mqLandRise 0.62s cubic-bezier(0.22, 1, 0.36, 1) backwards;
     }
-    .mq-land-host.mq-land-in .ih-hero-copy > h2 .ih-h1-line:nth-child(1) { animation-delay: 160ms; }
-    .mq-land-host.mq-land-in .ih-hero-copy > h2 .ih-h1-line:nth-child(2) { animation-delay: 250ms; }
-    .mq-land-host.mq-land-in .ih-hero-copy > h2 .ih-h1-line:nth-child(3) { animation-delay: 340ms; }
-    .mq-land-host.mq-land-in .ih-hero-copy > p:not(.ih-eyebrow) { animation-delay: 360ms; }
-    .mq-land-host.mq-land-in .ih-hero-copy > p:not(.ih-eyebrow) + p { animation-delay: 430ms; }
-    .mq-land-host.mq-land-in .ih-hero-copy > div:not(.border-t) { animation-delay: 500ms; }
-    .mq-land-host.mq-land-in .ih-hero-copy > div.border-t { animation-delay: 620ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > h2 .ih-h1-line:nth-child(1) { animation-delay: 100ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > h2 .ih-h1-line:nth-child(2) { animation-delay: 170ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > h2 .ih-h1-line:nth-child(3) { animation-delay: 240ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > p:not(.ih-eyebrow) { animation-delay: 230ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > p:not(.ih-eyebrow) + p { animation-delay: 290ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > div:not(.border-t) { animation-delay: 320ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > div.border-t { animation-delay: 380ms; }
     .mq-land-host.mq-land-in .ih-hero-copy > div.border-t > div {
-      animation: mqLandRise 0.8s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+      animation: mqLandRise 0.56s cubic-bezier(0.22, 1, 0.36, 1) backwards;
     }
-    .mq-land-host.mq-land-in .ih-hero-copy > div.border-t > div:nth-child(1) { animation-delay: 700ms; }
-    .mq-land-host.mq-land-in .ih-hero-copy > div.border-t > div:nth-child(2) { animation-delay: 800ms; }
-    .mq-land-host.mq-land-in .ih-hero-copy > div.border-t > div:nth-child(3) { animation-delay: 900ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > div.border-t > div:nth-child(1) { animation-delay: 420ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > div.border-t > div:nth-child(2) { animation-delay: 480ms; }
+    .mq-land-host.mq-land-in .ih-hero-copy > div.border-t > div:nth-child(3) { animation-delay: 540ms; }
 
     /* 1b. Simple sequential word float & soft optical wave on Products/Brands/Services/Resources headlines */
     .mq-title-w {
@@ -16818,8 +16847,8 @@
     }
     .mq-land-host.mq-land-in .mq-title-w {
       animation:
-        mqWordIn 0.72s cubic-bezier(0.22, 1, 0.36, 1) calc(80ms + var(--wi, 0) * 65ms) backwards,
-        mqWordWave 4.8s ease-in-out calc(920ms + var(--wi, 0) * 165ms) infinite;
+        mqWordIn 0.56s cubic-bezier(0.22, 1, 0.36, 1) calc(65ms + var(--wi, 0) * 48ms) backwards,
+        mqWordWave 4.8s ease-in-out calc(760ms + var(--wi, 0) * 165ms) infinite;
     }
     .mq-land-host.mq-land-in .mq-title-w:hover {
       color: #e0f2fe;
@@ -16838,8 +16867,8 @@
     .mq-land-host.mq-land-in h2 span[class*="text-[#72c5f8]"].mq-title-accent {
       animation:
         mqAccentShimmer 5.2s linear infinite,
-        mqWordIn 0.72s cubic-bezier(0.22, 1, 0.36, 1) calc(80ms + var(--wi, 5) * 65ms) backwards,
-        mqAccentWave 4.8s ease-in-out calc(920ms + var(--wi, 5) * 165ms) infinite;
+        mqWordIn 0.56s cubic-bezier(0.22, 1, 0.36, 1) calc(65ms + var(--wi, 5) * 48ms) backwards,
+        mqAccentWave 4.8s ease-in-out calc(760ms + var(--wi, 5) * 165ms) infinite;
     }
 
     /* 3. Breathing eyebrow hairlines */
@@ -16914,6 +16943,21 @@
       background-repeat: no-repeat;
     }
 
+    /* Coordinated GPU entrance choreography for News & Events (#activities) and Contact (#contact) */
+    html.mq-land-js #activities .deck-slide[data-slide-index="0"].mq-land-host:not(.mq-land-in) > div > *:not(.news-cf-nav-btn),
+    html.mq-land-js #contact .deck-slide[data-slide-index="0"].mq-land-host:not(.mq-land-in) #contact-panel-form {
+      opacity: 0;
+    }
+    #activities .deck-slide[data-slide-index="0"].mq-land-host.mq-land-in > div > *:not(.news-cf-nav-btn) {
+      animation: mqLandRise 0.62s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    }
+    #activities .deck-slide[data-slide-index="0"].mq-land-host.mq-land-in > div > *:nth-child(1) { animation-delay: 40ms; }
+    #activities .deck-slide[data-slide-index="0"].mq-land-host.mq-land-in > div > *:nth-child(2) { animation-delay: 130ms; }
+    #activities .deck-slide[data-slide-index="0"].mq-land-host.mq-land-in > div > *:nth-child(n+3):not(.news-cf-nav-btn) { animation-delay: 240ms; }
+    #contact .deck-slide[data-slide-index="0"].mq-land-host.mq-land-in #contact-panel-form {
+      animation: mqLandRise 0.64s cubic-bezier(0.22, 1, 0.36, 1) 70ms backwards;
+    }
+
     /* Pause all CSS landing micro-animations on offscreen sections */
     .page-snap-section:not(.is-page-active) .mq-land-host,
     .page-snap-section:not(.is-page-active) .mq-land-host *,
@@ -16948,20 +16992,20 @@
       opacity: 0;
     }
     html body .mq-zen-landing.mq-land-in .mq-zen-wrap > * {
-      animation: mqLandRise 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+      animation: mqLandRise 0.62s cubic-bezier(0.22, 1, 0.36, 1) backwards;
     }
-    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > .mq-zen-eyebrow { animation-delay: 40ms; }
-    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > h2.mq-zen-title { animation-delay: 140ms; }
-    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > p.mq-zen-sub { animation-delay: 360ms; }
-    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > .mq-zen-actions { animation-delay: 480ms; }
-    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > .mq-zen-strip { animation-delay: 600ms; }
-    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > p.mq-zen-footnote { animation-delay: 700ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > .mq-zen-eyebrow { animation-delay: 30ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > h2.mq-zen-title { animation-delay: 95ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > p.mq-zen-sub { animation-delay: 220ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > .mq-zen-actions { animation-delay: 300ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > .mq-zen-strip { animation-delay: 370ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-wrap > p.mq-zen-footnote { animation-delay: 440ms; }
     html body .mq-zen-landing.mq-land-in .mq-zen-strip > .mq-zen-strip-item {
-      animation: mqLandRise 0.8s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+      animation: mqLandRise 0.56s cubic-bezier(0.22, 1, 0.36, 1) backwards;
     }
-    html body .mq-zen-landing.mq-land-in .mq-zen-strip > .mq-zen-strip-item:nth-child(1) { animation-delay: 680ms; }
-    html body .mq-zen-landing.mq-land-in .mq-zen-strip > .mq-zen-strip-item:nth-child(2) { animation-delay: 760ms; }
-    html body .mq-zen-landing.mq-land-in .mq-zen-strip > .mq-zen-strip-item:nth-child(3) { animation-delay: 840ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-strip > .mq-zen-strip-item:nth-child(1) { animation-delay: 420ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-strip > .mq-zen-strip-item:nth-child(2) { animation-delay: 480ms; }
+    html body .mq-zen-landing.mq-land-in .mq-zen-strip > .mq-zen-strip-item:nth-child(3) { animation-delay: 540ms; }
 
     section.page-snap-section .mq-zen-landing .mq-zen-wrap {
       width: 100%;
@@ -17072,8 +17116,8 @@
     html body .mq-zen-landing.mq-land-host.mq-land-in h2.mq-zen-title .mq-zen-accent.mq-title-accent {
       animation:
         mqAccentShimmer 5.2s linear infinite,
-        mqWordIn 0.72s cubic-bezier(0.22, 1, 0.36, 1) calc(80ms + var(--wi, 5) * 65ms) backwards,
-        mqAccentWave 4.8s ease-in-out calc(920ms + var(--wi, 5) * 165ms) infinite !important;
+        mqWordIn 0.56s cubic-bezier(0.22, 1, 0.36, 1) calc(65ms + var(--wi, 5) * 48ms) backwards,
+        mqAccentWave 4.8s ease-in-out calc(760ms + var(--wi, 5) * 165ms) infinite !important;
     }
 
     html body #products .mq-zen-landing p.mq-zen-sub,
@@ -17950,7 +17994,7 @@
       pointer-events: none;
       background: #070d1b;
       opacity: 0;
-      transition: opacity 260ms cubic-bezier(0.22, 1, 0.36, 1);
+      transition: opacity 220ms cubic-bezier(0.22, 1, 0.36, 1);
       will-change: opacity;
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
@@ -17978,7 +18022,7 @@
 
     #mq-page-veil.is-entering {
       opacity: 1;
-      transition-duration: 150ms;
+      transition-duration: 120ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -17995,7 +18039,7 @@
     @keyframes mqWebPageEnterNext {
       0% {
         opacity: 0;
-        transform: translate3d(0, 16px, 0);
+        transform: translate3d(0, 22px, 0);
       }
       100% {
         opacity: 1;
@@ -18006,7 +18050,7 @@
     @keyframes mqWebPageEnterPrev {
       0% {
         opacity: 0;
-        transform: translate3d(0, -16px, 0);
+        transform: translate3d(0, -22px, 0);
       }
       100% {
         opacity: 1;
@@ -18015,14 +18059,14 @@
     }
 
     .mq-web-page-enter-next {
-      animation: mqWebPageEnterNext 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation: mqWebPageEnterNext 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
       will-change: transform, opacity;
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
     }
 
     .mq-web-page-enter-prev {
-      animation: mqWebPageEnterPrev 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation: mqWebPageEnterPrev 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
       will-change: transform, opacity;
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
@@ -18119,7 +18163,9 @@
         '#products .product-slide[data-product-index="0"]',
         '#brands .deck-slide[data-slide-index="0"]',
         '#distribution .deck-slide[data-slide-index="0"]',
-        '#resources .deck-slide[data-slide-index="0"]'
+        '#resources .deck-slide[data-slide-index="0"]',
+        '#activities .deck-slide[data-slide-index="0"]',
+        '#contact .deck-slide[data-slide-index="0"]'
       ];
       var animatedTitleIds = ['products-title', 'brands-title', 'distribution-title', 'resources-title'];
 
@@ -18184,12 +18230,13 @@
         }
         document.documentElement.classList.add('mq-land-js');
 
-        function replay(host) {
+        function replay(host, force) {
           if (!host) return;
-          if (!host.classList.contains('mq-land-in')) {
-            host.classList.add('mq-land-in');
+          var now = Date.now();
+          if (!force && host._mqLastReplay && now - host._mqLastReplay < 450 && host.classList.contains('mq-land-in')) {
             return;
           }
+          host._mqLastReplay = now;
           host.classList.remove('mq-land-in');
           requestAnimationFrame(function () {
             requestAnimationFrame(function () { host.classList.add('mq-land-in'); });
@@ -18203,40 +18250,50 @@
           return r.top < vh * 0.88 && r.bottom > vh * 0.12;
         }
 
-        window.__revealLandingHost = function (sectionEl) {
+        window.__replayLandingHost = function (sectionEl) {
           var host = sectionEl && sectionEl.querySelector ? sectionEl.querySelector('.mq-land-host') : null;
-          if (host) host.classList.add('mq-land-in');
+          if (host) replay(host, true);
+        };
+
+        window.__revealLandingHost = function (sectionEl, shouldReplay) {
+          var host = sectionEl && sectionEl.querySelector ? sectionEl.querySelector('.mq-land-host') : null;
+          if (!host) return;
+          if (shouldReplay) replay(host, true);
+          else host.classList.add('mq-land-in');
         };
 
         hosts.forEach(function (host) {
           var section = host.closest('section') || host;
-          var revealed = false;
+          var inView = false;
 
           var io = new IntersectionObserver(function (entries) {
             var entry = entries[0];
             if (!entry) return;
-            if (entry.isIntersecting || isSectionInView(section)) {
-              if (!revealed) {
-                revealed = true;
-                host.classList.add('mq-land-in');
-                io.disconnect();
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.12) {
+              if (!inView) {
+                inView = true;
+                replay(host, false);
+              }
+            } else if (!entry.isIntersecting && entry.intersectionRatio === 0) {
+              inView = false;
+              if (!document.documentElement.classList.contains('mediq-subpage-locked')) {
+                host.classList.remove('mq-land-in');
               }
             }
-          }, { threshold: 0.05 });
+          }, { threshold: [0, 0.14] });
           io.observe(section);
 
-          // Ensure return from subpage within the same section keeps content revealed cleanly
+          // Replay entrance cleanly when returning to landing page from a subpage within the same section
           var wasHidden = host.classList.contains('opacity-0');
           new MutationObserver(function () {
             var hidden = host.classList.contains('opacity-0');
-            if (wasHidden && !hidden) host.classList.add('mq-land-in');
+            if (wasHidden && !hidden) replay(host, true);
             wasHidden = hidden;
           }).observe(host, { attributes: true, attributeFilter: ['class'] });
 
           if (isSectionInView(section)) {
-            revealed = true;
+            inView = true;
             host.classList.add('mq-land-in');
-            io.disconnect();
           }
         });
       }
@@ -18252,7 +18309,7 @@
     <script src="assets/js/GLTFLoader.js?v=3.00" defer></script>
   <script src="assets/js/foundation-logo-data.js?v=1.00" defer></script>
   <script src="assets/js/foundation-particles-gl.js?v=4.64" defer></script>
-  <script src="assets/js/main.js?v=388.59" defer></script>
+  <script src="assets/js/main.js?v=388.60" defer></script>
   <script src="assets/js/motion-navbar.js?v=1.00" defer></script>
   <script src="assets/js/galaxy-delivery-3d.js?v=14.42" defer></script>
   <script src="assets/js/about-route-globe.js?v=9.04" defer></script>
