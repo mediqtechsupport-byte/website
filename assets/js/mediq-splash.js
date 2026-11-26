@@ -9,13 +9,13 @@
 (function () {
   'use strict';
 
-  var TOTAL_LOAD_MS = 1450;   // Phase 1 & 2: Optical convergence & smooth focus lock
-  var HOLD_MS = 380;          // Phase 3: Serene 20/20 hold with specular sheen & corneal ripple
-  var CLEAR_OPTICS_MS = 520;  // Step 4A: Clear ring + haptics + dust + MEDIQ completely to pure gradient
+  var TOTAL_LOAD_MS = 1200;   // Phase 1 & 2: Optical convergence & smooth focus lock
+  var HOLD_MS = 260;          // Phase 3: Serene 20/20 hold with specular sheen & corneal ripple
+  var CLEAR_OPTICS_MS = 400;  // Step 4A: Clear ring + haptics + dust + MEDIQ completely to pure gradient
   var FAST_CLEAR_MS = 190;    // Fast clear duration on Escape
-  var VEIL_FADE_MS = 660;     // Step 4B: Matches CSS 0.64s easeInOutSine fade of clean empty veil
-  var FAST_VEIL_MS = 320;     // Fast veil fade duration on Escape
-  var SAFETY_EXIT_MS = 6500;  // Safety trigger always initiates clean sequential exit
+  var VEIL_FADE_MS = 500;     // Step 4B: Matches CSS 0.48s easeInOutSine fade of clean empty veil
+  var FAST_VEIL_MS = 280;     // Fast veil fade duration on Escape
+  var SAFETY_EXIT_MS = 5000;  // Safety trigger always initiates clean sequential exit
 
   function clamp01(v) {
     return v < 0 ? 0 : v > 1 ? 1 : v;
@@ -288,6 +288,7 @@
   function runSplash(splashEl) {
     if (!splashEl || splashEl.__mediqSplashRunning) return;
     splashEl.__mediqSplashRunning = true;
+    window.__mediqSplashActive = true;
 
     var canvas = splashEl.querySelector('#pl-glow-canvas');
     var reticleWrap = splashEl.querySelector('#pl-reticle-wrap');
@@ -333,16 +334,20 @@
     }
 
     var dpr = 1;
+    var pixelScale = 1;
     var cw = 1;
     var ch = 1;
     var lensRPx = 180;
 
     function resize() {
       if (!canvas) return;
-      var maxDpr = window.innerWidth >= 1440 ? 1.0 : 1.25;
+      var maxDpr = window.innerWidth >= 1440 ? 0.85 : 1.0;
       dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
-      cw = Math.max(1, Math.round(window.innerWidth * dpr));
-      ch = Math.max(1, Math.round(window.innerHeight * dpr));
+      var rawW = Math.max(1, Math.round(window.innerWidth * dpr));
+      var rawH = Math.max(1, Math.round(window.innerHeight * dpr));
+      pixelScale = Math.min(1, Math.sqrt(580000 / Math.max(1, rawW * rawH)));
+      cw = Math.max(1, Math.round(rawW * pixelScale));
+      ch = Math.max(1, Math.round(rawH * pixelScale));
       if (canvas.width !== cw || canvas.height !== ch) {
         canvas.width = cw;
         canvas.height = ch;
@@ -350,7 +355,7 @@
       if (reticleWrap) {
         var rect = reticleWrap.getBoundingClientRect();
         if (rect.width > 40) {
-          lensRPx = rect.width * 0.42 * dpr;
+          lensRPx = rect.width * 0.42 * dpr * pixelScale;
         } else {
           lensRPx = Math.min(cw, ch) * 0.25;
         }
@@ -383,6 +388,7 @@
       }
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
+      window.__mediqSplashActive = false;
       if (splashEl.parentNode) {
         splashEl.parentNode.removeChild(splashEl);
       }
@@ -405,6 +411,9 @@
       clearDurationMs = fast ? FAST_CLEAR_MS : CLEAR_OPTICS_MS;
       veilDurationMs = fast ? FAST_VEIL_MS : VEIL_FADE_MS;
       clearTimeout(safetyTimer);
+      try {
+        window.dispatchEvent(new CustomEvent('mediq:splash-clearing'));
+      } catch (_) {}
 
       if (fast) {
         splashEl.classList.add('pl-exit-fast');

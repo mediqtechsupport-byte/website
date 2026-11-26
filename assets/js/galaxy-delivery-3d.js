@@ -5226,10 +5226,14 @@ function createCartonGalaxyTopTexture() {
     // 360° Drag & Orbit
     const canvas = document.getElementById('galaxy-delivery-canvas');
     if (canvas) {
+      canvas.style.touchAction = 'none';
       canvas.addEventListener('pointerdown', (e) => {
         isDragging = true;
         prevMouseX = e.clientX;
         prevMouseY = e.clientY;
+        if (canvas.setPointerCapture) {
+          try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+        }
       });
 
       window.addEventListener('pointermove', (e) => {
@@ -5243,6 +5247,10 @@ function createCartonGalaxyTopTexture() {
       });
 
       window.addEventListener('pointerup', () => {
+        isDragging = false;
+      });
+
+      window.addEventListener('pointercancel', () => {
         isDragging = false;
       });
 

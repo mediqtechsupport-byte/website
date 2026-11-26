@@ -592,7 +592,7 @@
     var sectionInView = false;
 
     function shouldTick() {
-      return alive && visible && sectionInView && !document.hidden;
+      return alive && visible && sectionInView && !document.hidden && !window.__mediqSplashActive && !document.getElementById('splash');
     }
 
     function tick(now) {
@@ -682,11 +682,21 @@
           draw(performance.now());
         }
         syncRun();
-      }, { rootMargin: '220px 0px', threshold: 0.01 });
+      }, { rootMargin: '0px', threshold: 0.01 });
       io.observe(aboutSec);
     } else {
       sectionInView = true;
     }
+
+    var onSplashDone = function () {
+      if (!alive) return;
+      if (shouldTick()) {
+        draw(performance.now());
+        syncRun();
+      }
+    };
+    window.addEventListener('mediq:splash-clearing', onSplashDone, { once: true });
+    window.addEventListener('mediq:splash-complete', onSplashDone, { once: true });
 
     var slideEl = hostSlideEl || container.closest('.about-slide');
     if (slideEl) {
@@ -707,7 +717,7 @@
     document.addEventListener('visibilitychange', syncRun);
 
     var r0 = aboutSec ? aboutSec.getBoundingClientRect() : null;
-    sectionInView = !!(r0 && r0.bottom > -220 && r0.top < (window.innerHeight || 900) + 220);
+    sectionInView = !!(r0 && r0.bottom > 0 && r0.top < (window.innerHeight || 900));
     resize();
     if (shouldTick()) {
       draw(performance.now());

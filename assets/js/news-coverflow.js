@@ -218,6 +218,8 @@
         'background-color:#171311',
         'border:1px solid rgba(255,255,255,0.12)',
         'transform-origin:center center',
+        '-webkit-backface-visibility:hidden',
+        'backface-visibility:hidden',
         'transition:all 800ms cubic-bezier(0.25, 1, 0.5, 1)',
         'will-change:transform,opacity,filter',
       ].join(';');
@@ -442,12 +444,18 @@
       syncAutoplay();
     });
 
+    var touchStartX = null;
+    var touchStartY = null;
+    var touchLastX = null;
+    var touchLockedH = false;
+
     stage.addEventListener('pointerdown', function (ev) {
+      if (ev.pointerType === 'touch') return;
       if (ev.target.closest('a, button')) return;
       pointerDownX = ev.clientX;
     });
     stage.addEventListener('pointerup', function (ev) {
-      if (pointerDownX === null) return;
+      if (ev.pointerType === 'touch' || pointerDownX === null) return;
       var diff = ev.clientX - pointerDownX;
       pointerDownX = null;
       if (Math.abs(diff) > 45) {
@@ -458,6 +466,53 @@
     stage.addEventListener('pointercancel', function () {
       pointerDownX = null;
     });
+
+    stage.addEventListener('touchstart', function (ev) {
+      if (!ev.touches || !ev.touches[0]) return;
+      if (ev.target.closest('a, button')) return;
+      touchStartX = ev.touches[0].clientX;
+      touchStartY = ev.touches[0].clientY;
+      touchLastX = touchStartX;
+      touchLockedH = false;
+    }, { passive: true });
+    stage.addEventListener('touchmove', function (ev) {
+      if (touchStartX === null || !ev.touches || !ev.touches[0]) return;
+      var curX = ev.touches[0].clientX;
+      var curY = ev.touches[0].clientY;
+      touchLastX = curX;
+      var dx = curX - touchStartX;
+      var dy = curY - touchStartY;
+      if (!touchLockedH) {
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+          touchLockedH = true;
+        } else if (Math.abs(dy) > 12) {
+          touchStartX = null;
+          return;
+        }
+      }
+      if (touchLockedH) {
+        ev.preventDefault();
+      }
+    }, { passive: false });
+    stage.addEventListener('touchend', function () {
+      if (touchStartX === null) return;
+      var dx = (touchLastX !== null ? touchLastX : touchStartX) - touchStartX;
+      var wasLockedH = touchLockedH;
+      touchStartX = null;
+      touchStartY = null;
+      touchLastX = null;
+      touchLockedH = false;
+      if (wasLockedH && Math.abs(dx) > 36) {
+        if (dx < 0) nextSlide();
+        else prevSlide();
+      }
+    }, { passive: true });
+    stage.addEventListener('touchcancel', function () {
+      touchStartX = null;
+      touchStartY = null;
+      touchLastX = null;
+      touchLockedH = false;
+    }, { passive: true });
 
     window.addEventListener('keydown', function (ev) {
       if (!isInView) return;

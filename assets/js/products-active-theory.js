@@ -1342,13 +1342,8 @@
         preIo.disconnect();
         schedulePrewarm();
       }
-    }, { rootMargin: '500px 0px', threshold: 0.01 });
+    }, { rootMargin: '200px 0px', threshold: 0.01 });
     preIo.observe(prodSec);
-  }
-  if (typeof window.requestIdleCallback === 'function') {
-    window.requestIdleCallback(schedulePrewarm, { timeout: 2200 });
-  } else {
-    setTimeout(schedulePrewarm, 1200);
   }
 
   window.__activateProductsActiveTheory = function(slideIdx) {

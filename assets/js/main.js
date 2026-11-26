@@ -2,6 +2,28 @@
 (() => {
   const root = document.documentElement;
 
+  window.__mediqOnAfterSplash = function(fn) {
+    if (typeof fn !== 'function') return;
+    const splashEl = document.getElementById('splash');
+    if (!splashEl || window.__mediqSplashActive === false) {
+      fn();
+      return;
+    }
+    let ran = false;
+    let fallbackTimer = 0;
+    const runOnce = () => {
+      if (ran) return;
+      ran = true;
+      clearTimeout(fallbackTimer);
+      window.removeEventListener('mediq:splash-clearing', runOnce);
+      window.removeEventListener('mediq:splash-complete', runOnce);
+      fn();
+    };
+    window.addEventListener('mediq:splash-clearing', runOnce, { once: true });
+    window.addEventListener('mediq:splash-complete', runOnce, { once: true });
+    fallbackTimer = setTimeout(runOnce, 3800);
+  };
+
   // 0. Enforce Home (#hero) start on refresh / history restore (never keep old scroll/subpage)
   if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
@@ -130,8 +152,11 @@
   // 3. Header translucent at top of hero, crisp high-contrast frosted navy on scroll
   const bar = document.getElementById('header-bar');
   if (bar) {
+    let lastScrolled = null;
     const onScroll = () => {
       const scrolled = window.scrollY > 40;
+      if (scrolled === lastScrolled) return;
+      lastScrolled = scrolled;
       bar.classList.toggle('bg-[#0a1d40]/92', scrolled);
       bar.classList.toggle('bg-[#0a1d40]/45', !scrolled);
       bar.classList.toggle('border-sky/20', scrolled);
@@ -302,7 +327,14 @@
     }
   };
   window.__updateActiveNavOnScroll = updateActiveNavOnScroll;
-  window.addEventListener('scroll', () => updateActiveNavOnScroll(), { passive: true });
+  let navScrollRaf = 0;
+  window.addEventListener('scroll', () => {
+    if (navScrollRaf) return;
+    navScrollRaf = requestAnimationFrame(() => {
+      navScrollRaf = 0;
+      updateActiveNavOnScroll();
+    });
+  }, { passive: true });
   updateActiveNavOnScroll();
 
     const transitionCurtain = document.getElementById('page-transition-curtain');
@@ -866,7 +898,7 @@
     function renderFrame(now) {
       rafId = 0;
       if (!isVisible || !docVisible) return;
-      if (window.__mediqFastJumping || (lastDrawTs && now && now - lastDrawTs < 24)) {
+      if (window.__mediqFastJumping || (lastDrawTs && now && now - lastDrawTs < 32)) {
         if (!reducedMotionMq.matches) rafId = requestAnimationFrame(renderFrame);
         return;
       }
@@ -901,7 +933,7 @@
       const io = new IntersectionObserver((entries) => {
         entries.forEach((en) => { isVisible = en.isIntersecting; });
         syncAboutSmoke();
-      }, { rootMargin: '140px 0px', threshold: 0.01 });
+      }, { rootMargin: '0px', threshold: 0.01 });
       io.observe(canvas.parentElement || canvas);
     } else {
       isVisible = true;
@@ -962,7 +994,7 @@
     function renderSmoke(now) {
       rafId = 0;
       if (!isVisible || !docVisible) return;
-      if (window.__mediqFastJumping || (lastDrawTs && now && now - lastDrawTs < 24)) {
+      if (window.__mediqFastJumping || (lastDrawTs && now && now - lastDrawTs < 32)) {
         rafId = requestAnimationFrame(renderSmoke);
         return;
       }
@@ -982,8 +1014,9 @@
       rafId = requestAnimationFrame(renderSmoke);
     }
 
+    let heroSmokeArmed = false;
     const syncHeroSmoke = () => {
-      if (isVisible && docVisible) {
+      if (heroSmokeArmed && isVisible && docVisible) {
         if (!rafId) rafId = requestAnimationFrame(renderSmoke);
       } else if (rafId) {
         cancelAnimationFrame(rafId);
@@ -991,12 +1024,15 @@
       }
     };
 
-    syncHeroSmoke();
+    window.__mediqOnAfterSplash(() => {
+      heroSmokeArmed = true;
+      syncHeroSmoke();
+    });
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
         entries.forEach((en) => { isVisible = en.isIntersecting; });
         syncHeroSmoke();
-      }, { rootMargin: '140px 0px', threshold: 0.01 });
+      }, { rootMargin: '0px', threshold: 0.01 });
       io.observe(canvas.parentElement || canvas);
     }
     document.addEventListener('visibilitychange', () => {
@@ -4644,7 +4680,6 @@
     });
 
     window.addEventListener('resize', updateViewScale);
-    window.addEventListener('scroll', updateViewScale, { passive: true });
     updateViewScale();
     triggerPhysics();
   }
@@ -5746,12 +5781,11 @@ function initHeroEyeLifespan() {
     video.muted = true;
     video.loop = true;
     video.playsInline = true;
-    video.preload = i === 0 ? 'auto' : 'none';
+    video.preload = 'none';
     video.setAttribute('aria-hidden', 'true');
-    if (i === 0) video.src = src;
     sl.appendChild(video);
 
-    const slot = { video, src, attached: i === 0, ready: false, pendingCb: null };
+    const slot = { video, src, attached: false, ready: false, pendingCb: null };
     const markReady = () => {
       if (slot.ready) return;
       slot.ready = true;
@@ -5837,19 +5871,33 @@ function initHeroEyeLifespan() {
     blinkTimers.push(startId, prewarmId);
   }
 
+  let heroBlinkArmed = false;
   const heroSectionEl = document.getElementById('hero');
   if (heroSectionEl && 'IntersectionObserver' in window) {
     const blinkIo = new IntersectionObserver((entries) => {
       const wasVisible = heroBlinkVisible;
       heroBlinkVisible = entries.some((en) => en.isIntersecting);
       if (!heroBlinkVisible) {
+        clearTimeout(autoTimer);
+        autoTimer = null;
         resetBlinkLayers();
-      } else if (!wasVisible) {
+      } else if (!wasVisible && heroBlinkArmed) {
         scheduleStageBlinkTrain(currentStage);
+        scheduleNext();
       }
-    }, { rootMargin: '100px 0px', threshold: 0.05 });
+    }, { rootMargin: '0px', threshold: 0.05 });
     blinkIo.observe(heroSectionEl);
   }
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      clearTimeout(autoTimer);
+      autoTimer = null;
+      resetBlinkLayers();
+    } else if (heroBlinkVisible && heroBlinkArmed && !autoTimer) {
+      scheduleStageBlinkTrain(currentStage);
+      scheduleNext();
+    }
+  });
 
   function applySlideCopy(slideData, animate) {
     if (!slideData || !titleEl) return;
@@ -5908,7 +5956,7 @@ function initHeroEyeLifespan() {
     }, 220);
   }
 
-  function setStage(idx, animate = true) {
+  function setStage(idx, animate = true, skipVideoStart = false) {
     const total = Math.min(slides.length, HERO_CAROUSEL_DATA.length);
     currentStage = (idx + total) % total;
     resetBlinkLayers();
@@ -5929,12 +5977,18 @@ function initHeroEyeLifespan() {
     });
 
     applySlideCopy(HERO_CAROUSEL_DATA[currentStage], animate);
-    scheduleStageBlinkTrain(currentStage);
+    if (!skipVideoStart) {
+      scheduleStageBlinkTrain(currentStage);
+    }
   }
 
   function scheduleNext() {
     clearTimeout(autoTimer);
+    autoTimer = null;
+    if (!heroBlinkVisible || document.hidden || !heroBlinkArmed) return;
     autoTimer = setTimeout(() => {
+      autoTimer = null;
+      if (!heroBlinkVisible || document.hidden || !heroBlinkArmed) return;
       setStage(currentStage + 1, true);
       scheduleNext();
     }, INTERVAL);
@@ -5970,8 +6024,14 @@ function initHeroEyeLifespan() {
   }
 
   window.__triggerHeroEyeBlink = () => triggerEyeBlink();
-  setStage(0, false);
-  scheduleNext();
+  setStage(0, false, true);
+  window.__mediqOnAfterSplash(() => {
+    heroBlinkArmed = true;
+    if (heroBlinkVisible && !document.hidden) {
+      scheduleStageBlinkTrain(currentStage);
+      scheduleNext();
+    }
+  });
 }
 
 if (document.readyState === 'loading') {
@@ -6539,7 +6599,7 @@ void main() {
       };
     });
 
-    const scale = Math.min(1.25, 1800 / w);
+    const scale = Math.min(1.0, 1100 / w);
     const texW = Math.max(2, Math.round(w * scale));
     const texH = Math.max(2, Math.round(h * scale));
 
@@ -6623,6 +6683,23 @@ void main() {
     };
   }
 
+  let lastTime = performance.now();
+  let heroLiquidVisible = true;
+  let heroLiquidDocVisible = !document.hidden;
+  let heroLiquidRafId = 0;
+
+  function syncHeroLiquidLoop() {
+    if (heroLiquidVisible && heroLiquidDocVisible && field && layout) {
+      if (!heroLiquidRafId) {
+        lastTime = performance.now();
+        heroLiquidRafId = requestAnimationFrame(loop);
+      }
+    } else if (heroLiquidRafId) {
+      cancelAnimationFrame(heroLiquidRafId);
+      heroLiquidRafId = 0;
+    }
+  }
+
   function setupGL() {
     canvas.style.width = '';
     canvas.style.height = '';
@@ -6631,6 +6708,7 @@ void main() {
       layout = null;
       canvas.classList.add('opacity-0');
       titleEl.querySelectorAll('.ih-h1-line').forEach(el => el.classList.remove('opacity-0'));
+      syncHeroLiquidLoop();
       return;
     }
     const res = buildTitleField();
@@ -6638,7 +6716,7 @@ void main() {
     field = res;
     layout = res.layout;
 
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     canvas.width = Math.round(layout.width * dpr);
     canvas.height = Math.round(layout.height * dpr);
     canvas.style.width = layout.width + 'px';
@@ -6661,6 +6739,7 @@ void main() {
 
     titleEl.querySelectorAll('.ih-h1-line').forEach(el => el.classList.add('opacity-0'));
     canvas.classList.remove('opacity-0');
+    syncHeroLiquidLoop();
   }
 
   window.rebuildHeroLiquidTitle = setupGL;
@@ -6808,6 +6887,7 @@ void main() {
     sim.mode = 'pointer';
     sim.tx = Math.min(layout.width, Math.max(0, (e.clientX - rect.left) * sx));
     sim.ty = Math.min(layout.height, Math.max(0, (e.clientY - rect.top) * sy));
+    syncHeroLiquidLoop();
   }
 
   function onPointerLeave() {
@@ -6816,30 +6896,12 @@ void main() {
     sim.homeX = hx; sim.homeY = hy;
     sim.mode = 'release';
     sim.releaseT = 0;
+    syncHeroLiquidLoop();
   }
 
   canvas.addEventListener('pointermove', onPointerMove);
   canvas.addEventListener('pointerleave', onPointerLeave);
   canvas.addEventListener('pointerup', onPointerLeave);
-
-  setupGL();
-
-  let lastTime = performance.now();
-  let heroLiquidVisible = true;
-  let heroLiquidDocVisible = !document.hidden;
-  let heroLiquidRafId = 0;
-
-  function syncHeroLiquidLoop() {
-    if (heroLiquidVisible && heroLiquidDocVisible) {
-      if (!heroLiquidRafId) {
-        lastTime = performance.now();
-        heroLiquidRafId = requestAnimationFrame(loop);
-      }
-    } else if (heroLiquidRafId) {
-      cancelAnimationFrame(heroLiquidRafId);
-      heroLiquidRafId = 0;
-    }
-  }
 
   function loop(now) {
     heroLiquidRafId = 0;
@@ -6848,16 +6910,19 @@ void main() {
     lastTime = now;
     stepSim(dt);
     draw();
-    if (heroLiquidVisible && heroLiquidDocVisible) {
+    const isRestingIdle = sim.mode === 'idle' && sim.mass < 0.002 && Math.abs(sim.massV) < 0.01;
+    if (heroLiquidVisible && heroLiquidDocVisible && !isRestingIdle) {
       heroLiquidRafId = requestAnimationFrame(loop);
     }
   }
+
+  setupGL();
 
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver((entries) => {
       heroLiquidVisible = entries.some((en) => en.isIntersecting);
       syncHeroLiquidLoop();
-    }, { rootMargin: '160px 0px', threshold: 0.01 });
+    }, { rootMargin: '0px', threshold: 0.01 });
     io.observe(canvas.closest('section') || canvas.parentElement || canvas);
   }
   document.addEventListener('visibilitychange', () => {
@@ -6873,16 +6938,28 @@ void main() {
   });
 }
 
+let heroLiquidBootQueued = false;
+function scheduleHeroLiquidBoot() {
+  if (heroLiquidBootQueued) return;
+  heroLiquidBootQueued = true;
+  window.__mediqOnAfterSplash(() => {
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(initHeroLiquidText, { timeout: 120 });
+    } else {
+      setTimeout(initHeroLiquidText, 16);
+    }
+  });
+}
 if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(initHeroLiquidText);
+  document.fonts.ready.then(scheduleHeroLiquidBoot);
 } else {
-  setTimeout(initHeroLiquidText, 80);
+  setTimeout(scheduleHeroLiquidBoot, 80);
 }
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
-  setTimeout(initHeroLiquidText, 50);
+  setTimeout(scheduleHeroLiquidBoot, 50);
 } else {
-  window.addEventListener('DOMContentLoaded', initHeroLiquidText);
-  window.addEventListener('load', initHeroLiquidText);
+  window.addEventListener('DOMContentLoaded', scheduleHeroLiquidBoot);
+  window.addEventListener('load', scheduleHeroLiquidBoot);
 }
 
 
@@ -8840,6 +8917,27 @@ function initProductsDeckController() {
   let prodEdgeAccum = 0;
   let prodLastInnerScrollTime = 0;
   let prodLastSwitchTime = 0;
+  let prodSubListenersBound = false;
+  let touchStartY = 0;
+  let touchStartScrollTop = 0;
+  let isTouchingSubpage = false;
+
+  function syncProductsSubpageListeners(isSubpageOpen) {
+    if (isSubpageOpen && !prodSubListenersBound) {
+      prodSubListenersBound = true;
+      window.addEventListener('wheel', onProductsSubpageWheel, { passive: false });
+      window.addEventListener('touchstart', onProductsSubpageTouchStart, { passive: true });
+      window.addEventListener('touchmove', onProductsSubpageTouchMove, { passive: false });
+      window.addEventListener('touchend', onProductsSubpageTouchEnd, { passive: true });
+    } else if (!isSubpageOpen && prodSubListenersBound) {
+      prodSubListenersBound = false;
+      isTouchingSubpage = false;
+      window.removeEventListener('wheel', onProductsSubpageWheel, { passive: false });
+      window.removeEventListener('touchstart', onProductsSubpageTouchStart, { passive: true });
+      window.removeEventListener('touchmove', onProductsSubpageTouchMove, { passive: false });
+      window.removeEventListener('touchend', onProductsSubpageTouchEnd, { passive: true });
+    }
+  }
 
   function goToSlide(idx, opts = {}) {
     if (idx < 0) idx = 0;
@@ -8911,6 +9009,8 @@ function initProductsDeckController() {
       window.__activateProductsActiveTheory(currentIndex);
     }
 
+    syncProductsSubpageListeners(currentIndex >= 1);
+
     // LOCK main page scrolling on ALL subpages (Slide 1: IOLs, Slide 2: Medical Supplies, Slide 3: Devices, Slide 4: Catalogs)
     // Only Slide 0 (Product Overview) allows main page scrolling!
     if (currentIndex >= 1) {
@@ -8945,9 +9045,9 @@ function initProductsDeckController() {
     }
   }
 
-  // SUBPAGES SCROLL LOCK CONTROLLER:
+  // SUBPAGES SCROLL LOCK CONTROLLER (dynamically bound ONLY when a Products subpage is active):
   // When inside Intraocular Lenses, Medical Supplies, Devices, or Catalogs, main page scrolling is 100% LOCKED!
-  window.addEventListener('wheel', (e) => {
+  function onProductsSubpageWheel(e) {
     // On Slide 0 (Product Overview), allow normal main page scrolling!
     if (currentIndex === 0) return;
 
@@ -9015,14 +9115,10 @@ function initProductsDeckController() {
       // Scroll the inner subpage container smoothly without moving the main page
       sc.scrollTop += rawDy * 1.3;
     }
-  }, { passive: false });
+  }
 
-  // TOUCH GESTURE CONTROLLER FOR SUBPAGES
-  let touchStartY = 0;
-  let touchStartScrollTop = 0;
-  let isTouchingSubpage = false;
-
-  window.addEventListener('touchstart', (e) => {
+  // TOUCH GESTURE CONTROLLER FOR SUBPAGES (dynamically bound ONLY when a Products subpage is active)
+  function onProductsSubpageTouchStart(e) {
     if (currentIndex === 0) return;
     if (e.touches && e.touches.length === 1) {
       touchStartY = e.touches[0].clientY;
@@ -9035,9 +9131,9 @@ function initProductsDeckController() {
         touchStartScrollTop = activeSlide ? activeSlide.scrollTop : 0;
       }
     }
-  }, { passive: true });
+  }
 
-  window.addEventListener('touchmove', (e) => {
+  function onProductsSubpageTouchMove(e) {
     if (currentIndex === 0 || !isTouchingSubpage) return;
     if (e.touches && e.touches.length === 1) {
       // Prevent outer main page from scrolling away while viewing subpages
@@ -9061,11 +9157,11 @@ function initProductsDeckController() {
         if (activeSlide) activeSlide.scrollTop = touchStartScrollTop + diffY * 1.5;
       }
     }
-  }, { passive: false });
+  }
 
-  window.addEventListener('touchend', () => {
+  function onProductsSubpageTouchEnd() {
     isTouchingSubpage = false;
-  }, { passive: true });
+  }
 
   // Global helper for direct button navigation to any section
   window.navigateToSection = function(selector) {
@@ -12188,7 +12284,7 @@ if (document.readyState === 'loading') {
 })();
 
 /* ========================================================================= */
-/* GRAIL-APP.COM INSPIRED 3D STACKED-PAGE SCROLL & DAMPED MOMENTUM ENGINE    */
+/* NATIVE COMPOSITOR SCROLL & CLEAN VEIL PAGE NAVIGATION ENGINE              */
 /* ========================================================================= */
 (function initGrailAppPageScrollChoreography() {
   const rmq = typeof window.matchMedia === 'function'
@@ -12213,14 +12309,25 @@ if (document.readyState === 'loading') {
     .filter(Boolean);
   if (!sections.length) return;
 
-  // Map each section to its primary foreground content wrapper for secondary depth parallax
+  // Map each section to its primary foreground content wrapper for transition entrance
   const innerStages = sections.map((sec) => {
     if (sec.id === 'hero') return sec.querySelector('.ih-shell');
     if (sec.id === 'about') return sec.querySelector('.about-slide[data-index="0"] > div, .about-slide[data-slide-index="0"] > div');
-    if (sec.id === 'products') return sec.querySelector('.product-slide[data-product-index="0"] .ih-shell');
+    if (sec.id === 'products') return sec.querySelector('.product-slide[data-product-index="0"] .mq-zen-wrap, .product-slide[data-product-index="0"] .ih-shell');
     if (sec.id === 'site-footer') return null;
     return sec.querySelector('.deck-slide[data-slide-index="0"] > div');
   });
+
+  // Clear any leftover inline section/stage transforms so compositor scrolling stays native 60/120 FPS
+  for (let i = 0; i < sections.length; i++) {
+    sections[i].classList.remove('grail-card-transitioning');
+    sections[i].style.transform = '';
+    sections[i].style.opacity = '';
+    if (innerStages[i]) {
+      innerStages[i].style.transform = '';
+      innerStages[i].style.opacity = '';
+    }
+  }
 
   let sectionOffsets = [];
   let vh = window.innerHeight || 1;
@@ -12228,10 +12335,6 @@ if (document.readyState === 'loading') {
 
   function measureSections() {
     vh = window.innerHeight || 1;
-    // Temporarily clear inline transforms before measuring exact document offsets
-    sections.forEach((sec) => {
-      sec.style.transform = '';
-    });
     sectionOffsets = sections.map((sec) => sec.offsetTop);
     maxScroll = Math.max(0, document.documentElement.scrollHeight - vh);
   }
@@ -12240,7 +12343,6 @@ if (document.readyState === 'loading') {
   const handleViewportMetricsChange = () => {
     measureSections();
     if (window.__refreshNavSectionOffsets) window.__refreshNavSectionOffsets();
-    applyGrailTransforms(window.scrollY);
   };
   window.addEventListener('resize', handleViewportMetricsChange, { passive: true });
   window.addEventListener('orientationchange', () => {
@@ -12254,214 +12356,69 @@ if (document.readyState === 'loading') {
     handleViewportMetricsChange();
   });
 
-  // Apply Ultra-Smooth Zero-Lag Scroll Transition (keeps heavy WebGL sections & mobile touch 60/120 FPS)
-  function applyGrailTransforms(scrollY) {
-    const isMobileOrTablet = window.innerWidth < 1024;
-    const contactIdx = sections.findIndex((s) => s && s.id === 'contact');
+  let pageVeilTimer = null;
+  let pageVeilCleanTimer = null;
+  let activeEnterStage = null;
 
-    for (let i = 0; i < sections.length; i++) {
-      const sec = sections[i];
-      if (!sec || sec.id === 'site-footer') continue;
-
-      if (sec.style.transform || sec.style.opacity || sec.classList.contains('grail-card-transitioning')) {
-        sec.classList.remove('grail-card-transitioning');
-        sec.style.transform = '';
-        sec.style.opacity = '';
-      }
-
-      const inner = innerStages[i];
-      if (!inner) continue;
-
-      if (isMobileOrTablet) {
-        if (inner.style.transform || inner.style.opacity) {
-          inner.style.transform = '';
-          inner.style.opacity = '';
-        }
-        continue;
-      }
-
-      const baseTop = sectionOffsets[i] !== undefined ? sectionOffsets[i] : (i * vh);
-      const nextTop = sectionOffsets[i + 1] !== undefined ? sectionOffsets[i + 1] : ((i + 1) * vh);
-      const spanOut = Math.max(1, nextTop - baseTop);
-      const prevTop = sectionOffsets[i - 1] !== undefined ? sectionOffsets[i - 1] : ((i - 1) * vh);
-      const spanIn = Math.max(1, baseTop - prevTop);
-      const relTop = baseTop - scrollY;
-
-      // Leave #contact -> #site-footer natural so footer & edge-to-edge map scroll directly
-      if (sec.id === 'contact' && relTop <= 0.5) {
-        if (inner.style.transform || inner.style.opacity) {
-          inner.style.transform = '';
-          inner.style.opacity = '';
-        }
-        continue;
-      }
-
-      if (relTop > vh * 1.15 || relTop < -spanOut * 1.15) {
-        if (inner.style.transform || inner.style.opacity) {
-          inner.style.transform = '';
-          inner.style.opacity = '';
-        }
-        continue;
-      }
-
-      if (relTop < -0.5 && relTop > -spanOut * 1.02 && (contactIdx === -1 || i < contactIdx)) {
-        const p = Math.min(1, Math.max(0, -relTop / spanOut));
-        const e = p * (2 - p);
-        inner.style.transform = 'translate3d(0, ' + (-e * 22).toFixed(1) + 'px, 0)';
-        inner.style.opacity = Math.max(0.32, 1 - e * 0.68).toFixed(3);
-      } else if (relTop > 0.5 && relTop < spanIn * 1.02 && i > 0) {
-        const enterP = Math.min(1, Math.max(0, relTop / spanIn));
-        const e = enterP * enterP;
-        inner.style.transform = 'translate3d(0, ' + (e * 22).toFixed(1) + 'px, 0)';
-        inner.style.opacity = Math.max(0.32, 1 - e * 0.68).toFixed(3);
-      } else if (inner.style.transform || inner.style.opacity) {
-        inner.style.transform = '';
-        inner.style.opacity = '';
-      }
+  function playSimplePageTransition(destY, dir, targetSec, destIdx) {
+    const veil = document.getElementById('mq-page-veil');
+    if (!veil) return false;
+    if (pageVeilTimer) {
+      clearTimeout(pageVeilTimer);
+      pageVeilTimer = null;
     }
-  }
-
-  let currentY = window.scrollY;
-  let targetY = window.scrollY;
-  let isAnimating = false;
-  let lastWheelDir = 0;
-  let snapTimer = null;
-  let lastTickTs = 0;
-
-  function enableDesktopGrailMode() {
-    if (window.innerWidth >= 1024) {
-      document.documentElement.classList.add('grail-scroll-ready');
-    } else {
-      document.documentElement.classList.remove('grail-scroll-ready');
+    if (pageVeilCleanTimer) {
+      clearTimeout(pageVeilCleanTimer);
+      pageVeilCleanTimer = null;
     }
-  }
-  enableDesktopGrailMode();
-  window.addEventListener('resize', enableDesktopGrailMode, { passive: true });
-
-  function shouldYieldToInnerScroll(e) {
-    if (e.defaultPrevented) return true;
-    if (typeof window.__isAnyMediqSubpageOpen === 'function' && window.__isAnyMediqSubpageOpen()) return true;
-    if (document.documentElement.classList.contains('mediq-subpage-locked')) return true;
-    if (document.documentElement.style.overflow === 'hidden') return true;
-
-    const scroller = e.target && e.target.closest
-      ? e.target.closest('#about-subpage-scroll, #iol-scroll-container, .product-slide, .deck-slide:not([data-slide-index="0"]), #mediq-search-results')
-      : null;
-    if (scroller && scroller.scrollHeight > scroller.clientHeight + 4) {
-      const canScrollDown = e.deltaY > 0 && (scroller.scrollTop + scroller.clientHeight < scroller.scrollHeight - 2);
-      const canScrollUp = e.deltaY < 0 && (scroller.scrollTop > 2);
-      if (canScrollDown || canScrollUp) return true;
+    if (activeEnterStage) {
+      activeEnterStage.classList.remove('mq-web-page-enter-next', 'mq-web-page-enter-prev');
+      activeEnterStage = null;
     }
-    return false;
-  }
+    if (veil._subPulseTimer) {
+      clearTimeout(veil._subPulseTimer);
+      veil._subPulseTimer = null;
+    }
+    veil.classList.remove('is-sub-pulse');
+    veil.classList.add('is-entering');
 
-  function scheduleMagneticSettle() {
-    clearTimeout(snapTimer);
-    snapTimer = setTimeout(() => {
-      if (!sectionOffsets.length) return;
-      if (typeof window.__isAnyMediqSubpageOpen === 'function' && window.__isAnyMediqSubpageOpen()) return;
-      if (document.documentElement.classList.contains('mediq-subpage-locked')) return;
-      let bestTarget = targetY;
-      let minDist = Infinity;
+    pageVeilTimer = setTimeout(() => {
+      pageVeilTimer = null;
+      window.scrollTo({ top: destY, left: 0, behavior: 'instant' });
+      if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll(destY);
+      if (targetSec && typeof window.__revealLandingHost === 'function') {
+        window.__revealLandingHost(targetSec);
+      }
 
-      for (let i = 0; i < sectionOffsets.length - 1; i++) {
-        const start = sectionOffsets[i];
-        const end = sectionOffsets[i + 1];
-        const span = end - start;
-        if (span <= 10) continue;
-
-        if (targetY >= start - 4 && targetY <= end + 4) {
-          const progress = (targetY - start) / span;
-          if (lastWheelDir > 0) {
-            bestTarget = progress > 0.15 ? end : start;
-          } else if (lastWheelDir < 0) {
-            bestTarget = progress < 0.85 ? start : end;
-          } else {
-            bestTarget = progress >= 0.5 ? end : start;
+      const stageEl = (destIdx !== -1 && innerStages[destIdx])
+        ? innerStages[destIdx]
+        : (targetSec ? targetSec.firstElementChild : null);
+      if (stageEl) {
+        const enterCls = dir < 0 ? 'mq-web-page-enter-prev' : 'mq-web-page-enter-next';
+        stageEl.classList.remove('mq-web-page-enter-next', 'mq-web-page-enter-prev');
+        void stageEl.offsetWidth;
+        stageEl.classList.add(enterCls);
+        activeEnterStage = stageEl;
+        const clearStage = () => {
+          stageEl.classList.remove('mq-web-page-enter-next', 'mq-web-page-enter-prev');
+          if (activeEnterStage === stageEl) activeEnterStage = null;
+          if (pageVeilCleanTimer) {
+            clearTimeout(pageVeilCleanTimer);
+            pageVeilCleanTimer = null;
           }
-          minDist = 0;
-          break;
-        }
+        };
+        stageEl.addEventListener('animationend', clearStage, { once: true });
+        pageVeilCleanTimer = setTimeout(clearStage, 440);
       }
 
-      if (minDist === Infinity) {
-        for (let i = 0; i < sectionOffsets.length; i++) {
-          const d = Math.abs(targetY - sectionOffsets[i]);
-          if (d < minDist) {
-            minDist = d;
-            bestTarget = sectionOffsets[i];
-          }
-        }
-      }
-
-      targetY = Math.max(0, Math.min(maxScroll, bestTarget));
-      startLoop();
-    }, 360);
+      requestAnimationFrame(() => {
+        veil.classList.remove('is-entering');
+      });
+    }, 150);
+    return true;
   }
 
-  function tick(now) {
-    if (document.documentElement.classList.contains('mediq-subpage-locked')) {
-      isAnimating = false;
-      lastTickTs = 0;
-      return;
-    }
-    const dt = lastTickTs ? Math.min(0.05, Math.max(0.001, (now - lastTickTs) / 1000)) : 0.016;
-    lastTickTs = now;
-    const diff = targetY - currentY;
-    if (Math.abs(diff) > 0.45) {
-      currentY += diff * (1 - Math.exp(-13.2 * dt));
-      window.scrollTo({ top: currentY, left: 0, behavior: 'instant' });
-      applyGrailTransforms(currentY);
-      if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll(currentY);
-      requestAnimationFrame(tick);
-    } else {
-      currentY = targetY;
-      window.scrollTo({ top: currentY, left: 0, behavior: 'instant' });
-      applyGrailTransforms(currentY);
-      if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll(currentY);
-      isAnimating = false;
-      lastTickTs = 0;
-    }
-  }
-
-  function startLoop() {
-    if (!isAnimating) {
-      isAnimating = true;
-      lastTickTs = 0;
-      requestAnimationFrame(tick);
-    }
-  }
-
-  window.addEventListener('wheel', (e) => {
-    if (window.innerWidth < 1024) return;
-    if (shouldYieldToInnerScroll(e)) return;
-
-    e.preventDefault();
-    if (!isAnimating) {
-      currentY = window.scrollY;
-      targetY = window.scrollY;
-    }
-
-    const rawDelta = e.deltaMode === 1 ? e.deltaY * 36 : e.deltaY;
-    const clampedDelta = Math.max(-360, Math.min(360, rawDelta * 1.15));
-    lastWheelDir = clampedDelta > 0 ? 1 : (clampedDelta < 0 ? -1 : lastWheelDir);
-
-    targetY = Math.max(0, Math.min(maxScroll, targetY + clampedDelta));
-    startLoop();
-    scheduleMagneticSettle();
-  }, { passive: false });
-
-    // Sync when user scrolls via scrollbar, keyboard, or touch
-  window.addEventListener('scroll', () => {
-    if (!isAnimating) {
-      currentY = window.scrollY;
-      targetY = window.scrollY;
-      applyGrailTransforms(window.scrollY);
-    }
-  }, { passive: true });
-
-  // Programmatic smooth glide API for navbar links, dropdowns, and page indicator dots
-  // Multi-page jumps pre-position smoothly right before the target section so intermediate WebGL canvases stay asleep.
+  // Programmatic transition API for navbar links, dropdowns, CTAs, and page indicator dots
   window.grailScrollTo = function(targetElOrY) {
     if (typeof window.__cancelUnlockRestore === 'function') {
       window.__cancelUnlockRestore();
@@ -12470,51 +12427,50 @@ if (document.readyState === 'loading') {
       window.__closeMediqMobileMenu();
     }
     if (window.innerWidth < 1024) {
-      clearTimeout(snapTimer);
-      isAnimating = false;
-      lastTickTs = 0;
       const liveDest = typeof targetElOrY === 'number'
         ? Math.max(0, targetElOrY)
         : (targetElOrY && typeof targetElOrY.getBoundingClientRect === 'function'
           ? Math.max(0, Math.round(targetElOrY.getBoundingClientRect().top + window.scrollY))
           : 0);
-      currentY = liveDest;
-      targetY = liveDest;
+      const liveIdx = typeof targetElOrY === 'number'
+        ? (liveDest <= 10 ? 0 : -1)
+        : sections.indexOf(targetElOrY);
+      const liveSec = liveIdx !== -1
+        ? sections[liveIdx]
+        : (targetElOrY && targetElOrY.tagName ? targetElOrY : null);
+      const startY = window.scrollY;
+      const dist = liveDest - startY;
+      if (Math.abs(dist) > 40 && !rmq.matches && playSimplePageTransition(liveDest, dist >= 0 ? 1 : -1, liveSec, liveIdx)) {
+        return;
+      }
       window.scrollTo({ top: liveDest, left: 0, behavior: 'smooth' });
       if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll(liveDest);
       return;
     }
     measureSections();
     let destY = 0;
+    let destIdx = -1;
+    let destSec = null;
     if (typeof targetElOrY === 'number') {
       destY = targetElOrY;
+      destIdx = sectionOffsets.findIndex((y) => Math.abs(y - destY) < 48);
+      if (destIdx === -1 && destY <= 10) destIdx = 0;
+      destSec = destIdx !== -1 ? sections[destIdx] : null;
     } else if (targetElOrY && typeof targetElOrY.offsetTop === 'number') {
-      const idx = sections.indexOf(targetElOrY);
-      destY = idx !== -1 ? sectionOffsets[idx] : targetElOrY.offsetTop;
+      destIdx = sections.indexOf(targetElOrY);
+      destY = destIdx !== -1 ? sectionOffsets[destIdx] : targetElOrY.offsetTop;
+      destSec = targetElOrY;
     }
-    clearTimeout(snapTimer);
     destY = Math.max(0, Math.min(maxScroll, destY));
     const startY = window.scrollY;
     const dist = destY - startY;
-    const jumpThreshold = Math.max(950, (vh || 900) * 1.15);
 
-    if (Math.abs(dist) > jumpThreshold) {
-      window.__mediqFastJumping = true;
-      const lead = Math.sign(dist) * Math.min(280, Math.round((vh || 900) * 0.32));
-      const preY = Math.max(0, Math.min(maxScroll, destY - lead));
-      window.scrollTo({ top: preY, left: 0, behavior: 'instant' });
-      currentY = preY;
-      targetY = destY;
-      requestAnimationFrame(() => {
-        window.__mediqFastJumping = false;
-      });
-      startLoop();
+    if (Math.abs(dist) > 40 && !rmq.matches && playSimplePageTransition(destY, dist >= 0 ? 1 : -1, destSec, destIdx)) {
       return;
     }
 
-    currentY = startY;
-    targetY = destY;
-    startLoop();
+    window.scrollTo({ top: destY, left: 0, behavior: 'smooth' });
+    if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll(destY);
   };
 
   // Immediate zero-latency snap API for locking flush onto a subpage host section
@@ -12522,8 +12478,6 @@ if (document.readyState === 'loading') {
     if (typeof window.__cancelUnlockRestore === 'function') {
       window.__cancelUnlockRestore();
     }
-    clearTimeout(snapTimer);
-    isAnimating = false;
     measureSections();
     let destY = 0;
     if (typeof targetElOrY === 'number') {
@@ -12533,14 +12487,9 @@ if (document.readyState === 'loading') {
       destY = idx !== -1 ? sectionOffsets[idx] : targetElOrY.offsetTop;
     }
     destY = Math.max(0, Math.min(maxScroll, destY));
-    currentY = destY;
-    targetY = destY;
     window.scrollTo({ top: destY, left: 0, behavior: 'instant' });
-    applyGrailTransforms(destY);
-    if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll();
+    if (window.__updateActiveNavOnScroll) window.__updateActiveNavOnScroll(destY);
   };
-
-  applyGrailTransforms(window.scrollY);
 })();
 
 /* ========================================================================= */
@@ -12558,6 +12507,18 @@ if (document.readyState === 'loading') {
 
   window.__playSubpage3DEntrance = function(el, dir = 1) {
     if (!el || rmq.matches) return;
+    const veil = document.getElementById('mq-page-veil');
+    if (veil && !veil.classList.contains('is-entering')) {
+      if (veil._subPulseTimer) {
+        clearTimeout(veil._subPulseTimer);
+        veil._subPulseTimer = null;
+      }
+      veil.classList.add('is-sub-pulse');
+      veil._subPulseTimer = setTimeout(() => {
+        veil.classList.remove('is-sub-pulse');
+        veil._subPulseTimer = null;
+      }, 110);
+    }
     if (el._sub3dTimer) {
       clearTimeout(el._sub3dTimer);
       el._sub3dTimer = null;
@@ -12586,6 +12547,28 @@ if (document.readyState === 'loading') {
 
   let lastLockedHostEl = null;
   let pendingRestoreRaf = 0;
+  let subpageInputBound = false;
+  let touchActive = false;
+  let touchLastY = 0;
+  let touchEdgeAccum = 0;
+
+  function syncSubpageLockInputListeners(bind) {
+    if (bind && !subpageInputBound) {
+      subpageInputBound = true;
+      window.addEventListener('wheel', onSubpageLockWheel, { passive: false, capture: true });
+      window.addEventListener('touchstart', onSubpageLockTouchStart, { passive: true });
+      window.addEventListener('touchmove', onSubpageLockTouchMove, { passive: false });
+      window.addEventListener('touchend', onSubpageLockTouchEnd, { passive: true });
+    } else if (!bind && subpageInputBound) {
+      subpageInputBound = false;
+      touchActive = false;
+      touchEdgeAccum = 0;
+      window.removeEventListener('wheel', onSubpageLockWheel, { passive: false, capture: true });
+      window.removeEventListener('touchstart', onSubpageLockTouchStart, { passive: true });
+      window.removeEventListener('touchmove', onSubpageLockTouchMove, { passive: false });
+      window.removeEventListener('touchend', onSubpageLockTouchEnd, { passive: true });
+    }
+  }
 
   window.__cancelUnlockRestore = function() {
     if (pendingRestoreRaf) {
@@ -12607,6 +12590,7 @@ if (document.readyState === 'loading') {
   window.__unlockOuterPageScroll = function(opts) {
     window.__cancelUnlockRestore();
     edgeAccum = 0;
+    syncSubpageLockInputListeners(false);
     const hostToRestore = lastLockedHostEl;
     lastLockedHostEl = null;
     setActiveSubpageHost(null);
@@ -12736,6 +12720,7 @@ if (document.readyState === 'loading') {
     edgeAccum = 0;
     lastSwitchTime = performance.now();
     window.__resetAllSubpagesExcept(keepKey);
+    syncSubpageLockInputListeners(true);
 
     const isMobileOrTablet = window.innerWidth < 1024;
     setActiveSubpageHost(secEl);
@@ -12809,8 +12794,8 @@ if (document.readyState === 'loading') {
     return false;
   }
 
-  // Capture-phase wheel controller: 100% blocks outer main-page scroll & steps cleanly between subpages (1..maxIdx)
-  window.addEventListener('wheel', (e) => {
+  // Capture-phase wheel controller (bound ONLY while a subpage lock is engaged): 100% blocks outer scroll
+  function onSubpageLockWheel(e) {
     if (isEventInsideOpenModal(e.target)) return;
 
     const active = getActiveManagedSubpage();
@@ -12860,14 +12845,10 @@ if (document.readyState === 'loading') {
       e.preventDefault();
       sc.scrollTop += dy;
     }
-  }, { passive: false, capture: true });
+  }
 
-  // Touch controller for mobile/tablet subpage isolation & boundary paging
-  let touchActive = false;
-  let touchLastY = 0;
-  let touchEdgeAccum = 0;
-
-  window.addEventListener('touchstart', (e) => {
+  // Touch controller for mobile/tablet subpage isolation & boundary paging (bound ONLY while locked)
+  function onSubpageLockTouchStart(e) {
     if (isEventInsideOpenModal(e.target)) {
       touchActive = false;
       return;
@@ -12880,9 +12861,9 @@ if (document.readyState === 'loading') {
     touchActive = true;
     touchLastY = e.touches[0].clientY;
     touchEdgeAccum = 0;
-  }, { passive: true });
+  }
 
-  window.addEventListener('touchmove', (e) => {
+  function onSubpageLockTouchMove(e) {
     if (!touchActive || !e.touches || e.touches.length !== 1) return;
     const active = getActiveManagedSubpage();
     if (!active) {
@@ -12927,12 +12908,12 @@ if (document.readyState === 'loading') {
       if (e.cancelable) e.preventDefault();
       sc.scrollTop += dy * 1.2;
     }
-  }, { passive: false });
+  }
 
-  window.addEventListener('touchend', () => {
+  function onSubpageLockTouchEnd() {
     touchActive = false;
     touchEdgeAccum = 0;
-  }, { passive: true });
+  }
 
   // Keyboard scroll & subpage navigation guard when inside managed subpages
   window.addEventListener('keydown', (e) => {

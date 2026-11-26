@@ -1444,9 +1444,26 @@
     }, 90);
   };
 
+  function lazyBootServicesBookCarousel() {
+    const distSec = document.getElementById('distribution');
+    if (distSec && 'IntersectionObserver' in window) {
+      let booted = false;
+      const io = new IntersectionObserver((entries) => {
+        if (!booted && entries.some((e) => e.isIntersecting)) {
+          booted = true;
+          io.disconnect();
+          setupCarousel();
+        }
+      }, { rootMargin: '200px 0px', threshold: 0.01 });
+      io.observe(distSec);
+    } else {
+      setupCarousel();
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupCarousel);
+    document.addEventListener('DOMContentLoaded', lazyBootServicesBookCarousel);
   } else {
-    setupCarousel();
+    lazyBootServicesBookCarousel();
   }
 })();

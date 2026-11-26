@@ -1439,6 +1439,43 @@ void main(){
     }
 
     // Pointer Interactions (Drag to Spin, Click Wings to Step, Click Center Front Card to Inspect)
+    container.style.touchAction = 'pan-y';
+    let wrapTouchX = null;
+    let wrapTouchY = null;
+    let wrapTouchH = false;
+
+    container.addEventListener('touchstart', (e) => {
+      if (paused || !e.touches || !e.touches[0]) return;
+      wrapTouchX = e.touches[0].clientX;
+      wrapTouchY = e.touches[0].clientY;
+      wrapTouchH = false;
+    }, { passive: true });
+
+    container.addEventListener('touchmove', (e) => {
+      if (paused || wrapTouchX === null || !e.touches || !e.touches[0]) return;
+      if (!wrapTouchH) {
+        const dx = e.touches[0].clientX - wrapTouchX;
+        const dy = e.touches[0].clientY - wrapTouchY;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+          wrapTouchH = true;
+        } else if (Math.abs(dy) > 12) {
+          wrapTouchX = null;
+          return;
+        }
+      }
+      if (wrapTouchH && L.mode === 'drag') {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    const clearWrapTouch = () => {
+      wrapTouchX = null;
+      wrapTouchY = null;
+      wrapTouchH = false;
+    };
+    container.addEventListener('touchend', clearWrapTouch, { passive: true });
+    container.addEventListener('touchcancel', clearWrapTouch, { passive: true });
+
     container.addEventListener('pointerdown', (e) => {
       if (paused || e.button > 0) return;
       if (e.target && e.target.closest('button, a, input')) return;

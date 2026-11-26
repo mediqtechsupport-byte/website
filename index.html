@@ -47,35 +47,8 @@
     window.scrollTo(0, 0);
   </script>
 
-  <!-- Inject Tailwind v4 @theme before browser compiler runs (keeps static CSS validator 100% error-free) -->
-  <script>
-    const twTheme = document.createElement('style');
-    twTheme.setAttribute('type', 'text/tailwindcss');
-    twTheme.textContent = `
-      @theme {
-        --font-serif: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-        --font-sans: "Inter", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-        --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-        --color-ink: #0a1d40;
-        --color-navy: #0a1d40;
-        --color-navy-2: #0a1d40;
-        --color-cream: #f6f2ea;
-        --color-sand: #e9e1d2;
-        --color-pearl: #f3efe7;
-        --color-ray: #e8562a;
-        --color-magenta: #c4006b;
-        --color-sky: #3aa0db;
-        --animate-kenburns: kenburns 22s ease-in-out infinite alternate;
-        --animate-sweep: sweep 9s ease-in-out infinite;
-        --animate-float: float 6s ease-in-out infinite;
-        --animate-scrollcue: scrollcue 2.2s ease-in-out infinite;
-      }
-    `;
-    document.head.appendChild(twTheme);
-  </script>
-
-  <!-- Tailwind CSS v4 (browser build – for local development) -->
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- Precompiled Tailwind CSS v4 (zero runtime JIT overhead & zero MutationObserver lag) -->
+  <link rel="stylesheet" href="assets/css/tailwind.compiled.css?v=1.0" />
 
   <!-- Three.js WebGL 3D Engine for Real-Time 3D Product Modelling (deferred so Hero paints immediately) -->
   <script src="assets/js/three.min.js" defer></script>
@@ -505,11 +478,19 @@
       backdrop-filter: blur(24px);
     }
 
-    /* Page-by-Page Smooth Presentation & Grail.app 3D Stacked Scroll Architecture */
+    /* Page-by-Page Native Compositor Scroll & Mobile Snap Architecture */
     html {
-      scroll-behavior: smooth;
-      scroll-snap-type: y proximity;
+      scroll-behavior: auto;
+      scroll-snap-type: none;
       scroll-padding-top: 0;
+    }
+
+    @media (min-width: 1024px) {
+      html,
+      html.scroll-smooth {
+        scroll-behavior: auto !important;
+        scroll-snap-type: none !important;
+      }
     }
 
     html.grail-scroll-ready {
@@ -558,6 +539,7 @@
     }
 
     .deck-slide:not([data-slide-index="0"]).justify-center {
+      justify-content: center;
       justify-content: safe center;
     }
 
@@ -1144,6 +1126,7 @@
     .mediq-subnavbar__inner {
       display: flex;
       align-items: stretch;
+      justify-content: center;
       justify-content: safe center;
       height: 100%;
       max-width: 1640px;
@@ -3734,8 +3717,11 @@
       }
 
       #contact-panel-form {
-        padding: 20px 16px !important;
-        border-radius: 20px !important;
+        padding: 0 !important;
+        border-radius: 16px !important;
+        background: #0c1322 !important;
+        border: 1px solid rgba(255, 255, 255, 0.07) !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.52) !important;
       }
 
       #contact #contact-title {
@@ -3753,8 +3739,10 @@
       }
 
       #contact button[type="submit"] {
-        padding: 10px 22px !important;
-        font-size: 13px !important;
+        width: auto !important;
+        padding: 0 18px !important;
+        height: 38px !important;
+        font-size: 10px !important;
       }
 
       #footer-inner > div > div > div {
@@ -4287,7 +4275,7 @@
       will-change: opacity;
       overflow: hidden;
       user-select: none;
-      transition: opacity 0.64s cubic-bezier(0.37, 0, 0.63, 1);
+      transition: opacity 0.48s cubic-bezier(0.37, 0, 0.63, 1);
     }
 
     #splash.pl-root.pl-exit-veil {
@@ -4296,7 +4284,7 @@
     }
 
     #splash.pl-root.pl-exit-fast {
-      transition: opacity 0.30s cubic-bezier(0.37, 0, 0.63, 1);
+      transition: opacity 0.26s cubic-bezier(0.37, 0, 0.63, 1);
     }
 
     .pl-glow-mount {
@@ -4444,13 +4432,13 @@
     .lottici-stagger-in {
       animation: lotticiOrderConvergence 0.76s cubic-bezier(0.16, 1, 0.3, 1) both;
       animation-delay: var(--lottici-delay, 0ms);
-      will-change: transform, opacity, filter;
+      will-change: transform, opacity;
     }
 
     .lottici-heading-reveal {
       animation: lotticiHeadingClipReveal 0.78s cubic-bezier(0.16, 1, 0.3, 1) both;
       animation-delay: var(--lottici-delay, 0ms);
-      will-change: transform, opacity, clip-path;
+      will-change: transform, opacity;
     }
 
     .lottici-line-sweep {
@@ -4462,12 +4450,10 @@
     @keyframes lotticiOrderConvergence {
       0% {
         opacity: 0;
-        filter: blur(4px);
         transform: perspective(900px) translate3d(var(--lottici-cx, 0px), var(--lottici-cy, 26px), -18px) rotateX(var(--lottici-crx, 5deg)) scale(0.965);
       }
       100% {
         opacity: 1;
-        filter: blur(0px);
         transform: perspective(900px) translate3d(0, 0, 0) rotateX(0deg) scale(1);
       }
     }
@@ -4565,7 +4551,7 @@
       </div>
     </div>
   </div>
-  <script src="assets/js/mediq-splash.js?v=4.21"></script>
+  <script src="assets/js/mediq-splash.js?v=4.22"></script>
 
   <!-- Page transition optical curtain -->
   <div id="page-transition-curtain" aria-hidden="true"></div>
@@ -5384,6 +5370,16 @@
       </div>
 
     </section>
+
+    <script>
+      (function deferHeroModalVideo() {
+        var v = document.getElementById('hero-modal-video');
+        if (!v) return;
+        v.autoplay = false;
+        v.preload = 'none';
+        try { v.pause(); } catch (_) {}
+      })();
+    </script>
 
     <!-- ============== ABOUT / HERITAGE & 3D PRODUCT PEDESTAL SHOWCASE ============== -->
 
@@ -8653,7 +8649,7 @@
           <div class="mq-zen-wrap">
             <p class="mq-zen-eyebrow">
               <span class="mq-zen-rule" aria-hidden="true"></span>
-              <span>OPHTHALMIC INNOVATIONS &nbsp;&bull;&nbsp; PRODUCT PORTFOLIO</span>
+              <span class="mq-zen-eyebrow-text"><span class="mq-zen-eyebrow-lead">OPHTHALMIC INNOVATIONS</span><span class="mq-zen-eyebrow-tail"><span class="mq-zen-eyebrow-dot" aria-hidden="true">&bull;</span><span>PRODUCT PORTFOLIO</span></span></span>
               <span class="mq-zen-rule" aria-hidden="true"></span>
             </p>
 
@@ -11359,7 +11355,7 @@
           <div class="mq-zen-wrap">
             <p class="mq-zen-eyebrow">
               <span class="mq-zen-rule" aria-hidden="true"></span>
-              <span>GLOBAL HEALTHCARE PARTNERSHIPS &nbsp;&bull;&nbsp; BRANDS &amp; PARTNERS</span>
+              <span class="mq-zen-eyebrow-text"><span class="mq-zen-eyebrow-lead">GLOBAL HEALTHCARE PARTNERSHIPS</span><span class="mq-zen-eyebrow-tail"><span class="mq-zen-eyebrow-dot" aria-hidden="true">&bull;</span><span>BRANDS &amp; PARTNERS</span></span></span>
               <span class="mq-zen-rule" aria-hidden="true"></span>
             </p>
 
@@ -12649,7 +12645,7 @@
           <div class="mq-zen-wrap">
             <p class="mq-zen-eyebrow">
               <span class="mq-zen-rule" aria-hidden="true"></span>
-              <span>CLINICAL &amp; COMMERCIAL STEWARDSHIP &nbsp;&bull;&nbsp; SERVICES</span>
+              <span class="mq-zen-eyebrow-text"><span class="mq-zen-eyebrow-lead">CLINICAL &amp; COMMERCIAL STEWARDSHIP</span><span class="mq-zen-eyebrow-tail"><span class="mq-zen-eyebrow-dot" aria-hidden="true">&bull;</span><span>SERVICES</span></span></span>
               <span class="mq-zen-rule" aria-hidden="true"></span>
             </p>
 
@@ -12813,7 +12809,7 @@
           <div class="mq-zen-wrap">
             <p class="mq-zen-eyebrow">
               <span class="mq-zen-rule" aria-hidden="true"></span>
-              <span>RESPONSIBLE INFORMATION HUB &nbsp;&bull;&nbsp; RESOURCES</span>
+              <span class="mq-zen-eyebrow-text"><span class="mq-zen-eyebrow-lead">RESPONSIBLE INFORMATION HUB</span><span class="mq-zen-eyebrow-tail"><span class="mq-zen-eyebrow-dot" aria-hidden="true">&bull;</span><span>RESOURCES</span></span></span>
               <span class="mq-zen-rule" aria-hidden="true"></span>
             </p>
 
@@ -13389,135 +13385,146 @@
     </section>
     <!-- ============== CONTACT US SINGLE-PAGE SECTION ============== -->
     <section id="contact" aria-labelledby="contact-title"
-      class="page-snap-section page-transition-section relative isolate w-full min-h-[100svh] lg:h-[100svh] overflow-hidden bg-[#0a1d40] text-[#f6f2ea] scroll-mt-0">
+      class="page-snap-section page-transition-section relative isolate w-full min-h-[100svh] lg:h-[100svh] overflow-hidden bg-[#060a14] text-[#f4f7fb] scroll-mt-0">
       <style id="contact-editorial-scoped-styles">
         #contact .cnt-heading {
           font-family: "Instrument Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-          letter-spacing: -0.02em;
+          letter-spacing: -0.025em;
           -webkit-font-smoothing: antialiased;
         }
 
         #contact .cnt-label {
           display: block;
-          font-size: 11.5px;
-          font-weight: 500;
-          letter-spacing: 0.01em;
-          color: rgba(186, 208, 232, 0.84);
-          margin-bottom: 5px;
+          font-size: 9.5px;
+          font-weight: 600;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #5b6e8a;
+          margin-bottom: 6px;
         }
 
         #contact .cnt-field {
           width: 100%;
-          border: 1px solid rgba(114, 197, 248, 0.22);
-          background: rgba(5, 14, 34, 0.72);
-          padding: 9.5px 12.5px;
-          font-size: 13.5px;
+          border-radius: 9px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: #090f1d;
+          padding: 10px 13px;
+          font-size: 13px;
           line-height: 1.35;
-          color: #f4f7fb;
-          border-radius: 10px;
+          color: #eef2f7;
           box-sizing: border-box;
-          transition: border-color 160ms ease, box-shadow 180ms ease, background-color 160ms ease;
+          transition: border-color 180ms ease, background-color 180ms ease;
         }
 
         #contact .cnt-field::placeholder {
-          color: rgba(148, 175, 206, 0.52);
+          color: #3f4f68;
         }
 
         #contact .cnt-field:focus {
           outline: none;
-          border-color: rgba(114, 197, 248, 0.78);
-          background: rgba(8, 22, 50, 0.92);
-          box-shadow: 0 0 0 3px rgba(114, 197, 248, 0.14);
+          border-color: rgba(76, 139, 245, 0.65);
+          background: #0b1326;
         }
 
         #contact .cnt-select {
           -webkit-appearance: none !important;
           -moz-appearance: none !important;
           appearance: none !important;
-          padding-right: 36px;
+          padding-right: 32px;
           cursor: pointer;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2393c5fd' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238091ab' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
           background-repeat: no-repeat;
           background-position: right 12px center;
-          background-size: 15px 15px;
+          background-size: 14px 14px;
         }
         #contact .cnt-select::-ms-expand {
           display: none;
         }
 
+        #contact .cnt-select::picker-icon {
+          display: none !important;
+          content: none !important;
+        }
+
         #contact .cnt-select option {
-          background-color: #071530;
-          color: #f4f7fb;
+          background-color: #090f1d;
+          color: #eef2f7;
         }
 
         #contact .cnt-seg-bar {
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 4px;
+          border-radius: 10px;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          background: #080e1b;
           padding: 4px;
-          border-radius: 11px;
-          border: 1px solid rgba(114, 197, 248, 0.18);
-          background: rgba(4, 11, 28, 0.72);
         }
 
         #contact .cnt-seg-btn {
+          border-radius: 7px;
           border: 1px solid transparent;
-          border-radius: 8px;
+          padding: 8px 8px;
           background: transparent;
-          padding: 7px 8px;
-          font-size: 12px;
-          font-weight: 500;
-          line-height: 1.2;
-          color: #9eb4cc;
-          text-align: center;
+          font-size: 9.5px;
+          font-weight: 600;
+          letter-spacing: 0.10em;
+          text-transform: uppercase;
+          color: #6b7d98;
           white-space: nowrap;
+          text-align: center;
           cursor: pointer;
-          transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+          transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease;
         }
 
         #contact .cnt-seg-btn:hover {
-          color: #ffffff;
+          color: #dbe6f7;
         }
 
         #contact .cnt-seg-btn.is-active {
-          border-color: rgba(114, 197, 248, 0.45);
-          background: rgba(20, 56, 112, 0.85);
-          color: #ffffff;
-          font-weight: 600;
-          box-shadow: 0 2px 10px rgba(2, 6, 18, 0.35);
+          background: #10203d;
+          border-color: rgba(76, 139, 245, 0.45);
+          color: #6db3ff;
         }
 
-        #contact .cnt-desk-row {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-          padding: 13px 0;
-          border-top: 1px solid rgba(114, 197, 248, 0.12);
-        }
-
-        #contact .cnt-desk-icon {
+        #contact .cnt-submit-btn {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 34px;
-          height: 34px;
-          flex-shrink: 0;
+          gap: 9px;
+          height: 44px;
+          padding: 0 26px;
           border-radius: 10px;
-          border: 1px solid rgba(114, 197, 248, 0.22);
-          background: rgba(11, 30, 68, 0.65);
-          color: #72c5f8;
+          background: linear-gradient(135deg, #4b94ff 0%, #3174f2 100%);
+          border: 1px solid rgba(114, 184, 255, 0.35);
+          color: #ffffff;
+          font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.10em;
+          text-transform: uppercase;
+          box-shadow: 0 8px 24px rgba(59, 130, 246, 0.38);
+          cursor: pointer;
+          transition: filter 180ms ease, transform 180ms ease, box-shadow 180ms ease;
         }
 
-        #contact .cnt-desk-icon svg {
-          width: 15px;
-          height: 15px;
+        #contact .cnt-submit-btn:hover {
+          filter: brightness(1.08);
+          transform: translateY(-1px);
+          box-shadow: 0 12px 28px rgba(59, 130, 246, 0.48);
+        }
+
+        #contact .cnt-submit-btn svg {
+          width: 14px;
+          height: 14px;
+          flex-shrink: 0;
         }
 
         #contact #inq-consent {
-          accent-color: #3aa0db;
-          width: 16px;
-          height: 16px;
-          border-radius: 4px;
+          accent-color: #3b82f6;
+          width: 14px;
+          height: 14px;
+          border-radius: 3px;
           cursor: pointer;
         }
 
@@ -13547,59 +13554,123 @@
         }
       </style>
 
-      <!-- Persistent Ambient MediQ Navy, Silk Waves Shader, Two-Layer Smoke & Fine Architectural Grid -->
-      <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-[#0a1d40]" aria-hidden="true">
+      <!-- Calm Deep-Navy & Obsidian Atmospheric Backdrop -->
+      <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-[#060a14]" aria-hidden="true">
         <canvas id="contact-waves-shader-canvas"
-          class="pointer-events-none absolute inset-0 z-0 block size-full opacity-45 transition-opacity duration-500"
+          class="pointer-events-none absolute inset-0 z-0 block size-full opacity-25 transition-opacity duration-500"
           aria-hidden="true"></canvas>
         <canvas id="contact-smoke-canvas"
-          class="deck-smoke-canvas pointer-events-none absolute inset-0 z-[1] block size-full opacity-95"
+          class="deck-smoke-canvas pointer-events-none absolute inset-0 z-[1] block size-full opacity-45"
           aria-hidden="true"></canvas>
-        <div
-          class="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(rgba(114,197,248,0.032)_1px,transparent_1px),linear-gradient(90deg,rgba(114,197,248,0.032)_1px,transparent_1px)] [background-size:32px_32px]">
-        </div>
-        <div class="absolute -left-24 top-1/4 h-[38rem] w-[38rem] rounded-full bg-[radial-gradient(circle,rgba(58,160,219,0.16)_0%,transparent_70%)]"></div>
-        <div class="absolute right-0 top-1/3 h-[42rem] w-[42rem] rounded-full bg-[radial-gradient(circle,rgba(13,42,90,0.48)_0%,transparent_70%)]"></div>
-        <div class="pointer-events-none absolute inset-0 z-[3] mx-auto max-w-[1380px] px-6 sm:px-10 lg:px-16">
-          <div class="grid h-full w-full grid-cols-3 border-x border-[#72c5f8]/[0.07]">
-            <div class="border-r border-[#72c5f8]/[0.07]"></div>
-            <div class="border-r border-[#72c5f8]/[0.07]"></div>
-            <div></div>
-          </div>
-        </div>
       </div>
 
       <!-- Single Page Container -->
       <div class="relative z-10 w-full h-full overflow-hidden">
         <div
-          class="deck-slide relative lg:absolute inset-x-0 lg:top-20 lg:bottom-0 w-full flex flex-col justify-start lg:justify-center bg-transparent px-5 sm:px-8 lg:px-12 pt-24 pb-10 lg:py-6 overflow-y-auto transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10"
+          class="deck-slide relative lg:absolute inset-x-0 lg:top-20 lg:bottom-0 w-full flex flex-col justify-start lg:justify-center bg-transparent px-4 sm:px-8 lg:px-10 pt-24 pb-8 lg:py-4 overflow-y-auto transition-all duration-500 ease-out opacity-100 pointer-events-auto translate-x-0 z-10"
           data-deck="contact" data-slide-index="0">
-          <div class="relative z-20 w-full max-w-[1260px] mx-auto">
+          <div class="relative z-20 w-full max-w-[980px] mx-auto">
 
-            <!-- Clean Doctor-First Order & Institutional Inquiry Card -->
+            <!-- Two-Tone Split Obsidian / Dark-Navy Contact Card -->
             <div id="contact-panel-form"
-              class="relative overflow-hidden rounded-[24px] bg-[#071530]/92 backdrop-blur-sm border border-[#72c5f8]/20 shadow-[0_32px_90px_rgba(3,10,24,0.62)] p-5 sm:p-8 lg:px-11 lg:py-8">
-              <div class="pointer-events-none absolute inset-x-16 top-0 h-px bg-gradient-to-r from-transparent via-[#72c5f8]/45 to-transparent" aria-hidden="true"></div>
+              class="relative w-full overflow-hidden rounded-[22px] border border-white/[0.06] bg-[#0c1322] shadow-[0_32px_90px_rgba(0,0,0,0.62)]">
+              <div class="grid grid-cols-1 lg:grid-cols-12">
 
-              <div class="grid grid-cols-1 lg:grid-cols-12 gap-7 lg:gap-0 items-start">
+                <!-- Left Clinical Desk Column (Desktop >= 1024px) -->
+                <div class="hidden lg:flex lg:col-span-5 bg-[#080d1a] lg:border-r lg:border-white/[0.05] p-8 xl:p-10 flex-col justify-between min-w-0">
+                  <div>
+                    <div class="inline-flex items-center gap-3">
+                      <span class="inline-flex size-7 items-center justify-center rounded-[8px] text-white shrink-0"
+                        style="background: linear-gradient(135deg, #4b8bff 0%, #2563eb 100%); box-shadow: 0 4px 16px rgba(59, 130, 246, 0.42);">
+                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3" />
+                          <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4" />
+                          <circle cx="20" cy="10" r="2" />
+                        </svg>
+                      </span>
+                      <span class="text-[10px] font-bold uppercase tracking-[0.14em] text-[#4c8bf5]">
+                        Direct Clinical Desk
+                      </span>
+                    </div>
 
-                <!-- Form Column: Shown FIRST on mobile so doctors immediately access clean ordering -->
-                <div class="order-1 lg:order-2 lg:col-span-7 min-w-0 lg:pl-10 xl:pl-12">
-                  <div class="mb-2.5 sm:mb-4">
-                    <p class="font-mono text-[10px] sm:text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8] mb-0.5 sm:mb-1">Order &amp; Inquiry</p>
-                    <h3 class="cnt-heading text-[19px] sm:text-[25px] font-semibold text-[#f4f7fb] leading-tight">Order or inquire with MEDIQ</h3>
-                    <p class="hidden sm:block mt-1 text-[13px] leading-[1.45] text-[#9eb4cc]">
-                      Select your product and clinic details. Our team replies via email or Viber.
+                    <h2 id="contact-title"
+                      class="cnt-heading mt-7 text-[34px] xl:text-[40px] font-bold leading-[1.06] tracking-[-0.03em] text-white">
+                      Ready to <br />
+                      support <br />
+                      <span class="text-[#72b8ff]">your clinical<br />needs.</span>
+                    </h2>
+
+                    <p class="mt-4 text-[13px] leading-[1.6] text-[#8091ab] max-w-[285px]">
+                      Connect directly with MEDIQ Pharma Inc. for surgical lens reservations, hospital allocations, or documentation requests.
                     </p>
+
+                    <div class="mt-8 space-y-5">
+                      <div class="flex items-center gap-3.5">
+                        <span class="inline-flex size-9 items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.03] text-[#8fa3bf] shrink-0">
+                          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                          </svg>
+                        </span>
+                        <div class="min-w-0">
+                          <div class="text-[9.5px] font-semibold uppercase tracking-[0.12em] text-[#5b6e8a]">Call or Viber</div>
+                          <a href="tel:+639457954365" class="mt-0.5 block text-[13.5px] font-semibold text-white hover:text-[#72b8ff] transition-colors">
+                            0945 795 4365
+                          </a>
+                        </div>
+                      </div>
+
+                      <div class="flex items-center gap-3.5">
+                        <span class="inline-flex size-9 items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.03] text-[#8fa3bf] shrink-0">
+                          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                            <rect x="2" y="4" width="20" height="16" rx="2" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                          </svg>
+                        </span>
+                        <div class="min-w-0">
+                          <div class="text-[9.5px] font-semibold uppercase tracking-[0.12em] text-[#5b6e8a]">Email Support</div>
+                          <a href="mailto:mediqtechsupport@gmail.com" class="mt-0.5 block truncate text-[13.5px] font-semibold text-white hover:text-[#72b8ff] transition-colors">
+                            mediqtechsupport@gmail.com
+                          </a>
+                        </div>
+                      </div>
+
+                      <div class="flex items-center gap-3.5">
+                        <span class="inline-flex size-9 items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.03] text-[#8fa3bf] shrink-0">
+                          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                            <circle cx="12" cy="10" r="3" />
+                          </svg>
+                        </span>
+                        <div class="min-w-0">
+                          <div class="text-[9.5px] font-semibold uppercase tracking-[0.12em] text-[#5b6e8a]">Headquarters</div>
+                          <div class="mt-0.5 text-[13.5px] font-semibold text-white">Marikina &mdash; Pasig, Metro Manila</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
-                  <form id="quote-form" action="https://formsubmit.co/mediqtechsupport@gmail.com" method="POST" class="flex flex-col gap-3.5" novalidate>
+                  <div class="mt-8 pt-4 border-t border-white/[0.05]">
+                    <p class="text-[9px] font-medium uppercase tracking-[0.12em] text-[#47566e]">
+                      Official Pharma Channel &copy; 2026 MEDIQ Pharma Inc.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Right Precision Submission Form Column -->
+                <div class="cnt-form-col lg:col-span-7 bg-[#0c1322] p-5 sm:p-8 lg:px-10 lg:py-8 xl:px-11 xl:py-9 min-w-0">
+                  <div>
+                    <p class="text-[9.5px] font-semibold uppercase tracking-[0.16em] text-[#4c8bf5]">Order &amp; Inquiry</p>
+                    <h3 class="cnt-heading mt-1 text-[21px] sm:text-[23px] font-bold tracking-[-0.02em] text-white">Precision Submission</h3>
+                    <p class="mt-1 text-[12px] sm:text-[12.5px] text-[#7b8ca6]">Submit product requirements and clinic details for immediate verification.</p>
+                  </div>
+
+                  <form id="quote-form" action="https://formsubmit.co/mediqtechsupport@gmail.com" method="POST" class="mt-5 flex flex-col gap-3.5" novalidate>
                     <input type="hidden" name="_subject" value="MEDIQ Pharma — New Website Inquiry" />
                     <input type="hidden" name="_template" value="table" />
                     <input type="hidden" name="_autoresponse" value="Thank you for contacting MEDIQ Pharma and Medical Supplies Distribution Inc. We have received your message and our Commercial & Technical Support team will reply shortly. Direct channels: Viber / Mobile +63 945 795 4365 | Telegram t.me/mediqpharma | Email mediqtechsupport@gmail.com" />
                     <input type="hidden" id="inq-subject" name="subject" value="IOL portfolio" />
 
-                    <!-- Clean 3-Option Segmented Selector -->
+                    <!-- Segmented Inquiry Topic Control -->
                     <div id="contact-topic-pills" class="cnt-seg-bar" role="group" aria-label="Inquiry topic">
                       <button type="button" data-contact-topic="IOL portfolio" aria-pressed="true" class="cnt-seg-btn is-active">
                         Product Order
@@ -13612,9 +13683,9 @@
                       </button>
                     </div>
 
-                    <!-- Product / Lens Selector -->
+                    <!-- Portfolio Selection -->
                     <div>
-                      <label for="inq-product" class="cnt-label">Product / Portfolio</label>
+                      <label for="inq-product" class="cnt-label">Portfolio Selection</label>
                       <select id="inq-product" name="product" class="cnt-field cnt-select appearance-none">
                         <option value="RayOne Galaxy — Spiral Full-Range IOL">RayOne Galaxy (Spiral IOL)</option>
                         <option value="Galaxy Toric — Spiral Astigmatic IOL">Galaxy Toric (Spiral IOL)</option>
@@ -13631,22 +13702,22 @@
                       </select>
                     </div>
 
-                    <!-- Doctor / Clinic -->
+                    <!-- Doctor / Hospital -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                       <div>
-                        <label for="inq-name" class="cnt-label">Doctor / Full Name <span class="text-[#72c5f8]">*</span></label>
+                        <label for="inq-name" class="cnt-label">Doctor / Full Name <span class="text-[#4c8bf5]">*</span></label>
                         <input id="inq-name" name="name" type="text" required placeholder="Dr. Juan Dela Cruz" class="cnt-field" />
                       </div>
                       <div>
-                        <label for="inq-clinic" class="cnt-label">Hospital / Clinic <span class="text-[#72c5f8]">*</span></label>
+                        <label for="inq-clinic" class="cnt-label">Hospital / Clinic <span class="text-[#4c8bf5]">*</span></label>
                         <input id="inq-clinic" name="clinic" type="text" required placeholder="Eye Center or Hospital" class="cnt-field" />
                       </div>
                     </div>
 
-                    <!-- Email / Viber -->
+                    <!-- Contact Email / Mobile -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                       <div>
-                        <label for="inq-email" class="cnt-label">Email <span class="text-[#72c5f8]">*</span></label>
+                        <label for="inq-email" class="cnt-label">Contact Email <span class="text-[#4c8bf5]">*</span></label>
                         <input id="inq-email" name="email" type="email" required placeholder="doctor@clinic.ph" class="cnt-field" />
                       </div>
                       <div>
@@ -13655,47 +13726,56 @@
                       </div>
                     </div>
 
-                    <!-- Order Details -->
+                    <!-- Order Specifications -->
                     <div>
-                      <label for="inq-message" class="cnt-label">Order Details / Notes</label>
-                      <textarea id="inq-message" name="message" rows="2"
-                        placeholder="Diopter, quantity, or notes..."
+                      <label for="inq-message" class="cnt-label">Order Specifications</label>
+                      <textarea id="inq-message" name="message" rows="3"
+                        placeholder="Diopter, quantity, or special instructions..."
                         class="cnt-field resize-none"></textarea>
                     </div>
 
-                    <label for="inq-consent" class="flex items-start gap-2 pt-0.5 cursor-pointer">
+                    <label for="inq-consent" class="flex items-start gap-2.5 pt-0.5 cursor-pointer">
                       <input id="inq-consent" name="consent" type="checkbox" required class="mt-0.5 shrink-0" />
-                      <span class="text-[12px] leading-[1.4] text-[#9eb4cc]">
-                        I agree to MEDIQ using my contact details to respond under the Philippine Data Privacy Act.
+                      <span class="text-[11.5px] leading-[1.4] text-[#6b7d98]">
+                        I agree to the <span class="underline underline-offset-2 text-[#b8c7dc]">Philippine Data Privacy Act</span> protocols.
                       </span>
                     </label>
 
-                    <div class="pt-0.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
-                      <button type="submit"
-                        class="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-[#4da8f0] hover:bg-[#70beff] text-[#041022] font-semibold text-[14px] px-7 py-3 shadow-[0_8px_24px_rgba(77,168,240,0.32)] cursor-pointer transition-colors">
-                        <span>Submit Order Inquiry</span>
+                    <div class="pt-1 flex items-center justify-between gap-3">
+                      <button type="submit" class="cnt-submit-btn">
+                        <span>Submit Request</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                          <path d="M5 12h14" />
+                          <path d="m13 6 6 6-6 6" />
+                        </svg>
                       </button>
-                      <p id="form-feedback" class="text-[11px] text-[#7e9aba] text-center sm:text-right">Direct reply via Email or Viber</p>
+
+                      <span class="cnt-desk-badge inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/[0.07] px-3 py-1.5 text-[9.5px] font-semibold uppercase tracking-[0.12em] text-emerald-400 shrink-0">
+                        <span class="size-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.85)]" aria-hidden="true"></span>
+                        <span>Desk Active</span>
+                      </span>
                     </div>
 
+                    <p id="form-feedback" class="text-[11px] text-[#7b8ca6] empty:hidden" aria-live="polite"></p>
+
                     <!-- Single-row mobile quick contact bar (stays cleanly on one mobile screen) -->
-                    <div class="cnt-mobile-quickbar lg:hidden grid grid-cols-3 gap-1.5 pt-2 mt-0.5 border-t border-[#72c5f8]/12">
+                    <div class="cnt-mobile-quickbar lg:hidden grid grid-cols-3 gap-1.5 pt-2 mt-0.5 border-t border-white/[0.06]">
                       <a href="tel:+639457954365"
-                        class="inline-flex items-center justify-center gap-1 rounded-lg border border-[#72c5f8]/22 bg-[#0a214a]/65 py-1.5 px-1 text-[11px] font-medium text-[#dce8f5] hover:border-[#72c5f8]/55 hover:text-white transition-colors">
+                        class="inline-flex items-center justify-center gap-1 rounded-full border border-white/[0.12] bg-[#0a1630]/40 py-1.5 px-1 text-[11px] font-medium text-[#dce8f5] hover:border-[#72c5f8]/55 hover:text-white transition-colors">
                         <svg class="size-3 text-[#72c5f8] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                           <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                         </svg>
                         <span>Call</span>
                       </a>
                       <a href="viber://chat?number=%2B639457954365"
-                        class="inline-flex items-center justify-center gap-1 rounded-lg border border-[#72c5f8]/22 bg-[#0a214a]/65 py-1.5 px-1 text-[11px] font-medium text-[#dce8f5] hover:border-[#72c5f8]/55 hover:text-white transition-colors">
+                        class="inline-flex items-center justify-center gap-1 rounded-full border border-white/[0.12] bg-[#0a1630]/40 py-1.5 px-1 text-[11px] font-medium text-[#dce8f5] hover:border-[#72c5f8]/55 hover:text-white transition-colors">
                         <svg class="size-3 text-[#72c5f8] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                         </svg>
                         <span>Viber</span>
                       </a>
                       <a href="mailto:mediqtechsupport@gmail.com"
-                        class="inline-flex items-center justify-center gap-1 rounded-lg border border-[#72c5f8]/22 bg-[#0a214a]/65 py-1.5 px-1 text-[11px] font-medium text-[#dce8f5] hover:border-[#72c5f8]/55 hover:text-white transition-colors">
+                        class="inline-flex items-center justify-center gap-1 rounded-full border border-white/[0.12] bg-[#0a1630]/40 py-1.5 px-1 text-[11px] font-medium text-[#dce8f5] hover:border-[#72c5f8]/55 hover:text-white transition-colors">
                         <svg class="size-3 text-[#72c5f8] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                           <rect x="2" y="4" width="20" height="16" rx="2" />
                           <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
@@ -13704,84 +13784,6 @@
                       </a>
                     </div>
                   </form>
-                </div>
-
-                <!-- Calm Direct Desk Column: Shown on Desktop (>= 1024px) left column only -->
-                <div class="hidden lg:flex order-2 lg:order-1 lg:col-span-5 min-w-0 lg:pr-10 xl:pr-12 lg:border-r lg:border-[#72c5f8]/12 flex-col justify-between">
-                  <div class="hidden lg:block mb-6">
-                    <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#72c5f8] mb-2">Direct Clinical Desk</p>
-                    <h2 id="contact-title"
-                      class="cnt-heading text-[30px] xl:text-[34px] font-normal text-[#f4f7fb] leading-[1.16] tracking-[-0.025em] mb-3"
-                      style="text-wrap: balance;">
-                      We are always ready to help you and answer your questions
-                    </h2>
-                    <p class="text-[13.5px] leading-[1.58] text-[#9eb4cc]" style="text-wrap: pretty;">
-                      Connect directly with MEDIQ Pharma Inc. for urgent surgical lens reservations, hospital allocations, or product documentation.
-                    </p>
-                  </div>
-
-                  <p class="lg:hidden font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#72c5f8] mb-1">
-                    Need immediate assistance?
-                  </p>
-
-                  <div>
-                    <div class="cnt-desk-row">
-                      <span class="cnt-desk-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                        </svg>
-                      </span>
-                      <div class="min-w-0 flex-1">
-                        <div class="text-[11px] text-[#7e9aba]">Call or Viber</div>
-                        <a href="tel:+639457954365" class="mt-0.5 block font-mono text-[14px] font-medium text-[#f4f7fb] hover:text-[#72c5f8] transition-colors">
-                          0945 795 4365
-                        </a>
-                        <div class="mt-2 flex flex-wrap gap-2">
-                          <a href="tel:+639457954365"
-                            class="inline-flex items-center rounded-lg border border-[#72c5f8]/25 bg-[#0a214a]/70 px-2.5 py-1 text-[11px] font-medium text-[#dce8f5] hover:border-[#72c5f8]/55 hover:text-white transition-colors">
-                            Call
-                          </a>
-                          <a href="viber://chat?number=%2B639457954365"
-                            class="inline-flex items-center rounded-lg border border-[#72c5f8]/25 bg-[#0a214a]/70 px-2.5 py-1 text-[11px] font-medium text-[#dce8f5] hover:border-[#72c5f8]/55 hover:text-white transition-colors">
-                            Message on Viber
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="cnt-desk-row">
-                      <span class="cnt-desk-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                          <rect x="2" y="4" width="20" height="16" rx="2" />
-                          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                        </svg>
-                      </span>
-                      <div class="min-w-0 flex-1">
-                        <div class="text-[11px] text-[#7e9aba]">Email Support Desk</div>
-                        <a href="mailto:mediqtechsupport@gmail.com"
-                          class="mt-0.5 inline-block break-all text-[13.5px] font-medium text-[#9bd8ff] hover:text-white transition-colors">
-                          mediqtechsupport@gmail.com
-                        </a>
-                      </div>
-                    </div>
-
-                    <div class="cnt-desk-row">
-                      <span class="cnt-desk-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                          <circle cx="12" cy="10" r="3" />
-                        </svg>
-                      </span>
-                      <div class="min-w-0 flex-1">
-                        <div class="text-[11px] text-[#7e9aba]">Philippines HQ</div>
-                        <div class="mt-0.5 text-[13.5px] font-medium text-[#f4f7fb]">Marikina &mdash; Pasig, Metro Manila</div>
-                        <div class="text-[12px] text-[#7e9aba] mt-0.5">
-                          Serving Luzon, Visayas &amp; Mindanao &middot;
-                          <a href="https://t.me/mediqpharma" target="_blank" rel="noopener noreferrer" class="text-[#9bd8ff] hover:text-white underline underline-offset-2">Telegram @mediqpharma</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
 
               </div>
@@ -13794,56 +13796,79 @@
 
     <!-- Branded MEDIQ Inquiry Confirmation Receipt Modal -->
     <div id="contact-confirmation-modal"
-      class="hidden fixed inset-0 z-[110] grid place-items-center bg-[#030916]/80 p-4 backdrop-blur-md opacity-0 transition-opacity duration-300"
+      class="hidden fixed inset-0 z-[110] grid place-items-center bg-[#040812]/82 p-4 backdrop-blur-md opacity-0 transition-opacity duration-300"
       role="dialog" aria-modal="true" aria-labelledby="cfm-title">
-      <div class="relative w-full max-w-[540px] overflow-hidden rounded-[24px] border border-[#72c5f8]/25 bg-[#071530]/95 shadow-[0_32px_90px_rgba(0,0,0,0.72)] text-[#f4f7fb]">
-        <div class="flex items-center justify-between border-b border-[#72c5f8]/15 bg-[#051026]/90 px-6 py-4">
-          <img src="assets/img/mediq-wordmark.svg?v=1.0" alt="MEDIQ Pharma" class="h-6 w-auto object-contain" />
-          <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/35 bg-emerald-500/15 px-3 py-1 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-emerald-300">
-            <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-            Confirmed
+      <div class="relative w-full max-w-[460px] max-h-[92svh] overflow-y-auto rounded-[20px] border border-white/[0.08] bg-[#0c1322] shadow-[0_32px_90px_rgba(0,0,0,0.75)] text-[#f4f7fb]">
+        <div class="flex items-center justify-between border-b border-white/[0.06] bg-[#080d1a] px-5 py-3.5">
+          <img src="assets/img/mediq-wordmark.svg?v=1.0" alt="MEDIQ Pharma" class="h-5 w-auto object-contain" />
+          <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/[0.08] px-2.5 py-1 text-[9.5px] font-semibold uppercase tracking-[0.12em] text-emerald-400">
+            <span class="size-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.85)]" aria-hidden="true"></span>
+            <span>Confirmed</span>
           </span>
         </div>
-        <div class="p-6 sm:p-7 space-y-4">
+        <div class="p-5 sm:p-6 space-y-5">
           <div>
-            <p id="cfm-ref" class="font-mono text-[11px] uppercase tracking-[0.16em] text-[#72c5f8] mb-1">Reference MQ-000000</p>
-            <h3 id="cfm-title" class="text-[21px] font-semibold leading-snug text-white">We have received your message</h3>
-            <p class="mt-1.5 text-[13.5px] leading-relaxed text-[#9eb4cc]">
-              Thank you, <strong id="cfm-name" class="text-white font-semibold">Partner</strong>. Your institutional inquiry has been logged for MEDIQ Technical &amp; Commercial Support and a confirmation notice has been prepared.
+            <p id="cfm-ref" class="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#4c8bf5]">Reference MQ-000000</p>
+            <h3 id="cfm-title" class="mt-1.5 text-[22px] font-bold leading-[1.15] tracking-[-0.025em] text-white">Request received.</h3>
+            <p class="mt-1.5 text-[13px] leading-[1.55] text-[#8091ab]">
+              Thank you, <strong id="cfm-name" class="font-semibold text-white">Partner</strong>. Our clinical desk has logged your inquiry and will respond shortly.
             </p>
           </div>
-          <div class="rounded-2xl border border-[#72c5f8]/15 bg-[#051024]/80 p-4 text-[12.5px] space-y-2">
-            <div class="flex justify-between gap-4 border-b border-[#72c5f8]/10 pb-2">
-              <span class="text-[#7e9aba]">Organization</span>
-              <span id="cfm-clinic" class="text-right font-medium text-[#f4f7fb]"></span>
+          <div class="rounded-[12px] border border-white/[0.07] bg-[#080d1a] divide-y divide-white/[0.06]">
+            <div class="px-4 py-2.5">
+              <div class="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#5b6e8a]">Organization</div>
+              <div id="cfm-clinic" class="mt-0.5 text-[13px] font-medium text-[#eef2f7] break-words"></div>
             </div>
-            <div class="flex justify-between gap-4 border-b border-[#72c5f8]/10 pb-2">
-              <span class="text-[#7e9aba]">Email</span>
-              <span id="cfm-email" class="text-right font-mono text-[#72c5f8]"></span>
+            <div class="px-4 py-2.5">
+              <div class="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#5b6e8a]">Contact Email</div>
+              <div id="cfm-email" class="mt-0.5 text-[13px] font-normal text-[#72b8ff] break-all"></div>
             </div>
-            <div class="flex justify-between gap-4 border-b border-[#72c5f8]/10 pb-2">
-              <span class="text-[#7e9aba]">Topic</span>
-              <span id="cfm-topic" class="text-right text-[#f4f7fb]"></span>
+            <div class="px-4 py-2.5">
+              <div class="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#5b6e8a]">Portfolio / Topic</div>
+              <div id="cfm-topic" class="mt-0.5 text-[13px] font-medium text-[#eef2f7] leading-[1.4]"></div>
             </div>
-            <div class="pt-0.5">
-              <span class="block text-[#7e9aba] mb-1">Submitted Message</span>
-              <p id="cfm-message" class="text-[#dce7f3] leading-relaxed line-clamp-3"></p>
+            <div class="px-4 py-2.5">
+              <div class="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#5b6e8a]">Order Specifications</div>
+              <p id="cfm-message" class="mt-0.5 text-[12.5px] text-[#9eb4cc] leading-[1.45] line-clamp-3 break-words"></p>
             </div>
           </div>
-          <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
-            <div class="flex flex-wrap items-center gap-2 text-[11.5px] text-[#9eb4cc]">
-              <a href="viber://chat?number=%2B639457954365" class="rounded-full border border-[#72c5f8]/25 bg-[#0a214a]/70 px-3 py-1.5 hover:border-[#72c5f8]/60 hover:text-white transition-colors">Viber</a>
-              <a href="https://t.me/mediqpharma" target="_blank" rel="noopener noreferrer" class="rounded-full border border-[#72c5f8]/25 bg-[#0a214a]/70 px-3 py-1.5 hover:border-[#72c5f8]/60 hover:text-white transition-colors">Telegram</a>
-              <a href="tel:+639457954365" class="rounded-full border border-[#72c5f8]/25 bg-[#0a214a]/70 px-3 py-1.5 hover:border-[#72c5f8]/60 hover:text-white transition-colors">0945 795 4365</a>
-            </div>
+          <div class="space-y-2.5 pt-0.5">
             <button type="button" id="cfm-close-btn"
-              class="rounded-full bg-[#4da8f0] hover:bg-[#70beff] text-[#041022] font-semibold text-[12.5px] px-5 py-2 cursor-pointer transition-colors">
+              style="background: linear-gradient(135deg, #4b94ff 0%, #3174f2 100%); border: 1px solid rgba(114, 184, 255, 0.35); box-shadow: 0 8px 24px rgba(59, 130, 246, 0.32);"
+              class="w-full h-[42px] inline-flex items-center justify-center rounded-[10px] text-[11px] font-bold uppercase tracking-[0.10em] text-white cursor-pointer transition-all hover:brightness-110 active:scale-[0.99]">
               Done
             </button>
+            <div class="grid grid-cols-3 gap-2">
+              <a href="viber://chat?number=%2B639457954365"
+                class="h-[34px] rounded-[9px] border border-white/[0.08] bg-[#080d1a] px-2 inline-flex items-center justify-center gap-1.5 text-[11px] font-medium text-[#9eb4cc] hover:border-white/20 hover:text-white transition-colors">
+                <svg class="size-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+                <span>Viber</span>
+              </a>
+              <a href="https://t.me/mediqpharma" target="_blank" rel="noopener noreferrer"
+                class="h-[34px] rounded-[9px] border border-white/[0.08] bg-[#080d1a] px-2 inline-flex items-center justify-center gap-1.5 text-[11px] font-medium text-[#9eb4cc] hover:border-white/20 hover:text-white transition-colors">
+                <svg class="size-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="m22 2-7 20-4-9-9-4Z" />
+                  <path d="M22 2 11 13" />
+                </svg>
+                <span>Telegram</span>
+              </a>
+              <a href="tel:+639457954365"
+                class="h-[34px] rounded-[9px] border border-white/[0.08] bg-[#080d1a] px-2 inline-flex items-center justify-center gap-1.5 text-[11px] font-medium text-[#9eb4cc] hover:border-white/20 hover:text-white transition-colors">
+                <svg class="size-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+                <span>Call Desk</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+  <!-- Minimal Desktop Page Transition Veil -->
+  <div id="mq-page-veil" aria-hidden="true"></div>
 
   <!-- ============== COMPACT FULL-WIDTH WEB FOOTER ============== -->
   <div id="site-footer" class="page-snap-section page-transition-section relative z-30 w-full bg-[#0a1d40]">
@@ -14216,9 +14241,9 @@
       background-image: var(--mediq-halo-bg) !important;
     }
 
-    /* Maintain exact font sizes across ALL subpages & footer while rendering non-bold (regular 400); #hero & navbar stay untouched */
-    html body section.page-snap-section:not(#hero),
-    html body section.page-snap-section:not(#hero) *,
+    /* Maintain exact font sizes across ALL subpages & footer while rendering non-bold (regular 400); #hero, #contact & navbar stay untouched */
+    html body section.page-snap-section:not(#hero):not(#contact),
+    html body section.page-snap-section:not(#hero):not(#contact) *,
     html body #galaxy-delivery,
     html body #galaxy-delivery *,
     html body #site-footer,
@@ -14768,9 +14793,9 @@
     }
 
     #contact #contact-panel-form {
-      background: rgba(15, 19, 30, 0.84) !important;
-      border-color: rgba(255, 255, 255, 0.12) !important;
-      box-shadow: 0 32px 90px rgba(0, 0, 0, 0.65) !important;
+      background: #0c1322 !important;
+      border: 1px solid rgba(255, 255, 255, 0.07) !important;
+      box-shadow: 0 32px 90px rgba(0, 0, 0, 0.62) !important;
     }
     #footer-map-band,
     #footer-map-band #contact-map-wrap {
@@ -15058,6 +15083,7 @@
       #brands .deck-slide[data-slide-index="0"],
       #distribution .deck-slide[data-slide-index="0"],
       #resources .deck-slide[data-slide-index="0"] {
+        justify-content: center !important;
         justify-content: safe center !important;
         padding-top: clamp(76px, 9.5svh, 88px) !important;
         padding-bottom: clamp(18px, 2.8svh, 28px) !important;
@@ -15265,19 +15291,26 @@
       #contact .deck-slide[data-slide-index="0"] {
         min-height: 100svh !important;
         justify-content: center !important;
-        padding: 84px 12px 14px !important;
+        padding: 84px 16px 14px !important;
         box-sizing: border-box !important;
       }
       #contact #contact-panel-form {
-        padding: 14px 14px !important;
-        border-radius: 18px !important;
+        padding: 0 !important;
+        border-radius: 16px !important;
+        background: #0c1322 !important;
+        border: 1px solid rgba(255, 255, 255, 0.07) !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.52) !important;
+      }
+      #contact .cnt-form-col {
+        padding: 16px 15px 14px !important;
       }
       #contact #quote-form {
-        gap: 8px !important;
+        margin-top: 12px !important;
+        gap: 9px !important;
       }
       #contact #quote-form > .grid:not(.cnt-mobile-quickbar) {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 8px !important;
+        gap: 10px !important;
       }
       #contact #quote-form > .cnt-mobile-quickbar {
         display: grid !important;
@@ -15285,39 +15318,55 @@
         gap: 6px !important;
       }
       #contact .cnt-label {
-        font-size: 10.5px !important;
-        margin-bottom: 3px !important;
+        font-size: 8.5px !important;
+        margin-bottom: 4px !important;
       }
       #contact .cnt-field {
-        font-size: 13px !important;
-        padding: 8px 10px !important;
-        border-radius: 9px !important;
+        font-size: 12.5px !important;
+        padding: 7px 10px !important;
+        border-radius: 8px !important;
+        background-color: #090f1d !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
       }
       #contact .cnt-select {
-        padding-right: 32px !important;
+        padding-right: 28px !important;
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
       }
       #contact textarea#inq-message {
-        height: 44px !important;
-        min-height: 44px !important;
+        height: 48px !important;
+        min-height: 48px !important;
         padding: 7px 10px !important;
       }
       #contact .cnt-seg-bar {
+        gap: 3px !important;
         padding: 3px !important;
+        border-radius: 9px !important;
+        border: 1px solid rgba(255, 255, 255, 0.06) !important;
+        background: #080e1b !important;
       }
       #contact .cnt-seg-btn {
-        font-size: 11px !important;
+        font-size: 8.5px !important;
+        letter-spacing: 0.06em !important;
         padding: 6px 4px !important;
+        border-radius: 6px !important;
       }
       #contact label[for="inq-consent"] span {
         font-size: 10.5px !important;
         line-height: 1.3 !important;
       }
       #contact button[type="submit"] {
-        padding: 10px 16px !important;
-        font-size: 13px !important;
+        width: auto !important;
+        height: 38px !important;
+        min-height: 38px !important;
+        padding: 0 18px !important;
+        border-radius: 9px !important;
+        font-size: 10px !important;
+      }
+      #contact .cnt-desk-badge {
+        padding: 5px 10px !important;
+        font-size: 9px !important;
       }
       #contact #form-feedback {
         font-size: 10.5px !important;
@@ -16602,40 +16651,22 @@
   <!-- ============== LANDING PAGE MICRO-ANIMATIONS (About, Products, Brands, Services, Resources — Slide 0) ============== -->
   <style id="mq-landing-motion">
     @keyframes mqLandRise {
-      0% { opacity: 0; transform: translate3d(0, 10px, 0); filter: blur(6px); }
-      100% { opacity: 1; transform: translate3d(0, 0, 0); filter: blur(0); }
+      0% { opacity: 0; transform: translate3d(0, 10px, 0); }
+      100% { opacity: 1; transform: translate3d(0, 0, 0); }
     }
     @keyframes mqWordIn {
-      0% { opacity: 0; transform: translate3d(0, 14px, 0); filter: blur(4px); }
-      100% { opacity: 1; transform: translate3d(0, 0, 0); filter: blur(0); }
+      0% { opacity: 0; transform: translate3d(0, 14px, 0); }
+      100% { opacity: 1; transform: translate3d(0, 0, 0); }
     }
     @keyframes mqWordWave {
-      0%, 100% {
-        transform: translate3d(0, 0, 0);
-        text-shadow: 0 8px 28px rgba(3, 10, 24, 0.5);
-      }
-      14% {
-        transform: translate3d(0, -2.5px, 0);
-        text-shadow: 0 0 22px rgba(114, 197, 248, 0.52), 0 8px 28px rgba(3, 10, 24, 0.5);
-      }
-      28% {
-        transform: translate3d(0, 0, 0);
-        text-shadow: 0 8px 28px rgba(3, 10, 24, 0.5);
-      }
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      14% { transform: translate3d(0, -2px, 0); }
+      28% { transform: translate3d(0, 0, 0); }
     }
     @keyframes mqAccentWave {
-      0%, 100% {
-        transform: translate3d(0, 0, 0);
-        filter: drop-shadow(0 0 0 rgba(114, 197, 248, 0));
-      }
-      14% {
-        transform: translate3d(0, -2.5px, 0);
-        filter: drop-shadow(0 0 14px rgba(114, 197, 248, 0.45));
-      }
-      28% {
-        transform: translate3d(0, 0, 0);
-        filter: drop-shadow(0 0 0 rgba(114, 197, 248, 0));
-      }
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      14% { transform: translate3d(0, -2px, 0); }
+      28% { transform: translate3d(0, 0, 0); }
     }
     /* Mobile About Up/Down stage stepper pill (hidden on desktop >= 1024px) */
     .abt-mobile-stepper {
@@ -16783,17 +16814,15 @@
     /* 1b. Simple sequential word float & soft optical wave on Products/Brands/Services/Resources headlines */
     .mq-title-w {
       display: inline-block;
-      transition: color 0.25s ease, text-shadow 0.25s ease;
+      transition: color 0.25s ease;
     }
     .mq-land-host.mq-land-in .mq-title-w {
-      will-change: transform, opacity, filter;
       animation:
         mqWordIn 0.72s cubic-bezier(0.22, 1, 0.36, 1) calc(80ms + var(--wi, 0) * 65ms) backwards,
         mqWordWave 4.8s ease-in-out calc(920ms + var(--wi, 0) * 165ms) infinite;
     }
     .mq-land-host.mq-land-in .mq-title-w:hover {
       color: #e0f2fe;
-      text-shadow: 0 0 26px rgba(114, 197, 248, 0.72);
     }
 
     /* 2. Luminous shimmer gliding through the highlighted accent word + matching wave lift */
@@ -16807,7 +16836,6 @@
       animation: mqAccentShimmer 5.2s linear infinite;
     }
     .mq-land-host.mq-land-in h2 span[class*="text-[#72c5f8]"].mq-title-accent {
-      will-change: transform, opacity, filter, background-position;
       animation:
         mqAccentShimmer 5.2s linear infinite,
         mqWordIn 0.72s cubic-bezier(0.22, 1, 0.36, 1) calc(80ms + var(--wi, 5) * 65ms) backwards,
@@ -16869,7 +16897,7 @@
       animation: mqStripBeam 6.5s ease-in-out infinite;
     }
 
-    /* 6. Slow drifting aurora glow behind the centered landing pages */
+    /* 6. Static soft aurora glow behind the centered landing pages (zero CPU repaint) */
     #products .product-slide[data-product-index="0"].mq-land-host::after,
     #brands .deck-slide[data-slide-index="0"].mq-land-host::after,
     #distribution .deck-slide[data-slide-index="0"].mq-land-host::after,
@@ -16879,12 +16907,21 @@
       inset: 0;
       pointer-events: none;
       z-index: 0;
+      opacity: 0.85;
       background:
-        radial-gradient(ellipse 38% 30% at center, rgba(58, 160, 219, 0.12), transparent 70%),
-        radial-gradient(ellipse 34% 28% at center, rgba(37, 99, 235, 0.10), transparent 70%);
-      background-size: 140% 140%, 140% 140%;
+        radial-gradient(ellipse 38% 30% at 38% 42%, rgba(58, 160, 219, 0.12), transparent 70%),
+        radial-gradient(ellipse 34% 28% at 62% 58%, rgba(37, 99, 235, 0.10), transparent 70%);
       background-repeat: no-repeat;
-      animation: mqAuroraDrift 14s ease-in-out infinite alternate;
+    }
+
+    /* Pause all CSS landing micro-animations on offscreen sections */
+    .page-snap-section:not(.is-page-active) .mq-land-host,
+    .page-snap-section:not(.is-page-active) .mq-land-host *,
+    .page-snap-section:not(.is-page-active) .mq-land-host::before,
+    .page-snap-section:not(.is-page-active) .mq-land-host::after,
+    .page-snap-section:not(.is-page-active) .mq-land-host *::before,
+    .page-snap-section:not(.is-page-active) .mq-land-host *::after {
+      animation-play-state: paused !important;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -16972,6 +17009,19 @@
       transform-origin: right center;
     }
 
+    .mq-zen-landing .mq-zen-eyebrow-text {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mq-zen-landing .mq-zen-eyebrow-tail {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
     html body #products #products-title.mq-zen-title,
     html body #products #products-title.mq-zen-title *,
     html body #brands #brands-title.mq-zen-title,
@@ -17020,7 +17070,6 @@
     }
 
     html body .mq-zen-landing.mq-land-host.mq-land-in h2.mq-zen-title .mq-zen-accent.mq-title-accent {
-      will-change: transform, opacity, filter, background-position;
       animation:
         mqAccentShimmer 5.2s linear infinite,
         mqWordIn 0.72s cubic-bezier(0.22, 1, 0.36, 1) calc(80ms + var(--wi, 5) * 65ms) backwards,
@@ -17201,39 +17250,91 @@
       }
 
       section.page-snap-section .mq-zen-landing .mq-zen-wrap {
-        padding: 0 20px !important;
+        position: relative !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 24px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        text-align: left !important;
+      }
+
+      .mq-zen-landing .mq-zen-rule {
+        display: none !important;
       }
 
       html body #products .mq-zen-landing .mq-zen-eyebrow,
       html body #brands .mq-zen-landing .mq-zen-eyebrow,
       html body #distribution .mq-zen-landing .mq-zen-eyebrow,
       html body #resources .mq-zen-landing .mq-zen-eyebrow {
+        display: flex !important;
+        justify-content: flex-start !important;
+        text-align: left !important;
+        width: 100% !important;
+        gap: 0 !important;
         font-size: 9.5px !important;
-        letter-spacing: 0.16em !important;
-        gap: 10px !important;
+        letter-spacing: 0.13em !important;
+        line-height: 1.45 !important;
+        color: rgba(114, 197, 248, 0.90) !important;
       }
 
-      .mq-zen-landing .mq-zen-rule {
-        width: 18px !important;
+      .mq-zen-landing .mq-zen-eyebrow-text {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        column-gap: 7px !important;
+        row-gap: 3px !important;
+      }
+
+      .mq-zen-landing .mq-zen-eyebrow-lead {
+        white-space: nowrap !important;
+      }
+
+      .mq-zen-landing .mq-zen-eyebrow-tail {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 7px !important;
+        white-space: nowrap !important;
       }
 
       html body #products #products-title.mq-zen-title,
       html body #brands #brands-title.mq-zen-title,
       html body #distribution #distribution-title.mq-zen-title,
       html body #resources #resources-title.mq-zen-title {
-        font-size: clamp(28px, 7.6vw, 36px) !important;
-        line-height: 1.1 !important;
-        margin-top: 14px !important;
+        font-size: clamp(29px, 8vw, 36px) !important;
+        line-height: 1.09 !important;
+        letter-spacing: -0.025em !important;
+        text-align: left !important;
+        margin: 14px 0 0 !important;
+        min-height: 2.2em !important;
       }
 
       html body #products .mq-zen-landing p.mq-zen-sub,
       html body #brands .mq-zen-landing p.mq-zen-sub,
       html body #distribution .mq-zen-landing p.mq-zen-sub,
       html body #resources .mq-zen-landing p.mq-zen-sub {
-        font-size: 13px !important;
-        line-height: 1.56 !important;
-        margin-top: 14px !important;
-        max-width: 340px !important;
+        font-size: 13.5px !important;
+        line-height: 1.62 !important;
+        color: rgba(188, 202, 220, 0.86) !important;
+        text-align: left !important;
+        max-width: 336px !important;
+        margin: 14px 0 0 !important;
+        min-height: 88px !important;
+      }
+
+      html body #resources .mq-zen-landing p.mq-zen-footnote {
+        position: absolute !important;
+        left: 24px !important;
+        right: 24px !important;
+        top: 100% !important;
+        margin: 16px 0 0 !important;
+        max-width: none !important;
+        text-align: left !important;
+        font-size: 10.5px !important;
+        line-height: 1.48 !important;
+        color: rgba(148, 163, 184, 0.54) !important;
       }
 
       .mq-zen-landing .mq-zen-actions {
@@ -17256,6 +17357,757 @@
 
       .mq-zen-landing .mq-zen-strip {
         display: none !important;
+      }
+    }
+  </style>
+  <style id="mq-uniform-desktop-buttons">
+    /* ============== UNIFORM DESKTOP BUTTON SIZE, STYLE & POSITION ACROSS ALL PAGES (>= 1024px) ============== */
+    @media (min-width: 1024px) {
+      #hero #hero-cta-primary.ih-btn-pill-primary,
+      #hero #hero-open-brochure-btn.ih-btn-video-secondary,
+      #about .about-slide[data-index="0"] .about-go-next,
+      html body #products .mq-zen-landing .mq-zen-btn,
+      html body #brands .mq-zen-landing .mq-zen-btn,
+      html body #distribution .mq-zen-landing .mq-zen-btn,
+      html body #resources .mq-zen-landing .mq-zen-btn {
+        width: 264px !important;
+        min-width: 264px !important;
+        max-width: 264px !important;
+        height: 46px !important;
+        min-height: 46px !important;
+        max-height: 46px !important;
+        padding: 0 18px !important;
+        border-radius: 9999px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 9px !important;
+        box-sizing: border-box !important;
+        font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        font-style: normal !important;
+        letter-spacing: 0.09em !important;
+        line-height: 1 !important;
+        text-transform: uppercase !important;
+        white-space: nowrap !important;
+      }
+
+      /* Unified frosted navy primary pill styling across Home (#hero) & About (#about Slide 0) */
+      #hero #hero-cta-primary.ih-btn-pill-primary,
+      #about .about-slide[data-index="0"] .about-go-next {
+        background: rgba(10, 22, 48, 0.78) !important;
+        border: 1px solid rgba(114, 197, 248, 0.42) !important;
+        color: #f8fafc !important;
+        box-shadow: 0 8px 24px rgba(3, 10, 24, 0.45) !important;
+        transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
+      }
+
+      #hero #hero-cta-primary.ih-btn-pill-primary:hover,
+      #about .about-slide[data-index="0"] .about-go-next:hover {
+        background: rgba(16, 36, 74, 0.92) !important;
+        border-color: rgba(114, 197, 248, 0.72) !important;
+        color: #ffffff !important;
+        transform: translateY(-1px) !important;
+      }
+
+      /* Unified secondary pill styling on Home (#hero) */
+      #hero #hero-open-brochure-btn.ih-btn-video-secondary {
+        background: rgba(10, 22, 48, 0.72) !important;
+        border: 1px solid rgba(114, 197, 248, 0.24) !important;
+        color: #f8fafc !important;
+        box-shadow: none !important;
+        transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease !important;
+      }
+
+      #hero #hero-open-brochure-btn.ih-btn-video-secondary:hover {
+        background: rgba(16, 36, 74, 0.88) !important;
+        border-color: rgba(114, 197, 248, 0.58) !important;
+        color: #ffffff !important;
+        transform: translateY(-1px) !important;
+      }
+
+      #hero #hero-open-brochure-btn .ih-play-circle {
+        width: 24px !important;
+        height: 24px !important;
+        min-width: 24px !important;
+        border-width: 1.4px !important;
+        flex-shrink: 0 !important;
+      }
+
+      #hero #hero-open-brochure-btn .ih-play-circle svg {
+        width: 12px !important;
+        height: 12px !important;
+        flex-shrink: 0 !important;
+      }
+
+      #hero #hero-cta-primary svg,
+      #about .about-slide[data-index="0"] .about-go-next svg,
+      .mq-zen-landing .mq-zen-btn svg {
+        width: 13px !important;
+        height: 13px !important;
+        flex-shrink: 0 !important;
+        color: rgba(226, 232, 240, 0.86) !important;
+        stroke: currentColor !important;
+      }
+
+      /* Exact uniform button Y & X alignment across centered landing pages (Products, Brands, Services, Resources) */
+      .mq-zen-landing .mq-zen-wrap {
+        position: relative !important;
+      }
+
+      html body #products #products-title.mq-zen-title,
+      html body #brands #brands-title.mq-zen-title,
+      html body #distribution #distribution-title.mq-zen-title,
+      html body #resources #resources-title.mq-zen-title {
+        min-height: 2.2em !important;
+      }
+
+      html body #products .mq-zen-landing p.mq-zen-sub,
+      html body #brands .mq-zen-landing p.mq-zen-sub,
+      html body #distribution .mq-zen-landing p.mq-zen-sub,
+      html body #resources .mq-zen-landing p.mq-zen-sub {
+        min-height: 80px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      .mq-zen-landing .mq-zen-actions {
+        margin-top: 32px !important;
+        gap: 16px !important;
+        flex-wrap: nowrap !important;
+        justify-content: center !important;
+      }
+
+      .mq-zen-landing .mq-zen-strip {
+        margin-top: 64px !important;
+        padding-top: 32px !important;
+      }
+
+      html body #resources .mq-zen-landing p.mq-zen-footnote {
+        position: absolute !important;
+        left: 0 !important;
+        right: 0 !important;
+        top: 100% !important;
+        margin-top: 18px !important;
+      }
+
+      /* Exact uniform left/vertical button alignment across Home (#hero) & About (#about Slide 0) */
+      #hero .ih-hero-copy,
+      #about .about-slide[data-index="0"] .ih-hero-copy {
+        padding-top: 48px !important;
+        padding-bottom: 48px !important;
+      }
+
+      #hero .ih-lede,
+      #about .about-slide[data-index="0"] .ih-lede {
+        min-height: 84px !important;
+        margin-top: 20px !important;
+      }
+
+      #hero .ih-hero-ctas,
+      #about .about-slide[data-index="0"] .mt-8 {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        gap: 16px !important;
+        margin-top: 32px !important;
+      }
+    }
+  </style>
+  <style id="mq-uniform-mobile-buttons">
+    /* ============== MINIMAL UNIFORM MOBILE / APP BUTTONS (< 1024px) ============== */
+    @media (max-width: 1023px) {
+      #hero #hero-cta-primary.ih-btn-pill-primary,
+      #hero #hero-open-brochure-btn.ih-btn-video-secondary,
+      #about .about-slide[data-index="0"] .about-go-next,
+      html body #products .mq-zen-landing .mq-zen-btn,
+      html body #brands .mq-zen-landing .mq-zen-btn,
+      html body #distribution .mq-zen-landing .mq-zen-btn,
+      html body #resources .mq-zen-landing .mq-zen-btn,
+      #mobile-menu div.mob-nav-item > a.mobile-link:not(.mob-item-link) {
+        height: 36px !important;
+        min-height: 36px !important;
+        max-height: 36px !important;
+        border-radius: 9999px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 5px !important;
+        box-sizing: border-box !important;
+        box-shadow: none !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        backdrop-filter: blur(8px) !important;
+        font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+        font-size: clamp(10px, 2.7vw, 11.5px) !important;
+        font-weight: 500 !important;
+        font-style: normal !important;
+        letter-spacing: 0.01em !important;
+        line-height: 1 !important;
+        text-transform: none !important;
+        white-space: nowrap !important;
+        transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.15s ease !important;
+      }
+
+      /* Minimal primary pill styling */
+      #hero #hero-cta-primary.ih-btn-pill-primary,
+      #about .about-slide[data-index="0"] .about-go-next,
+      html body #products .mq-zen-landing .mq-zen-btn.mq-zen-btn--primary,
+      html body #brands .mq-zen-landing .mq-zen-btn.mq-zen-btn--primary,
+      html body #distribution .mq-zen-landing .mq-zen-btn.mq-zen-btn--primary,
+      html body #resources .mq-zen-landing .mq-zen-btn.mq-zen-btn--primary,
+      #mobile-menu div.mob-nav-item > a.mobile-link:not(.mob-item-link):first-child {
+        background: rgba(10, 22, 48, 0.58) !important;
+        border: 1px solid rgba(114, 197, 248, 0.36) !important;
+        color: #f4f7fb !important;
+      }
+
+      /* Minimal secondary pill styling */
+      #hero #hero-open-brochure-btn.ih-btn-video-secondary,
+      html body #products .mq-zen-landing .mq-zen-btn:not(.mq-zen-btn--primary),
+      html body #brands .mq-zen-landing .mq-zen-btn:not(.mq-zen-btn--primary),
+      html body #distribution .mq-zen-landing .mq-zen-btn:not(.mq-zen-btn--primary),
+      html body #resources .mq-zen-landing .mq-zen-btn:not(.mq-zen-btn--primary),
+      #mobile-menu div.mob-nav-item > a.mobile-link:not(.mob-item-link):last-child {
+        background: rgba(10, 22, 48, 0.40) !important;
+        border: 1px solid rgba(255, 255, 255, 0.16) !important;
+        color: #dce8f5 !important;
+      }
+
+      /* Subtle press feedback */
+      #hero #hero-cta-primary.ih-btn-pill-primary:active,
+      #hero #hero-open-brochure-btn.ih-btn-video-secondary:active,
+      #about .about-slide[data-index="0"] .about-go-next:active,
+      html body #products .mq-zen-landing .mq-zen-btn:active,
+      html body #brands .mq-zen-landing .mq-zen-btn:active,
+      html body #distribution .mq-zen-landing .mq-zen-btn:active,
+      html body #resources .mq-zen-landing .mq-zen-btn:active,
+      #mobile-menu div.mob-nav-item > a.mobile-link:not(.mob-item-link):active {
+        transform: scale(0.985) !important;
+        background: rgba(16, 36, 74, 0.78) !important;
+        border-color: rgba(114, 197, 248, 0.55) !important;
+      }
+
+      /* Strip circular ring around Hero secondary icon on mobile */
+      #hero #hero-open-brochure-btn .ih-play-circle {
+        width: 12px !important;
+        min-width: 12px !important;
+        max-width: 12px !important;
+        height: 12px !important;
+        min-height: 12px !important;
+        max-height: 12px !important;
+        flex: 0 0 12px !important;
+        border: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      #hero #hero-open-brochure-btn .ih-play-circle svg {
+        width: 11px !important;
+        height: 11px !important;
+        color: rgba(203, 213, 225, 0.85) !important;
+        stroke: currentColor !important;
+      }
+
+      /* Uniform crisp 11px icons across all mobile pills */
+      #hero #hero-cta-primary svg,
+      #about .about-slide[data-index="0"] .about-go-next svg,
+      .mq-zen-landing .mq-zen-btn svg,
+      #mobile-menu div.mob-nav-item > a.mobile-link:not(.mob-item-link) svg {
+        width: 11px !important;
+        height: 11px !important;
+        flex-shrink: 0 !important;
+        color: rgba(203, 213, 225, 0.82) !important;
+        stroke: currentColor !important;
+        animation: none !important;
+      }
+
+      /* Suppress sliding sheen glints on mobile */
+      .mq-land-host .ih-btn-pill-primary::after,
+      .mq-land-host .about-go-next::after,
+      .mq-land-host .br-cta-row > button::after {
+        display: none !important;
+      }
+
+      /* Consistent single-CTA mobile sizing */
+      #about .about-slide[data-index="0"] .about-go-next {
+        width: auto !important;
+        padding: 0 18px !important;
+      }
+
+      /* Minimal mobile quick contact pills (Call | Viber | Email) */
+      #contact .cnt-mobile-quickbar a {
+        height: 32px !important;
+        min-height: 32px !important;
+        padding: 0 8px !important;
+        border-radius: 9999px !important;
+        background: rgba(10, 22, 48, 0.30) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        color: #cbd5e1 !important;
+        font-size: 11px !important;
+        font-weight: 500 !important;
+        gap: 5px !important;
+        box-shadow: none !important;
+      }
+
+      #contact .cnt-mobile-quickbar a svg {
+        width: 11px !important;
+        height: 11px !important;
+        color: rgba(148, 163, 184, 0.85) !important;
+      }
+
+      /* Minimal top-right mobile navbar controls */
+      #mediq-search-trigger,
+      #menu-toggle {
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        min-height: 36px !important;
+        background: rgba(7, 21, 48, 0.45) !important;
+        border: 1px solid rgba(255, 255, 255, 0.14) !important;
+        box-shadow: none !important;
+      }
+    }
+
+    @media (max-width: 639px) {
+      /* Equal-width side-by-side 2-column CTA rows on phones */
+      #hero .ih-hero-ctas {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        width: 100% !important;
+        gap: 8px !important;
+        margin-top: 20px !important;
+      }
+
+      #hero #hero-cta-primary.ih-btn-pill-primary,
+      #hero #hero-open-brochure-btn.ih-btn-video-secondary {
+        width: 100% !important;
+        min-width: 0 !important;
+        padding: 0 8px !important;
+        overflow: hidden !important;
+      }
+
+      .mq-zen-landing .mq-zen-actions {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 24px 0 0 !important;
+        gap: 8px !important;
+      }
+
+      html body #products .mq-zen-landing .mq-zen-btn,
+      html body #brands .mq-zen-landing .mq-zen-btn,
+      html body #distribution .mq-zen-landing .mq-zen-btn,
+      html body #resources .mq-zen-landing .mq-zen-btn {
+        width: 100% !important;
+        min-width: 0 !important;
+        padding: 0 8px !important;
+        overflow: hidden !important;
+      }
+
+      #mobile-menu div.mob-nav-item > a.mobile-link:not(.mob-item-link) {
+        width: 100% !important;
+        padding: 0 10px !important;
+      }
+
+      /* Compact minimal News arrows on phones */
+      #activities .news-cf-nav-btn {
+        width: 36px !important;
+        height: 36px !important;
+        background: rgba(7, 15, 32, 0.52) !important;
+        border: 1px solid rgba(255, 255, 255, 0.16) !important;
+        box-shadow: none !important;
+      }
+
+      #activities .news-cf-nav-btn svg {
+        width: 16px !important;
+        height: 16px !important;
+      }
+    }
+  </style>
+  <style id="mq-cross-device-mobile-hardening">
+    /* ============== CROSS-DEVICE iOS & ANDROID COMPATIBILITY HARDENING ============== */
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      color-scheme: dark;
+    }
+
+    button,
+    a,
+    input,
+    select,
+    textarea {
+      touch-action: manipulation;
+    }
+
+    #contact input,
+    #contact select,
+    #contact textarea,
+    #mediq-search-input {
+      color-scheme: dark;
+    }
+
+    #contact .deck-slide[data-slide-index="0"],
+    #contact-confirmation-modal > div {
+      -webkit-overflow-scrolling: touch;
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+      #hero #hero-cta-primary:hover,
+      #hero #hero-open-brochure-btn:hover,
+      #about .about-go-next:hover,
+      .mq-zen-landing .mq-zen-btn:hover,
+      #contact .cnt-submit-btn:hover {
+        transform: none !important;
+      }
+    }
+
+    @media (max-width: 639px) {
+      html body #products .mq-zen-landing .mq-zen-eyebrow,
+      html body #brands .mq-zen-landing .mq-zen-eyebrow,
+      html body #distribution .mq-zen-landing .mq-zen-eyebrow,
+      html body #resources .mq-zen-landing .mq-zen-eyebrow {
+        min-height: 2.9em !important;
+        align-items: flex-end !important;
+        font-size: clamp(8.5px, 2.35vw, 9.5px) !important;
+        letter-spacing: 0.11em !important;
+      }
+
+      html body #products #products-title.mq-zen-title,
+      html body #brands #brands-title.mq-zen-title,
+      html body #distribution #distribution-title.mq-zen-title,
+      html body #resources #resources-title.mq-zen-title {
+        font-size: clamp(24px, 7.1vw, 34px) !important;
+      }
+
+      #hero #hero-cta-primary.ih-btn-pill-primary,
+      #hero #hero-open-brochure-btn.ih-btn-video-secondary,
+      html body #products .mq-zen-landing .mq-zen-btn,
+      html body #brands .mq-zen-landing .mq-zen-btn,
+      html body #distribution .mq-zen-landing .mq-zen-btn,
+      html body #resources .mq-zen-landing .mq-zen-btn {
+        font-size: clamp(9.2px, 2.55vw, 11px) !important;
+        letter-spacing: 0 !important;
+        gap: 4px !important;
+        padding: 0 7px !important;
+      }
+
+      #hero #hero-cta-primary-label,
+      #hero #hero-cta-secondary-label,
+      .mq-zen-landing .mq-zen-btn > span {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      #contact .cnt-field {
+        font-size: 13.5px !important;
+      }
+    }
+
+    @media (max-width: 374px) {
+      section.page-snap-section .mq-zen-landing .mq-zen-wrap {
+        padding: 0 18px !important;
+      }
+
+      html body #resources .mq-zen-landing p.mq-zen-footnote {
+        left: 18px !important;
+        right: 18px !important;
+      }
+
+      html:not(.mediq-subpage-locked) #contact .deck-slide[data-slide-index="0"],
+      #contact .deck-slide[data-slide-index="0"] {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+      }
+
+      #contact .cnt-form-col {
+        padding: 14px 13px 12px !important;
+      }
+
+      #contact .cnt-seg-btn {
+        font-size: 8px !important;
+        letter-spacing: 0.04em !important;
+        padding: 6px 2px !important;
+      }
+
+      #contact button[type="submit"] {
+        padding: 0 14px !important;
+        font-size: 9.5px !important;
+      }
+
+      #contact .cnt-desk-badge {
+        padding: 4px 8px !important;
+        font-size: 8.5px !important;
+      }
+    }
+
+    @media (max-width: 639px) and (max-height: 700px) {
+      html:not(.mediq-subpage-locked) #contact .deck-slide[data-slide-index="0"],
+      #contact .deck-slide[data-slide-index="0"] {
+        padding-top: 74px !important;
+        padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+      }
+
+      #contact .cnt-form-col {
+        padding: 12px 14px 11px !important;
+      }
+
+      #contact .cnt-form-col h3 {
+        font-size: 18px !important;
+      }
+
+      #contact #quote-form {
+        margin-top: 8px !important;
+        gap: 7px !important;
+      }
+
+      #contact textarea#inq-message {
+        height: 38px !important;
+        min-height: 38px !important;
+      }
+
+      #contact button[type="submit"] {
+        height: 36px !important;
+        min-height: 36px !important;
+      }
+
+      #contact .cnt-mobile-quickbar {
+        padding-top: 6px !important;
+      }
+
+      #contact-confirmation-modal > div > div:last-child {
+        padding: 16px !important;
+      }
+    }
+
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      #site-header #header-bar {
+        padding-top: env(safe-area-inset-top);
+      }
+
+      @media (max-width: 639px) {
+        .mq-zen-landing {
+          padding-bottom: calc(24px + env(safe-area-inset-bottom)) !important;
+        }
+
+        html:not(.mediq-subpage-locked) #contact .deck-slide[data-slide-index="0"],
+        #contact .deck-slide[data-slide-index="0"] {
+          padding-bottom: calc(16px + env(safe-area-inset-bottom)) !important;
+        }
+
+        #contact-confirmation-modal {
+          padding-top: max(16px, env(safe-area-inset-top)) !important;
+          padding-bottom: max(16px, env(safe-area-inset-bottom)) !important;
+        }
+
+        #mobile-menu {
+          padding-bottom: calc(16px + env(safe-area-inset-bottom)) !important;
+        }
+      }
+    }
+
+    @supports (-webkit-touch-callout: none) {
+      @media (max-width: 639px) {
+        #contact .cnt-field,
+        #contact .cnt-select,
+        #contact textarea#inq-message,
+        #mediq-search-input {
+          font-size: 16px !important;
+          line-height: 1.25 !important;
+        }
+
+        #contact .cnt-field {
+          padding: 5px 10px !important;
+        }
+
+        #contact .cnt-select {
+          padding-right: 28px !important;
+        }
+
+        #contact textarea#inq-message {
+          height: 46px !important;
+          min-height: 46px !important;
+          padding: 6px 10px !important;
+        }
+      }
+    }
+  </style>
+  <style id="mq-web-page-transitions">
+    /* ============== SIMPLE MINIMAL CROSS-DEVICE PAGE TRANSITIONS (DESKTOP, ANDROID & iOS) ============== */
+    #mq-page-veil {
+      display: block !important;
+      position: fixed;
+      inset: 0;
+      z-index: 45;
+      pointer-events: none;
+      background: #070d1b;
+      opacity: 0;
+      transition: opacity 260ms cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    #mq-page-veil::after {
+      content: "";
+      position: absolute;
+      top: calc(env(safe-area-inset-top, 0px) + 72px);
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, rgba(114, 197, 248, 0.72) 50%, transparent 100%);
+      opacity: 0;
+      transform: scaleX(0.12);
+      transform-origin: left center;
+      transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease;
+    }
+
+    @media (min-width: 1024px) {
+      #mq-page-veil::after {
+        top: 80px;
+      }
+    }
+
+    #mq-page-veil.is-entering {
+      opacity: 1;
+      transition-duration: 150ms;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #mq-page-veil.is-entering::after {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+
+    #mq-page-veil.is-sub-pulse {
+      opacity: 0.42;
+      transition-duration: 90ms;
+    }
+
+    @keyframes mqWebPageEnterNext {
+      0% {
+        opacity: 0;
+        transform: translate3d(0, 16px, 0);
+      }
+      100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    @keyframes mqWebPageEnterPrev {
+      0% {
+        opacity: 0;
+        transform: translate3d(0, -16px, 0);
+      }
+      100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    .mq-web-page-enter-next {
+      animation: mqWebPageEnterNext 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      will-change: transform, opacity;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    .mq-web-page-enter-prev {
+      animation: mqWebPageEnterPrev 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      will-change: transform, opacity;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    .mediq-subpage-3d-next {
+      animation: mqWebPageEnterNext 360ms cubic-bezier(0.22, 1, 0.36, 1) both !important;
+      will-change: transform, opacity;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    .mediq-subpage-3d-prev {
+      animation: mqWebPageEnterPrev 360ms cubic-bezier(0.22, 1, 0.36, 1) both !important;
+      will-change: transform, opacity;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    @keyframes mqLandRiseMobile {
+      0% { opacity: 0; transform: translate3d(0, 12px, 0); }
+      100% { opacity: 1; transform: translate3d(0, 0, 0); }
+    }
+
+    @keyframes mqWordInMobile {
+      0% { opacity: 0; transform: translate3d(0, 10px, 0); }
+      100% { opacity: 1; transform: translate3d(0, 0, 0); }
+    }
+
+    @media (max-width: 1023px) {
+      .mq-land-host.mq-land-in .ih-hero-copy > *,
+      html body .mq-zen-landing.mq-land-in .mq-zen-wrap > * {
+        animation: mqLandRiseMobile 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards !important;
+        will-change: transform, opacity;
+        filter: none !important;
+      }
+
+      .mq-land-host.mq-land-in .mq-title-w {
+        animation: mqWordInMobile 0.55s cubic-bezier(0.22, 1, 0.36, 1) calc(60ms + var(--wi, 0) * 45ms) backwards !important;
+        will-change: transform, opacity;
+        filter: none !important;
+      }
+
+      html body .mq-zen-landing.mq-land-host.mq-land-in h2.mq-zen-title .mq-zen-accent.mq-title-accent,
+      .mq-land-host.mq-land-in h2 span[class*="text-[#72c5f8]"].mq-title-accent {
+        animation:
+          mqAccentShimmer 5.2s linear infinite,
+          mqWordInMobile 0.55s cubic-bezier(0.22, 1, 0.36, 1) calc(60ms + var(--wi, 5) * 45ms) backwards !important;
+        will-change: transform, opacity;
+        filter: none !important;
+      }
+    }
+
+    @supports (-webkit-touch-callout: none) {
+      .mq-land-host.mq-land-in .ih-hero-copy > *,
+      html body .mq-zen-landing.mq-land-in .mq-zen-wrap > * {
+        animation: mqLandRiseMobile 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards !important;
+        will-change: transform, opacity;
+        filter: none !important;
+      }
+
+      .mq-land-host.mq-land-in .mq-title-w {
+        animation: mqWordInMobile 0.55s cubic-bezier(0.22, 1, 0.36, 1) calc(60ms + var(--wi, 0) * 45ms) backwards !important;
+        will-change: transform, opacity;
+        filter: none !important;
+      }
+
+      html body .mq-zen-landing.mq-land-host.mq-land-in h2.mq-zen-title .mq-zen-accent.mq-title-accent,
+      .mq-land-host.mq-land-in h2 span[class*="text-[#72c5f8]"].mq-title-accent {
+        animation:
+          mqAccentShimmer 5.2s linear infinite,
+          mqWordInMobile 0.55s cubic-bezier(0.22, 1, 0.36, 1) calc(60ms + var(--wi, 5) * 45ms) backwards !important;
+        will-change: transform, opacity;
+        filter: none !important;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #mq-page-veil {
+        display: none !important;
+      }
+
+      .mq-web-page-enter-next,
+      .mq-web-page-enter-prev {
+        animation: none !important;
       }
     }
   </style>
@@ -17356,42 +18208,24 @@
           if (host) host.classList.add('mq-land-in');
         };
 
-        var hostRecords = [];
         hosts.forEach(function (host) {
           var section = host.closest('section') || host;
-          var rec = { host: host, section: section, inView: false };
-          hostRecords.push(rec);
-
-          function syncVisibility(forceReplay) {
-            var visible = isSectionInView(section);
-            if (visible && !rec.inView) {
-              rec.inView = true;
-              if (forceReplay) replay(host);
-              else host.classList.add('mq-land-in');
-            } else if (!visible && rec.inView) {
-              rec.inView = false;
-              host.classList.remove('mq-land-in');
-            }
-          }
+          var revealed = false;
 
           var io = new IntersectionObserver(function (entries) {
             var entry = entries[0];
             if (!entry) return;
             if (entry.isIntersecting || isSectionInView(section)) {
-              if (!rec.inView) {
-                rec.inView = true;
-                replay(host);
-              } else {
+              if (!revealed) {
+                revealed = true;
                 host.classList.add('mq-land-in');
+                io.disconnect();
               }
-            } else if (!isSectionInView(section) && rec.inView) {
-              rec.inView = false;
-              host.classList.remove('mq-land-in');
             }
-          }, { threshold: 0.02 });
+          }, { threshold: 0.05 });
           io.observe(section);
 
-          // Replay when returning to the landing page from a subpage within the same section
+          // Ensure return from subpage within the same section keeps content revealed cleanly
           var wasHidden = host.classList.contains('opacity-0');
           new MutationObserver(function () {
             var hidden = host.classList.contains('opacity-0');
@@ -17399,22 +18233,12 @@
             wasHidden = hidden;
           }).observe(host, { attributes: true, attributeFilter: ['class'] });
 
-          syncVisibility(false);
-        });
-
-        window.addEventListener('scroll', function () {
-          for (var hi = 0; hi < hostRecords.length; hi++) {
-            var hr = hostRecords[hi];
-            if (isSectionInView(hr.section)) {
-              if (!hr.inView) {
-                hr.inView = true;
-                replay(hr.host);
-              } else if (!hr.host.classList.contains('mq-land-in')) {
-                hr.host.classList.add('mq-land-in');
-              }
-            }
+          if (isSectionInView(section)) {
+            revealed = true;
+            host.classList.add('mq-land-in');
+            io.disconnect();
           }
-        }, { passive: true });
+        });
       }
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
@@ -17428,20 +18252,19 @@
     <script src="assets/js/GLTFLoader.js?v=3.00" defer></script>
   <script src="assets/js/foundation-logo-data.js?v=1.00" defer></script>
   <script src="assets/js/foundation-particles-gl.js?v=4.64" defer></script>
-  <script src="assets/js/foundation-vr-scene.js?v=1.03" defer></script>
-  <script src="assets/js/main.js?v=388.56" defer></script>
+  <script src="assets/js/main.js?v=388.59" defer></script>
   <script src="assets/js/motion-navbar.js?v=1.00" defer></script>
-  <script src="assets/js/galaxy-delivery-3d.js?v=14.41" defer></script>
-  <script src="assets/js/about-route-globe.js?v=9.03" defer></script>
+  <script src="assets/js/galaxy-delivery-3d.js?v=14.42" defer></script>
+  <script src="assets/js/about-route-globe.js?v=9.04" defer></script>
   <script src="assets/js/aller-silhouette.js?v=11.60" defer></script>
   <script src="assets/js/core-values-monument.js?v=16.00" defer></script>
-  <script src="assets/js/products-warp-carousel.js?v=1.09" defer></script>
-  <script src="assets/js/products-active-theory.js?v=11.16" defer></script>
+  <script src="assets/js/products-warp-carousel.js?v=1.10" defer></script>
+  <script src="assets/js/products-active-theory.js?v=11.17" defer></script>
   <script src="assets/js/services-liquid-text.js?v=1.04" defer></script>
-  <script src="assets/js/news-coverflow.js?v=1.04" defer></script>
+  <script src="assets/js/news-coverflow.js?v=1.05" defer></script>
   <script src="assets/js/services-3d-backdrop.js?v=2.01" defer></script>
   <script src="assets/js/services-book-character.js?v=1.00" defer></script>
-  <script src="assets/js/services-book-carousel.js?v=2.00" defer></script>
+  <script src="assets/js/services-book-carousel.js?v=2.01" defer></script>
   <script src="assets/js/site-search.js?v=4.01" defer></script>
   <script src="assets/js/contact-map.js?v=2.00" defer></script>
   <script>
@@ -17494,8 +18317,11 @@
         for (var i = 0; i < vids.length; i++) {
           var v = vids[i];
           var src = v.getAttribute('src');
-          if (src && src.indexOf('assets/video/') === 0) {
-            v.setAttribute('src', appendBust(src));
+          if (src && !v.getAttribute('data-lazy-src') && src.indexOf('assets/video/') === 0) {
+            v.setAttribute('data-lazy-src', appendBust(src));
+            v.removeAttribute('src');
+            v.preload = 'none';
+            try { v.pause(); v.load(); } catch (_) {}
           }
           var lazy = v.getAttribute('data-lazy-src');
           if (lazy && lazy.indexOf('assets/video/') === 0) {
